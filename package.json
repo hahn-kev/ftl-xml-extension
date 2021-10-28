@@ -1,0 +1,52 @@
+{
+    "name": "ftlXml",
+    "displayName": "ftl-xml",
+    "description": "provides autocomplete and other help to FTL mod devs",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.61.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "activationEvents": [
+        "onLanguage:ftl-xml"
+    ],
+    "main": "./out/main",
+    "contributes": {
+        "languages": [
+            {
+                "id": "ftl-xml",
+                "aliases": [
+                    "FTL XML",
+                    "ftl-xml"
+                ],
+                "extensions": [
+                    ".xml",
+                    ".xml.append"
+                ],
+                "configuration": "./language-configuration.json",
+                "firstLine": "^<FTL>"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "ftl-xml",
+                "scopeName": "text.xml",
+                "path": "./syntaxes/xml.tmLanguage"
+            }
+        ]
+    },
+    "scripts": {
+        "compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./"
+    },
+    "dependencies": {
+        "vscode-html-languageservice": "^4.1.1",
+        "vscode-languageclient": "^7.0.0"
+    },
+    "devDependencies": {
+        "@types/vscode": "^1.52.0",
+        "typescript": "^4.4.3"
+    }
+}
