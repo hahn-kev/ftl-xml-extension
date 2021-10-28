@@ -1,5 +1,5 @@
 {
-    "name": "ftlXml",
+    "name": "ftl-xml",
     "displayName": "ftl-xml",
     "description": "provides autocomplete and other help to FTL mod devs",
     "version": "0.0.1",
@@ -39,14 +39,16 @@
     },
     "scripts": {
         "compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./"
+        "watch": "tsc -watch -p ./"
     },
     "dependencies": {
         "vscode-html-languageservice": "^4.1.1",
         "vscode-languageclient": "^7.0.0"
     },
     "devDependencies": {
+        "@types/node": "^16.11.6",
         "@types/vscode": "^1.52.0",
-        "typescript": "^4.4.3"
+        "typescript": "^4.4.3",
+        "vscode-languageserver-textdocument": "^1.0.2"
     }
 }
