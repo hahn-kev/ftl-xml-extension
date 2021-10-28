@@ -1,4 +1,3 @@
-
 import {
     CancellationToken,
     CompletionItem,
@@ -20,6 +19,9 @@ import {
     CompletionItem as HtmlCompletionItem, HTMLDocument
 } from "vscode-html-languageservice";
 import {FtlDataProvider} from './ftl-data-provider';
+import {FtlDefinitionProvider} from './ftl-definition-provider';
+import {toTextDocumentHtml} from './helpers';
+import {FtlParser} from './ftl-parser';
 
 const ftlXmlDoc: DocumentSelector = {language: 'ftl-xml'};
 
@@ -32,10 +34,7 @@ class FtlXmlCompletionItemProvider implements CompletionItemProvider {
         document: TextDocument, position: Position, token: CancellationToken):
         Promise<CompletionItem[]> {
 
-        let serviceDocument: HtmlTextDocument = {
-            ...document,
-            uri: document.uri.toString()
-        };
+        let serviceDocument = toTextDocumentHtml(document);
         let htmlDocument = this.languageService.parseHTMLDocument(serviceDocument);
         let completionItems = this.languageService.doComplete(serviceDocument, position, htmlDocument);
         return this.convertCompletionItems(completionItems.items).concat(this.provideAdditionalItems(document, position, htmlDocument));
@@ -68,6 +67,15 @@ class FtlXmlCompletionItemProvider implements CompletionItemProvider {
 // noinspection JSUnusedGlobalSymbols
 export function activate(context: ExtensionContext) {
     let service = getLanguageService({useDefaultDataProvider: false});
-    service.setDataProviders(false, [new FtlDataProvider(service)])
+    let ftlDataProvider = new FtlDataProvider(service);
+    let ftlDefinitionProvider = new FtlDefinitionProvider(service);
+
+    let ftlParser = new FtlParser(service);
+    let ftlFilesPromise = ftlParser.parseCurrentWorkspace();
+    ftlFilesPromise.then(files => ftlDataProvider.updateFtlData(files));
+    ftlFilesPromise.then(files => ftlDefinitionProvider.loadFiles(files));
+
+    service.setDataProviders(false, [ftlDataProvider])
     languages.registerCompletionItemProvider(ftlXmlDoc, new FtlXmlCompletionItemProvider(service));
+    languages.registerDefinitionProvider(ftlXmlDoc, ftlDefinitionProvider)
 }

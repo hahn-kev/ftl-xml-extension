@@ -1,6 +1,7 @@
 import {FtlEvent} from './ftl-event';
+import {Uri} from 'vscode';
 
 export interface FtlFile {
-    uri: string,
+    uri: Uri,
     events: FtlEvent[]
 }

@@ -2,6 +2,7 @@ import {ProgressLocation, Uri, window, workspace} from 'vscode';
 import {TextDocument} from 'vscode-languageserver-textdocument';
 import {LanguageService, Node} from 'vscode-html-languageservice';
 import {FtlFile} from './ftl-file';
+import {normalizeEventName, toTextDocumentHtml} from './helpers';
 
 export class FtlParser {
     constructor(private service: LanguageService) {
@@ -24,27 +25,29 @@ export class FtlParser {
     async parseFiles(files: Uri[]) {
         for (let file of files) {
             let document = await workspace.openTextDocument(file);
-            this.parseFile(file, {...document, uri: file.toString()});
+            this.parseFile(file, toTextDocumentHtml(document));
         }
     }
 
     parseFile(uri: Uri, document: TextDocument) {
-        let ftlFile: FtlFile = {uri: uri.toString(), events: []};
-        this.files.set(ftlFile.uri, ftlFile);
+        let ftlFile: FtlFile = {uri: uri, events: []};
+        this.files.set(ftlFile.uri.toString(), ftlFile);
 
         let htmlDocument = this.service.parseHTMLDocument(document);
-        this.parseNodes(htmlDocument.roots, ftlFile);
+        this.parseNodes(htmlDocument.roots, ftlFile, document);
     }
 
-    parseNodes(nodes: Node[], ftlFile: FtlFile) {
+    parseNodes(nodes: Node[], ftlFile: FtlFile, document: TextDocument) {
         for (let node of nodes) {
             if (node.tag == 'event' && node.attributes && 'name' in node.attributes) {
                 ftlFile.events.push({
-                    name: node.attributes.name.slice(1, -1),
-                    documentIndex: node.start
+                    file: ftlFile,
+                    name: normalizeEventName(node.attributes.name),
+                    offset: node.start,
+                    position: document.positionAt(node.start)
                 });
             }
-            this.parseNodes(node.children, ftlFile);
+            this.parseNodes(node.children, ftlFile, document);
         }
     }
 }

@@ -11,10 +11,8 @@ import {FtlFile} from './ftl-file';
 import {FtlParser} from './ftl-parser';
 
 export class FtlDataProvider implements IHTMLDataProvider {
-    ftlParser = new FtlParser(this.service);
 
     constructor(private service: LanguageService) {
-        this.ftlParser.parseCurrentWorkspace().then(files => this.updateFtlData(files));
     }
 
     updateFtlData(files: Map<string, FtlFile>) {
