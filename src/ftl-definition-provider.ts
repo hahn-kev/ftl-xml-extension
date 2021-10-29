@@ -9,7 +9,7 @@ import {
     TextDocument
 } from 'vscode';
 import {LanguageService} from 'vscode-html-languageservice';
-import {getEventName, getEventRefName, toTextDocumentHtml} from './helpers';
+import {getEventName, toTextDocumentHtml} from './helpers';
 import {FtlFile} from './ftl-file';
 import {FtlEvent} from './ftl-event';
 
@@ -26,12 +26,15 @@ export class FtlDefinitionProvider implements DefinitionProvider {
         const node = htmlDocument.findNodeBefore(offset);
 
         let eventName = getEventName(node, document);
+        if (!eventName) {
+            return null;
+        }
         let event = this.events.get(eventName);
         if (event) {
             return new Location(event.file.uri, new Position(event.position.line, event.position.character))
         }
-        return null;
     }
+
     loadFiles(files: Map<string, FtlFile>) {
         for (let file of files.values()) {
             for (let event of file.events) {

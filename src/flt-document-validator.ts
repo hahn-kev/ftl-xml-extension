@@ -40,10 +40,9 @@ export class FltDocumentValidator {
     }
 
     private validateNode(node: Node, diagnostics: Diagnostic[], document: TextDocument) {
-        let eventName: string;
+        let eventName: string | undefined;
         if (node.tag == "event" && node.attributes && 'load' in node.attributes) {
             eventName = normalizeEventName(node.attributes.load);
-
         }
         if (isLoadEvent(node)) {
             eventName = getLoadEventName(node, document);

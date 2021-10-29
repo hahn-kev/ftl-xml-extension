@@ -9,11 +9,12 @@ export function toTextDocumentHtml(d: TextDocument): HtmlTextDocument {
     return {...d, uri: d.uri.toString()};
 }
 
-export function normalizeEventName(attr: string) {
-    return attr.slice(1, -1);
+export function normalizeEventName(attr: string | null | undefined) {
+    return attr?.slice(1, -1);
 }
 
 export function getLoadEventName(node: Node, document: TextDocument) {
+    if (node.startTagEnd === undefined || node.endTagStart === undefined) return undefined;
     return document.getText(new Range(document.positionAt(node.startTagEnd), document.positionAt(node.endTagStart)));
 }
 
@@ -29,13 +30,13 @@ export function inLoadAttribute(node: Node): boolean {
 
 export function getEventRefName(node: Node, document: TextDocument): string | undefined {
     if (inLoadAttribute(node)) {
-        return normalizeEventName(node.attributes.load);
+        return normalizeEventName(node.attributes!.load);
     }
 
     if (isLoadEvent(node)) {
         return getLoadEventName(node, document);
     }
-    if (node.tag == 'event' && node.attributes && 'name' in node.attributes && node.parent.tag == 'sectorDescription')
+    if (node.tag == 'event' && node.attributes && 'name' in node.attributes && node.parent?.tag == 'sectorDescription')
         return normalizeEventName(node.attributes.name);
 }
 
@@ -44,6 +45,6 @@ export function getEventName(node: Node, document: TextDocument): string | undef
 }
 
 export function getEventNameDef(node: Node): string | undefined {
-    if ((node.tag == 'eventList' || node.tag == 'event') && node.attributes && 'name' in node.attributes && node.parent.tag != 'sectorDescription')
+    if ((node.tag == 'eventList' || node.tag == 'event') && node.attributes && 'name' in node.attributes && node.parent?.tag != 'sectorDescription')
         return normalizeEventName(node.attributes.name);
 }
