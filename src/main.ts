@@ -3,7 +3,7 @@ import {
     CompletionItem,
     Range,
     SnippetString,
-    TextDocument
+    TextDocument, window, workspace
 } from 'vscode';
 import {
     ExtensionContext,
@@ -22,6 +22,9 @@ import {FtlDataProvider} from './ftl-data-provider';
 import {FtlDefinitionProvider} from './ftl-definition-provider';
 import {toTextDocumentHtml} from './helpers';
 import {FtlParser} from './ftl-parser';
+import {FltDocumentValidator} from './flt-document-validator';
+import {DocumentCache} from './document-cache';
+import {FtlReferenceProvider} from './ftl-reference-provider';
 
 const ftlXmlDoc: DocumentSelector = {language: 'ftl-xml'};
 
@@ -66,16 +69,34 @@ class FtlXmlCompletionItemProvider implements CompletionItemProvider {
 
 // noinspection JSUnusedGlobalSymbols
 export function activate(context: ExtensionContext) {
-    let service = getLanguageService({useDefaultDataProvider: false});
-    let ftlDataProvider = new FtlDataProvider(service);
-    let ftlDefinitionProvider = new FtlDefinitionProvider(service);
 
-    let ftlParser = new FtlParser(service);
+    let service = getLanguageService({useDefaultDataProvider: false});
+    let documentCache = new DocumentCache(service);
+    let ftlDataProvider = new FtlDataProvider();
+    let ftlDefinitionProvider = new FtlDefinitionProvider(service);
+    let ftlDocumentValidator = new FltDocumentValidator(documentCache);
+    let ftlReferenceProvider = new FtlReferenceProvider(documentCache);
+
+    let ftlParser = new FtlParser(documentCache);
     let ftlFilesPromise = ftlParser.parseCurrentWorkspace();
     ftlFilesPromise.then(files => ftlDataProvider.updateFtlData(files));
     ftlFilesPromise.then(files => ftlDefinitionProvider.loadFiles(files));
+    ftlFilesPromise.then(files => {
+        ftlDocumentValidator.loadEventNames(files);
+        for (let textDocument of workspace.textDocuments) {
+            ftlDocumentValidator.validateDocument(textDocument);
+        }
+    });
+    ftlFilesPromise.then(() => {
+       ftlReferenceProvider.eventRefs = ftlParser.eventRefs;
+    });
 
     service.setDataProviders(false, [ftlDataProvider])
     languages.registerCompletionItemProvider(ftlXmlDoc, new FtlXmlCompletionItemProvider(service));
-    languages.registerDefinitionProvider(ftlXmlDoc, ftlDefinitionProvider)
+    languages.registerDefinitionProvider(ftlXmlDoc, ftlDefinitionProvider);
+    window.onDidChangeActiveTextEditor(e => {
+        if (e)
+            ftlDocumentValidator.validateDocument(e.document);
+    });
+    languages.registerReferenceProvider(ftlXmlDoc, ftlReferenceProvider);
 }

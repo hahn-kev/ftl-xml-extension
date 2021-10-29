@@ -5,14 +5,7 @@
 	<key>fileTypes</key>
 	<array>
 		<string>xml</string>
-		<string>xsd</string>
-		<string>tld</string>
-		<string>jsp</string>
-		<string>pt</string>
-		<string>cpt</string>
-		<string>dtml</string>
-		<string>rss</string>
-		<string>opml</string>
+		<string>xml.append</string>
 	</array>
 	<key>keyEquivalent</key>
 	<string>^~X</string>

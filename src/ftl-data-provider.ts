@@ -3,16 +3,14 @@ import {
     IHTMLDataProvider,
     ITagData,
     IValueData,
-    LanguageService,
     newHTMLDataProvider
 } from "vscode-html-languageservice";
 import {FtlData, EventNamesValueSet} from './data/ftl-data';
 import {FtlFile} from './ftl-file';
-import {FtlParser} from './ftl-parser';
 
 export class FtlDataProvider implements IHTMLDataProvider {
 
-    constructor(private service: LanguageService) {
+    constructor() {
     }
 
     updateFtlData(files: Map<string, FtlFile>) {
