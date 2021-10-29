@@ -6,19 +6,19 @@ import {
 import {TextDocument} from 'vscode';
 
 export class DocumentCache {
-    cache = new Map<string, HTMLDocument>();
+    cache = new Map<string, {doc:HTMLDocument, version: number}>();
 
     constructor(private service: LanguageService) {
     }
 
     getHtmlDocument(document: HtmlTextDocument | TextDocument): HTMLDocument {
         let correctDoc: HtmlTextDocument;
-        let uri = document.uri.toString();
-        let htmlDoc = this.cache.get(uri);
-        if (htmlDoc) return htmlDoc;
+        let documentKey = document.uri.toString();
+        let cachedValue = this.cache.get(documentKey);
+        if (cachedValue && cachedValue.version == document.version) return cachedValue.doc;
         correctDoc = {...document, uri: document.uri.toString()};
-        htmlDoc = this.service.parseHTMLDocument(correctDoc);
-        this.cache.set(uri, htmlDoc);
+        let htmlDoc = this.service.parseHTMLDocument(correctDoc);
+        this.cache.set(documentKey, {doc: htmlDoc, version: document.version});
         return htmlDoc;
     }
 }

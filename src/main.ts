@@ -68,8 +68,12 @@ export function activate(context: ExtensionContext) {
 
     languages.registerDefinitionProvider(ftlXmlDoc, ftlDefinitionProvider);
     window.onDidChangeActiveTextEditor(e => {
-        if (e)
+        if (e) {
             ftlDocumentValidator.validateDocument(e.document);
+        }
+    });
+    workspace.onDidChangeTextDocument(e => {
+        if (e.document) ftlDocumentValidator.validateDocument(e.document);
     });
     languages.registerReferenceProvider(ftlXmlDoc, ftlReferenceProvider);
 }
