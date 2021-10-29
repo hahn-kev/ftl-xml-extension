@@ -1,71 +1,26 @@
 import {
     CancellationToken,
-    CompletionItem,
-    Range,
-    SnippetString,
-    TextDocument, window, workspace
-} from 'vscode';
-import {
-    ExtensionContext,
-    languages,
     DocumentSelector,
-    CompletionItemProvider,
-    Position
+    ExtensionContext, Hover,
+    languages, MarkdownString, Position, ProviderResult, Range, TextDocument,
+    window,
+    workspace,
 } from 'vscode';
-import {
-    getLanguageService,
-    LanguageService,
-    TextDocument as HtmlTextDocument,
-    CompletionItem as HtmlCompletionItem, HTMLDocument
-} from "vscode-html-languageservice";
+import {getLanguageService} from "vscode-html-languageservice";
 import {FtlDataProvider} from './ftl-data-provider';
 import {FtlDefinitionProvider} from './ftl-definition-provider';
-import {toTextDocumentHtml} from './helpers';
 import {FtlParser} from './ftl-parser';
 import {FltDocumentValidator} from './flt-document-validator';
 import {DocumentCache} from './document-cache';
 import {FtlReferenceProvider} from './ftl-reference-provider';
+import {FtlXmlCompletionItemProvider} from './ftlXmlCompletionItemProvider';
+import {
+    convertDocumentation,
+    convertRange,
+    toTextDocumentHtml
+} from './helpers';
 
-const ftlXmlDoc: DocumentSelector = {language: 'ftl-xml'};
-
-class FtlXmlCompletionItemProvider implements CompletionItemProvider {
-    constructor(private languageService: LanguageService) {
-    }
-
-
-    public async provideCompletionItems(
-        document: TextDocument, position: Position, token: CancellationToken):
-        Promise<CompletionItem[]> {
-
-        let serviceDocument = toTextDocumentHtml(document);
-        let htmlDocument = this.languageService.parseHTMLDocument(serviceDocument);
-        let completionItems = this.languageService.doComplete(serviceDocument, position, htmlDocument);
-        return this.convertCompletionItems(completionItems.items).concat(this.provideAdditionalItems(document, position, htmlDocument));
-    }
-
-    private provideAdditionalItems(document: TextDocument, position: Position, htmlDocument: HTMLDocument): CompletionItem[] {
-        const offset = document.offsetAt(position);
-        const node = htmlDocument.findNodeBefore(offset);
-
-        return [];
-    }
-
-    convertCompletionItems(items: HtmlCompletionItem[]): CompletionItem[] {
-        return items.filter(value => value.label !== 'data-').map(item => {
-            let {documentation, textEdit, additionalTextEdits, ...rest} = item;
-            let result: CompletionItem = {...rest};
-            if (textEdit) {
-                result.insertText = new SnippetString(textEdit.newText);
-                if ('range' in textEdit) {
-                    let start = textEdit.range.start;
-                    let end = textEdit.range.end;
-                    result.range = new Range(new Position(start.line, start.character), new Position(end.line, end.character));
-                }
-            }
-            return result;
-        });
-    }
-}
+const ftlXmlDoc: DocumentSelector = 'ftl-xml';
 
 // noinspection JSUnusedGlobalSymbols
 export function activate(context: ExtensionContext) {
@@ -87,12 +42,30 @@ export function activate(context: ExtensionContext) {
             ftlDocumentValidator.validateDocument(textDocument);
         }
     });
+
     ftlFilesPromise.then(() => {
-       ftlReferenceProvider.eventRefs = ftlParser.eventRefs;
+        ftlReferenceProvider.eventRefs = ftlParser.eventRefs;
     });
 
     service.setDataProviders(false, [ftlDataProvider])
     languages.registerCompletionItemProvider(ftlXmlDoc, new FtlXmlCompletionItemProvider(service));
+    languages.registerHoverProvider(ftlXmlDoc, {
+        provideHover(document: TextDocument, position: Position, token: CancellationToken): ProviderResult<Hover> {
+
+            let hover = service.doHover(toTextDocumentHtml(document), position, documentCache.getHtmlDocument(document), {documentation: true});
+            if (!hover || !hover.range || hover.contents === '') return null;
+            let documentation: string | MarkdownString | undefined;
+            if (typeof hover.contents === 'object' && 'kind' in hover.contents) {
+                documentation = convertDocumentation(hover.contents);
+            }
+            if (!documentation) return null;
+            return {
+                range: convertRange(hover.range),
+                contents: [documentation]
+            };
+        }
+    });
+
     languages.registerDefinitionProvider(ftlXmlDoc, ftlDefinitionProvider);
     window.onDidChangeActiveTextEditor(e => {
         if (e)

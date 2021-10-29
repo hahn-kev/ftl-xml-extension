@@ -1,8 +1,15 @@
 import {
+    MarkupContent,
     Node,
-    TextDocument as HtmlTextDocument
+    TextDocument as HtmlTextDocument,
+    Range as HtmlRange
 } from "vscode-html-languageservice";
-import {Range, TextDocument} from "vscode";
+import {
+    MarkdownString,
+    Position,
+    Range,
+    TextDocument
+} from "vscode";
 
 
 export function toTextDocumentHtml(d: TextDocument): HtmlTextDocument {
@@ -47,4 +54,20 @@ export function getEventName(node: Node, document: TextDocument): string | undef
 export function getEventNameDef(node: Node): string | undefined {
     if ((node.tag == 'eventList' || node.tag == 'event') && node.attributes && 'name' in node.attributes && node.parent?.tag != 'sectorDescription')
         return normalizeEventName(node.attributes.name);
+}
+
+export function convertDocumentation(documentation: string | MarkupContent | undefined): string | MarkdownString | undefined {
+    if (typeof documentation === 'object' && 'kind' in documentation) {
+        if (documentation.kind == 'markdown') {
+            return new MarkdownString(documentation.value);
+        }
+        return documentation.value;
+    }
+    return documentation;
+}
+
+export function convertRange(range: HtmlRange): Range {
+    let start = range.start;
+    let end = range.end;
+    return new Range(new Position(start.line, start.character), new Position(end.line, end.character));
 }
