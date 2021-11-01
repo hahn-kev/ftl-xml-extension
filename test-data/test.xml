@@ -1,0 +1,19 @@
+<FTL>
+    <event name="event-1">
+
+    </event>
+
+    <eventList name="list-1">
+
+        <event load="event-1"/>
+        <event load="list-1"/>
+        <!-- should not show an error because it's a default event -->
+        <event load="START_BEACON_LANIUS"/>
+        <!-- should show error that 'not-an-event' is invalid -->
+        <event load="not-an-event"/>
+        <loadEvent>event-1</loadEvent>
+
+        <!-- todo show error because of missing closing tag -->
+        <loadEvent>event-1</loadEvent
+    </eventList>
+</FTL>

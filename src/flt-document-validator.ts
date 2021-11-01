@@ -10,6 +10,7 @@ import {
 } from 'vscode';
 import {Node} from 'vscode-html-languageservice';
 import {getLoadEventName, isLoadEvent, normalizeEventName} from './helpers';
+import {defaultEvents} from './data/default-events';
 
 export class FltDocumentValidator {
 
@@ -23,7 +24,8 @@ export class FltDocumentValidator {
     eventNames = new Set<string>();
 
     loadEventNames(files: Map<string, FtlFile>) {
-        this.eventNames = new Set(Array.from(files.values()).flatMap(value => value.events).map(event => event.name));
+        let userDefinedEvents = Array.from(files.values()).flatMap(value => value.events).map(event => event.name);
+        this.eventNames = new Set(userDefinedEvents.concat(defaultEvents));
     }
 
     validateDocument(document: TextDocument) {

@@ -8,6 +8,7 @@ import {
 import {FtlData, EventNamesValueSet} from './data/ftl-data';
 import {FtlFile} from './ftl-file';
 import {Event} from 'vscode';
+import {defaultEvents} from './data/default-events';
 
 export class FtlDataProvider implements IHTMLDataProvider {
 
@@ -20,8 +21,8 @@ export class FtlDataProvider implements IHTMLDataProvider {
     updateFtlData(files: Map<string, FtlFile>) {
         let values = EventNamesValueSet.values;
         values.length = 0;
-        let eventNames = Array.from(files.values()).flatMap(value => value.events);
-        values.push(...eventNames.map(event => ({name: event.name})));
+        let customEventNames = Array.from(files.values()).flatMap(value => value.events).map(event => event.name);
+        values.push(...customEventNames.concat(defaultEvents).map(eventName => ({name: eventName})));
     }
 
     htmlDataProvider = newHTMLDataProvider('ftl-data', FtlData);
