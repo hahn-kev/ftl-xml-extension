@@ -5,11 +5,10 @@ import {
     IValueData,
     newHTMLDataProvider
 } from "vscode-html-languageservice";
-import {EventNamesValueSet, FtlData, ShipNames} from './data/ftl-data';
+import {FtlData} from './data/ftl-data';
 import {FtlFile} from './models/ftl-file';
 import {Event} from 'vscode';
-import {defaultEvents} from './data/default-events';
-import {defaultShips} from './data/default-ships';
+import {mappers} from './ref-mappers/ref-mapper';
 
 export class FtlDataProvider implements IHTMLDataProvider {
 
@@ -21,22 +20,9 @@ export class FtlDataProvider implements IHTMLDataProvider {
 
     updateFtlData(files: Map<string, FtlFile>) {
         let ftlFiles = Array.from(files.values());
-        this.updateEvents(ftlFiles);
-        this.updateShips(ftlFiles);
-    }
-
-    private updateEvents(ftlFiles: FtlFile[]) {
-        let eventValues = EventNamesValueSet.values;
-        eventValues.length = 0;
-        let customEventNames = ftlFiles.flatMap(value => value.events).map(event => event.name);
-        eventValues.push(...customEventNames.concat(defaultEvents).map(eventName => ({name: eventName})));
-    }
-
-    private updateShips(ftlFiles: FtlFile[]) {
-        let shipValues = ShipNames.values;
-        shipValues.length = 0;
-        let customShipNames = ftlFiles.flatMap(value => value.ships).map(ship => ship.name);
-        shipValues.push(...customShipNames.concat(defaultShips).map(shipName => ({name: shipName})));
+        for (let mapper of mappers) {
+            mapper.updateData(ftlFiles);
+        }
     }
 
     htmlDataProvider = newHTMLDataProvider('ftl-data', FtlData);
