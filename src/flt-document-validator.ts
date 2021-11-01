@@ -3,13 +3,12 @@ import {FtlFile} from './ftl-file';
 import {
     Diagnostic,
     DiagnosticCollection,
-    DiagnosticSeverity, Event,
-    languages,
-    Range,
+    DiagnosticSeverity,
+    Event,
     TextDocument
 } from 'vscode';
 import {Node} from 'vscode-html-languageservice';
-import {getLoadEventName, isLoadEvent, normalizeEventName} from './helpers';
+import {getEventRefName, toRange} from './helpers';
 import {defaultEvents} from './data/default-events';
 
 export class FltDocumentValidator {
@@ -44,18 +43,28 @@ export class FltDocumentValidator {
     }
 
     private validateNode(node: Node, diagnostics: Diagnostic[], document: TextDocument) {
-        let eventName: string | undefined;
-        if (node.tag == "event" && node.attributes && 'load' in node.attributes) {
-            eventName = normalizeEventName(node.attributes.load);
-        }
-        if (isLoadEvent(node)) {
-            eventName = getLoadEventName(node, document);
-        }
+        let eventName = getEventRefName(node, document);
         if (eventName) {
             if (!this.eventNames.has(eventName)) {
-                let range = new Range(document.positionAt(node.start), document.positionAt(node.end));
-                diagnostics.push(new Diagnostic(range, `Invalid Event name: '${eventName}'`, DiagnosticSeverity.Warning));
+                diagnostics.push(new Diagnostic(
+                    toRange(node.start, node.end, document),
+                    `Invalid Event name: '${eventName}'`,
+                    DiagnosticSeverity.Warning
+                ));
             }
         }
+        if (node.tag && this.isMissingEnd(node, document)) {
+            let warningStart = node.endTagStart ?? node.start;
+            //when the end and startTagEnd are the same then it's self closing
+            let isSelfClosing = node.end == node.startTagEnd;
+            let extraForOpening = isSelfClosing || !node.endTagStart ? '<'.length : '</'.length;
+            let warningEnd = warningStart + node.tag.length + extraForOpening;
+
+            diagnostics.push(new Diagnostic(toRange(warningStart, warningEnd, document), `Tag '${node.tag}' is not properly closed`, DiagnosticSeverity.Warning));
+        }
+    }
+
+    isMissingEnd(node: Node, document: TextDocument) {
+        return document.getText(toRange(node.end - 1, node.end, document)) !== '>';
     }
 }

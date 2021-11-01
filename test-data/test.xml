@@ -13,7 +13,11 @@
         <event load="not-an-event"/>
         <loadEvent>event-1</loadEvent>
 
-        <!-- todo show error because of missing closing tag -->
-        <loadEvent>event-1</loadEvent
+        <!-- should show error because of missing closing tag -->
+        <badTag>event-1</badTag       
+        <!-- should show error because of missing closing tag -->
+        <badTag>event-1
+        <!-- should show error because of missing closing tag -->
+        <badTag/
     </eventList>
 </FTL>

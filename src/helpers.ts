@@ -64,6 +64,10 @@ export function convertDocumentation(documentation: string | MarkupContent | und
     return documentation;
 }
 
+export function toRange(start: number, end: number, document: TextDocument) {
+    return new Range(document.positionAt(start), document.positionAt(end));
+}
+
 export function convertRange(range: HtmlRange): Range {
     let start = range.start;
     let end = range.end;
