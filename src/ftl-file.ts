@@ -4,4 +4,5 @@ import {Uri} from 'vscode';
 export interface FtlFile {
     uri: Uri,
     events: FtlEvent[]
+    eventRefs: Map<string, FtlEvent[]>;
 }

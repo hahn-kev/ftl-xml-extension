@@ -1,5 +1,5 @@
 import {
-    CancellationToken, Location, Position, ProviderResult,
+    CancellationToken, Event, Location, Position, ProviderResult,
     ReferenceContext,
     ReferenceProvider,
     TextDocument
@@ -7,14 +7,27 @@ import {
 import {FtlEvent} from './ftl-event';
 import {DocumentCache} from './document-cache';
 import {getEventName} from './helpers';
+import {FtlFile} from './ftl-file';
 
 export class FtlReferenceProvider implements ReferenceProvider {
-    constructor(private documentCache: DocumentCache) {
-
+    constructor(private documentCache: DocumentCache, onFileParsed: Event<{ file: FtlFile; files: Map<string, FtlFile> }>) {
+        onFileParsed(e => {
+            let map = new Map<string, FtlEvent[]>()
+            for (let file of e.files.values()) {
+                file.eventRefs.forEach((events, key) => {
+                    let currentEventsList = map.get(key);
+                    if (currentEventsList)
+                        currentEventsList.push(...events);
+                    else
+                        map.set(key, events);
+                });
+            }
+            this.eventRefs = map;
+        });
     }
 
 
-    public eventRefs = new Map<string, FtlEvent[]>();
+    private eventRefs = new Map<string, FtlEvent[]>();
 
     provideReferences(document: TextDocument, position: Position, context: ReferenceContext, token: CancellationToken): ProviderResult<Location[]> {
         let htmlDocument = this.documentCache.getHtmlDocument(document);
@@ -26,7 +39,7 @@ export class FtlReferenceProvider implements ReferenceProvider {
             return;
         }
         let ftlEvents = this.eventRefs.get(eventName);
-        if (!ftlEvents) return ;
+        if (!ftlEvents) return;
         return ftlEvents.map(value => new Location(value.file.uri, new Position(value.position.line, value.position.character)));
     }
 

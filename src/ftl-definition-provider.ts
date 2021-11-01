@@ -2,7 +2,7 @@ import {
     CancellationToken,
     Definition,
     DefinitionLink,
-    DefinitionProvider,
+    DefinitionProvider, Event,
     Location,
     Position,
     ProviderResult,
@@ -16,8 +16,11 @@ import {FtlEvent} from './ftl-event';
 export class FtlDefinitionProvider implements DefinitionProvider {
     events = new Map<string, FtlEvent>();
 
-    constructor(private service: LanguageService) {
-
+    constructor(private service: LanguageService, onFileParsed: Event<{ file: FtlFile; files: Map<string, FtlFile> }>) {
+        onFileParsed(e => {
+            this.events.clear();
+            this.loadFiles(e.files);
+        });
     }
 
     provideDefinition(document: TextDocument, position: Position, token: CancellationToken): ProviderResult<Definition | DefinitionLink[]> {
@@ -37,9 +40,13 @@ export class FtlDefinitionProvider implements DefinitionProvider {
 
     loadFiles(files: Map<string, FtlFile>) {
         for (let file of files.values()) {
-            for (let event of file.events) {
-                this.events.set(event.name, event);
-            }
+            this.loadFile(file);
+        }
+    }
+
+    loadFile(file: FtlFile) {
+        for (let event of file.events) {
+            this.events.set(event.name, event);
         }
     }
 }

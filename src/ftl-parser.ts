@@ -2,20 +2,23 @@ import {ProgressLocation, TextDocument, Uri, window, workspace} from 'vscode';
 import {LanguageService, Node} from 'vscode-html-languageservice';
 import {FtlFile} from './ftl-file';
 import {
-    getEventNameDef, getEventRefName,
-    getLoadEventName,
-    isLoadEvent,
-    normalizeEventName
+    getEventNameDef, getEventRefName
 } from './helpers';
 import {DocumentCache} from './document-cache';
 import {FtlEvent} from './ftl-event';
+import {Emitter} from 'vscode-languageclient';
 
 export class FtlParser {
     constructor(private cache: DocumentCache) {
     }
 
+    private _onFileParsedEmitter = new Emitter<{ file: FtlFile, files: Map<string, FtlFile> }>();
+
+    public get onFileParsed() {
+        return this._onFileParsedEmitter.event;
+    }
+
     public files = new Map<string, FtlFile>();
-    public eventRefs = new Map<string, FtlEvent[]>();
 
     public async parseCurrentWorkspace() {
         let files = await workspace.findFiles('**/*.{xml,xml.append}');
@@ -36,12 +39,18 @@ export class FtlParser {
         }
     }
 
-    private parseFile(uri: Uri, document: TextDocument) {
-        let ftlFile: FtlFile = {uri: uri, events: []};
+    public parseFile(uri: Uri, document: TextDocument) {
+        let ftlFile: FtlFile = {
+            uri: uri,
+            events: [],
+            eventRefs: new Map<string, FtlEvent[]>()
+        };
         this.files.set(ftlFile.uri.toString(), ftlFile);
 
         let htmlDocument = this.cache.getHtmlDocument(document);
         this.parseNodes(htmlDocument.roots, ftlFile, document);
+
+        this._onFileParsedEmitter.fire({file:ftlFile, files: this.files});
     }
 
     private parseNodes(nodes: Node[], ftlFile: FtlFile, document: TextDocument) {
@@ -63,11 +72,11 @@ export class FtlParser {
     }
 
     private addRef(eventName: string, node: Node, document: TextDocument, ftlFile: FtlFile) {
-        let refs = this.eventRefs.get(eventName);
+        let refs = ftlFile.eventRefs.get(eventName);
         let shouldSet = refs == undefined;
         refs ??= [];
         refs.push(this.toEvent(eventName, node, document, ftlFile));
-        if (shouldSet) this.eventRefs.set(eventName, refs);
+        if (shouldSet) ftlFile.eventRefs.set(eventName, refs);
     }
 
     private toEvent(eventName: string, node: Node, document: TextDocument, ftlFile: FtlFile): FtlEvent {

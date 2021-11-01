@@ -3,7 +3,7 @@ import {FtlFile} from './ftl-file';
 import {
     Diagnostic,
     DiagnosticCollection,
-    DiagnosticSeverity,
+    DiagnosticSeverity, Event,
     languages,
     Range,
     TextDocument
@@ -12,10 +12,12 @@ import {Node} from 'vscode-html-languageservice';
 import {getLoadEventName, isLoadEvent, normalizeEventName} from './helpers';
 
 export class FltDocumentValidator {
-    diagnosticCollection: DiagnosticCollection;
 
-    constructor(private documentCache: DocumentCache) {
-        this.diagnosticCollection = languages.createDiagnosticCollection('ftl-xml');
+    constructor(private documentCache: DocumentCache, onFileParsed: Event<{ file: FtlFile; files: Map<string, FtlFile> }>, private diagnosticCollection: DiagnosticCollection) {
+
+        onFileParsed(e => {
+            this.loadEventNames(e.files);
+        });
     }
 
     eventNames = new Set<string>();
