@@ -1,13 +1,21 @@
 {
   "name": "ftl-xml",
-  "displayName": "ftl-xml",
+  "displayName": "FTL XML",
   "description": "provides autocomplete and other help to FTL mod devs",
   "version": "0.0.1",
+  "publisher": "hahn-kev",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hahn-kev/ftl-xml-extension"
+  },
   "engines": {
     "vscode": "^1.61.0"
   },
   "categories": [
     "Programming Languages"
+  ],
+  "extensionKind": [
+    "workspace"
   ],
   "activationEvents": [
     "onLanguage:ftl-xml"
@@ -38,17 +46,20 @@
     ]
   },
   "scripts": {
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./"
+    "compile": "npm run esbuild-base -- --sourcemap",
+    "esbuild-base": "esbuild ./src/main.ts --bundle --tree-shaking=true --outfile=out/main.js --external:vscode --format=cjs",
+    "watch": "tsc -watch -p ./",
+    "vscode:prepublish": "npm run esbuild-base -- --minify"
   },
   "dependencies": {
     "vscode-html-languageservice": "^4.1.1",
-    "vscode-languageclient": "^7.0.0"
+    "vscode-languageclient": "^7.0.0",
+    "vscode-languageserver-textdocument": "^1.0.2"
   },
   "devDependencies": {
     "@types/node": "^16.11.6",
     "@types/vscode": "^1.52.0",
-    "typescript": "^4.4.3",
-    "vscode-languageserver-textdocument": "^1.0.2"
+    "esbuild": "^0.13.10",
+    "typescript": "^4.4.3"
   }
 }

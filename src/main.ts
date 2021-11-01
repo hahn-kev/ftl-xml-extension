@@ -20,10 +20,11 @@ import {
     toTextDocumentHtml
 } from './helpers';
 
-const ftlXmlDoc: DocumentSelector = 'ftl-xml';
+const ftlXmlDoc: DocumentSelector = {language: 'ftl-xml', scheme: 'file'};
 
 // noinspection JSUnusedGlobalSymbols
 export function activate(context: ExtensionContext) {
+    console.log('FTL Extension activated');
 
     let service = getLanguageService({useDefaultDataProvider: false});
     let documentCache = new DocumentCache(service);

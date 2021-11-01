@@ -6,7 +6,9 @@
 		"outDir": "out",
 		"rootDir": "src",
 		"sourceMap": true,
-		"strict": true
+		"strict": true,
+		"isolatedModules": true,
+		"esModuleInterop": true
 	},
 	"include": [
 		"src"
