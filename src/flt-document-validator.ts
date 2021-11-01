@@ -12,6 +12,7 @@ import {toRange} from './helpers';
 import {defaultEvents} from './data/default-events';
 import {events} from './events';
 import {ships} from './ships';
+import {defaultShips} from './data/default-ships';
 
 export class FltDocumentValidator {
 
@@ -29,7 +30,8 @@ export class FltDocumentValidator {
         let ftlFiles = Array.from(files.values());
         let userDefinedEvents = ftlFiles.flatMap(value => value.events).map(event => event.name);
         this.eventNames = new Set(userDefinedEvents.concat(defaultEvents));
-        this.shipNames = new Set(ftlFiles.flatMap(value => value.ships).map(ship => ship.name));
+        let userDefinedShips = ftlFiles.flatMap(value => value.ships).map(ship => ship.name);
+        this.shipNames = new Set(userDefinedShips.concat(defaultShips));
     }
 
     validateDocument(document: TextDocument) {

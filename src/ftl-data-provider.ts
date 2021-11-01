@@ -9,6 +9,7 @@ import {FtlData, EventNamesValueSet, ShipNames} from './data/ftl-data';
 import {FtlFile} from './models/ftl-file';
 import {Event} from 'vscode';
 import {defaultEvents} from './data/default-events';
+import {defaultShips} from './data/default-ships';
 
 export class FtlDataProvider implements IHTMLDataProvider {
 
@@ -35,7 +36,7 @@ export class FtlDataProvider implements IHTMLDataProvider {
         let shipValues = ShipNames.values;
         shipValues.length = 0;
         let customShipNames = ftlFiles.flatMap(value => value.ships).map(ship => ship.name);
-        shipValues.push(...customShipNames.map(shipName => ({name: shipName})));
+        shipValues.push(...customShipNames.concat(defaultShips).map(shipName => ({name: shipName})));
     }
 
     htmlDataProvider = newHTMLDataProvider('ftl-data', FtlData);

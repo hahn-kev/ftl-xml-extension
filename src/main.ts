@@ -20,7 +20,7 @@ import {
     toTextDocumentHtml
 } from './helpers';
 import {FtlHoverProvider} from './ftl-hover-provider';
-import {EventNamesValueSet} from './data/ftl-data';
+import {EventNamesValueSet, ShipNames} from './data/ftl-data';
 
 const ftlXmlDoc: DocumentSelector = {language: 'ftl-xml', scheme: 'file'};
 
@@ -50,6 +50,11 @@ export function activate(context: ExtensionContext) {
         for (let textDocument of workspace.textDocuments) {
             ftlDocumentValidator.validateDocument(textDocument);
         }
+        let wantToUpdateDefaults = false;
+        if (wantToUpdateDefaults) {
+            let eventNames = EventNamesValueSet.values.map(e => e.name);
+            let shipNames = ShipNames.values.map(v => v.name);
+        }
     });
 
 
@@ -61,7 +66,6 @@ export function activate(context: ExtensionContext) {
     );
 
     window.onDidChangeActiveTextEditor(e => {
-
         if (e) {
             ftlDocumentValidator.validateDocument(e.document);
         }
