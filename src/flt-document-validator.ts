@@ -11,6 +11,7 @@ import {Node} from 'vscode-html-languageservice';
 import {toRange} from './helpers';
 import {defaultEvents} from './data/default-events';
 import {events} from './events';
+import {ships} from './ships';
 
 export class FltDocumentValidator {
 
@@ -22,10 +23,13 @@ export class FltDocumentValidator {
     }
 
     eventNames = new Set<string>();
+    shipNames = new Set<string>();
 
     loadEventNames(files: Map<string, FtlFile>) {
-        let userDefinedEvents = Array.from(files.values()).flatMap(value => value.events).map(event => event.name);
+        let ftlFiles = Array.from(files.values());
+        let userDefinedEvents = ftlFiles.flatMap(value => value.events).map(event => event.name);
         this.eventNames = new Set(userDefinedEvents.concat(defaultEvents));
+        this.shipNames = new Set(ftlFiles.flatMap(value => value.ships).map(ship => ship.name));
     }
 
     validateDocument(document: TextDocument) {
@@ -54,6 +58,16 @@ export class FltDocumentValidator {
                 ));
             }
         }
+
+        let shipName = ships.getRefName(node);
+        if (shipName && !this.shipNames.has(shipName)) {
+            diagnostics.push(new Diagnostic(
+                toRange(node.start, node.end, document),
+                `Invalid Ship name: '${shipName}'`,
+                DiagnosticSeverity.Warning
+            ));
+        }
+
         if (node.tag && this.isMissingEnd(node, document)) {
             let warningStart = node.endTagStart ?? node.start;
             //when the end and startTagEnd are the same then it's self closing
@@ -61,7 +75,11 @@ export class FltDocumentValidator {
             let extraForOpening = isSelfClosing || !node.endTagStart ? '<'.length : '</'.length;
             let warningEnd = warningStart + node.tag.length + extraForOpening;
 
-            diagnostics.push(new Diagnostic(toRange(warningStart, warningEnd, document), `Tag '${node.tag}' is not properly closed`, DiagnosticSeverity.Warning));
+            diagnostics.push(new Diagnostic(
+                toRange(warningStart, warningEnd, document),
+                `Tag '${node.tag}' is not properly closed`,
+                DiagnosticSeverity.Warning
+            ));
         }
     }
 
