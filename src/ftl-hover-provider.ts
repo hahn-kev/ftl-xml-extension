@@ -6,7 +6,7 @@ import {
     TextDocument
 } from 'vscode';
 import {DocumentCache} from './document-cache';
-import {LanguageService} from 'vscode-html-languageservice';
+import {LanguageService, TextDocument as HtmlTextDocument} from 'vscode-html-languageservice';
 import {
     convertDocumentation,
     convertRange,
@@ -19,7 +19,11 @@ export class FtlHoverProvider implements HoverProvider {
     }
 
     provideHover(document: TextDocument, position: Position, token: CancellationToken): ProviderResult<Hover> {
-        let hover = this.service.doHover(toTextDocumentHtml(document), position, this.documentCache.getHtmlDocument(document), {documentation: true});
+        //the document from vscode will not accept range objects created inside
+        //the html language service, so we must do this
+        let textDocument = HtmlTextDocument.create(document.uri.toString(), document.languageId, document.version, document.getText());
+
+        let hover = this.service.doHover(textDocument, position, this.documentCache.getHtmlDocument(document), {documentation: true});
         if (!hover || !hover.range || hover.contents === '') return null;
         let documentation: string | MarkdownString | undefined;
         if (typeof hover.contents === 'object' && 'kind' in hover.contents) {
