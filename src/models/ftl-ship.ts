@@ -1,7 +1,6 @@
 import {FtlFile} from './ftl-file';
-import {Position} from 'vscode-languageserver-textdocument';
 import {Node} from 'vscode-html-languageservice';
-import {TextDocument} from 'vscode';
+import {TextDocument, Position} from 'vscode';
 
 export class FtlShip {
     readonly kind = 'ship';

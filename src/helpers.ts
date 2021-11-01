@@ -27,7 +27,7 @@ export function toRange(start: number, end: number, document: TextDocument) {
 }
 
 export function toLocation(value: FtlShip | FtlEvent) {
-    return new Location(value.file.uri, new Position(value.position.line, value.position.character));
+    return new Location(value.file.uri, value.position);
 }
 
 export function convertRange(range: HtmlRange): Range {
@@ -40,8 +40,18 @@ export function normalizeAttributeName(attr: string | null | undefined) {
     return attr?.slice(1, -1);
 }
 
-export function addToKey<T, Key>(map: Map<Key, T[]>, key: Key, value: T) {
+export function addToKey<T, Key>(map: Map<Key, T[]>, key: Key, value: T | T[]) {
     let arr = map.get(key);
+
+    if (value instanceof Array) {
+        if (!arr) {
+            map.set(key, [...value]);
+            return;
+        }
+        arr.push(...value);
+        return;
+    }
+
     let shouldSet = arr === undefined;
     arr ??= [];
     arr.push(value);

@@ -1,6 +1,6 @@
-import {Position} from 'vscode-languageserver-textdocument';
+
 import {FtlFile} from './ftl-file';
-import {TextDocument} from 'vscode';
+import {Position, TextDocument} from 'vscode';
 import {Node} from 'vscode-html-languageservice';
 
 
