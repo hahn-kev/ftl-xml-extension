@@ -30,9 +30,7 @@ export function isLoadEvent(node: Node) {
 }
 
 export function inLoadAttribute(node: Node): boolean {
-    if (!node.attributes || !('load' in node.attributes))
-        return false;
-    return true;
+    return !!(node.tag == 'event' && node.attributes && 'load' in node.attributes);
 }
 
 export function getEventRefName(node: Node, document: TextDocument): string | undefined {
