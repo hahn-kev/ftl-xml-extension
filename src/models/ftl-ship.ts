@@ -3,7 +3,7 @@ import {Node} from 'vscode-html-languageservice';
 import {TextDocument, Position} from 'vscode';
 
 export class FtlShip {
-    readonly kind = 'ship';
+    readonly kind = 'Ship';
     constructor(name: string, file: FtlFile, node: Node, document: TextDocument) {
         this.file = file;
         this.name = name;

@@ -5,7 +5,7 @@ import {Node} from 'vscode-html-languageservice';
 
 
 export class FtlEvent {
-    readonly kind = 'event';
+    readonly kind = 'Event';
     constructor(name: string, file: FtlFile, node: Node, document: TextDocument) {
         this.file = file;
         this.name = name;

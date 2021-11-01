@@ -13,29 +13,17 @@ import {defaultEvents} from './data/default-events';
 import {events} from './events';
 import {ships} from './ships';
 import {defaultShips} from './data/default-ships';
+import {mappers} from './ref-mappers/ref-mapper';
 
 export class FltDocumentValidator {
 
     constructor(private documentCache: DocumentCache, onFileParsed: Event<{ file: FtlFile; files: Map<string, FtlFile> }>, private diagnosticCollection: DiagnosticCollection) {
 
         onFileParsed(e => {
-            this.loadEventNames(e.files);
         });
     }
 
-    eventNames = new Set<string>();
-    shipNames = new Set<string>();
-
-    loadEventNames(files: Map<string, FtlFile>) {
-        let ftlFiles = Array.from(files.values());
-        let userDefinedEvents = ftlFiles.flatMap(value => value.events).map(event => event.name);
-        this.eventNames = new Set(userDefinedEvents.concat(defaultEvents));
-        let userDefinedShips = ftlFiles.flatMap(value => value.ships).map(ship => ship.name);
-        this.shipNames = new Set(userDefinedShips.concat(defaultShips));
-    }
-
     validateDocument(document: TextDocument) {
-        if (this.eventNames.size == 0) return;
         let htmlDocument = this.documentCache.getHtmlDocument(document);
         let diagnostics: Diagnostic[] = [];
         this.validateNodes(htmlDocument.roots, diagnostics, document);
@@ -50,24 +38,15 @@ export class FltDocumentValidator {
     }
 
     private validateNode(node: Node, diagnostics: Diagnostic[], document: TextDocument) {
-        let eventName = events.getEventRefName(node, document);
-        if (eventName) {
-            if (!this.eventNames.has(eventName)) {
+        for (let mapper of mappers) {
+            let invalidRefName = mapper.tryGetInvalidRefName(node, document);
+            if (invalidRefName) {
                 diagnostics.push(new Diagnostic(
                     toRange(node.start, node.end, document),
-                    `Invalid Event name: '${eventName}'`,
+                    `Invalid ${mapper.typeName} name: '${invalidRefName}'`,
                     DiagnosticSeverity.Warning
                 ));
             }
-        }
-
-        let shipName = ships.getRefName(node);
-        if (shipName && !this.shipNames.has(shipName)) {
-            diagnostics.push(new Diagnostic(
-                toRange(node.start, node.end, document),
-                `Invalid Ship name: '${shipName}'`,
-                DiagnosticSeverity.Warning
-            ));
         }
 
         if (node.tag && this.isMissingEnd(node, document)) {

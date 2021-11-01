@@ -16,10 +16,16 @@ export interface RefMapperBase {
     lookupRefs(node: Node, document: TextDocument): Location[] | undefined;
 
     lookupDef(node: Node, document: TextDocument): Location | undefined;
+
+    readonly typeName: string;
+
+    tryGetInvalidRefName(node: Node, document: TextDocument): string | undefined;
 }
 
 interface NodeMap {
     getName(node: Node, document: TextDocument): string | undefined;
+
+    getRefName(node: Node, document: TextDocument): string | undefined;
 }
 
 export class RefMapper<T extends { file: FtlFile, position: Position }> implements RefMapperBase {
@@ -31,6 +37,7 @@ export class RefMapper<T extends { file: FtlFile, position: Position }> implemen
                 private nameSelector: (value: T) => string,
                 private nodeMap: NodeMap,
                 public valueSet: IValueSet,
+                public typeName: string,
                 private defaults: readonly string[] = []) {
     }
 
@@ -63,6 +70,17 @@ export class RefMapper<T extends { file: FtlFile, position: Position }> implemen
         let value = this.defs.get(name);
         if (value) return toLocation(value);
     }
+
+    tryGetInvalidRefName(node: Node, document: TextDocument): string | undefined {
+        if (this.defs.size == 0) return;
+
+        let refName = this.nodeMap.getRefName(node, document);
+        if (refName && !this.isNameDefined(refName)) return refName;
+    }
+
+    isNameDefined(name: string) {
+        return this.defs.has(name) || this.defaults.includes(name);
+    }
 }
 
 const eventsMapper = new RefMapper<FtlEvent>(file => file.events,
@@ -71,9 +89,13 @@ const eventsMapper = new RefMapper<FtlEvent>(file => file.events,
     {
         getName(node: Node, document: TextDocument): string | undefined {
             return events.getEventName(node, document);
+        },
+        getRefName(node: Node, document: TextDocument): string | undefined {
+            return events.getEventRefName(node, document);
         }
     },
     EventNamesValueSet,
+    "Event",
     defaultEvents);
 
 const shipsMapper = new RefMapper(file => file.ships,
@@ -82,9 +104,13 @@ const shipsMapper = new RefMapper(file => file.ships,
     {
         getName(node: Node, document: TextDocument): string | undefined {
             return ships.getNameDef(node) ?? ships.getRefName(node);
+        },
+        getRefName(node: Node, document: TextDocument): string | undefined {
+            return ships.getRefName(node);
         }
     },
     ShipNames,
+    "Ship",
     defaultShips);
 
 export const mappers: RefMapperBase[] = [eventsMapper, shipsMapper];
