@@ -13,15 +13,18 @@ import {addToKey, toLocation} from '../helpers';
 export interface RefMapperBase {
     updateData(files: FtlFile[]): void;
 
-    provideRefs(node: Node, document: TextDocument): Location[] | undefined;
+    lookupRefs(node: Node, document: TextDocument): Location[] | undefined;
+
+    lookupDef(node: Node, document: TextDocument): Location | undefined;
 }
 
 interface NodeMap {
     getName(node: Node, document: TextDocument): string | undefined;
 }
 
-export class RefMapper<T extends {file: FtlFile, position: Position}> implements RefMapperBase {
+export class RefMapper<T extends { file: FtlFile, position: Position }> implements RefMapperBase {
     refs = new Map<string, T[]>();
+    defs = new Map<string, T>();
 
     constructor(private fileSelector: (file: FtlFile) => T[],
                 private fileRefSelector: (file: FtlFile) => Map<string, T[]>,
@@ -33,6 +36,7 @@ export class RefMapper<T extends {file: FtlFile, position: Position}> implements
 
     updateData(files: FtlFile[]) {
         this.refs.clear();
+        this.defs.clear();
         this.valueSet.values.length = 0;
 
         let customNames = files.flatMap(this.fileSelector).map(this.nameSelector);
@@ -40,14 +44,24 @@ export class RefMapper<T extends {file: FtlFile, position: Position}> implements
 
         for (let file of files) {
             this.fileRefSelector(file).forEach((value, key) => addToKey(this.refs, key, value));
+            for (let value of this.fileSelector(file)) {
+                this.defs.set(this.nameSelector(value), value);
+            }
         }
     }
 
-    provideRefs(node: Node, document: TextDocument): Location[] | undefined {
+    lookupRefs(node: Node, document: TextDocument): Location[] | undefined {
         let name = this.nodeMap.getName(node, document);
         if (!name) return;
         let values = this.refs.get(name);
         return values?.map(toLocation);
+    }
+
+    lookupDef(node: Node, document: TextDocument): Location | undefined {
+        let name = this.nodeMap.getName(node, document);
+        if (!name) return;
+        let value = this.defs.get(name);
+        if (value) return toLocation(value);
     }
 }
 

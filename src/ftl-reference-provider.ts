@@ -23,7 +23,7 @@ export class FtlReferenceProvider implements ReferenceProvider {
         const offset = document.offsetAt(position);
         const node = htmlDocument.findNodeBefore(offset);
         for (let mapper of mappers) {
-            let refs = mapper.provideRefs(node, document);
+            let refs = mapper.lookupRefs(node, document);
             if (refs) return refs;
         }
     }
