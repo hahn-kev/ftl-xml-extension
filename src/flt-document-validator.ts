@@ -1,5 +1,5 @@
 import {DocumentCache} from './document-cache';
-import {FtlFile} from './ftl-file';
+import {FtlFile} from './models/ftl-file';
 import {
     Diagnostic,
     DiagnosticCollection,

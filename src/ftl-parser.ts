@@ -1,11 +1,11 @@
 import {ProgressLocation, TextDocument, Uri, window, workspace} from 'vscode';
 import {LanguageService, Node} from 'vscode-html-languageservice';
-import {FtlFile} from './ftl-file';
+import {FtlFile} from './models/ftl-file';
 import {
     getEventNameDef, getEventRefName
 } from './helpers';
 import {DocumentCache} from './document-cache';
-import {FtlEvent} from './ftl-event';
+import {FtlEvent} from './models/ftl-event';
 import {Emitter} from 'vscode-languageclient';
 
 export class FtlParser {

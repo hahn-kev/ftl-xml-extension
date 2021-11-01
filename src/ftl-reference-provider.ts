@@ -4,10 +4,10 @@ import {
     ReferenceProvider,
     TextDocument
 } from 'vscode';
-import {FtlEvent} from './ftl-event';
+import {FtlEvent} from './models/ftl-event';
 import {DocumentCache} from './document-cache';
 import {getEventName} from './helpers';
-import {FtlFile} from './ftl-file';
+import {FtlFile} from './models/ftl-file';
 
 export class FtlReferenceProvider implements ReferenceProvider {
     constructor(private documentCache: DocumentCache, onFileParsed: Event<{ file: FtlFile; files: Map<string, FtlFile> }>) {

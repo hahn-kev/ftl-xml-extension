@@ -6,7 +6,7 @@ import {
     newHTMLDataProvider
 } from "vscode-html-languageservice";
 import {FtlData, EventNamesValueSet} from './data/ftl-data';
-import {FtlFile} from './ftl-file';
+import {FtlFile} from './models/ftl-file';
 import {Event} from 'vscode';
 import {defaultEvents} from './data/default-events';
 

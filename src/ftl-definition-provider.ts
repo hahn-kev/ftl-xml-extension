@@ -10,8 +10,8 @@ import {
 } from 'vscode';
 import {LanguageService} from 'vscode-html-languageservice';
 import {getEventName, toTextDocumentHtml} from './helpers';
-import {FtlFile} from './ftl-file';
-import {FtlEvent} from './ftl-event';
+import {FtlFile} from './models/ftl-file';
+import {FtlEvent} from './models/ftl-event';
 
 export class FtlDefinitionProvider implements DefinitionProvider {
     events = new Map<string, FtlEvent>();
