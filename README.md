@@ -1,6 +1,6 @@
 # FTL XML
 
-FTL XML is intended to improve the editing expierince for any mod dev, please let me know of any additional features that you would like to have included.
+FTL XML is intended to improve the editing experience for any mod dev, please let me know of any additional features that you would like to have included.
 
 ## Features
 
@@ -20,5 +20,9 @@ You must wait for the loading indicator to finish.
 ### 0.0.1
 
 Initial release of FTL XML
+
+### 0.0.2
+
+Enable web support
 
 **Enjoy!**

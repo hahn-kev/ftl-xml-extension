@@ -23,6 +23,7 @@
     "onLanguage:ftl-xml"
   ],
   "main": "./out/main",
+  "browser": "./out/main.js",
   "contributes": {
     "languages": [
       {
