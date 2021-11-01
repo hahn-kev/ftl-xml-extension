@@ -1,15 +1,14 @@
 import {
     CancellationToken,
-    CompletionItem,
-    CompletionItemProvider, MarkdownString,
+    CompletionItem, CompletionItemKind,
+    CompletionItemProvider,
     Position,
-    Range,
     SnippetString,
-    TextDocument
+    TextDocument, TextEdit
 } from 'vscode';
 import {
     CompletionItem as HtmlCompletionItem,
-    HTMLDocument,
+    HTMLDocument, InsertTextFormat,
     LanguageService
 } from 'vscode-html-languageservice';
 import {
@@ -17,9 +16,11 @@ import {
     convertRange,
     toTextDocumentHtml
 } from './helpers';
+import {DocumentCache} from './document-cache';
+import {EventNamesValueSet} from './data/ftl-data';
 
 export class FtlXmlCompletionItemProvider implements CompletionItemProvider {
-    constructor(private languageService: LanguageService) {
+    constructor(private documentCache: DocumentCache, private languageService: LanguageService) {
     }
 
 
@@ -28,7 +29,11 @@ export class FtlXmlCompletionItemProvider implements CompletionItemProvider {
         Promise<CompletionItem[]> {
 
         let serviceDocument = toTextDocumentHtml(document);
-        let htmlDocument = this.languageService.parseHTMLDocument(serviceDocument);
+        let htmlDocument = this.documentCache.getHtmlDocument(serviceDocument);
+
+        let items = this.tryCompleteCustom(document, htmlDocument, position);
+        if (items) return items;
+
         let completionItems = this.languageService.doComplete(serviceDocument, position, htmlDocument);
         return this.convertCompletionItems(completionItems.items).concat(this.provideAdditionalItems(document, position, htmlDocument));
     }
@@ -54,5 +59,24 @@ export class FtlXmlCompletionItemProvider implements CompletionItemProvider {
             }
             return result;
         });
+    }
+
+    private tryCompleteCustom(document: TextDocument, htmlDocument: HTMLDocument, position: Position): CompletionItem[] | undefined {
+        const offset = document.offsetAt(position);
+        const node = htmlDocument.findNodeBefore(offset);
+        let startTagEnd = node.startTagEnd ?? node.start;
+        let endTagStart = node.endTagStart ?? -1;
+        if (node.tag == "loadEvent" && startTagEnd <= offset && endTagStart >= offset) {
+            return this.eventNames();
+        }
+    }
+
+    private eventNames(): CompletionItem[] {
+        return EventNamesValueSet.values.map(value => {
+            return {
+                label: value.name,
+                kind: CompletionItemKind.Unit,
+            };
+        })
     }
 }

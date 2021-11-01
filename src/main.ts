@@ -20,6 +20,7 @@ import {
     toTextDocumentHtml
 } from './helpers';
 import {FtlHoverProvider} from './ftl-hover-provider';
+import {EventNamesValueSet} from './data/ftl-data';
 
 const ftlXmlDoc: DocumentSelector = {language: 'ftl-xml', scheme: 'file'};
 
@@ -41,7 +42,7 @@ export function activate(context: ExtensionContext) {
     let ftlDocumentValidator = new FltDocumentValidator(documentCache, ftlParser.onFileParsed, diagnosticCollection);
     let ftlReferenceProvider = new FtlReferenceProvider(documentCache, ftlParser.onFileParsed);
     let hoverProvider = new FtlHoverProvider(documentCache, service);
-    let completionItemProvider = new FtlXmlCompletionItemProvider(service);
+    let completionItemProvider = new FtlXmlCompletionItemProvider(documentCache, service);
 
     let ftlFilesPromise = ftlParser.parseCurrentWorkspace();
 
