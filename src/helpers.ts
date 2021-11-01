@@ -6,6 +6,7 @@ import {
 import {Location, MarkdownString, Position, Range, TextDocument} from "vscode";
 import {FtlShip} from './models/ftl-ship';
 import {FtlEvent} from './models/ftl-event';
+import {FtlFile} from './models/ftl-file';
 
 
 export function toTextDocumentHtml(d: TextDocument): HtmlTextDocument {
@@ -26,7 +27,7 @@ export function toRange(start: number, end: number, document: TextDocument) {
     return new Range(document.positionAt(start), document.positionAt(end));
 }
 
-export function toLocation(value: FtlShip | FtlEvent) {
+export function toLocation(value: {file: FtlFile, position: Position}) {
     return new Location(value.file.uri, value.position);
 }
 
