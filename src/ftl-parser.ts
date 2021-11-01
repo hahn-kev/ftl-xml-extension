@@ -8,6 +8,7 @@ import {events} from './events';
 import {FtlShip} from './models/ftl-ship';
 import {addToKey} from './helpers';
 import {ships} from './ships';
+import {mappers} from './ref-mappers/ref-mapper';
 
 export class FtlParser {
     constructor(private cache: DocumentCache) {
@@ -58,8 +59,9 @@ export class FtlParser {
 
     private parseNodes(nodes: Node[], ftlFile: FtlFile, document: TextDocument) {
         for (let node of nodes) {
-            this.parseEvent(node, ftlFile, document);
-            this.parseShip(node, ftlFile, document);
+            for (let mapper of mappers) {
+                mapper.parseNode(node, ftlFile, document);
+            }
 
 
             this.parseNodes(node.children, ftlFile, document);
