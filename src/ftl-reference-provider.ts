@@ -1,13 +1,17 @@
 import {
-    CancellationToken, Event, Location, Position, ProviderResult,
+    CancellationToken,
+    Event,
+    Location,
+    Position,
+    ProviderResult,
     ReferenceContext,
     ReferenceProvider,
     TextDocument
 } from 'vscode';
 import {FtlEvent} from './models/ftl-event';
 import {DocumentCache} from './document-cache';
-import {getEventName} from './helpers';
 import {FtlFile} from './models/ftl-file';
+import {events} from './events';
 
 export class FtlReferenceProvider implements ReferenceProvider {
     constructor(private documentCache: DocumentCache, onFileParsed: Event<{ file: FtlFile; files: Map<string, FtlFile> }>) {
@@ -34,7 +38,7 @@ export class FtlReferenceProvider implements ReferenceProvider {
         const offset = document.offsetAt(position);
         const node = htmlDocument.findNodeBefore(offset);
 
-        let eventName = getEventName(node, document);
+        let eventName = events.getEventName(node, document);
         if (!eventName) {
             return;
         }

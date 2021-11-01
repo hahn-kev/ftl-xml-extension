@@ -8,8 +8,9 @@ import {
     TextDocument
 } from 'vscode';
 import {Node} from 'vscode-html-languageservice';
-import {getEventRefName, toRange} from './helpers';
+import {toRange} from './helpers';
 import {defaultEvents} from './data/default-events';
+import {events} from './events';
 
 export class FltDocumentValidator {
 
@@ -43,7 +44,7 @@ export class FltDocumentValidator {
     }
 
     private validateNode(node: Node, diagnostics: Diagnostic[], document: TextDocument) {
-        let eventName = getEventRefName(node, document);
+        let eventName = events.getEventRefName(node, document);
         if (eventName) {
             if (!this.eventNames.has(eventName)) {
                 diagnostics.push(new Diagnostic(

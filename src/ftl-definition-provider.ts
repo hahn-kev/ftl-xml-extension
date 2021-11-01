@@ -2,16 +2,18 @@ import {
     CancellationToken,
     Definition,
     DefinitionLink,
-    DefinitionProvider, Event,
+    DefinitionProvider,
+    Event,
     Location,
     Position,
     ProviderResult,
     TextDocument
 } from 'vscode';
 import {LanguageService} from 'vscode-html-languageservice';
-import {getEventName, toTextDocumentHtml} from './helpers';
+import {toTextDocumentHtml} from './helpers';
 import {FtlFile} from './models/ftl-file';
 import {FtlEvent} from './models/ftl-event';
+import {events} from './events';
 
 export class FtlDefinitionProvider implements DefinitionProvider {
     events = new Map<string, FtlEvent>();
@@ -28,7 +30,7 @@ export class FtlDefinitionProvider implements DefinitionProvider {
         const offset = document.offsetAt(position);
         const node = htmlDocument.findNodeBefore(offset);
 
-        let eventName = getEventName(node, document);
+        let eventName = events.getEventName(node, document);
         if (!eventName) {
             return null;
         }

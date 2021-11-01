@@ -1,12 +1,10 @@
 import {ProgressLocation, TextDocument, Uri, window, workspace} from 'vscode';
-import {LanguageService, Node} from 'vscode-html-languageservice';
+import {Node} from 'vscode-html-languageservice';
 import {FtlFile} from './models/ftl-file';
-import {
-    getEventNameDef, getEventRefName
-} from './helpers';
 import {DocumentCache} from './document-cache';
 import {FtlEvent} from './models/ftl-event';
 import {Emitter} from 'vscode-languageclient';
+import {events} from './events';
 
 export class FtlParser {
     constructor(private cache: DocumentCache) {
@@ -55,13 +53,13 @@ export class FtlParser {
 
     private parseNodes(nodes: Node[], ftlFile: FtlFile, document: TextDocument) {
         for (let node of nodes) {
-            let nameDef = getEventNameDef(node);
+            let nameDef = events.getEventNameDef(node);
             if (nameDef) {
                 ftlFile.events.push(this.toEvent(nameDef, node, document, ftlFile));
                 this.addRef(nameDef, node, document, ftlFile);
             }
             if (!nameDef) {
-                let nameRef = getEventRefName(node, document);
+                let nameRef = events.getEventRefName(node, document);
                 if (nameRef) {
                     this.addRef(nameRef, node, document, ftlFile);
                 }
