@@ -50,7 +50,7 @@ export function activate(context: ExtensionContext) {
         for (let textDocument of workspace.textDocuments) {
             ftlDocumentValidator.validateDocument(textDocument);
         }
-        let wantToUpdateDefaults = false;
+        let wantToUpdateDefaults = true;
         if (wantToUpdateDefaults) {
             let eventNames = EventNamesValueSet.values.map(e => e.name);
             let shipNames = ShipNames.values.map(v => v.name);
@@ -59,7 +59,7 @@ export function activate(context: ExtensionContext) {
 
 
     context.subscriptions.push(
-        languages.registerCompletionItemProvider(ftlXmlDoc, completionItemProvider),
+        languages.registerCompletionItemProvider(ftlXmlDoc, completionItemProvider, '<', '"'),
         languages.registerHoverProvider(ftlXmlDoc, hoverProvider),
         languages.registerDefinitionProvider(ftlXmlDoc, ftlDefinitionProvider),
         languages.registerReferenceProvider(ftlXmlDoc, ftlReferenceProvider),
