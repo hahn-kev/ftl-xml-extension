@@ -15,8 +15,13 @@ function boolAttr(name: string): IAttributeData {
 
 export const EventNamesValueSet: IValueSet = {
     name: 'event-names',
-    values: [{name: 'test'}]
-}
+    values: [{name: 'loading...'}]
+};
+
+export const ShipNames: IValueSet = {
+    name: 'ship-names',
+    values: [{name: 'loading...'}]
+};
 
 export const FtlData: XmlData = {
     version: 1.1,
@@ -35,7 +40,11 @@ export const FtlData: XmlData = {
             description: 'encloses the choice text and event for each choice in an event',
             attributes: [
                 boolAttr('unique'),
-                {name: 'hidden', valueSet: 'bool', description: ` if marked true, the choice's rewards will not be displayed before selecting the event. By default set to false. (usually set to true unless its an event where a trade is made, so that you can see the exact values of what is being traded)`},
+                {
+                    name: 'hidden',
+                    valueSet: 'bool',
+                    description: ` if marked true, the choice's rewards will not be displayed before selecting the event. By default set to false. (usually set to true unless its an event where a trade is made, so that you can see the exact values of what is being traded)`
+                },
                 {name: "req"},
                 {name: "lvl"},
                 boolAttr('blue'),
@@ -48,9 +57,18 @@ export const FtlData: XmlData = {
             name: 'loadEvent',
             attributes: []
         },
+        {
+            name: "ship",
+            attributes: [
+                {
+                    name: 'load',
+                    valueSet: ShipNames.name
+                },
+                boolAttr('hostile')
+            ]
+        },
         {name: "text", attributes: [{name: 'id'}]},
         {name: "quest", attributes: [{name: 'event'}]},
-        {name: "ship", attributes: [{name: 'load'}, boolAttr('hostile')]},
         {name: "environment", attributes: []},
         {name: "weapon", attributes: [{name: 'name'}]},
         {name: "unlockCustomShip", attributes: []},
@@ -118,6 +136,7 @@ export const FtlData: XmlData = {
     ],
     valueSets: [
         {name: 'bool', values: [{name: 'true'}, {name: 'false'}]},
-        EventNamesValueSet
+        EventNamesValueSet,
+        ShipNames
     ]
 };

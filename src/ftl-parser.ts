@@ -5,6 +5,9 @@ import {DocumentCache} from './document-cache';
 import {FtlEvent} from './models/ftl-event';
 import {Emitter} from 'vscode-languageclient';
 import {events} from './events';
+import {FtlShip} from './models/ftl-ship';
+import {addToKey} from './helpers';
+import {ships} from './ships';
 
 export class FtlParser {
     constructor(private cache: DocumentCache) {
@@ -41,48 +44,53 @@ export class FtlParser {
         let ftlFile: FtlFile = {
             uri: uri,
             events: [],
-            eventRefs: new Map<string, FtlEvent[]>()
+            eventRefs: new Map<string, FtlEvent[]>(),
+            ships: [],
+            shipRefs: new Map<string, FtlShip[]>(),
         };
         this.files.set(ftlFile.uri.toString(), ftlFile);
 
         let htmlDocument = this.cache.getHtmlDocument(document);
         this.parseNodes(htmlDocument.roots, ftlFile, document);
 
-        this._onFileParsedEmitter.fire({file:ftlFile, files: this.files});
+        this._onFileParsedEmitter.fire({file: ftlFile, files: this.files});
     }
 
     private parseNodes(nodes: Node[], ftlFile: FtlFile, document: TextDocument) {
         for (let node of nodes) {
-            let nameDef = events.getEventNameDef(node);
-            if (nameDef) {
-                ftlFile.events.push(this.toEvent(nameDef, node, document, ftlFile));
-                this.addRef(nameDef, node, document, ftlFile);
-            }
-            if (!nameDef) {
-                let nameRef = events.getEventRefName(node, document);
-                if (nameRef) {
-                    this.addRef(nameRef, node, document, ftlFile);
-                }
-            }
+            this.parseEvent(node, ftlFile, document);
+            this.parseShip(node, ftlFile, document);
+
 
             this.parseNodes(node.children, ftlFile, document);
         }
     }
 
-    private addRef(eventName: string, node: Node, document: TextDocument, ftlFile: FtlFile) {
-        let refs = ftlFile.eventRefs.get(eventName);
-        let shouldSet = refs == undefined;
-        refs ??= [];
-        refs.push(this.toEvent(eventName, node, document, ftlFile));
-        if (shouldSet) ftlFile.eventRefs.set(eventName, refs);
+    private parseEvent(node: Node, ftlFile: FtlFile, document: TextDocument) {
+        let nameDef = events.getEventNameDef(node);
+        if (nameDef) {
+            let ftlEvent = new FtlEvent(nameDef, ftlFile, node, document);
+            ftlFile.events.push(ftlEvent);
+            addToKey(ftlFile.eventRefs, nameDef, ftlEvent);
+        } else {
+            let nameRef = events.getEventRefName(node, document);
+            if (nameRef) {
+                addToKey(ftlFile.eventRefs, nameRef, new FtlEvent(nameRef, ftlFile, node, document));
+            }
+        }
     }
 
-    private toEvent(eventName: string, node: Node, document: TextDocument, ftlFile: FtlFile): FtlEvent {
-        return {
-            name: eventName,
-            file: ftlFile,
-            offset: node.start,
-            position: document.positionAt(node.start)
-        };
+    private parseShip(node: Node, ftlFile: FtlFile, document: TextDocument) {
+        let nameDef = ships.getNameDef(node);
+        if (nameDef) {
+            let ship = new FtlShip(nameDef, ftlFile, node, document);
+            ftlFile.ships.push(ship);
+            addToKey(ftlFile.shipRefs, nameDef, ship);
+        } else {
+            let refName = ships.getRefName(node);
+            if (refName) {
+                addToKey(ftlFile.shipRefs, refName, new FtlShip(refName, ftlFile, node, document));
+            }
+        }
     }
 }

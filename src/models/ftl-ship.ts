@@ -1,11 +1,10 @@
-import {Position} from 'vscode-languageserver-textdocument';
 import {FtlFile} from './ftl-file';
-import {TextDocument} from 'vscode';
+import {Position} from 'vscode-languageserver-textdocument';
 import {Node} from 'vscode-html-languageservice';
+import {TextDocument} from 'vscode';
 
-
-export class FtlEvent {
-    readonly kind = 'event';
+export class FtlShip {
+    readonly kind = 'ship';
     constructor(name: string, file: FtlFile, node: Node, document: TextDocument) {
         this.file = file;
         this.name = name;
@@ -13,8 +12,8 @@ export class FtlEvent {
         this.position = document.positionAt(node.start);
     }
 
-    public file: FtlFile
-    public name: string;
-    public offset: number;
-    public position: Position
+    file: FtlFile
+    name: string;
+    offset: number;
+    position: Position
 }
