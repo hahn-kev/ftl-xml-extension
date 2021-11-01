@@ -38,7 +38,7 @@ export function activate(context: ExtensionContext) {
     let ftlDataProvider = new FtlDataProvider(ftlParser.onFileParsed);
     service.setDataProviders(false, [ftlDataProvider]);
 
-    let ftlDefinitionProvider = new FtlDefinitionProvider(service, ftlParser.onFileParsed);
+    let ftlDefinitionProvider = new FtlDefinitionProvider(documentCache, ftlParser.onFileParsed);
     let ftlDocumentValidator = new FltDocumentValidator(documentCache, ftlParser.onFileParsed, diagnosticCollection);
     let ftlReferenceProvider = new FtlReferenceProvider(documentCache, ftlParser.onFileParsed);
     let hoverProvider = new FtlHoverProvider(documentCache, service);
