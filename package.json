@@ -8,6 +8,8 @@
     "type": "git",
     "url": "https://github.com/hahn-kev/ftl-xml-extension"
   },
+  "icon": "logo.png",
+  "license": "SEE LICENSE IN LICENSE",
   "engines": {
     "vscode": "^1.61.0"
   },

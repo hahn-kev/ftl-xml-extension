@@ -4,16 +4,20 @@ FTL XML is intended to improve the editing expierince for any mod dev, please le
 
 ## Features
 
-* Autocomplete of Event names
-* Warnings if trying to load an event that can't be found
+* Autocomplete of Event and Ship names
+* Go to definition and references supported for both events and ships
+* Warnings 
+  * if trying to load an event that can't be found
+  * if trying to load a ship that can't be found
+  * if a tag was not closed properly
 
 ## Known Issues
 
-Only Event's are supported
+You must wait for the loading indicator to finish.
 
 ## Release Notes
 
-### 1.0.0
+### 0.0.1
 
 Initial release of FTL XML
 
