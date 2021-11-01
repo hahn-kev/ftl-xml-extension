@@ -1,9 +1,6 @@
 import {
-    CancellationToken,
     DocumentSelector,
-    ExtensionContext, Hover,
-    languages, MarkdownString, Position, ProviderResult, Range, TextDocument,
-    window,
+    ExtensionContext, languages, window,
     workspace,
 } from 'vscode';
 import {getLanguageService} from "vscode-html-languageservice";
@@ -13,12 +10,7 @@ import {FtlParser} from './ftl-parser';
 import {FltDocumentValidator} from './flt-document-validator';
 import {DocumentCache} from './document-cache';
 import {FtlReferenceProvider} from './ftl-reference-provider';
-import {FtlXmlCompletionItemProvider} from './ftlXmlCompletionItemProvider';
-import {
-    convertDocumentation,
-    convertRange,
-    toTextDocumentHtml
-} from './helpers';
+import {FtlCompletionProvider} from './ftl-completion-provider';
 import {FtlHoverProvider} from './ftl-hover-provider';
 import {EventNamesValueSet, ShipNames} from './data/ftl-data';
 
@@ -42,7 +34,7 @@ export function activate(context: ExtensionContext) {
     let ftlDocumentValidator = new FltDocumentValidator(documentCache, ftlParser.onFileParsed, diagnosticCollection);
     let ftlReferenceProvider = new FtlReferenceProvider(documentCache, ftlParser.onFileParsed);
     let hoverProvider = new FtlHoverProvider(documentCache, service);
-    let completionItemProvider = new FtlXmlCompletionItemProvider(documentCache, service);
+    let completionItemProvider = new FtlCompletionProvider(documentCache, service);
 
     let ftlFilesPromise = ftlParser.parseCurrentWorkspace();
 

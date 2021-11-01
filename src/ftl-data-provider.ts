@@ -5,7 +5,7 @@ import {
     IValueData,
     newHTMLDataProvider
 } from "vscode-html-languageservice";
-import {FtlData, EventNamesValueSet, ShipNames} from './data/ftl-data';
+import {EventNamesValueSet, FtlData, ShipNames} from './data/ftl-data';
 import {FtlFile} from './models/ftl-file';
 import {Event} from 'vscode';
 import {defaultEvents} from './data/default-events';
@@ -58,7 +58,6 @@ export class FtlDataProvider implements IHTMLDataProvider {
     }
 
     provideValues(tag: string, attribute: string): IValueData[] {
-        let results = this.htmlDataProvider.provideValues(tag, attribute);
-        return results;
+        return this.htmlDataProvider.provideValues(tag, attribute);
     }
 }

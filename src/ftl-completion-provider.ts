@@ -4,12 +4,11 @@ import {
     CompletionItemProvider,
     Position,
     SnippetString,
-    TextDocument, TextEdit
+    TextDocument
 } from 'vscode';
 import {
     CompletionItem as HtmlCompletionItem,
-    HTMLDocument, InsertTextFormat,
-    LanguageService
+    HTMLDocument, LanguageService
 } from 'vscode-html-languageservice';
 import {
     convertDocumentation,
@@ -19,7 +18,7 @@ import {
 import {DocumentCache} from './document-cache';
 import {EventNamesValueSet} from './data/ftl-data';
 
-export class FtlXmlCompletionItemProvider implements CompletionItemProvider {
+export class FtlCompletionProvider implements CompletionItemProvider {
     constructor(private documentCache: DocumentCache, private languageService: LanguageService) {
     }
 
@@ -35,14 +34,7 @@ export class FtlXmlCompletionItemProvider implements CompletionItemProvider {
         if (items) return items;
 
         let completionItems = this.languageService.doComplete(serviceDocument, position, htmlDocument);
-        return this.convertCompletionItems(completionItems.items).concat(this.provideAdditionalItems(document, position, htmlDocument));
-    }
-
-    private provideAdditionalItems(document: TextDocument, position: Position, htmlDocument: HTMLDocument): CompletionItem[] {
-        const offset = document.offsetAt(position);
-        const node = htmlDocument.findNodeBefore(offset);
-
-        return [];
+        return this.convertCompletionItems(completionItems.items);
     }
 
     convertCompletionItems(items: HtmlCompletionItem[]): CompletionItem[] {
