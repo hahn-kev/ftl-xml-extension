@@ -20,4 +20,9 @@
         <!-- should show error because of missing closing tag -->
         <badTag/
     </eventList>
+
+    <ship name="ship-1" auto_blueprint="blueprint-1"/>
+    <ship load="ship-1"/>
+
+    <blueprintList name="blueprint-1"/>
 </FTL>

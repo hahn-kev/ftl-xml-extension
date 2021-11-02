@@ -9,6 +9,7 @@ import {FtlShip} from './models/ftl-ship';
 import {addToKey} from './helpers';
 import {ships} from './ships';
 import {mappers} from './ref-mappers/ref-mapper';
+import {FtlAutoblueprint} from './models/ftl-autoblueprint';
 
 export class FtlParser {
     constructor(private cache: DocumentCache) {
@@ -48,6 +49,9 @@ export class FtlParser {
             eventRefs: new Map<string, FtlEvent[]>(),
             ships: [],
             shipRefs: new Map<string, FtlShip[]>(),
+
+            blueprints: [],
+            blueprintRefs: new Map<string, FtlAutoblueprint[]>()
         };
         this.files.set(ftlFile.uri.toString(), ftlFile);
 
@@ -65,34 +69,6 @@ export class FtlParser {
 
 
             this.parseNodes(node.children, ftlFile, document);
-        }
-    }
-
-    private parseEvent(node: Node, ftlFile: FtlFile, document: TextDocument) {
-        let nameDef = events.getEventNameDef(node);
-        if (nameDef) {
-            let ftlEvent = new FtlEvent(nameDef, ftlFile, node, document);
-            ftlFile.events.push(ftlEvent);
-            addToKey(ftlFile.eventRefs, nameDef, ftlEvent);
-        } else {
-            let nameRef = events.getEventRefName(node, document);
-            if (nameRef) {
-                addToKey(ftlFile.eventRefs, nameRef, new FtlEvent(nameRef, ftlFile, node, document));
-            }
-        }
-    }
-
-    private parseShip(node: Node, ftlFile: FtlFile, document: TextDocument) {
-        let nameDef = ships.getNameDef(node);
-        if (nameDef) {
-            let ship = new FtlShip(nameDef, ftlFile, node, document);
-            ftlFile.ships.push(ship);
-            addToKey(ftlFile.shipRefs, nameDef, ship);
-        } else {
-            let refName = ships.getRefName(node);
-            if (refName) {
-                addToKey(ftlFile.shipRefs, refName, new FtlShip(refName, ftlFile, node, document));
-            }
         }
     }
 }

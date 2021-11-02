@@ -23,6 +23,11 @@ export const ShipNames: IValueSet = {
     values: [{name: 'loading...'}]
 };
 
+export const AutoblueprintNames: IValueSet = {
+    name: 'blueprint-names',
+    values: [{name: 'loading...'}]
+}
+
 export const FtlData: XmlData = {
     version: 1.1,
     tags: [
@@ -64,7 +69,18 @@ export const FtlData: XmlData = {
                     name: 'load',
                     valueSet: ShipNames.name
                 },
+                {
+                    name: 'auto_blueprint',
+                    valueSet: AutoblueprintNames.name
+                },
+                {name: 'name'},
                 boolAttr('hostile')
+            ]
+        },
+        {
+            name: 'blueprintList',
+            attributes: [
+                {name: 'name'}
             ]
         },
         {name: "text", attributes: [{name: 'id'}]},
@@ -137,6 +153,7 @@ export const FtlData: XmlData = {
     valueSets: [
         {name: 'bool', values: [{name: 'true'}, {name: 'false'}]},
         EventNamesValueSet,
-        ShipNames
+        ShipNames,
+        AutoblueprintNames
     ]
 };

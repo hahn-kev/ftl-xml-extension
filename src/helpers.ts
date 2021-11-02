@@ -1,5 +1,5 @@
 import {
-    MarkupContent,
+    MarkupContent, Node,
     Range as HtmlRange,
     TextDocument as HtmlTextDocument
 } from "vscode-html-languageservice";
@@ -39,6 +39,11 @@ export function convertRange(range: HtmlRange): Range {
 
 export function normalizeAttributeName(attr: string | null | undefined) {
     return attr?.slice(1, -1);
+}
+
+export function getAttrValueForTag(node: Node, tagName: string, attrName: string): string|undefined{
+    if (node.tag == tagName && node.attributes && attrName in node.attributes)
+        return normalizeAttributeName(node.attributes[attrName]);
 }
 
 export function addToKey<T, Key>(map: Map<Key, T[]>, key: Key, value: T | T[]) {
