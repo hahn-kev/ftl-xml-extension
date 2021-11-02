@@ -10,6 +10,7 @@ import {addToKey} from './helpers';
 import {ships} from './ships';
 import {mappers} from './ref-mappers/ref-mapper';
 import {FtlAutoblueprint} from './models/ftl-autoblueprint';
+import {FtlText} from './models/ftl-text';
 
 export class FtlParser {
     constructor(private cache: DocumentCache) {
@@ -51,7 +52,10 @@ export class FtlParser {
             shipRefs: new Map<string, FtlShip[]>(),
 
             blueprints: [],
-            blueprintRefs: new Map<string, FtlAutoblueprint[]>()
+            blueprintRefs: new Map<string, FtlAutoblueprint[]>(),
+
+            texts: [],
+            textRefs: new Map<string, FtlText[]>()
         };
         this.files.set(ftlFile.uri.toString(), ftlFile);
 

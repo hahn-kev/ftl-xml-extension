@@ -42,7 +42,7 @@ export class FltDocumentValidator {
             let invalidRefName = mapper.tryGetInvalidRefName(node, document);
             if (invalidRefName) {
                 diagnostics.push(new Diagnostic(
-                    toRange(node.start, node.end, document),
+                    toRange(node.start, node.startTagEnd ?? node.end, document),
                     `Invalid ${mapper.typeName} name: '${invalidRefName}'`,
                     DiagnosticSeverity.Warning
                 ));

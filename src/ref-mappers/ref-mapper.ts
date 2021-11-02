@@ -4,7 +4,7 @@ import {IValueData, IValueSet, Node} from 'vscode-html-languageservice';
 import {
     AutoblueprintNames,
     EventNamesValueSet,
-    ShipNames
+    ShipNames, TextIdNames
 } from '../data/ftl-data';
 import {defaultEvents} from '../data/default-events';
 import {defaultShips} from '../data/default-ships';
@@ -18,6 +18,7 @@ import {
     toLocation
 } from '../helpers';
 import {FtlAutoblueprint} from '../models/ftl-autoblueprint';
+import {FtlText} from '../models/ftl-text';
 
 export interface RefMapperBase {
     updateData(files: FtlFile[]): void;
@@ -118,7 +119,9 @@ const eventsMapper = new RefMapper<FtlEvent>(file => file.events,
             return events.getEventNameDef(node);
         },
         getRefName(node: Node, document: TextDocument): string | undefined {
-            return events.getEventRefName(node, document);
+            return events.getEventRefName(node, document)
+                ?? getAttrValueForTag(node, 'destroyed', 'load')
+                ?? getAttrValueForTag(node, 'deadCrew', 'load');
         }
     },
     EventNamesValueSet,
@@ -147,7 +150,7 @@ const blueprintMapper = new RefMapper(file => file.blueprints,
     (name, file, node, document) => new FtlAutoblueprint(name, file, node, document),
     {
         getNameDef(node: Node, document: TextDocument): string | undefined {
-            return getAttrValueForTag(node, 'blueprintList', 'name');
+            return getAttrValueForTag(node, 'shipBlueprint', 'name') ?? getAttrValueForTag(node, 'blueprintList', 'name');
         },
         getRefName(node: Node, document: TextDocument): string | undefined {
             return getAttrValueForTag(node, 'ship', 'auto_blueprint');
@@ -155,6 +158,22 @@ const blueprintMapper = new RefMapper(file => file.blueprints,
     },
     AutoblueprintNames,
     "Auto Blueprint",
-    [])
+    []);
 
-export const mappers: RefMapperBase[] = [eventsMapper, shipsMapper, blueprintMapper];
+const textMapper = new RefMapper(file => file.texts,
+    file => file.textRefs, value => value.name,
+    (name, file, node, document) => new FtlText(name, file, node, document),
+    {
+        getNameDef(node: Node, document: TextDocument): string | undefined {
+            return getAttrValueForTag(node, 'text', 'name') ?? getAttrValueForTag(node, 'textList', 'name');
+        },
+        getRefName(node: Node, document: TextDocument): string | undefined {
+            return getAttrValueForTag(node, 'text', 'load') ?? getAttrValueForTag(node, 'text', 'id');
+        }
+    },
+    TextIdNames,
+    "Text",
+    []
+);
+
+export const mappers: RefMapperBase[] = [eventsMapper, shipsMapper, blueprintMapper, textMapper];

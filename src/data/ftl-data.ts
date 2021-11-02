@@ -28,6 +28,11 @@ export const AutoblueprintNames: IValueSet = {
     values: [{name: 'loading...'}]
 }
 
+export const TextIdNames: IValueSet = {
+    name: 'text-id-names',
+    values: [{name: 'loading...'}]
+};
+
 export const FtlData: XmlData = {
     version: 1.1,
     tags: [
@@ -83,7 +88,32 @@ export const FtlData: XmlData = {
                 {name: 'name'}
             ]
         },
-        {name: "text", attributes: [{name: 'id'}]},
+        {
+            name: 'shipBlueprint',
+            attributes: [
+                {name: 'name'}
+            ]
+        },
+        {
+            name: 'destroyed',
+            attributes: [{name: 'load', valueSet: EventNamesValueSet.name}]
+        },
+        {
+            name: 'deadCrew',
+            attributes: [{name: 'load', valueSet: EventNamesValueSet.name}]
+        },
+        {
+            name: "text",
+            attributes: [
+                {name: 'name'},
+                {name: 'id', valueSet: TextIdNames.name},
+                {name: 'load', valueSet: TextIdNames.name}
+            ]
+        },
+        {
+            name: 'textList',
+            attributes: [{name: 'name'}]
+        },
         {name: "quest", attributes: [{name: 'event'}]},
         {name: "environment", attributes: []},
         {name: "weapon", attributes: [{name: 'name'}]},
@@ -154,6 +184,7 @@ export const FtlData: XmlData = {
         {name: 'bool', values: [{name: 'true'}, {name: 'false'}]},
         EventNamesValueSet,
         ShipNames,
-        AutoblueprintNames
+        AutoblueprintNames,
+        TextIdNames
     ]
 };
