@@ -12,7 +12,12 @@ import {DocumentCache} from './document-cache';
 import {FtlReferenceProvider} from './ftl-reference-provider';
 import {FtlCompletionProvider} from './ftl-completion-provider';
 import {FtlHoverProvider} from './ftl-hover-provider';
-import {EventNamesValueSet, ShipNames} from './data/ftl-data';
+import {
+    AutoblueprintNames,
+    EventNamesValueSet,
+    ShipNames,
+    TextIdNames
+} from './data/ftl-data';
 
 const ftlXmlDoc: DocumentSelector = {language: 'ftl-xml', scheme: 'file'};
 
@@ -46,6 +51,9 @@ export function activate(context: ExtensionContext) {
         if (wantToUpdateDefaults) {
             let eventNames = EventNamesValueSet.values.map(e => e.name);
             let shipNames = ShipNames.values.map(v => v.name);
+            let textNames = TextIdNames.values.map(t => t.name);
+            let blueprints = AutoblueprintNames.values.map(b => b.name);
+            let tmp = '';
         }
     });
 

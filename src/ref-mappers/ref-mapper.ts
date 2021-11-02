@@ -19,6 +19,7 @@ import {
 } from '../helpers';
 import {FtlAutoblueprint} from '../models/ftl-autoblueprint';
 import {FtlText} from '../models/ftl-text';
+import {defaultBlueprints} from '../data/default-blueprints';
 
 export interface RefMapperBase {
     updateData(files: FtlFile[]): void;
@@ -158,7 +159,7 @@ const blueprintMapper = new RefMapper(file => file.blueprints,
     },
     AutoblueprintNames,
     "Auto Blueprint",
-    []);
+    defaultBlueprints);
 
 const textMapper = new RefMapper(file => file.texts,
     file => file.textRefs, value => value.name,
