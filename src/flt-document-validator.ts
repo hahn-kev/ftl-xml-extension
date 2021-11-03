@@ -13,10 +13,8 @@ import {mappers} from './ref-mappers/mappers';
 
 export class FltDocumentValidator {
 
-    constructor(private documentCache: DocumentCache, onFileParsed: Event<{ file: FtlFile; files: Map<string, FtlFile> }>, private diagnosticCollection: DiagnosticCollection) {
+    constructor(private documentCache: DocumentCache, private diagnosticCollection: DiagnosticCollection) {
 
-        onFileParsed(e => {
-        });
     }
 
     validateDocument(document: TextDocument) {

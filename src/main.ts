@@ -35,9 +35,9 @@ export function activate(context: ExtensionContext) {
     let ftlDataProvider = new FtlDataProvider(ftlParser.onFileParsed);
     service.setDataProviders(false, [ftlDataProvider]);
 
-    let ftlDefinitionProvider = new FtlDefinitionProvider(documentCache, ftlParser.onFileParsed);
-    let ftlDocumentValidator = new FltDocumentValidator(documentCache, ftlParser.onFileParsed, diagnosticCollection);
-    let ftlReferenceProvider = new FtlReferenceProvider(documentCache, ftlParser.onFileParsed);
+    let ftlDefinitionProvider = new FtlDefinitionProvider(documentCache);
+    let ftlDocumentValidator = new FltDocumentValidator(documentCache, diagnosticCollection);
+    let ftlReferenceProvider = new FtlReferenceProvider(documentCache);
     let hoverProvider = new FtlHoverProvider(documentCache, service);
     let completionItemProvider = new FtlCompletionProvider(documentCache, service);
 

@@ -15,7 +15,7 @@ import {mappers} from './ref-mappers/mappers';
 export class FtlDefinitionProvider implements DefinitionProvider {
 
 
-    constructor(private documentCache: DocumentCache, onFileParsed: Event<{ file: FtlFile; files: Map<string, FtlFile> }>) {
+    constructor(private documentCache: DocumentCache) {
 
     }
 

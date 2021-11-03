@@ -10,6 +10,7 @@ export class FtlParser {
     }
 
     private _onFileParsedEmitter = new Emitter<{ file: FtlFile, files: Map<string, FtlFile> }>();
+    private _emitEvents = true;
 
     public get onFileParsed() {
         return this._onFileParsedEmitter.event;
@@ -30,10 +31,15 @@ export class FtlParser {
     }
 
     private async parseFiles(files: Uri[]) {
+        if (files.length == 0) return;
+        this._emitEvents = false;
+        let lastFile = files[files.length - 1];
         for (let file of files) {
             let document = await workspace.openTextDocument(file);
+            if (lastFile) this._emitEvents = true;
             this.parseFile(file, document);
         }
+
     }
 
     public parseFile(uri: Uri, document: TextDocument) {
@@ -43,7 +49,8 @@ export class FtlParser {
         let htmlDocument = this.cache.getHtmlDocument(document);
         this.parseNodes(htmlDocument.roots, ftlFile, document);
 
-        this._onFileParsedEmitter.fire({file: ftlFile, files: this.files});
+        if (this._emitEvents)
+            this._onFileParsedEmitter.fire({file: ftlFile, files: this.files});
     }
 
     private parseNodes(nodes: Node[], ftlFile: FtlFile, document: TextDocument) {
