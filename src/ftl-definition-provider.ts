@@ -4,20 +4,13 @@ import {
     DefinitionLink,
     DefinitionProvider,
     Event,
-    Location,
     Position,
     ProviderResult,
     TextDocument
 } from 'vscode';
-import {LanguageService, Node} from 'vscode-html-languageservice';
-import {toLocation, toTextDocumentHtml} from './helpers';
 import {FtlFile} from './models/ftl-file';
-import {FtlEvent} from './models/ftl-event';
-import {events} from './events';
-import {FtlShip} from './models/ftl-ship';
-import {ships} from './ships';
 import {DocumentCache} from './document-cache';
-import {mappers} from './ref-mappers/ref-mapper';
+import {mappers} from './ref-mappers/mappers';
 
 export class FtlDefinitionProvider implements DefinitionProvider {
 

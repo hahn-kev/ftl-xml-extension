@@ -10,7 +10,7 @@ import {
 } from 'vscode';
 import {DocumentCache} from './document-cache';
 import {FtlFile} from './models/ftl-file';
-import {mappers} from './ref-mappers/ref-mapper';
+import {mappers} from './ref-mappers/mappers';
 
 export class FtlReferenceProvider implements ReferenceProvider {
     constructor(private documentCache: DocumentCache, onFileParsed: Event<{ file: FtlFile; files: Map<string, FtlFile> }>) {

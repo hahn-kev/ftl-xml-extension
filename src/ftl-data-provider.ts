@@ -8,7 +8,7 @@ import {
 import {FtlData} from './data/ftl-data';
 import {FtlFile} from './models/ftl-file';
 import {Event} from 'vscode';
-import {mappers} from './ref-mappers/ref-mapper';
+import {mappers} from './ref-mappers/mappers';
 
 export class FtlDataProvider implements IHTMLDataProvider {
 

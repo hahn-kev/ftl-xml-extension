@@ -2,15 +2,8 @@ import {ProgressLocation, TextDocument, Uri, window, workspace} from 'vscode';
 import {Node} from 'vscode-html-languageservice';
 import {FtlFile} from './models/ftl-file';
 import {DocumentCache} from './document-cache';
-import {FtlEvent} from './models/ftl-event';
 import {Emitter} from 'vscode-languageclient';
-import {events} from './events';
-import {FtlShip} from './models/ftl-ship';
-import {addToKey} from './helpers';
-import {ships} from './ships';
-import {mappers} from './ref-mappers/ref-mapper';
-import {FtlAutoblueprint} from './models/ftl-autoblueprint';
-import {FtlText} from './models/ftl-text';
+import {mappers} from './ref-mappers/mappers';
 
 export class FtlParser {
     constructor(private cache: DocumentCache) {
@@ -44,19 +37,7 @@ export class FtlParser {
     }
 
     public parseFile(uri: Uri, document: TextDocument) {
-        let ftlFile: FtlFile = {
-            uri: uri,
-            events: [],
-            eventRefs: new Map<string, FtlEvent[]>(),
-            ships: [],
-            shipRefs: new Map<string, FtlShip[]>(),
-
-            blueprints: [],
-            blueprintRefs: new Map<string, FtlAutoblueprint[]>(),
-
-            texts: [],
-            textRefs: new Map<string, FtlText[]>()
-        };
+        let ftlFile: FtlFile = new FtlFile(uri);
         this.files.set(ftlFile.uri.toString(), ftlFile);
 
         let htmlDocument = this.cache.getHtmlDocument(document);

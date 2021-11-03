@@ -9,11 +9,7 @@ import {
 } from 'vscode';
 import {Node} from 'vscode-html-languageservice';
 import {toRange} from './helpers';
-import {defaultEvents} from './data/default-events';
-import {events} from './events';
-import {ships} from './ships';
-import {defaultShips} from './data/default-ships';
-import {mappers} from './ref-mappers/ref-mapper';
+import {mappers} from './ref-mappers/mappers';
 
 export class FltDocumentValidator {
 

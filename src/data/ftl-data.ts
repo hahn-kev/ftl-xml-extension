@@ -33,6 +33,11 @@ export const TextIdNames: IValueSet = {
     values: [{name: 'loading...'}]
 };
 
+export const WeaponNames: IValueSet = {
+    name: 'weapon-names',
+    values: [{name: 'loading...'}]
+}
+
 export const FtlData: XmlData = {
     version: 1.1,
     tags: [
@@ -116,7 +121,8 @@ export const FtlData: XmlData = {
         },
         {name: "quest", attributes: [{name: 'event'}]},
         {name: "environment", attributes: []},
-        {name: "weapon", attributes: [{name: 'name'}]},
+        {name: "weapon", attributes: [{name: 'name', valueSet: WeaponNames.name}]},
+        {name: 'weaponBlueprint', attributes: [{name: 'name'}]},
         {name: "unlockCustomShip", attributes: []},
         {name: "autoReward", attributes: [{name: 'level'}]},
         {name: "item_modify", attributes: []},
@@ -185,6 +191,7 @@ export const FtlData: XmlData = {
         EventNamesValueSet,
         ShipNames,
         AutoblueprintNames,
-        TextIdNames
+        TextIdNames,
+        WeaponNames
     ]
 };
