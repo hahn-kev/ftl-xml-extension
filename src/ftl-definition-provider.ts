@@ -3,19 +3,17 @@ import {
     Definition,
     DefinitionLink,
     DefinitionProvider,
-    Event,
     Position,
     ProviderResult,
     TextDocument
 } from 'vscode';
-import {FtlFile} from './models/ftl-file';
 import {DocumentCache} from './document-cache';
-import {mappers} from './ref-mappers/mappers';
+import {RefMapperBase} from './ref-mappers/ref-mapper';
 
 export class FtlDefinitionProvider implements DefinitionProvider {
 
 
-    constructor(private documentCache: DocumentCache) {
+    constructor(private documentCache: DocumentCache, private mappers: RefMapperBase[]) {
 
     }
 
@@ -23,7 +21,7 @@ export class FtlDefinitionProvider implements DefinitionProvider {
         let htmlDocument = this.documentCache.getHtmlDocument(document);
         const offset = document.offsetAt(position);
         const node = htmlDocument.findNodeBefore(offset);
-        for (let mapper of mappers) {
+        for (let mapper of this.mappers) {
             let def = mapper.lookupDef(node, document, position);
             if (def) return def;
         }

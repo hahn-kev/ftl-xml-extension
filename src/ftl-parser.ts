@@ -3,10 +3,10 @@ import {Node} from 'vscode-html-languageservice';
 import {FtlFile} from './models/ftl-file';
 import {DocumentCache} from './document-cache';
 import {Emitter} from 'vscode-languageclient';
-import {mappers} from './ref-mappers/mappers';
+import {RefMapperBase} from './ref-mappers/ref-mapper';
 
 export class FtlParser {
-    constructor(private cache: DocumentCache) {
+    constructor(private cache: DocumentCache, private mappers: RefMapperBase[]) {
     }
 
     private _onFileParsedEmitter = new Emitter<{ file: FtlFile, files: Map<string, FtlFile> }>();
@@ -55,7 +55,7 @@ export class FtlParser {
 
     private parseNodes(nodes: Node[], ftlFile: FtlFile, document: TextDocument) {
         for (let node of nodes) {
-            for (let mapper of mappers) {
+            for (let mapper of this.mappers) {
                 mapper.parseNode(node, ftlFile, document);
             }
 

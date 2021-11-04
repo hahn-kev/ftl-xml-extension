@@ -18,6 +18,7 @@ import {
     ShipNames,
     TextIdNames
 } from './data/ftl-data';
+import {mappers} from './ref-mappers/mappers';
 
 const ftlXmlDoc: DocumentSelector = {language: 'ftl-xml', scheme: 'file'};
 
@@ -30,14 +31,14 @@ export function activate(context: ExtensionContext) {
 
     let service = getLanguageService({useDefaultDataProvider: false});
     let documentCache = new DocumentCache(service);
-    let ftlParser = new FtlParser(documentCache);
-
-    let ftlDataProvider = new FtlDataProvider(ftlParser.onFileParsed);
+    let {mappers: mappersList, blueprintMapper} = mappers.setup(documentCache);
+    let ftlParser = new FtlParser(documentCache, mappersList);
+    let ftlDataProvider = new FtlDataProvider(ftlParser.onFileParsed, mappersList);
     service.setDataProviders(false, [ftlDataProvider]);
 
-    let ftlDefinitionProvider = new FtlDefinitionProvider(documentCache);
-    let ftlDocumentValidator = new FltDocumentValidator(documentCache, diagnosticCollection);
-    let ftlReferenceProvider = new FtlReferenceProvider(documentCache);
+    let ftlDefinitionProvider = new FtlDefinitionProvider(documentCache, mappersList);
+    let ftlDocumentValidator = new FltDocumentValidator(documentCache, diagnosticCollection, blueprintMapper, mappersList);
+    let ftlReferenceProvider = new FtlReferenceProvider(documentCache, mappersList);
     let hoverProvider = new FtlHoverProvider(documentCache, service);
     let completionItemProvider = new FtlCompletionProvider(documentCache, service);
 

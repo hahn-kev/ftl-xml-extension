@@ -8,11 +8,11 @@ import {
 import {FtlData} from './data/ftl-data';
 import {FtlFile} from './models/ftl-file';
 import {Event} from 'vscode';
-import {mappers} from './ref-mappers/mappers';
+import {RefMapperBase} from './ref-mappers/ref-mapper';
 
 export class FtlDataProvider implements IHTMLDataProvider {
 
-    constructor(onFileParsed: Event<{ file: FtlFile; files: Map<string, FtlFile> }>) {
+    constructor(onFileParsed: Event<{ file: FtlFile; files: Map<string, FtlFile> }>, private mappers: RefMapperBase[]) {
         onFileParsed(e => {
             this.updateFtlData(e.files);
         });
@@ -20,7 +20,7 @@ export class FtlDataProvider implements IHTMLDataProvider {
 
     updateFtlData(files: Map<string, FtlFile>) {
         let ftlFiles = Array.from(files.values());
-        for (let mapper of mappers) {
+        for (let mapper of this.mappers) {
             mapper.updateData(ftlFiles);
         }
     }

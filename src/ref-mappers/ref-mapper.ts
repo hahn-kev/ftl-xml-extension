@@ -23,7 +23,7 @@ export interface RefMapperBase {
 
     isNameValid(name: string): boolean;
 
-    getRefName(node: Node, document: TextDocument, position: Position): string | undefined;
+    getRefName(node: Node, document: TextDocument, position?: Position): string | undefined;
 }
 
 export interface NodeMap {

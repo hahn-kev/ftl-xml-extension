@@ -10,7 +10,7 @@ export class FtlBlueprintList extends FtlValue {
         super(name, file, node, document);
     }
 
-    public blueprintKind: string = 'unknown';
+    public childRefNames: string[] = [];
 }
 
 export class FtlBlueprintValue extends FtlValue {

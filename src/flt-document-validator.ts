@@ -5,23 +5,26 @@ import {
     DiagnosticCollection,
     DiagnosticSeverity,
     Event,
-    TextDocument
+    TextDocument, Uri
 } from 'vscode';
 import {Node} from 'vscode-html-languageservice';
 import {toRange} from './helpers';
-import {blueprintMapper, mappers} from './ref-mappers/mappers';
+import {BlueprintMapper} from './ref-mappers/blueprint-mapper';
+import {RefMapperBase} from './ref-mappers/ref-mapper';
 
 export class FltDocumentValidator {
 
-    constructor(private documentCache: DocumentCache, private diagnosticCollection: DiagnosticCollection) {
-
+    constructor(private documentCache: DocumentCache,
+                private diagnosticCollection: DiagnosticCollection,
+                private blueprintMapper: BlueprintMapper,
+                private mappers: RefMapperBase[]) {
     }
 
     validateDocument(document: TextDocument) {
         let htmlDocument = this.documentCache.getHtmlDocument(document);
         let diagnostics: Diagnostic[] = [];
         this.validateNodes(htmlDocument.roots, diagnostics, document);
-        this.diagnosticCollection.set(document.uri, diagnostics)
+        this.diagnosticCollection.set(document.uri, diagnostics);
     }
 
     validateNodes(nodes: Node[], diagnostics: Diagnostic[], document: TextDocument) {
@@ -31,8 +34,10 @@ export class FltDocumentValidator {
         }
     }
 
+
     private validateNode(node: Node, diagnostics: Diagnostic[], document: TextDocument) {
-        for (let mapper of mappers) {
+
+        for (let mapper of this.mappers) {
             let invalidRef = mapper.tryGetInvalidRefName(node, document);
             if (invalidRef) {
                 diagnostics.push(new Diagnostic(
@@ -43,7 +48,8 @@ export class FltDocumentValidator {
             }
         }
 
-        diagnostics.push(...blueprintMapper.validateListType(node, document))
+        diagnostics.push(...this.blueprintMapper.validateListType(node, document));
+        diagnostics.push(...this.blueprintMapper.validateRefType(node, document));
 
         if (node.tag && this.isMissingEnd(node, document)) {
             let warningStart = node.endTagStart ?? node.start;
