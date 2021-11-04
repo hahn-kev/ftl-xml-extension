@@ -27,9 +27,9 @@ export interface RefMapperBase {
 }
 
 export interface NodeMap {
-    getNameDef(node: Node, document: TextDocument): string | undefined;
+    getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined;
 
-    getRefName(node: Node, document: TextDocument): string | undefined;
+    getRefName(node: Node, document: TextDocument, position?: Position): string | undefined;
 }
 
 interface AdditionalDefsProvider {
@@ -80,7 +80,7 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
     }
 
     getRefName(node: Node, document: TextDocument, position: Position) {
-        return this.nodeMap.getNameDef(node, document) ?? this.nodeMap.getRefName(node, document);
+        return this.nodeMap.getNameDef(node, document, position) ?? this.nodeMap.getRefName(node, document, position);
     }
 
     tryGetInvalidRefName(node: Node, document: TextDocument): { name: string, range: Range, typeName: string } | undefined {

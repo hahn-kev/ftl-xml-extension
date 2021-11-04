@@ -24,7 +24,7 @@ import {
 import {DocumentCache} from '../document-cache';
 
 export class BlueprintMapper implements RefMapperBase {
-    constructor(public blueprintMappers: RefMapperBase[], private documentCache: DocumentCache) {
+    constructor(public blueprintMappers: RefMapperBase[]) {
 
     }
 

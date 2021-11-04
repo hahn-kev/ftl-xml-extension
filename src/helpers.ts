@@ -1,5 +1,6 @@
 import {
-    MarkupContent, Node,
+    MarkupContent,
+    Node,
     Range as HtmlRange,
     TextDocument as HtmlTextDocument
 } from "vscode-html-languageservice";
@@ -39,9 +40,51 @@ export function normalizeAttributeName(attr: string | null | undefined) {
     return attr?.slice(1, -1);
 }
 
-export function getAttrValueForTag(node: Node, tagName: string, attrName: string): string | undefined {
-    if (node.tag == tagName && node.attributes && attrName in node.attributes)
+export function getAttrValueForTag(node: Node, tagName: string, attrName: string, document?: TextDocument, atPosition?: Position): string | undefined {
+    if (node.tag == tagName && hasAttr(node, attrName, document, atPosition))
         return normalizeAttributeName(node.attributes[attrName]);
+}
+
+export function hasAttr<T extends string>(node: Node, name: T, document?: TextDocument, atPosition?: Position): node is Node & {attributes: {T: string}} {
+    if (!node.attributes) return false;
+    if (!(name in node.attributes)) return false;
+    if (document && atPosition) {
+        return isInAttrValue(node, document, name, atPosition);
+    }
+    return true;
+}
+
+export function isInAttrValue(node: Node, document: TextDocument, attrName: string, position: Position): boolean {
+    let startPosition = document.positionAt(node.start);
+    let textRange = new Range(
+        startPosition,
+        document.positionAt(node.startTagEnd ?? node.end)
+    );
+    let text = document.getText(textRange);
+    let positionOffset = document.offsetAt(position);
+
+    if (positionOffset < node.start || (node.startTagEnd ?? node.end) < positionOffset) return false;
+    let cursorOffsetInText = positionOffset - node.start;
+
+    let attrEnd: number | undefined;
+    let attrStart: number | undefined;
+    for (let i = cursorOffsetInText; i > 0; i--) {
+        if (attrEnd === undefined) {
+            if (text.charAt(i) != '"') continue;
+            i--;
+            if (text.charAt(i) != '=') continue;
+            attrEnd = i;
+        }
+        //we've found =" keep going to get the attribute name
+        if (text.charAt(i) == ' ') {
+            attrStart = i + 1;
+            break;
+        }
+    }
+
+    if (attrEnd === undefined || attrStart === undefined) return false;
+    let foundAttrName = text.substring(attrStart, attrEnd);
+    return foundAttrName === attrName;
 }
 
 export function firstWhere<T, R>(list: T[], map: (value: T) => R) {
@@ -68,6 +111,7 @@ export function addToKey<T, Key>(map: Map<Key, T[]>, key: Key, value: T | T[]) {
     arr.push(value);
     if (shouldSet) map.set(key, arr);
 }
+
 export function maxBy<T>(arr: T[], map: (value: T) => number) {
 
 }

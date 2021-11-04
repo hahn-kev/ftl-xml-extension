@@ -21,19 +21,25 @@
         <badTag/
     </eventList>
 
-    <ship name="ship-1" auto_blueprint="blueprint-1"/>
+    <ship name="ship-1" auto_blueprint="ship-list-1"/>
     <ship name="ship-2" auto_blueprint="ship-blueprint-1"/>
     <ship load="ship-1"/>
+    <ship load="ship-2"/>
 
     <shipBlueprint name="ship-blueprint-1"/>
+    <shipBlueprint name="ship-blueprint-2"/>
     <weaponBlueprint name="weapon-1"/>
 
-    <weapon name="blueprint-1"/>
+    <weapon name="weapon-list-1"/>
     <weapon name="weapon-1"/>
 
-    <blueprintList name="blueprint-1">
+    <blueprintList name="weapon-list-1">
         <name>weapon-1</name>
         <name>weapon-1</name>
+    </blueprintList>
+
+    <blueprintList name="ship-list-1">
         <name>ship-blueprint-1</name>
+        <name>ship-blueprint-2</name>
     </blueprintList>
 </FTL>
