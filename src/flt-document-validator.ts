@@ -9,7 +9,7 @@ import {
 } from 'vscode';
 import {Node} from 'vscode-html-languageservice';
 import {toRange} from './helpers';
-import {mappers} from './ref-mappers/mappers';
+import {blueprintMapper, mappers} from './ref-mappers/mappers';
 
 export class FltDocumentValidator {
 
@@ -33,15 +33,17 @@ export class FltDocumentValidator {
 
     private validateNode(node: Node, diagnostics: Diagnostic[], document: TextDocument) {
         for (let mapper of mappers) {
-            let invalidRefName = mapper.tryGetInvalidRefName(node, document);
-            if (invalidRefName) {
+            let invalidRef = mapper.tryGetInvalidRefName(node, document);
+            if (invalidRef) {
                 diagnostics.push(new Diagnostic(
-                    toRange(node.start, node.startTagEnd ?? node.end, document),
-                    `Invalid ${mapper.typeName} name: '${invalidRefName}'`,
+                    invalidRef.range,
+                    `Invalid ${invalidRef.typeName} name: '${invalidRef.name}'`,
                     DiagnosticSeverity.Warning
                 ));
             }
         }
+
+        diagnostics.push(...blueprintMapper.validateListType(node, document))
 
         if (node.tag && this.isMissingEnd(node, document)) {
             let warningStart = node.endTagStart ?? node.start;

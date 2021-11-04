@@ -24,7 +24,7 @@ export class FtlDefinitionProvider implements DefinitionProvider {
         const offset = document.offsetAt(position);
         const node = htmlDocument.findNodeBefore(offset);
         for (let mapper of mappers) {
-            let def = mapper.lookupDef(node, document);
+            let def = mapper.lookupDef(node, document, position);
             if (def) return def;
         }
     }

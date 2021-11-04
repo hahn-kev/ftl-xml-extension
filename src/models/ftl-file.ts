@@ -4,6 +4,7 @@ import {FtlShip} from './ftl-ship';
 import {FtlAutoblueprint} from './ftl-autoblueprint';
 import {FtlText} from './ftl-text';
 import {FtlWeapon} from './ftl-weapon';
+import {FtlBlueprintList, FtlBlueprintValue} from './ftl-blueprint-list';
 
 export class FtlFile {
 
@@ -16,12 +17,15 @@ export class FtlFile {
     ships: FtlShip[] = [];
     shipRefs = new Map<string, FtlShip[]>();
 
-    blueprints: FtlAutoblueprint[] = [];
-    blueprintRefs = new Map<string, FtlAutoblueprint[]>();
+    autoBlueprints: FtlAutoblueprint[] = [];
+    autoBlueprintRefs = new Map<string, FtlAutoblueprint[]>();
 
     texts: FtlText[] = [];
     textRefs = new Map<string, FtlText[]>();
 
     weapons: FtlWeapon[] = [];
     weaponRefs = new Map<string, FtlWeapon[]>();
+
+    blueprintLists: FtlBlueprintList[] = [];
+    blueprintListRefs = new Map<string, FtlBlueprintValue[]>();
 }

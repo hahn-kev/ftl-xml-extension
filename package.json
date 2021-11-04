@@ -51,7 +51,7 @@
   "scripts": {
     "compile": "npm run esbuild-base -- --sourcemap",
     "esbuild-base": "esbuild ./src/main.ts --bundle --tree-shaking=true --outfile=out/main.js --external:vscode --format=cjs",
-    "watch": "tsc -watch -p ./",
+    "watch": "npm run esbuild-base -- --sourcemap --watch",
     "vscode:prepublish": "npm run esbuild-base -- --minify",
     "package": "vsce package",
     "publish": "vsce publish"

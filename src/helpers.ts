@@ -3,10 +3,7 @@ import {
     Range as HtmlRange,
     TextDocument as HtmlTextDocument
 } from "vscode-html-languageservice";
-import {Location, MarkdownString, Position, Range, TextDocument} from "vscode";
-import {FtlShip} from './models/ftl-ship';
-import {FtlEvent} from './models/ftl-event';
-import {FtlFile} from './models/ftl-file';
+import {MarkdownString, Position, Range, TextDocument} from "vscode";
 
 
 export function toTextDocumentHtml(d: TextDocument): HtmlTextDocument {
@@ -23,12 +20,13 @@ export function convertDocumentation(documentation: string | MarkupContent | und
     return documentation;
 }
 
-export function toRange(start: number, end: number, document: TextDocument) {
-    return new Range(document.positionAt(start), document.positionAt(end));
+export function getNodeTextContent(node: Node, document: TextDocument) {
+    if (node.startTagEnd === undefined || node.endTagStart === undefined) return undefined;
+    return document.getText(new Range(document.positionAt(node.startTagEnd), document.positionAt(node.endTagStart)));
 }
 
-export function toLocation(value: {file: FtlFile, position: Position}) {
-    return new Location(value.file.uri, value.position);
+export function toRange(start: number, end: number, document: TextDocument) {
+    return new Range(document.positionAt(start), document.positionAt(end));
 }
 
 export function convertRange(range: HtmlRange): Range {
@@ -41,9 +39,16 @@ export function normalizeAttributeName(attr: string | null | undefined) {
     return attr?.slice(1, -1);
 }
 
-export function getAttrValueForTag(node: Node, tagName: string, attrName: string): string|undefined{
+export function getAttrValueForTag(node: Node, tagName: string, attrName: string): string | undefined {
     if (node.tag == tagName && node.attributes && attrName in node.attributes)
         return normalizeAttributeName(node.attributes[attrName]);
+}
+
+export function firstWhere<T, R>(list: T[], map: (value: T) => R) {
+    for (let value of list) {
+        let mapped = map(value);
+        if (mapped) return mapped;
+    }
 }
 
 export function addToKey<T, Key>(map: Map<Key, T[]>, key: Key, value: T | T[]) {
@@ -62,4 +67,7 @@ export function addToKey<T, Key>(map: Map<Key, T[]>, key: Key, value: T | T[]) {
     arr ??= [];
     arr.push(value);
     if (shouldSet) map.set(key, arr);
+}
+export function maxBy<T>(arr: T[], map: (value: T) => number) {
+
 }

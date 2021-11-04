@@ -1,6 +1,6 @@
 import {FtlValue} from './ftl-value';
 
 export class FtlAutoblueprint extends FtlValue {
-    readonly kind = 'Blueprint';
+    readonly kind = 'Auto Blueprint';
 
 }

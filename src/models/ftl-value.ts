@@ -1,6 +1,6 @@
 import {FtlFile} from './ftl-file';
 import {Node} from 'vscode-html-languageservice';
-import {Position, TextDocument} from 'vscode';
+import {Location, Position, TextDocument} from 'vscode';
 
 export abstract class FtlValue {
     constructor(name: string, file: FtlFile, node: Node, document: TextDocument) {
@@ -14,5 +14,9 @@ export abstract class FtlValue {
     public file: FtlFile
     public name: string;
     public offset: number;
-    public position: Position
+    public position: Position;
+
+    toLocation() {
+        return new Location(this.file.uri, this.position);
+    }
 }

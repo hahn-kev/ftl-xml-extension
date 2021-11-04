@@ -1,6 +1,6 @@
 import {Node} from 'vscode-html-languageservice';
 import {Range, TextDocument} from 'vscode';
-import {normalizeAttributeName} from './helpers';
+import {getNodeTextContent, normalizeAttributeName} from './helpers';
 
 export namespace events {
     function isLoadEvent(node: Node) {
@@ -17,17 +17,14 @@ export namespace events {
         }
 
         if (isLoadEvent(node)) {
-            return getLoadEventName(node, document);
+            return getNodeTextContent(node, document);
         }
         if (node.tag == 'event' && node.attributes && 'name' in node.attributes && node.parent?.tag == 'sectorDescription')
             return normalizeAttributeName(node.attributes.name);
     }
 
 
-    export function getLoadEventName(node: Node, document: TextDocument) {
-        if (node.startTagEnd === undefined || node.endTagStart === undefined) return undefined;
-        return document.getText(new Range(document.positionAt(node.startTagEnd), document.positionAt(node.endTagStart)));
-    }
+
 
     export function getEventName(node: Node, document: TextDocument): string | undefined {
         return events.getEventRefName(node, document) ?? getEventNameDef(node);
