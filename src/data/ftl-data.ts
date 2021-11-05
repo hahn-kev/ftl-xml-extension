@@ -37,6 +37,10 @@ export const WeaponNames: IValueSet = {
     name: 'weapon-names',
     values: [{name: 'loading...'}]
 }
+export const DroneNames: IValueSet = {
+    name: 'drone-names',
+    values: [{name: 'loading...'}]
+}
 
 export const FtlData: XmlData = {
     version: 1.1,
@@ -138,7 +142,7 @@ export const FtlData: XmlData = {
         {name: "status", attributes: []},
         {name: "distressBeacon", attributes: []},
         {name: "restartEvent", attributes: []},
-        {name: "drone", attributes: []},
+        {name: "drone", attributes: [{name: 'name', valueSet: DroneNames.name}]},
         {name: "beaconType", attributes: []},
         {name: "recallBoarders", attributes: []},
         {name: "loadEvent", attributes: []},
@@ -192,6 +196,7 @@ export const FtlData: XmlData = {
         ShipNames,
         AutoblueprintNames,
         TextIdNames,
-        WeaponNames
+        WeaponNames,
+        DroneNames
     ]
 };

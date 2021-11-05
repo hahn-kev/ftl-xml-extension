@@ -19,6 +19,4 @@ export class FtlBlueprintValue extends FtlValue {
     constructor(name: string, file: FtlFile, node: Node, document: TextDocument) {
         super(name, file, node, document);
     }
-
-    public blueprintKind: string = 'unknown';
 }

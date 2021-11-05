@@ -1,4 +1,5 @@
 export const defaultWeaponBlueprints = [
+    'RANDOM',
     "ARTILLERY_BOSS_1",
     "ARTILLERY_BOSS_2",
     "ARTILLERY_BOSS_3",

@@ -16,6 +16,8 @@ export interface RefMapperBase {
     readonly autoCompleteValues?: IValueSet;
     readonly refs: Map<string, FtlValue[]>;
     readonly defs: Map<string, FtlValue>;
+    readonly fileSelector?: (file: FtlFile) => FtlValue[],
+    readonly fileRefSelector?: (file: FtlFile) => Map<string, FtlValue[]>,
 
     tryGetInvalidRefName(node: Node, document: TextDocument): { name: string, range: Range, typeName: string } | undefined;
 
@@ -40,10 +42,10 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
     readonly refs = new Map<string, T[]>();
     readonly defs = new Map<string, T>();
 
-    constructor(private fileSelector: (file: FtlFile) => T[],
-                private fileRefSelector: (file: FtlFile) => Map<string, T[]>,
-                private newFromNode: (name: string, file: FtlFile, node: Node, document: TextDocument) => T,
-                public nodeMap: NodeMap,
+    constructor(public readonly fileSelector: (file: FtlFile) => T[],
+                public readonly fileRefSelector: (file: FtlFile) => Map<string, T[]>,
+                private readonly newFromNode: (name: string, file: FtlFile, node: Node, document: TextDocument) => T,
+                public readonly nodeMap: NodeMap,
                 public readonly autoCompleteValues: IValueSet,
                 public readonly typeName: string,
                 private defaults: readonly string[] = []) {

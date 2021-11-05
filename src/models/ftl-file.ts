@@ -5,6 +5,8 @@ import {FtlAutoblueprint} from './ftl-autoblueprint';
 import {FtlText} from './ftl-text';
 import {FtlWeapon} from './ftl-weapon';
 import {FtlBlueprintList, FtlBlueprintValue} from './ftl-blueprint-list';
+import {FtlDrone} from './ftl-drone';
+import {FtlValue} from './ftl-value';
 
 export class FtlFile {
 
@@ -26,6 +28,9 @@ export class FtlFile {
     weapons: FtlWeapon[] = [];
     weaponRefs = new Map<string, FtlWeapon[]>();
 
+    drones: FtlDrone[] = [];
+    droneRefs = new Map<string, FtlDrone[]>();
+
     blueprintLists: FtlBlueprintList[] = [];
-    blueprintListRefs = new Map<string, FtlBlueprintValue[]>();
+    blueprintListRefs = new Map<string, FtlValue[]>();
 }

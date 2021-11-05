@@ -5,7 +5,7 @@ import {Position, TextDocument} from 'vscode';
 import {events} from '../events';
 import {getAttrValueForTag} from '../helpers';
 import {
-    AutoblueprintNames,
+    AutoblueprintNames, DroneNames,
     EventNamesValueSet,
     ShipNames,
     TextIdNames,
@@ -21,6 +21,8 @@ import {FtlText} from '../models/ftl-text';
 import {BlueprintMapper} from './blueprint-mapper';
 import {DocumentCache} from '../document-cache';
 import {defaultWeaponBlueprints} from '../data/default-weapon-blueprints';
+import {FtlDrone} from '../models/ftl-drone';
+import {defaultDrones} from '../data/default-drones';
 
 export namespace mappers {
 
@@ -70,6 +72,21 @@ export namespace mappers {
         "Weapon",
         defaultWeaponBlueprints);
 
+    export const dronesMapper = new RefMapper(file => file.drones,
+        file => file.droneRefs,
+        (name, file, node, document) => new FtlDrone(name, file, node, document),
+        {
+            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
+                return getAttrValueForTag(node, 'droneBlueprint', 'name', document, position);
+            },
+            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+                return getAttrValueForTag(node, 'drone', 'name', document, position)
+            }
+        },
+        DroneNames,
+        "Drone",
+        defaultDrones);
+
     export const autoBlueprintMapper = new RefMapper(file => file.autoBlueprints,
         file => file.autoBlueprintRefs,
         (name, file, node, document) => new FtlAutoblueprint(name, file, node, document),
@@ -102,7 +119,7 @@ export namespace mappers {
         []
     );
 
-    const blueprintMappers: RefMapperBase[] = [weaponsMapper, autoBlueprintMapper];
+    const blueprintMappers: RefMapperBase[] = [weaponsMapper, autoBlueprintMapper, dronesMapper];
 
     export function setup(documentCache: DocumentCache) {
         const blueprintMapper = new BlueprintMapper(blueprintMappers);

@@ -73,12 +73,13 @@ export class BlueprintMapper implements RefMapperBase {
     parseNode(node: Node, file: FtlFile, document: TextDocument): void {
         const name = getAttrValueForTag(node, 'blueprintList', 'name');
         if (name) {
-
             let ftlBlueprintList = new FtlBlueprintList(name, file, node, document);
             ftlBlueprintList.childRefNames = node.children.filter(c => c.tag == 'name')
                 .map(c => getNodeTextContent(c, document))
                 .filter((t): t is string => !!t);
+
             file.blueprintLists.push(ftlBlueprintList);
+            addToKey(file.blueprintListRefs, name, ftlBlueprintList);
             return;
         }
 
@@ -150,8 +151,10 @@ export class BlueprintMapper implements RefMapperBase {
 
         //we need to do this after the first iteration of files because we need the defs to be setup already
         for (let file of files) {
-            this.addRefs(file.weaponRefs.values());
-            this.addRefs(file.autoBlueprintRefs.values());
+            for (let mapper of this.blueprintMappers) {
+                if (mapper.fileRefSelector)
+                    this.addRefs(mapper.fileRefSelector(file).values());
+            }
         }
     }
 
