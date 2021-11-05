@@ -16,7 +16,8 @@ import {
     AutoblueprintNames,
     EventNamesValueSet,
     ShipNames,
-    TextIdNames
+    TextIdNames,
+    WeaponNames
 } from './data/ftl-data';
 import {mappers} from './ref-mappers/mappers';
 
@@ -40,7 +41,7 @@ export function activate(context: ExtensionContext) {
     let ftlDocumentValidator = new FltDocumentValidator(documentCache, diagnosticCollection, blueprintMapper, mappersList);
     let ftlReferenceProvider = new FtlReferenceProvider(documentCache, mappersList);
     let hoverProvider = new FtlHoverProvider(documentCache, service);
-    let completionItemProvider = new FtlCompletionProvider(documentCache, service);
+    let completionItemProvider = new FtlCompletionProvider(documentCache, service, blueprintMapper, mappersList);
 
     let ftlFilesPromise = ftlParser.parseCurrentWorkspace();
 
@@ -53,7 +54,8 @@ export function activate(context: ExtensionContext) {
             let eventNames = EventNamesValueSet.values.map(e => e.name);
             let shipNames = ShipNames.values.map(v => v.name);
             let textNames = TextIdNames.values.map(t => t.name);
-            let blueprints = AutoblueprintNames.values.map(b => b.name);
+            let autoBlueprints = AutoblueprintNames.values.map(b => b.name);
+            let weapons = WeaponNames.values.map(w => w.name);
             let tmp = '';
         }
     });

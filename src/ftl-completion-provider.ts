@@ -1,6 +1,7 @@
 import {
     CancellationToken,
-    CompletionItem, CompletionItemKind,
+    CompletionItem,
+    CompletionItemKind,
     CompletionItemProvider,
     Position,
     SnippetString,
@@ -8,7 +9,9 @@ import {
 } from 'vscode';
 import {
     CompletionItem as HtmlCompletionItem,
-    HTMLDocument, LanguageService
+    HTMLDocument,
+    LanguageService,
+    Node
 } from 'vscode-html-languageservice';
 import {
     convertDocumentation,
@@ -17,9 +20,14 @@ import {
 } from './helpers';
 import {DocumentCache} from './document-cache';
 import {EventNamesValueSet} from './data/ftl-data';
+import {BlueprintMapper} from './ref-mappers/blueprint-mapper';
+import {RefMapperBase} from './ref-mappers/ref-mapper';
 
 export class FtlCompletionProvider implements CompletionItemProvider {
-    constructor(private documentCache: DocumentCache, private languageService: LanguageService) {
+    constructor(private documentCache: DocumentCache,
+                private languageService: LanguageService,
+                private blueprintMapper: BlueprintMapper,
+                private mappers: RefMapperBase[]) {
     }
 
 
@@ -56,11 +64,29 @@ export class FtlCompletionProvider implements CompletionItemProvider {
     private tryCompleteCustom(document: TextDocument, htmlDocument: HTMLDocument, position: Position): CompletionItem[] | undefined {
         const offset = document.offsetAt(position);
         const node = htmlDocument.findNodeBefore(offset);
-        let startTagEnd = node.startTagEnd ?? node.start;
-        let endTagStart = node.endTagStart ?? -1;
-        if (node.tag == "loadEvent" && startTagEnd <= offset && endTagStart >= offset) {
+        if (node.tag == "loadEvent" && this.shouldCompleteForNodeContents(node, offset)) {
             return this.eventNames();
         }
+        if (node.parent && this.blueprintMapper.isListChild(node) && this.shouldCompleteForNodeContents(node, offset)) {
+            let blueprintListNode = node.parent;
+            let typeInfo = this.blueprintMapper.getListTypeInfoFromNode(blueprintListNode, document);
+            if (!typeInfo) return;
+            let mapper = this.blueprintMapper.getMapperForTypeName(typeInfo.listTypeName);
+
+            if (!mapper || mapper == this.blueprintMapper || !mapper.autoCompleteValues) {
+               return this.blueprintMapper.getAllBlueprintNames().map(name => ({label: name, kind: CompletionItemKind.Unit}));
+            } else {
+                return mapper.autoCompleteValues.values.map(value => ({label: value.name, kind: CompletionItemKind.Unit}));
+            }
+        }
+    }
+
+    private shouldCompleteForNodeContents(node: Node, offset: number) {
+        let startTagEnd = node.startTagEnd ?? node.start;
+        let endTagStart = node.endTagStart ?? -1;
+
+        return startTagEnd <= offset && endTagStart >= offset;
+
     }
 
     private eventNames(): CompletionItem[] {

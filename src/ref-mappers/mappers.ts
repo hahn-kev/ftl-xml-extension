@@ -20,6 +20,7 @@ import {defaultAutoBlueprints} from '../data/default-auto-blueprints';
 import {FtlText} from '../models/ftl-text';
 import {BlueprintMapper} from './blueprint-mapper';
 import {DocumentCache} from '../document-cache';
+import {defaultWeaponBlueprints} from '../data/default-weapon-blueprints';
 
 export namespace mappers {
 
@@ -67,7 +68,7 @@ export namespace mappers {
         },
         WeaponNames,
         "Weapon",
-        []);
+        defaultWeaponBlueprints);
 
     export const autoBlueprintMapper = new RefMapper(file => file.autoBlueprints,
         file => file.autoBlueprintRefs,

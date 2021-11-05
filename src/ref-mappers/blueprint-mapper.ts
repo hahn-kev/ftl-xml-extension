@@ -24,7 +24,7 @@ import {
 import {DocumentCache} from '../document-cache';
 
 export class BlueprintMapper implements RefMapperBase {
-    constructor(public blueprintMappers: RefMapperBase[]) {
+    constructor(private blueprintMappers: RefMapperBase[]) {
 
     }
 
@@ -116,8 +116,12 @@ export class BlueprintMapper implements RefMapperBase {
     }
 
     getNameNodeText(node: Node, document: TextDocument) {
-        if (node.tag != 'name' || node.parent?.tag != 'blueprintList') return;
+        if (!this.isListChild(node)) return;
         return getNodeTextContent(node, document);
+    }
+
+    isListChild(node: Node) {
+        return node.tag == 'name' && node.parent?.tag == 'blueprintList';
     }
 
     isNameValid(name: string): boolean {
@@ -241,5 +245,15 @@ export class BlueprintMapper implements RefMapperBase {
     getRefType(name: string): string {
         let mapper = this.doMapper(true, mapper => mapper.defs.has(name) ? mapper : undefined);
         return mapper?.typeName ?? 'Unknown';
+    }
+
+    getMapperForTypeName(type: string): RefMapperBase | undefined {
+        return this.doMapper(true, mapper => mapper.typeName == type ? mapper : undefined);
+    }
+
+    getAllBlueprintNames(): string[] {
+        return [this, ...this.blueprintMappers]
+            .flatMap((value:RefMapperBase) => value.autoCompleteValues?.values ?? [])
+            .map(value => value.name);
     }
 }
