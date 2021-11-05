@@ -41,6 +41,10 @@ export const DroneNames: IValueSet = {
     name: 'drone-names',
     values: [{name: 'loading...'}]
 }
+export const AugmentNames: IValueSet = {
+    name: 'augment-names',
+    values: [{name: 'loading...'}]
+}
 
 export const FtlData: XmlData = {
     version: 1.1,
@@ -127,6 +131,8 @@ export const FtlData: XmlData = {
         {name: "environment", attributes: []},
         {name: "weapon", attributes: [{name: 'name', valueSet: WeaponNames.name}]},
         {name: 'weaponBlueprint', attributes: [{name: 'name'}]},
+        {name: 'droneBlueprint', attributes: [{name: 'name'}]},
+        {name: 'augmentBlueprint', attributes: [{name: 'name'}]},
         {name: "unlockCustomShip", attributes: []},
         {name: "autoReward", attributes: [{name: 'level'}]},
         {name: "item_modify", attributes: []},
@@ -150,7 +156,7 @@ export const FtlData: XmlData = {
         {name: "customFleet", attributes: []},
         {name: "preventQuest", attributes: []},
         {name: "preventFleet", attributes: []},
-        {name: "augment", attributes: []},
+        {name: "augment", attributes: [{name: 'name', valueSet: AugmentNames.name}]},
         {name: "store", attributes: []},
         {name: "triggeredEvent", attributes: []},
         {name: "hiddenAug", attributes: []},
@@ -197,6 +203,7 @@ export const FtlData: XmlData = {
         AutoblueprintNames,
         TextIdNames,
         WeaponNames,
-        DroneNames
+        DroneNames,
+        AugmentNames
     ]
 };

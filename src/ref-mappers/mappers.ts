@@ -5,6 +5,7 @@ import {Position, TextDocument} from 'vscode';
 import {events} from '../events';
 import {getAttrValueForTag} from '../helpers';
 import {
+    AugmentNames,
     AutoblueprintNames, DroneNames,
     EventNamesValueSet,
     ShipNames,
@@ -23,6 +24,8 @@ import {DocumentCache} from '../document-cache';
 import {defaultWeaponBlueprints} from '../data/default-weapon-blueprints';
 import {FtlDrone} from '../models/ftl-drone';
 import {defaultDrones} from '../data/default-drones';
+import {FtlAugment} from '../models/ftlAugment';
+import {defaultAugments} from '../data/default-augments';
 
 export namespace mappers {
 
@@ -86,6 +89,21 @@ export namespace mappers {
         DroneNames,
         "Drone",
         defaultDrones);
+    export const augmentsMapper = new RefMapper(file => file.augments,
+        file => file.augmentRefs,
+        (name, file, node, document) => new FtlAugment(name, file, node, document),
+        {
+            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
+                return getAttrValueForTag(node, 'augBlueprint', 'name', document, position);
+            },
+            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+                return getAttrValueForTag(node, 'augment', 'name', document, position)
+                    ?? getAttrValueForTag(node, 'aug', 'name', document, position)
+            }
+        },
+        AugmentNames,
+        "Augment",
+        defaultAugments);
 
     export const autoBlueprintMapper = new RefMapper(file => file.autoBlueprints,
         file => file.autoBlueprintRefs,
@@ -119,7 +137,7 @@ export namespace mappers {
         []
     );
 
-    const blueprintMappers: RefMapperBase[] = [weaponsMapper, autoBlueprintMapper, dronesMapper];
+    const blueprintMappers: RefMapperBase[] = [weaponsMapper, autoBlueprintMapper, dronesMapper, augmentsMapper];
 
     export function setup(documentCache: DocumentCache) {
         const blueprintMapper = new BlueprintMapper(blueprintMappers);

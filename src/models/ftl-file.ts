@@ -7,6 +7,7 @@ import {FtlWeapon} from './ftl-weapon';
 import {FtlBlueprintList, FtlBlueprintValue} from './ftl-blueprint-list';
 import {FtlDrone} from './ftl-drone';
 import {FtlValue} from './ftl-value';
+import {FtlAugment} from './ftlAugment';
 
 export class FtlFile {
 
@@ -30,6 +31,8 @@ export class FtlFile {
 
     drones: FtlDrone[] = [];
     droneRefs = new Map<string, FtlDrone[]>();
+    augments: FtlAugment[] = [];
+    augmentRefs = new Map<string, FtlAugment[]>();
 
     blueprintLists: FtlBlueprintList[] = [];
     blueprintListRefs = new Map<string, FtlValue[]>();
