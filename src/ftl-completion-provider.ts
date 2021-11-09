@@ -19,7 +19,7 @@ import {
     toTextDocumentHtml
 } from './helpers';
 import {DocumentCache} from './document-cache';
-import {EventNamesValueSet} from './data/ftl-data';
+import {EventNamesValueSet} from './data/autocomplete-value-sets';
 import {BlueprintMapper} from './ref-mappers/blueprint-mapper';
 import {RefMapperBase} from './ref-mappers/ref-mapper';
 

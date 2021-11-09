@@ -12,7 +12,7 @@ import {RefMapperBase} from './ref-mappers/ref-mapper';
 
 export class FtlDataProvider implements IHTMLDataProvider {
 
-    constructor(onFileParsed: Event<{ file: FtlFile; files: Map<string, FtlFile> }>, private mappers: RefMapperBase[]) {
+    constructor(onFileParsed: Event<{ files: Map<string, FtlFile> }>, private mappers: RefMapperBase[]) {
         onFileParsed(e => {
             this.updateFtlData(e.files);
         });

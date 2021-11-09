@@ -1,6 +1,6 @@
 <FTL>
     <event name="event-1">
-
+        <bla/>
     </event>
 
     <eventList name="list-1">

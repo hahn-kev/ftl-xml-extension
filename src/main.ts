@@ -20,7 +20,7 @@ import {
     ShipNames,
     TextIdNames,
     WeaponNames
-} from './data/ftl-data';
+} from './data/autocomplete-value-sets';
 import {mappers} from './ref-mappers/mappers';
 
 const ftlXmlDoc: DocumentSelector = {language: 'ftl-xml', scheme: 'file'};
@@ -47,9 +47,10 @@ export function activate(context: ExtensionContext) {
 
     let ftlFilesPromise = ftlParser.parseCurrentWorkspace();
 
-    ftlFilesPromise.then(() => {
-        for (let textDocument of workspace.textDocuments) {
-            ftlDocumentValidator.validateDocument(textDocument);
+    ftlFilesPromise.then(async (files) => {
+        let fileUris = Array.from(files.values()).map(file => file.uri);
+        for (let fileUri of fileUris) {
+            ftlDocumentValidator.validateDocument(await workspace.openTextDocument(fileUri));
         }
         let wantToUpdateDefaults = true;
         if (wantToUpdateDefaults) {

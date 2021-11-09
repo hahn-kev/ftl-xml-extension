@@ -1,4 +1,10 @@
-import {ProgressLocation, TextDocument, Uri, window, workspace} from 'vscode';
+import {
+    ProgressLocation,
+    TextDocument,
+    Uri,
+    window,
+    workspace
+} from 'vscode';
 import {Node} from 'vscode-html-languageservice';
 import {FtlFile} from './models/ftl-file';
 import {DocumentCache} from './document-cache';
@@ -9,8 +15,7 @@ export class FtlParser {
     constructor(private cache: DocumentCache, private mappers: RefMapperBase[]) {
     }
 
-    private _onFileParsedEmitter = new Emitter<{ file: FtlFile, files: Map<string, FtlFile> }>();
-    private _emitEvents = true;
+    private _onFileParsedEmitter = new Emitter<{ files: Map<string, FtlFile> }>();
 
     public get onFileParsed() {
         return this._onFileParsedEmitter.event;
@@ -32,25 +37,23 @@ export class FtlParser {
 
     private async parseFiles(files: Uri[]) {
         if (files.length == 0) return;
-        this._emitEvents = false;
-        let lastFile = files[files.length - 1];
         for (let file of files) {
             let document = await workspace.openTextDocument(file);
-            if (lastFile) this._emitEvents = true;
             this.parseFile(file, document);
         }
-
     }
 
     public parseFile(uri: Uri, document: TextDocument) {
+        this._parseFile(uri, document);
+        this._onFileParsedEmitter.fire({files: this.files});
+    }
+
+    private _parseFile(uri: Uri, document: TextDocument) {
         let ftlFile: FtlFile = new FtlFile(uri);
         this.files.set(ftlFile.uri.toString(), ftlFile);
 
         let htmlDocument = this.cache.getHtmlDocument(document);
         this.parseNodes(htmlDocument.roots, ftlFile, document);
-
-        if (this._emitEvents)
-            this._onFileParsedEmitter.fire({file: ftlFile, files: this.files});
     }
 
     private parseNodes(nodes: Node[], ftlFile: FtlFile, document: TextDocument) {

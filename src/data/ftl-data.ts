@@ -1,66 +1,113 @@
 import {
     HTMLDataV1,
-    IAttributeData,
+    IAttributeData, ITagData,
     IValueSet
 } from 'vscode-html-languageservice';
+import {
+    AugmentNames,
+    AutoblueprintNames, DroneNames,
+    EventNamesValueSet,
+    ShipNames, TextIdNames, WeaponNames
+} from './autocomplete-value-sets';
 
-// type XmlTag = ITagData & { tags?: string[] };
-type XmlData = HTMLDataV1
-// & { tags: XmlTag[] }
-    ;
+export type XmlTag = ITagData & { tags?: string[] | undefined };
+type XmlData = HTMLDataV1 & { tags: XmlTag[] };
 
 function boolAttr(name: string): IAttributeData {
     return {name: name, valueSet: 'bool'};
 }
 
-export const EventNamesValueSet: IValueSet = {
-    name: 'event-names',
-    values: [{name: 'loading...'}]
-};
+let hyperspaceEventChildren: XmlTag[] = [
+    {name: "beaconType", attributes: []},
+    {name: "recallBoarders", attributes: []},
+    {name: "instantEscape", attributes: []},
+    {name: "customFleet", attributes: []},
+    {name: "unlockCustomShip", attributes: []},
+    {name: "preventQuest", attributes: []},
+    {name: "preventFleet", attributes: []},
+    {name: 'remove', attributes: [{name: 'name'}]}
+];
+let eventChildTags: XmlTag[] = [
+    // ...allow XML tags of these types to be nested inside:
+    {name: "choice", attributes: []},
+    {name: "event", attributes: []},
+    {name: "text", attributes: []},
+    {name: "environment", attributes: []},
+    {name: "fleet", attributes: []},
+    {name: "img", attributes: []},
+    {name: "distressBeacon", attributes: []},
+    {name: "store", attributes: []},
+    {name: "ship", attributes: []},
+    {name: "repair", attributes: []},
+    {name: "autoReward", attributes: []},
+    {name: "augment", attributes: []},
+    {name: "weapon", attributes: []},
+    {name: "drone", attributes: []},
+    {name: "crewMember", attributes: []},
+    {name: "damage", attributes: []},
+    {name: "boarders", attributes: []},
+    {name: "reveal_map", attributes: []},
+    {name: "modifyPursuit", attributes: []},
+    {name: "quest", attributes: []},
+    {name: "unlockShip", attributes: []},
+    {name: "item_modify", attributes: []},
+    {name: "status", attributes: []},
+    {name: "secretSector", attributes: []},
+    {name: "removeCrew", attributes: []},
+    {name: "upgrade", attributes: []},
+    ...hyperspaceEventChildren
+];
+let eventChildTagNames = eventChildTags.map(t => t.name);
 
-export const ShipNames: IValueSet = {
-    name: 'ship-names',
-    values: [{name: 'loading...'}]
-};
-
-export const AutoblueprintNames: IValueSet = {
-    name: 'blueprint-names',
-    values: [{name: 'loading...'}]
-}
-
-export const TextIdNames: IValueSet = {
-    name: 'text-id-names',
-    values: [{name: 'loading...'}]
-};
-
-export const WeaponNames: IValueSet = {
-    name: 'weapon-names',
-    values: [{name: 'loading...'}]
-}
-export const DroneNames: IValueSet = {
-    name: 'drone-names',
-    values: [{name: 'loading...'}]
-}
-export const AugmentNames: IValueSet = {
-    name: 'augment-names',
-    values: [{name: 'loading...'}]
-}
+let shipTags: XmlTag[] = [
+    {name: 'weaponOverride', attributes: [], tags: ['name']},
+    {
+        name: 'destroyed',
+        tags: eventChildTagNames,
+        attributes: [{name: 'load', valueSet: EventNamesValueSet.name}]
+    },
+    {
+        name: 'deadCrew',
+        tags: eventChildTagNames,
+        attributes: [{name: 'load', valueSet: EventNamesValueSet.name}]
+    },
+    {
+        name: "surrender",
+        tags: eventChildTagNames,
+        attributes: [{name: 'load', valueSet: EventNamesValueSet.name}]
+    },
+    {
+        name: "escape",
+        tags: eventChildTagNames,
+        attributes: [{name: 'load', valueSet: EventNamesValueSet.name}]
+    },
+    {
+        name: "gotaway",
+        tags: eventChildTagNames,
+        attributes: [{name: 'load', valueSet: EventNamesValueSet.name}]
+    },
+    {name: "crew", attributes: [], tags: ["crewMember"]},
+    {name: "crewMember", attributes: [], tags: []},
+];
+let shipTagNames = shipTags.map(t => t.name);
 
 export const FtlData: XmlData = {
     version: 1.1,
     tags: [
         {
             name: 'event',
+            tags: eventChildTagNames,
             attributes: [
                 {name: 'name'},
                 boolAttr('hidden'),
                 boolAttr('unique'),
                 {name: 'load', valueSet: EventNamesValueSet.name}
-            ]
+            ],
         },
         {
             name: 'choice',
             description: 'encloses the choice text and event for each choice in an event',
+            tags: eventChildTagNames,
             attributes: [
                 boolAttr('unique'),
                 {
@@ -76,12 +123,13 @@ export const FtlData: XmlData = {
                 {name: "min_level"}
             ]
         },
-        {
-            name: 'loadEvent',
-            attributes: []
-        },
+        //event tags
+
+
+        //ship tags
         {
             name: "ship",
+            tags: shipTagNames,
             attributes: [
                 {
                     name: 'load',
@@ -95,8 +143,14 @@ export const FtlData: XmlData = {
                 boolAttr('hostile')
             ]
         },
+        ...shipTags,
+        {
+            name: 'loadEvent',
+            attributes: [],
+        },
         {
             name: 'blueprintList',
+            tags: ['name'],
             attributes: [
                 {name: 'name'}
             ]
@@ -108,12 +162,23 @@ export const FtlData: XmlData = {
             ]
         },
         {
-            name: 'destroyed',
-            attributes: [{name: 'load', valueSet: EventNamesValueSet.name}]
+            name: 'crewBlueprint',
+            attributes: [
+                {name: 'name'}
+            ],
+            tags: [
+                "desc", "cost", "title", "short", "rarity", "powerList", "bp", "colorList"
+            ]
         },
         {
-            name: 'deadCrew',
-            attributes: [{name: 'load', valueSet: EventNamesValueSet.name}]
+            name: 'systemBlueprint',
+            attributes: [
+                {name: 'name'}
+            ],
+            tags: [
+                "type", "title", "desc", "startPower", "maxPower", "rarity", "upgradeCost",
+                "cost", "locked", "bp"
+            ]
         },
         {
             name: "text",
@@ -125,17 +190,32 @@ export const FtlData: XmlData = {
         },
         {
             name: 'textList',
-            attributes: [{name: 'name'}]
+            attributes: [{name: 'name'}],
+            tags: ["text"]
         },
         {name: "quest", attributes: [{name: 'event'}]},
         {name: "environment", attributes: []},
-        {name: "weapon", attributes: [{name: 'name', valueSet: WeaponNames.name}]},
-        {name: 'weaponBlueprint', attributes: [{name: 'name'}]},
+        {
+            name: "weapon",
+            attributes: [{name: 'name', valueSet: WeaponNames.name}]
+        },
+        {
+            name: 'weaponBlueprint',
+            tags: [
+                "type", "title", "short", "locked", "desc", "tooltip", "damage", "ion", "sysDamage",
+                "persDamage", "speed", "missiles", "shots", "length", "lockdown", "sp", "fireChance",
+                "breachChance", "stunChance", "hullBust", "cooldown", "power", "cost", "bp", "rarity",
+                "image", "explosion", "launchSounds", "hitShipSounds", "hitShieldSounds", "missSounds",
+                "weaponArt", "tip", "iconImage", "color", "drone_targetable", "flavorType", "radius",
+                "spin", "projectiles", "chargeLevels", "boost", "stun"
+            ],
+            attributes: [{name: 'name'}]
+        },
         {name: 'droneBlueprint', attributes: [{name: 'name'}]},
         {name: 'augmentBlueprint', attributes: [{name: 'name'}]},
         {name: "unlockCustomShip", attributes: []},
         {name: "autoReward", attributes: [{name: 'level'}]},
-        {name: "item_modify", attributes: []},
+        {name: "item_modify", attributes: [], tags: ['item']},
         {
             name: "damage",
             attributes: [{name: 'amount'}, {name: 'system'}, {name: 'effect'}]
@@ -144,11 +224,14 @@ export const FtlData: XmlData = {
         {name: "modifyPursuit", attributes: []},
         {name: "crewMember", attributes: [{name: 'class'}, {name: 'amount'}]},
         {name: "img", attributes: []},
-        {name: "removeCrew", attributes: []},
+        {name: "removeCrew", attributes: [], tags: [...eventChildTagNames, "clone"]},
         {name: "status", attributes: []},
         {name: "distressBeacon", attributes: []},
         {name: "restartEvent", attributes: []},
-        {name: "drone", attributes: [{name: 'name', valueSet: DroneNames.name}]},
+        {
+            name: "drone",
+            attributes: [{name: 'name', valueSet: DroneNames.name}]
+        },
         {name: "beaconType", attributes: []},
         {name: "recallBoarders", attributes: []},
         {name: "loadEvent", attributes: []},
@@ -156,7 +239,10 @@ export const FtlData: XmlData = {
         {name: "customFleet", attributes: []},
         {name: "preventQuest", attributes: []},
         {name: "preventFleet", attributes: []},
-        {name: "augment", attributes: [{name: 'name', valueSet: AugmentNames.name}]},
+        {
+            name: "augment",
+            attributes: [{name: 'name', valueSet: AugmentNames.name}]
+        },
         {name: "store", attributes: []},
         {name: "triggeredEvent", attributes: []},
         {name: "hiddenAug", attributes: []},
@@ -166,7 +252,6 @@ export const FtlData: XmlData = {
         },
         {name: "remove", attributes: []},
         {name: "reveal_map", attributes: []},
-        {name: "surrender", attributes: []},
         {name: "aggressive", attributes: []},
         {name: "removeHazards", attributes: []},
         {name: "secretSectorWarp", attributes: []},
@@ -195,6 +280,7 @@ export const FtlData: XmlData = {
         {name: "win", attributes: []},
         {name: "disableScrapScore", attributes: []},
         {name: "unlockShip", attributes: []},
+        {name: "eventList", attributes: [], tags: ["event"]}
     ],
     valueSets: [
         {name: 'bool', values: [{name: 'true'}, {name: 'false'}]},

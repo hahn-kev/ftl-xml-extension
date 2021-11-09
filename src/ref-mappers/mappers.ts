@@ -11,7 +11,7 @@ import {
     ShipNames,
     TextIdNames,
     WeaponNames
-} from '../data/ftl-data';
+} from '../data/autocomplete-value-sets';
 import {defaultEvents} from '../data/default-events';
 import {FtlShip} from '../models/ftl-ship';
 import {defaultShips} from '../data/default-ships';
@@ -39,7 +39,8 @@ export namespace mappers {
             getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
                 return events.getEventRefName(node, document, position)
                     ?? getAttrValueForTag(node, 'destroyed', 'load', document, position)
-                    ?? getAttrValueForTag(node, 'deadCrew', 'load', document, position);
+                    ?? getAttrValueForTag(node, 'deadCrew', 'load', document, position)
+                    ?? getAttrValueForTag(node, 'surrender', 'load', document, position);
             }
         },
         EventNamesValueSet,

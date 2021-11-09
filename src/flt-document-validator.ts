@@ -1,16 +1,15 @@
 import {DocumentCache} from './document-cache';
-import {FtlFile} from './models/ftl-file';
 import {
     Diagnostic,
     DiagnosticCollection,
     DiagnosticSeverity,
-    Event,
-    TextDocument, Uri
+    TextDocument
 } from 'vscode';
 import {Node} from 'vscode-html-languageservice';
 import {toRange} from './helpers';
 import {BlueprintMapper} from './ref-mappers/blueprint-mapper';
 import {RefMapperBase} from './ref-mappers/ref-mapper';
+import {FtlData, XmlTag} from './data/ftl-data';
 
 export class FltDocumentValidator {
 
@@ -36,7 +35,6 @@ export class FltDocumentValidator {
 
 
     private validateNode(node: Node, diagnostics: Diagnostic[], document: TextDocument) {
-
         for (let mapper of this.mappers) {
             let invalidRef = mapper.tryGetInvalidRefName(node, document);
             if (invalidRef) {
@@ -48,6 +46,7 @@ export class FltDocumentValidator {
             }
         }
 
+        // this.validateAllowedChildren(node, document, diagnostics);
         diagnostics.push(...this.blueprintMapper.validateListType(node, document));
         diagnostics.push(...this.blueprintMapper.validateRefType(node, document));
 
@@ -64,6 +63,20 @@ export class FltDocumentValidator {
                 DiagnosticSeverity.Warning
             ));
         }
+    }
+
+    allowedChildrenMap: Map<string, Set<string>> = new Map(FtlData.tags.map((tag: XmlTag) => [tag.name, new Set(tag.tags)]));
+
+    private validateAllowedChildren(node: Node, document: TextDocument, diagnostics: Diagnostic[]) {
+        if (!node.tag) return;
+        const allowedChildren = this.allowedChildrenMap.get(node.tag);
+        if (allowedChildren === undefined) return;
+        let errors = node.children.filter(child => child.tag && !allowedChildren.has(child.tag))
+            .map(child => {
+                let range = toRange(child.start, child.startTagEnd ?? child.end, document);
+                return new Diagnostic(range, `Tag: ${child.tag} is not allowed in a ${node.tag}`, DiagnosticSeverity.Warning);
+            });
+        diagnostics.push(...errors);
     }
 
     isMissingEnd(node: Node, document: TextDocument) {
