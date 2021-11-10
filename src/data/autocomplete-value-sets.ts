@@ -32,3 +32,7 @@ export const AugmentNames: IValueSet = {
     name: 'augment-names',
     values: [{name: 'loading...'}]
 }
+export const CrewNames: IValueSet = {
+    name: 'crew-names',
+    values: [{name: 'loading...'}]
+}

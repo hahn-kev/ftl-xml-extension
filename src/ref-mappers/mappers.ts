@@ -6,7 +6,7 @@ import {events} from '../events';
 import {getAttrValueForTag} from '../helpers';
 import {
     AugmentNames,
-    AutoblueprintNames, DroneNames,
+    AutoblueprintNames, CrewNames, DroneNames,
     EventNamesValueSet,
     ShipNames,
     TextIdNames,
@@ -26,6 +26,8 @@ import {FtlDrone} from '../models/ftl-drone';
 import {defaultDrones} from '../data/default-drones';
 import {FtlAugment} from '../models/ftlAugment';
 import {defaultAugments} from '../data/default-augments';
+import {FtlCrew} from '../models/ftl-crew';
+import {defaultCrew} from '../data/default-crew';
 
 export namespace mappers {
 
@@ -61,6 +63,7 @@ export namespace mappers {
         ShipNames,
         "Ship",
         defaultShips);
+
     export const weaponsMapper = new RefMapper(file => file.weapons,
         file => file.weaponRefs,
         (name, file, node, document) => new FtlWeapon(name, file, node, document),
@@ -90,6 +93,7 @@ export namespace mappers {
         DroneNames,
         "Drone",
         defaultDrones);
+
     export const augmentsMapper = new RefMapper(file => file.augments,
         file => file.augmentRefs,
         (name, file, node, document) => new FtlAugment(name, file, node, document),
@@ -105,6 +109,23 @@ export namespace mappers {
         AugmentNames,
         "Augment",
         defaultAugments);
+
+    export const crewMapper = new RefMapper(file => file.crew,
+        file => file.crewRefs,
+        (name, file, node, document) => new FtlCrew(name, file, node, document),
+        {
+            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
+                return getAttrValueForTag(node, 'crewBlueprint', 'name', document, position);
+            },
+            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+                return getAttrValueForTag(node, 'crewMember', 'class', document, position)
+                    ?? getAttrValueForTag(node, 'crewMember', 'type', document, position)
+                    ?? getAttrValueForTag(node, 'removeCrew', 'class', document, position)
+            }
+        },
+        CrewNames,
+        "Crew",
+        defaultCrew);
 
     export const autoBlueprintMapper = new RefMapper(file => file.autoBlueprints,
         file => file.autoBlueprintRefs,
@@ -138,7 +159,13 @@ export namespace mappers {
         []
     );
 
-    const blueprintMappers: RefMapperBase[] = [weaponsMapper, autoBlueprintMapper, dronesMapper, augmentsMapper];
+    const blueprintMappers: RefMapperBase[] = [
+        weaponsMapper,
+        autoBlueprintMapper,
+        dronesMapper,
+        augmentsMapper,
+        crewMapper
+    ];
 
     export function setup(documentCache: DocumentCache) {
         const blueprintMapper = new BlueprintMapper(blueprintMappers);

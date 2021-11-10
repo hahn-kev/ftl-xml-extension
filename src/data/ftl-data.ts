@@ -5,7 +5,7 @@ import {
 } from 'vscode-html-languageservice';
 import {
     AugmentNames,
-    AutoblueprintNames, DroneNames,
+    AutoblueprintNames, CrewNames, DroneNames,
     EventNamesValueSet,
     ShipNames, TextIdNames, WeaponNames
 } from './autocomplete-value-sets';
@@ -45,7 +45,6 @@ let eventChildTags: XmlTag[] = [
     {name: "augment", attributes: []},
     {name: "weapon", attributes: []},
     {name: "drone", attributes: []},
-    {name: "crewMember", attributes: []},
     {name: "damage", attributes: []},
     {name: "boarders", attributes: []},
     {name: "reveal_map", attributes: []},
@@ -55,12 +54,18 @@ let eventChildTags: XmlTag[] = [
     {name: "item_modify", attributes: []},
     {name: "status", attributes: []},
     {name: "secretSector", attributes: []},
-    {name: "removeCrew", attributes: []},
+    {
+        name: "removeCrew",
+        attributes: [{
+            name: 'class',
+            valueSet: CrewNames.name
+        }]
+    },
     {name: "upgrade", attributes: []},
     ...hyperspaceEventChildren
 ];
 let eventChildTagNames = eventChildTags.map(t => t.name);
-eventChildTagNames.push('choice', 'text');
+eventChildTagNames.push('choice', 'text', 'crewMember');
 
 let shipTags: XmlTag[] = [
     {name: 'weaponOverride', attributes: [], tags: ['name']},
@@ -90,9 +95,8 @@ let shipTags: XmlTag[] = [
         attributes: [{name: 'load', valueSet: EventNamesValueSet.name}]
     },
     {name: "crew", attributes: [], tags: ["crewMember"]},
-    {name: "crewMember", attributes: [], tags: []},
 ];
-let shipTagNames = shipTags.map(t => t.name);
+let shipTagNames = [...shipTags.map(t => t.name), 'crewMember'];
 
 export const FtlData: XmlData = {
     version: 1.1,
@@ -226,9 +230,25 @@ export const FtlData: XmlData = {
         },
         {name: "upgrade", attributes: []},
         {name: "modifyPursuit", attributes: []},
-        {name: "crewMember", attributes: [{name: 'class'}, {name: 'amount'}]},
+        {
+            name: "crewMember",
+            attributes: [
+                {name: 'amount'},
+                {
+                    name: 'class',
+                    valueSet: CrewNames.name
+                },
+                {
+                    name: 'type',
+                    valueSet: CrewNames.name
+                }]
+        },
         {name: "img", attributes: []},
-        {name: "removeCrew", attributes: [], tags: [...eventChildTagNames, "clone"]},
+        {
+            name: "removeCrew",
+            attributes: [],
+            tags: [...eventChildTagNames, "clone"]
+        },
         {name: "status", attributes: []},
         {name: "distressBeacon", attributes: []},
         {name: "restartEvent", attributes: []},
@@ -294,6 +314,7 @@ export const FtlData: XmlData = {
         TextIdNames,
         WeaponNames,
         DroneNames,
-        AugmentNames
+        AugmentNames,
+        CrewNames
     ]
 };

@@ -14,7 +14,7 @@ import {FtlCompletionProvider} from './ftl-completion-provider';
 import {FtlHoverProvider} from './ftl-hover-provider';
 import {
     AugmentNames,
-    AutoblueprintNames,
+    AutoblueprintNames, CrewNames,
     DroneNames,
     EventNamesValueSet,
     ShipNames,
@@ -61,6 +61,7 @@ export function activate(context: ExtensionContext) {
             let weapons = WeaponNames.values.map(w => w.name);
             let drones = DroneNames.values.map(d => d.name);
             let augs = AugmentNames.values.map(a => a.name);
+            let crew = CrewNames.values.map(c => c.name);
             let tmp = '';
         }
     });

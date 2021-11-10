@@ -12,6 +12,7 @@ export interface RefMapperBase {
     lookupDef(node: Node, document: TextDocument, position: Position): Location | undefined;
 
     readonly typeName: string;
+    readonly defaults?: readonly string[];
     readonly nodeMap?: NodeMap;
     readonly autoCompleteValues?: IValueSet;
     readonly refs: Map<string, FtlValue[]>;
@@ -48,7 +49,7 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
                 public readonly nodeMap: NodeMap,
                 public readonly autoCompleteValues: IValueSet,
                 public readonly typeName: string,
-                private defaults: readonly string[] = []) {
+                public defaults: readonly string[] = []) {
     }
 
     updateData(files: FtlFile[]) {

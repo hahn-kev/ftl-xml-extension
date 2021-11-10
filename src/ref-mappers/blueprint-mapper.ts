@@ -246,7 +246,9 @@ export class BlueprintMapper implements RefMapperBase {
     }
 
     getRefType(name: string): string {
-        let mapper = this.doMapper(true, mapper => mapper.defs.has(name) ? mapper : undefined);
+        let mapper = this.doMapper(true, mapper => {
+            return (mapper.defs.has(name) || mapper.defaults?.includes(name)) ? mapper : undefined;
+        });
         return mapper?.typeName ?? 'Unknown';
     }
 

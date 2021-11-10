@@ -8,6 +8,7 @@ import {FtlBlueprintList, FtlBlueprintValue} from './ftl-blueprint-list';
 import {FtlDrone} from './ftl-drone';
 import {FtlValue} from './ftl-value';
 import {FtlAugment} from './ftlAugment';
+import {FtlCrew} from './ftl-crew';
 
 export class FtlFile {
 
@@ -33,6 +34,8 @@ export class FtlFile {
     droneRefs = new Map<string, FtlDrone[]>();
     augments: FtlAugment[] = [];
     augmentRefs = new Map<string, FtlAugment[]>();
+    crew: FtlCrew[] = [];
+    crewRefs = new Map<string, FtlCrew[]>();
 
     blueprintLists: FtlBlueprintList[] = [];
     blueprintListRefs = new Map<string, FtlValue[]>();
