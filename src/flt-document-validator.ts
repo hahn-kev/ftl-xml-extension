@@ -47,6 +47,7 @@ export class FltDocumentValidator {
         }
 
         // this.validateAllowedChildren(node, document, diagnostics);
+        this.validateRequiredChildren(node, document, diagnostics);
         diagnostics.push(...this.blueprintMapper.validateListType(node, document));
         diagnostics.push(...this.blueprintMapper.validateRefType(node, document));
 
@@ -75,6 +76,22 @@ export class FltDocumentValidator {
             .map(child => {
                 let range = toRange(child.start, child.startTagEnd ?? child.end, document);
                 return new Diagnostic(range, `Tag: ${child.tag} is not allowed in a ${node.tag}`, DiagnosticSeverity.Warning);
+            });
+        diagnostics.push(...errors);
+    }
+
+    requiredChildrenMap: Map<string, string[]> = new Map(FtlData.tags
+        .filter((tag: XmlTag): tag is XmlTag & { requiredTags: string[] } => !!tag.requiredTags)
+        .map(tag => [tag.name, tag.requiredTags]));
+    private validateRequiredChildren(node: Node, document: TextDocument, diagnostics: Diagnostic[]) {
+        if (!node.tag) return;
+        const requiredChildren = this.requiredChildrenMap.get(node.tag);
+        if (requiredChildren === undefined) return;
+        let childNames = new Set(node.children.map(c => c.tag).filter((t: string | undefined): t is string => !!t));
+        let errors = requiredChildren.filter(requiredTagName => !childNames.has(requiredTagName))
+            .map(requiredTagName => {
+                let range = toRange(node.start, node.startTagEnd ?? node.end, document);
+                return new Diagnostic(range, `Tag: ${node.tag} is missing the required child: ${requiredTagName}`, DiagnosticSeverity.Warning);
             });
         diagnostics.push(...errors);
     }

@@ -10,7 +10,11 @@ import {
     ShipNames, TextIdNames, WeaponNames
 } from './autocomplete-value-sets';
 
-export type XmlTag = ITagData & { tags?: string[] | undefined };
+export interface XmlTag extends ITagData {
+    tags?: string[] | undefined;
+    requiredTags?: string[]
+}
+
 type XmlData = HTMLDataV1 & { tags: XmlTag[] };
 
 function boolAttr(name: string): IAttributeData {
@@ -29,9 +33,7 @@ let hyperspaceEventChildren: XmlTag[] = [
 ];
 let eventChildTags: XmlTag[] = [
     // ...allow XML tags of these types to be nested inside:
-    {name: "choice", attributes: []},
     {name: "event", attributes: []},
-    {name: "text", attributes: []},
     {name: "environment", attributes: []},
     {name: "fleet", attributes: []},
     {name: "img", attributes: []},
@@ -58,6 +60,7 @@ let eventChildTags: XmlTag[] = [
     ...hyperspaceEventChildren
 ];
 let eventChildTagNames = eventChildTags.map(t => t.name);
+eventChildTagNames.push('choice', 'text');
 
 let shipTags: XmlTag[] = [
     {name: 'weaponOverride', attributes: [], tags: ['name']},
@@ -108,6 +111,7 @@ export const FtlData: XmlData = {
             name: 'choice',
             description: 'encloses the choice text and event for each choice in an event',
             tags: eventChildTagNames,
+            requiredTags: ['text'],
             attributes: [
                 boolAttr('unique'),
                 {
@@ -124,7 +128,7 @@ export const FtlData: XmlData = {
             ]
         },
         //event tags
-
+        ...eventChildTags,
 
         //ship tags
         {
