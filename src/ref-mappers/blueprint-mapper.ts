@@ -191,7 +191,11 @@ export class BlueprintMapper implements RefMapperBase {
         return [new Diagnostic(toRange(node.start, node.startTagEnd ?? node.end, document), message, DiagnosticSeverity.Warning)]
     }
 
+    static ignoreListNames = ['DLC_ITEMS'];
     validateListType(node: Node, document: TextDocument): Diagnostic[] {
+        let listName = getAttrValueForTag(node, 'blueprintList', 'name');
+        if (!listName || BlueprintMapper.ignoreListNames.includes(listName)) return [];
+
         let typeResults = this.getListTypeInfoFromNode(node, document);
         if (!typeResults) return [];
         let {map: typeMapper, listTypeName} = typeResults;
