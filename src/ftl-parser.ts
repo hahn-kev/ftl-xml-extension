@@ -38,10 +38,13 @@ export class FtlParser {
 
     private async parseFiles(files: Uri[]) {
         if (files.length == 0) return;
+        console.time('parse files');
         for (let file of files) {
             let document = await workspace.openTextDocument(file);
-            this.parseFile(file, document);
+            this._parseFile(file, document);
         }
+        console.timeEnd('parse files');
+        this._onFileParsedEmitter.fire({files: this.files});
     }
 
     public parseFile(uri: Uri, document: TextDocument) {
@@ -62,7 +65,6 @@ export class FtlParser {
             for (let mapper of this.mappers) {
                 mapper.parseNode(node, ftlFile, document);
             }
-
 
             this.parseNodes(node.children, ftlFile, document);
         }
