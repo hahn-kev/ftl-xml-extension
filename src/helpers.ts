@@ -1,9 +1,4 @@
-import {
-    MarkupContent,
-    Node,
-    Range as HtmlRange,
-    TextDocument as HtmlTextDocument
-} from "vscode-html-languageservice";
+import {MarkupContent, Node, Range as HtmlRange, TextDocument as HtmlTextDocument} from "vscode-html-languageservice";
 import {MarkdownString, Position, Range, TextDocument} from "vscode";
 
 
@@ -45,7 +40,7 @@ export function getAttrValueForTag(node: Node, tagName: string, attrName: string
         return normalizeAttributeName(node.attributes[attrName]);
 }
 
-export function hasAttr<T extends string>(node: Node, name: T, document?: TextDocument, atPosition?: Position): node is Node & {attributes: {T: string}} {
+export function hasAttr<T extends string>(node: Node, name: T, document?: TextDocument, atPosition?: Position): node is Node & { attributes: { T: string } } {
     if (!node.attributes) return false;
     if (!(name in node.attributes)) return false;
     if (document && atPosition) {

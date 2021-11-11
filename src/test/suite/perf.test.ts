@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import { performance } from 'perf_hooks';
+import {performance} from 'perf_hooks';
 import {setup} from '../../setup';
 
 suite('Performance', () => {

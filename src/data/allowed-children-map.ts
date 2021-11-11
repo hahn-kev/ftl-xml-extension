@@ -1,165 +1,162 @@
-
 let gib = [
     "velocity", "direction", "angular", "glowOffset", "x", "y"
 ];
 type AllowedChildrenType = { [key: string]: Set<string> };
 
 export const allowedChildrenMap: AllowedChildrenType = Object.fromEntries(Object.entries({
-    // This file lists tag names that are allowed to be nested inside other tags
-    // If a tag is found inside another, but is not found on a list in this file,
-    // it'll be reported as an error.
+                                                                                             // This file lists tag names that are allowed to be nested inside other tags
+                                                                                             // If a tag is found inside another, but is not found on a list in this file,
+                                                                                             // it'll be reported as an error.
 
 
+                                                                                             "projectiles": [
+                                                                                                 "projectile"
+                                                                                             ],
 
+                                                                                             "boost": [
+                                                                                                 "type", "amount", "count"
+                                                                                             ],
 
+                                                                                             "itemBlueprint": [
+                                                                                                 "type", "title", "desc", "cost", "rarity"
+                                                                                             ],
 
+                                                                                             "augBlueprint": [
+                                                                                                 "title", "desc", "cost", "bp", "rarity", "value", "stackable"
+                                                                                             ],
 
-    "projectiles": [
-        "projectile"
-    ],
+                                                                                             "droneBlueprint": [
+                                                                                                 "type", "level", "title", "short", "desc", "power", "cooldown", "dodge", "speed",
+                                                                                                 "cost", "bp", "locked", "droneImage", "image", "weaponBlueprint", "rarity",
+                                                                                                 "tooltip", "tip", "iconImage", "target"
+                                                                                             ],
 
-    "boost": [
-        "type", "amount", "count"
-    ],
+                                                                                             "shipBlueprint": [
+                                                                                                 "class", "name", "maxSector", "minSector", "unlock", "desc", "systemList",
+                                                                                                 "weaponSlots", "droneSlots", "weaponList", "droneList", "health", "maxPower",
+                                                                                                 "crewCount", "aug", "shieldImage", "cloakImage", "floorImage", "boardingAI"
+                                                                                             ],
 
-    "itemBlueprint": [
-        "type", "title", "desc", "cost", "rarity"
-    ],
+                                                                                             "anim": [
+                                                                                                 "sheet", "desc", "time"
+                                                                                             ],
 
-    "augBlueprint": [
-        "title", "desc", "cost", "bp", "rarity", "value", "stackable"
-    ],
+                                                                                             "weaponAnim": [
+                                                                                                 "sheet", "desc", "chargedFrame", "fireFrame", "firePoint", "mountPoint",
+                                                                                                 "delayChargeAnim", "chargeImage", "boost"
+                                                                                             ],
 
-    "droneBlueprint": [
-        "type", "level", "title", "short", "desc", "power", "cooldown", "dodge", "speed",
-        "cost", "bp", "locked", "droneImage", "image", "weaponBlueprint", "rarity",
-        "tooltip", "tip", "iconImage", "target"
-    ],
+                                                                                             "sectorDescription": [
+                                                                                                 "nameList", "trackList", "rarityList", "startEvent", "event"
+                                                                                             ],
 
-    "shipBlueprint": [
-        "class", "name", "maxSector", "minSector", "unlock", "desc", "systemList",
-        "weaponSlots", "droneSlots", "weaponList", "droneList", "health", "maxPower",
-        "crewCount", "aug", "shieldImage", "cloakImage", "floorImage", "boardingAI"
-    ],
+                                                                                             "sectorType": [
+                                                                                                 "sector"
+                                                                                             ],
 
-    "anim": [
-        "sheet", "desc", "time"
-    ],
+                                                                                             "nameList": [
+                                                                                                 "name"
+                                                                                             ],
 
-    "weaponAnim": [
-        "sheet", "desc", "chargedFrame", "fireFrame", "firePoint", "mountPoint",
-        "delayChargeAnim", "chargeImage", "boost"
-    ],
+                                                                                             "trackList": [
+                                                                                                 "track"
+                                                                                             ],
 
-    "sectorDescription": [
-        "nameList", "trackList", "rarityList", "startEvent", "event"
-    ],
+                                                                                             "rarityList": [
+                                                                                                 "blueprint"
+                                                                                             ],
 
-    "sectorType": [
-        "sector"
-    ],
+                                                                                             "offsets": [
+                                                                                                 "cloak", "floor"
+                                                                                             ],
 
-    "nameList": [
-        "name"
-    ],
+                                                                                             "weaponMounts": [
+                                                                                                 "mount"
+                                                                                             ],
 
-    "trackList": [
-        "track"
-    ],
+                                                                                             "systemList": [
+                                                                                                 "pilot", "oxygen", "shields", "engines", "weapons", "drones", "medbay",
+                                                                                                 "clonebay", "doors", "mind", "hacking", "artillery", "teleporter",
+                                                                                                 "sensors", "cloaking", "battery"
+                                                                                             ],
 
-    "rarityList": [
-        "blueprint"
-    ],
+                                                                                             "powerList": [
+                                                                                                 "power"
+                                                                                             ],
 
-    "offsets": [
-        "cloak", "floor"
-    ],
+                                                                                             "colorList": [
+                                                                                                 "layer"
+                                                                                             ],
 
-    "weaponMounts": [
-        "mount"
-    ],
+                                                                                             "layer": [
+                                                                                                 "color"
+                                                                                             ],
 
-    "systemList": [
-        "pilot", "oxygen", "shields", "engines", "weapons", "drones", "medbay",
-        "clonebay", "doors", "mind", "hacking", "artillery", "teleporter",
-        "sensors", "cloaking", "battery"
-    ],
+                                                                                             "color": [
+                                                                                                 "r", "g", "b"
+                                                                                             ],
 
-    "powerList": [
-        "power"
-    ],
+                                                                                             "upgradeCost": [
+                                                                                                 "level"
+                                                                                             ],
 
-    "colorList": [
-        "layer"
-    ],
+                                                                                             "launchSounds": [
+                                                                                                 "sound"
+                                                                                             ],
 
-    "layer": [
-        "color"
-    ],
+                                                                                             "hitShipSounds": [
+                                                                                                 "sound"
+                                                                                             ],
+                                                                                             "hitShieldSounds": [
+                                                                                                 "sound"
+                                                                                             ],
+                                                                                             "missSounds": [
+                                                                                                 "sound"
+                                                                                             ],
 
-    "color": [
-        "r", "g", "b"
-    ],
+                                                                                             "slot": [
+                                                                                                 "direction", "number"
+                                                                                             ],
 
-    "upgradeCost": [
-        "level"
-    ],
+                                                                                             "weaponList": [
+                                                                                                 "weapon"
+                                                                                             ],
 
-    "launchSounds": [
-        "sound"
-    ],
+                                                                                             "droneList": [
+                                                                                                 "drone"
+                                                                                             ],
 
-    "hitShipSounds": [
-        "sound"
-    ],
-    "hitShieldSounds": [
-        "sound"
-    ],
-    "missSounds": [
-        "sound"
-    ],
+                                                                                             "music": [
+                                                                                                 "track"
+                                                                                             ],
 
-    "slot": [
-        "direction", "number"
-    ],
+                                                                                             "track": [
+                                                                                                 "name", "explore", "combat"
+                                                                                             ],
 
-    "weaponList": [
-        "weapon"
-    ],
+                                                                                             "roomLayout": [
+                                                                                                 "computerGlow"
+                                                                                             ],
 
-    "droneList": [
-        "drone"
-    ],
+                                                                                             "imageList": [
+                                                                                                 "img"
+                                                                                             ],
 
-    "music": [
-        "track"
-    ],
+                                                                                             "explosion": [
+                                                                                                 "gib1",
+                                                                                                 "gib2",
+                                                                                                 "gib3",
+                                                                                                 "gib4",
+                                                                                                 "gib5",
+                                                                                                 "gib6",
+                                                                                             ],
 
-    "track": [
-        "name", "explore", "combat"
-    ],
-
-    "roomLayout": [
-        "computerGlow"
-    ],
-
-    "imageList": [
-        "img"
-    ],
-
-    "explosion": [
-        "gib1",
-        "gib2",
-        "gib3",
-        "gib4",
-        "gib5",
-        "gib6",
-    ],
-
-    "gib1": gib,
-    "gib2": gib,
-    "gib3": gib,
-    "gib4": gib,
-    "gib5": gib,
-    "gib6": gib,
-}).map(([tagName, children]) => [tagName, new Set(children)]));
+                                                                                             "gib1": gib,
+                                                                                             "gib2": gib,
+                                                                                             "gib3": gib,
+                                                                                             "gib4": gib,
+                                                                                             "gib5": gib,
+                                                                                             "gib6": gib,
+                                                                                         })
+                                                                              .map(([tagName, children]) => [tagName, new Set(
+                                                                                  children)]));

@@ -58,8 +58,8 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
         this.autoCompleteValues.values.length = 0;
 
         let names = new Set(files.flatMap(this.fileSelector)
-            .map(value => value.name)
-            .concat(this.defaults));
+                                .map(value => value.name)
+                                .concat(this.defaults));
 
         this.autoCompleteValues.values
             .push(...Array.from(names.values()).map(name => ({name})));

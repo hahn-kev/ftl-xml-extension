@@ -23,7 +23,10 @@ export function setup(): { ftlParser: FtlParser; ftlDocumentValidator: FltDocume
     service.setDataProviders(false, [ftlDataProvider]);
 
     let ftlDefinitionProvider = new FtlDefinitionProvider(documentCache, mappersList);
-    let ftlDocumentValidator = new FltDocumentValidator(documentCache, diagnosticCollection, blueprintMapper, mappersList);
+    let ftlDocumentValidator = new FltDocumentValidator(documentCache,
+                                                        diagnosticCollection,
+                                                        blueprintMapper,
+                                                        mappersList);
     let ftlReferenceProvider = new FtlReferenceProvider(documentCache, mappersList);
     let hoverProvider = new FtlHoverProvider(documentCache, service);
     let completionItemProvider = new FtlCompletionProvider(documentCache, service, blueprintMapper, mappersList);

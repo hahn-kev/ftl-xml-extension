@@ -1,12 +1,15 @@
 import {expect} from "chai";
-import {AsyncFunc, before, Context, suite, test} from "mocha";
+import {before, suite, test} from "mocha";
 
 import {setup} from '../../setup';
 import {
     AugmentNames,
-    AutoblueprintNames, CrewNames, DroneNames,
+    AutoblueprintNames,
+    CrewNames,
+    DroneNames,
     EventNamesValueSet,
-    ShipNames, SystemNames,
+    ShipNames,
+    SystemNames,
     TextIdNames,
     WeaponNames
 } from '../../data/autocomplete-value-sets';

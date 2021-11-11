@@ -1,10 +1,5 @@
 import {DocumentCache} from './document-cache';
-import {
-    Diagnostic,
-    DiagnosticCollection,
-    DiagnosticSeverity,
-    TextDocument
-} from 'vscode';
+import {Diagnostic, DiagnosticCollection, DiagnosticSeverity, TextDocument} from 'vscode';
 import {Node} from 'vscode-html-languageservice';
 import {toRange} from './helpers';
 import {BlueprintMapper} from './ref-mappers/blueprint-mapper';
@@ -75,14 +70,17 @@ export class FltDocumentValidator {
         let errors = node.children.filter(child => child.tag && !allowedChildren.has(child.tag))
             .map(child => {
                 let range = toRange(child.start, child.startTagEnd ?? child.end, document);
-                return new Diagnostic(range, `Tag: ${child.tag} is not allowed in a ${node.tag}`, DiagnosticSeverity.Warning);
+                return new Diagnostic(range,
+                                      `Tag: ${child.tag} is not allowed in a ${node.tag}`,
+                                      DiagnosticSeverity.Warning);
             });
         diagnostics.push(...errors);
     }
 
     requiredChildrenMap: Map<string, string[]> = new Map(FtlData.tags
-        .filter((tag: XmlTag): tag is XmlTag & { requiredTags: string[] } => !!tag.requiredTags)
-        .map(tag => [tag.name, tag.requiredTags]));
+                                                             .filter((tag: XmlTag): tag is XmlTag & { requiredTags: string[] } => !!tag.requiredTags)
+                                                             .map(tag => [tag.name, tag.requiredTags]));
+
     private validateRequiredChildren(node: Node, document: TextDocument, diagnostics: Diagnostic[]) {
         if (!node.tag) return;
         const requiredChildren = this.requiredChildrenMap.get(node.tag);
@@ -91,7 +89,9 @@ export class FltDocumentValidator {
         let errors = requiredChildren.filter(requiredTagName => !childNames.has(requiredTagName))
             .map(requiredTagName => {
                 let range = toRange(node.start, node.startTagEnd ?? node.end, document);
-                return new Diagnostic(range, `Tag: ${node.tag} is missing the required child: ${requiredTagName}`, DiagnosticSeverity.Warning);
+                return new Diagnostic(range,
+                                      `Tag: ${node.tag} is missing the required child: ${requiredTagName}`,
+                                      DiagnosticSeverity.Warning);
             });
         diagnostics.push(...errors);
     }

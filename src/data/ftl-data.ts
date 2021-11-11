@@ -1,13 +1,13 @@
-import {
-    HTMLDataV1,
-    IAttributeData, ITagData,
-    IValueSet
-} from 'vscode-html-languageservice';
+import {HTMLDataV1, IAttributeData, ITagData} from 'vscode-html-languageservice';
 import {
     AugmentNames,
-    AutoblueprintNames, CrewNames, DroneNames,
+    AutoblueprintNames,
+    CrewNames,
+    DroneNames,
     EventNamesValueSet,
-    ShipNames, TextIdNames, WeaponNames
+    ShipNames,
+    TextIdNames,
+    WeaponNames
 } from './autocomplete-value-sets';
 
 export interface XmlTag extends ITagData {

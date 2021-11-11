@@ -7,17 +7,8 @@ import {
     SnippetString,
     TextDocument
 } from 'vscode';
-import {
-    CompletionItem as HtmlCompletionItem,
-    HTMLDocument,
-    LanguageService,
-    Node
-} from 'vscode-html-languageservice';
-import {
-    convertDocumentation,
-    convertRange,
-    toTextDocumentHtml
-} from './helpers';
+import {CompletionItem as HtmlCompletionItem, HTMLDocument, LanguageService, Node} from 'vscode-html-languageservice';
+import {convertDocumentation, convertRange, toTextDocumentHtml} from './helpers';
 import {DocumentCache} from './document-cache';
 import {EventNamesValueSet} from './data/autocomplete-value-sets';
 import {BlueprintMapper} from './ref-mappers/blueprint-mapper';
@@ -74,9 +65,13 @@ export class FtlCompletionProvider implements CompletionItemProvider {
             let mapper = this.blueprintMapper.getMapperForTypeName(typeInfo.listTypeName);
 
             if (!mapper || mapper == this.blueprintMapper || !mapper.autoCompleteValues) {
-               return this.blueprintMapper.getAllBlueprintNames().map(name => ({label: name, kind: CompletionItemKind.Unit}));
+                return this.blueprintMapper.getAllBlueprintNames()
+                    .map(name => ({label: name, kind: CompletionItemKind.Unit}));
             } else {
-                return mapper.autoCompleteValues.values.map(value => ({label: value.name, kind: CompletionItemKind.Unit}));
+                return mapper.autoCompleteValues.values.map(value => ({
+                    label: value.name,
+                    kind: CompletionItemKind.Unit
+                }));
             }
         }
     }

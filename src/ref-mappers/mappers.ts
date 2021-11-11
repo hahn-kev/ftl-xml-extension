@@ -6,9 +6,12 @@ import {events} from '../events';
 import {getAttrValueForTag} from '../helpers';
 import {
     AugmentNames,
-    AutoblueprintNames, CrewNames, DroneNames,
+    AutoblueprintNames,
+    CrewNames,
+    DroneNames,
     EventNamesValueSet,
-    ShipNames, SystemNames,
+    ShipNames,
+    SystemNames,
     TextIdNames,
     WeaponNames
 } from '../data/autocomplete-value-sets';
@@ -34,147 +37,236 @@ import {defaultSystems} from '../data/default-systems';
 export namespace mappers {
 
     export const eventsMapper = new RefMapper(file => file.events,
-        file => file.eventRefs,
-        (name, file, node, document) => new FtlEvent(name, file, node, document),
-        {
-            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-                return events.getEventNameDef(node, document, position);
-            },
-            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-                return events.getEventRefName(node, document, position)
-                    ?? getAttrValueForTag(node, 'destroyed', 'load', document, position)
-                    ?? getAttrValueForTag(node, 'deadCrew', 'load', document, position)
-                    ?? getAttrValueForTag(node, 'surrender', 'load', document, position);
-            }
-        },
-        EventNamesValueSet,
-        "Event",
-        defaultEvents);
+                                              file => file.eventRefs,
+                                              (name, file, node, document) => new FtlEvent(name, file, node, document),
+                                              {
+                                                  getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
+                                                      return events.getEventNameDef(node, document, position);
+                                                  },
+                                                  getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+                                                      return events.getEventRefName(node, document, position)
+                                                          ?? getAttrValueForTag(node,
+                                                                                'destroyed',
+                                                                                'load',
+                                                                                document,
+                                                                                position)
+                                                          ?? getAttrValueForTag(node,
+                                                                                'deadCrew',
+                                                                                'load',
+                                                                                document,
+                                                                                position)
+                                                          ?? getAttrValueForTag(node,
+                                                                                'surrender',
+                                                                                'load',
+                                                                                document,
+                                                                                position);
+                                                  }
+                                              },
+                                              EventNamesValueSet,
+                                              "Event",
+                                              defaultEvents);
 
     export const shipsMapper = new RefMapper(file => file.ships,
-        file => file.shipRefs,
-        (name, file, node, document) => new FtlShip(name, file, node, document),
-        {
-            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-                return getAttrValueForTag(node, 'ship', 'name', document, position);
-            },
-            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-                return getAttrValueForTag(node, 'ship', 'load', document, position);
-            }
-        },
-        ShipNames,
-        "Ship",
-        defaultShips);
+                                             file => file.shipRefs,
+                                             (name, file, node, document) => new FtlShip(name, file, node, document),
+                                             {
+                                                 getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
+                                                     return getAttrValueForTag(node,
+                                                                               'ship',
+                                                                               'name',
+                                                                               document,
+                                                                               position);
+                                                 },
+                                                 getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+                                                     return getAttrValueForTag(node,
+                                                                               'ship',
+                                                                               'load',
+                                                                               document,
+                                                                               position);
+                                                 }
+                                             },
+                                             ShipNames,
+                                             "Ship",
+                                             defaultShips);
 
     export const weaponsMapper = new RefMapper(file => file.weapons,
-        file => file.weaponRefs,
-        (name, file, node, document) => new FtlWeapon(name, file, node, document),
-        {
-            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-                return getAttrValueForTag(node, 'weaponBlueprint', 'name', document, position);
-            },
-            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-                return getAttrValueForTag(node, 'weapon', 'name', document, position)
-            }
-        },
-        WeaponNames,
-        "Weapon",
-        defaultWeaponBlueprints);
+                                               file => file.weaponRefs,
+                                               (name, file, node, document) => new FtlWeapon(name,
+                                                                                             file,
+                                                                                             node,
+                                                                                             document),
+                                               {
+                                                   getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
+                                                       return getAttrValueForTag(node,
+                                                                                 'weaponBlueprint',
+                                                                                 'name',
+                                                                                 document,
+                                                                                 position);
+                                                   },
+                                                   getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+                                                       return getAttrValueForTag(node,
+                                                                                 'weapon',
+                                                                                 'name',
+                                                                                 document,
+                                                                                 position)
+                                                   }
+                                               },
+                                               WeaponNames,
+                                               "Weapon",
+                                               defaultWeaponBlueprints);
 
     export const dronesMapper = new RefMapper(file => file.drones,
-        file => file.droneRefs,
-        (name, file, node, document) => new FtlDrone(name, file, node, document),
-        {
-            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-                return getAttrValueForTag(node, 'droneBlueprint', 'name', document, position);
-            },
-            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-                return getAttrValueForTag(node, 'drone', 'name', document, position)
-            }
-        },
-        DroneNames,
-        "Drone",
-        defaultDrones);
+                                              file => file.droneRefs,
+                                              (name, file, node, document) => new FtlDrone(name, file, node, document),
+                                              {
+                                                  getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
+                                                      return getAttrValueForTag(node,
+                                                                                'droneBlueprint',
+                                                                                'name',
+                                                                                document,
+                                                                                position);
+                                                  },
+                                                  getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+                                                      return getAttrValueForTag(node,
+                                                                                'drone',
+                                                                                'name',
+                                                                                document,
+                                                                                position)
+                                                  }
+                                              },
+                                              DroneNames,
+                                              "Drone",
+                                              defaultDrones);
 
     export const augmentsMapper = new RefMapper(file => file.augments,
-        file => file.augmentRefs,
-        (name, file, node, document) => new FtlAugment(name, file, node, document),
-        {
-            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-                return getAttrValueForTag(node, 'augBlueprint', 'name', document, position);
-            },
-            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-                return getAttrValueForTag(node, 'augment', 'name', document, position)
-                    ?? getAttrValueForTag(node, 'aug', 'name', document, position)
-            }
-        },
-        AugmentNames,
-        "Augment",
-        defaultAugments);
+                                                file => file.augmentRefs,
+                                                (name, file, node, document) => new FtlAugment(name,
+                                                                                               file,
+                                                                                               node,
+                                                                                               document),
+                                                {
+                                                    getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
+                                                        return getAttrValueForTag(node,
+                                                                                  'augBlueprint',
+                                                                                  'name',
+                                                                                  document,
+                                                                                  position);
+                                                    },
+                                                    getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+                                                        return getAttrValueForTag(node,
+                                                                                  'augment',
+                                                                                  'name',
+                                                                                  document,
+                                                                                  position)
+                                                            ?? getAttrValueForTag(node,
+                                                                                  'aug',
+                                                                                  'name',
+                                                                                  document,
+                                                                                  position)
+                                                    }
+                                                },
+                                                AugmentNames,
+                                                "Augment",
+                                                defaultAugments);
 
     export const crewMapper = new RefMapper(file => file.crew,
-        file => file.crewRefs,
-        (name, file, node, document) => new FtlCrew(name, file, node, document),
-        {
-            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-                return getAttrValueForTag(node, 'crewBlueprint', 'name', document, position);
-            },
-            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-                return getAttrValueForTag(node, 'crewMember', 'class', document, position)
-                    ?? getAttrValueForTag(node, 'crewMember', 'type', document, position)
-                    ?? getAttrValueForTag(node, 'removeCrew', 'class', document, position)
-            }
-        },
-        CrewNames,
-        "Crew",
-        defaultCrew);
+                                            file => file.crewRefs,
+                                            (name, file, node, document) => new FtlCrew(name, file, node, document),
+                                            {
+                                                getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
+                                                    return getAttrValueForTag(node,
+                                                                              'crewBlueprint',
+                                                                              'name',
+                                                                              document,
+                                                                              position);
+                                                },
+                                                getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+                                                    return getAttrValueForTag(node,
+                                                                              'crewMember',
+                                                                              'class',
+                                                                              document,
+                                                                              position)
+                                                        ?? getAttrValueForTag(node,
+                                                                              'crewMember',
+                                                                              'type',
+                                                                              document,
+                                                                              position)
+                                                        ?? getAttrValueForTag(node,
+                                                                              'removeCrew',
+                                                                              'class',
+                                                                              document,
+                                                                              position)
+                                                }
+                                            },
+                                            CrewNames,
+                                            "Crew",
+                                            defaultCrew);
 
     export const systemMapper = new RefMapper(file => file.systems,
-        file => file.systemRefs,
-        (name, file, node, document) => new FtlSystem(name, file, node, document),
-        {
-            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-                return getAttrValueForTag(node, 'systemBlueprint', 'name', document, position);
-            },
-            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-                return getAttrValueForTag(node, 'status', 'system', document, position)
-            }
-        },
-        SystemNames,
-        "System",
-        defaultSystems);
+                                              file => file.systemRefs,
+                                              (name, file, node, document) => new FtlSystem(name, file, node, document),
+                                              {
+                                                  getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
+                                                      return getAttrValueForTag(node,
+                                                                                'systemBlueprint',
+                                                                                'name',
+                                                                                document,
+                                                                                position);
+                                                  },
+                                                  getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+                                                      return getAttrValueForTag(node,
+                                                                                'status',
+                                                                                'system',
+                                                                                document,
+                                                                                position)
+                                                  }
+                                              },
+                                              SystemNames,
+                                              "System",
+                                              defaultSystems);
 
     export const autoBlueprintMapper = new RefMapper(file => file.autoBlueprints,
-        file => file.autoBlueprintRefs,
-        (name, file, node, document) => new FtlAutoblueprint(name, file, node, document),
-        {
-            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-                return getAttrValueForTag(node, 'shipBlueprint', 'name', document, position);
-            },
-            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-                return getAttrValueForTag(node, 'ship', 'auto_blueprint', document, position);
-            }
-        },
-        AutoblueprintNames,
-        "Auto Blueprint",
-        defaultAutoBlueprints);
+                                                     file => file.autoBlueprintRefs,
+                                                     (name, file, node, document) => new FtlAutoblueprint(name,
+                                                                                                          file,
+                                                                                                          node,
+                                                                                                          document),
+                                                     {
+                                                         getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
+                                                             return getAttrValueForTag(node,
+                                                                                       'shipBlueprint',
+                                                                                       'name',
+                                                                                       document,
+                                                                                       position);
+                                                         },
+                                                         getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+                                                             return getAttrValueForTag(node,
+                                                                                       'ship',
+                                                                                       'auto_blueprint',
+                                                                                       document,
+                                                                                       position);
+                                                         }
+                                                     },
+                                                     AutoblueprintNames,
+                                                     "Auto Blueprint",
+                                                     defaultAutoBlueprints);
 
     export const textMapper = new RefMapper(file => file.texts,
-        file => file.textRefs, (name, file, node, document) => new FtlText(name, file, node, document),
-        {
-            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-                return getAttrValueForTag(node, 'text', 'name', document, position)
-                    ?? getAttrValueForTag(node, 'textList', 'name', document, position);
-            },
-            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-                return getAttrValueForTag(node, 'text', 'load', document, position)
-                    ?? getAttrValueForTag(node, 'text', 'id', document, position);
-            }
-        },
-        TextIdNames,
-        "Text",
-        []
-    );
+                                            file => file.textRefs,
+                                            (name, file, node, document) => new FtlText(name, file, node, document), {
+                                                getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
+                                                    return getAttrValueForTag(node, 'text', 'name', document, position)
+                                                        ?? getAttrValueForTag(node,
+                                                                              'textList',
+                                                                              'name',
+                                                                              document,
+                                                                              position);
+                                                },
+                                                getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+                                                    return getAttrValueForTag(node, 'text', 'load', document, position)
+                                                        ?? getAttrValueForTag(node, 'text', 'id', document, position);
+                                                }
+                                            }, TextIdNames, "Text", []);
 
     const blueprintMappers: RefMapperBase[] = [
         weaponsMapper,

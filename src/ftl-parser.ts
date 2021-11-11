@@ -1,10 +1,4 @@
-import {
-    ProgressLocation,
-    TextDocument,
-    Uri,
-    window,
-    workspace
-} from 'vscode';
+import {ProgressLocation, TextDocument, Uri, window, workspace} from 'vscode';
 import {Node} from 'vscode-html-languageservice';
 import {FtlFile} from './models/ftl-file';
 import {DocumentCache} from './document-cache';
@@ -28,9 +22,9 @@ export class FtlParser {
         let files = await workspace.findFiles(prefix + '**/*.{xml,xml.append}');
         if (files.length > 0)
             await window.withProgress({
-                title: 'Parsing FTL files',
-                location: ProgressLocation.Window
-            }, async (progress, token) => {
+                                          title: 'Parsing FTL files',
+                                          location: ProgressLocation.Window
+                                      }, async (progress, token) => {
                 await this.parseFiles(files);
             });
         return this.files;

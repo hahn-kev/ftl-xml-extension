@@ -1,6 +1,5 @@
 import {
     CancellationToken,
-    Event,
     Location,
     Position,
     ProviderResult,

@@ -1,12 +1,8 @@
-import {
-    HTMLDocument,
-    LanguageService,
-    TextDocument as HtmlTextDocument
-} from 'vscode-html-languageservice';
+import {HTMLDocument, LanguageService, TextDocument as HtmlTextDocument} from 'vscode-html-languageservice';
 import {TextDocument} from 'vscode';
 
 export class DocumentCache {
-    cache = new Map<string, {doc:HTMLDocument, version: number}>();
+    cache = new Map<string, { doc: HTMLDocument, version: number }>();
 
     constructor(private service: LanguageService) {
     }

@@ -1,10 +1,6 @@
 import {Node} from 'vscode-html-languageservice';
 import {Position, TextDocument} from 'vscode';
-import {
-    getNodeTextContent,
-    hasAttr,
-    normalizeAttributeName
-} from './helpers';
+import {getNodeTextContent, hasAttr, normalizeAttributeName} from './helpers';
 
 export namespace events {
     export function getEventRefName(node: Node, document: TextDocument, position?: Position): string | undefined {

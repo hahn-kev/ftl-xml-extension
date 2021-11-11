@@ -1,31 +1,14 @@
 import {RefMapperBase} from './ref-mapper';
 import {Node} from 'vscode-html-languageservice';
-import {
-    Diagnostic,
-    DiagnosticSeverity,
-    Location,
-    Position,
-    Range,
-    TextDocument, workspace
-} from 'vscode';
+import {Diagnostic, DiagnosticSeverity, Location, Position, Range, TextDocument} from 'vscode';
 import {FtlFile} from '../models/ftl-file';
-import {
-    FtlBlueprintList,
-    FtlBlueprintValue
-} from '../models/ftl-blueprint-list';
+import {FtlBlueprintList, FtlBlueprintValue} from '../models/ftl-blueprint-list';
 import {FtlValue} from '../models/ftl-value';
-import {
-    addToKey,
-    firstWhere,
-    getAttrValueForTag,
-    getNodeTextContent,
-    toRange
-} from '../helpers';
-import {DocumentCache} from '../document-cache';
+import {addToKey, firstWhere, getAttrValueForTag, getNodeTextContent, toRange} from '../helpers';
 
 export class BlueprintMapper implements RefMapperBase {
-    constructor(private blueprintMappers: RefMapperBase[]) {
 
+    constructor(private blueprintMappers: RefMapperBase[]) {
     }
 
     doMapper<T>(includeSelf: boolean, exec: (mapper: RefMapperBase) => T | undefined) {
@@ -168,7 +151,7 @@ export class BlueprintMapper implements RefMapperBase {
         }
     }
 
-     validateRefType(node: Node, document: TextDocument): Diagnostic[] {
+    validateRefType(node: Node, document: TextDocument): Diagnostic[] {
         if (node.tag == 'name') return [];
         let ref = this.getRefNameAndMapper(node, document);
         if (!ref) return [];
@@ -188,10 +171,13 @@ export class BlueprintMapper implements RefMapperBase {
         if (ref.mapper.typeName === defType || !defType) return [];
         let message = `${ref.mapper.typeName} can't reference a ${defType}, which is the type of blueprint: '${refName}' `;
 
-        return [new Diagnostic(toRange(node.start, node.startTagEnd ?? node.end, document), message, DiagnosticSeverity.Warning)]
+        return [new Diagnostic(toRange(node.start, node.startTagEnd ?? node.end, document),
+                               message,
+                               DiagnosticSeverity.Warning)]
     }
 
     static ignoreListNames = ['DLC_ITEMS'];
+
     validateListType(node: Node, document: TextDocument): Diagnostic[] {
         let listName = getAttrValueForTag(node, 'blueprintList', 'name');
         if (!listName || BlueprintMapper.ignoreListNames.includes(listName)) return [];
@@ -203,9 +189,11 @@ export class BlueprintMapper implements RefMapperBase {
         typeMapper.forEach((nodes, key) => {
             if (key == listTypeName) return;
             results.push(...nodes.map(childNode => {
+                let name = this.getNameNodeText(childNode, document);
+                let message = `Blueprint '${name}' is type: '${key}' does not match type of list: '${listTypeName}'`;
                 return new Diagnostic(toRange(childNode.start, childNode.end, document),
-                    `Blueprint '${this.getNameNodeText(childNode, document)}' is type: '${key}' does not match type of list: '${listTypeName}'`,
-                    DiagnosticSeverity.Warning);
+                                      message,
+                                      DiagnosticSeverity.Warning);
             }));
         });
         return results;
@@ -262,7 +250,7 @@ export class BlueprintMapper implements RefMapperBase {
 
     getAllBlueprintNames(): string[] {
         return [this, ...this.blueprintMappers]
-            .flatMap((value:RefMapperBase) => value.autoCompleteValues?.values ?? [])
+            .flatMap((value: RefMapperBase) => value.autoCompleteValues?.values ?? [])
             .map(value => value.name);
     }
 }

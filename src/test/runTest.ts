@@ -1,6 +1,6 @@
 import * as path from 'path';
 
-import { runTests } from '@vscode/test-electron';
+import {runTests} from '@vscode/test-electron';
 
 async function main() {
     try {
@@ -16,10 +16,10 @@ async function main() {
 
         // Download VS Code, unzip it and run the integration test
         await runTests({
-            extensionDevelopmentPath,
-            extensionTestsPath,
-            launchArgs: [testWorkspace]
-        });
+                           extensionDevelopmentPath,
+                           extensionTestsPath,
+                           launchArgs: [testWorkspace]
+                       });
     } catch (err) {
         console.error('Failed to run tests');
         process.exit(1);
