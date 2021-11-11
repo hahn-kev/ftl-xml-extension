@@ -15,4 +15,5 @@ export const defaultSystems: string[] = [
     "hacking",
     "battery",
     "mind",
+    "reactor"
 ];
