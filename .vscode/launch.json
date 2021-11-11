@@ -23,10 +23,7 @@
       "preLaunchTask": "npm: pretest",
       "args": [
         "--extensionDevelopmentPath=${workspaceFolder}",
-        "--extensionTestsPath=${workspaceFolder}/out/test/suite/index"
-      ],
-      "outFiles": [
-        "${workspaceFolder}/out/test/**/*.js"
+        "--extensionTestsPath=${workspaceFolder}/out-test/test/suite/index"
       ]
     }
   ]

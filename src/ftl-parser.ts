@@ -23,8 +23,9 @@ export class FtlParser {
 
     public files = new Map<string, FtlFile>();
 
-    public async parseCurrentWorkspace() {
-        let files = await workspace.findFiles('**/*.{xml,xml.append}');
+    public async parseCurrentWorkspace(subFolder?: string) {
+        let prefix = subFolder ? `${subFolder}/` : '';
+        let files = await workspace.findFiles(prefix + '**/*.{xml,xml.append}');
         if (files.length > 0)
             await window.withProgress({
                 title: 'Parsing FTL files',

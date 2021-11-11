@@ -9,6 +9,7 @@
       <excludeFolder url="file://$MODULE_DIR$/out" />
       <excludeFolder url="file://$MODULE_DIR$/test-data" />
       <excludeFolder url="file://$MODULE_DIR$/.vscode-test" />
+      <excludeFolder url="file://$MODULE_DIR$/out-test" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
