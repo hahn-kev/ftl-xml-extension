@@ -34,7 +34,8 @@ export class BlueprintMapper implements RefMapperBase {
 
 
     lookupRefs(node: Node, document: TextDocument, position: Position): Location[] | undefined {
-        let refName = this.getRefName(node, document, position);
+        let refName = getAttrValueForTag(node, 'blueprintList', 'name', document, position)
+            ?? this.getRefName(node, document, position);
         if (!refName) return;
         let results = [...this.refs.get(refName) ?? []];
         for (let mapper of this.blueprintMappers) {
