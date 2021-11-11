@@ -42,4 +42,14 @@
         <name>ship-blueprint-1</name>
         <name>ship-blueprint-2</name>
     </blueprintList>
+
+    <blueprintList name="list-1">
+        <name>list-2</name>
+    </blueprintList>
+    <blueprintList name="list-2">
+        <name>list-3</name>
+    </blueprintList>
+    <blueprintList name="list-3">
+        <name>list-1</name>
+    </blueprintList>
 </FTL>

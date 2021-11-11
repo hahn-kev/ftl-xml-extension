@@ -184,8 +184,32 @@ export class BlueprintMapper implements RefMapperBase {
         let message = `${ref.mapper.typeName} can't reference a ${defType}, which is the type of blueprint: '${refName}' `;
 
         return [new Diagnostic(toRange(node.start, node.startTagEnd ?? node.end, document),
-                               message,
-                               DiagnosticSeverity.Warning)]
+            message,
+            DiagnosticSeverity.Warning)]
+    }
+
+    validateListRefLoop(node: Node, document: TextDocument): Diagnostic | undefined {
+        let listName = getAttrValueForTag(node, 'blueprintList', 'name');
+        if (!listName) return;
+        let blueprintList = this.defs.get(listName);
+        if (!blueprintList) return;
+        let children = [...blueprintList.childRefNames];
+        let nameSet = new Set<string>();
+        nameSet.add(listName);
+        for (let i = 0; i < children.length; i++) {
+            let childName = children[i];
+            let childList = this.defs.get(childName);
+            if (!childList) continue;
+            if (nameSet.has(childName)) {
+                return new Diagnostic(
+                    toRange(node.start, node.startTagEnd ?? node.end, document),
+                    `Blueprint List: ${listName} is self referencing (possibly through another list)`,
+                    DiagnosticSeverity.Error
+                );
+            }
+            nameSet.add(childName);
+            children.push(...childList.childRefNames);
+        }
     }
 
     static ignoreListNames = ['DLC_ITEMS'];
@@ -204,8 +228,8 @@ export class BlueprintMapper implements RefMapperBase {
                 let name = this.getNameNodeText(childNode, document);
                 let message = `Blueprint '${name}' is type: '${key}' does not match type of list: '${listTypeName}'`;
                 return new Diagnostic(toRange(childNode.start, childNode.end, document),
-                                      message,
-                                      DiagnosticSeverity.Warning);
+                    message,
+                    DiagnosticSeverity.Warning);
             }));
         });
         return results;
@@ -250,7 +274,11 @@ export class BlueprintMapper implements RefMapperBase {
     }
 
     getRefType(name: string): string {
-        let mapper = this.doMapper(true, mapper => {
+        let list = this.defs.get(name);
+        if (list) {
+            return this.getListTypeFromBlueprint(list);
+        }
+        let mapper = this.doMapper(false, mapper => {
             return (mapper.defs.has(name) || mapper.defaults?.includes(name)) ? mapper : undefined;
         });
         return mapper?.typeName ?? 'Unknown';
