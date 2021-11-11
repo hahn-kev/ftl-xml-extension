@@ -1,12 +1,7 @@
 import {expect} from "chai";
-
 import { performance } from 'perf_hooks';
-
-// You can import and use all API from the 'vscode' module
-// as well as import your extension to test it
 import {window} from 'vscode';
 import {setup} from '../../setup';
-// import * as myExtension from '../../extension';
 
 suite('Extension Test Suite', () => {
     window.showInformationMessage('Start all tests.');
@@ -23,10 +18,16 @@ suite('Extension Test Suite', () => {
     }
 
     test('Loading MV test', async function () {
-        this.skip();
+        // this.skip();
         this.timeout('500s');
 
-        await parseTest('mv');
+        /*
+            parse files: 12.146s
+            update data: 69.797ms
+            parse mv: 12.373s
+        **/
+        let execution = await parseTest('mv');
+        expect(execution).to.lt(13000);
     });
     test('Loading base test', async function () {
         this.timeout('500s');

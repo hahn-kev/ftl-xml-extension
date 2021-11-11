@@ -14,7 +14,9 @@ export class FtlDataProvider implements IHTMLDataProvider {
 
     constructor(onFileParsed: Event<{ files: Map<string, FtlFile> }>, private mappers: RefMapperBase[]) {
         onFileParsed(e => {
+            console.time('update data');
             this.updateFtlData(e.files);
+            console.timeEnd('update data');
         });
     }
 

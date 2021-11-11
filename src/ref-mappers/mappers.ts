@@ -191,7 +191,8 @@ export namespace mappers {
             eventsMapper,
             shipsMapper,
             textMapper,
-            blueprintMapper];
+            blueprintMapper
+        ];
         return {blueprintMapper, mappers};
     }
 
