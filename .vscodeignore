@@ -4,4 +4,5 @@
 vsc-extension-quickstart.md
 node_modules
 src/
+out/test
 tsconfig.json

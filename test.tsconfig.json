@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json.schemastore.org/tsconfig",
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "out/test",
+    "rootDir": "src/test",
+    "sourceMap": true,
+    "strict": false
+  },
+  "include": [
+    "src/test"
+  ],
+  "exclude": [
+    "node_modules",
+    ".vscode-test"
+  ]
+}

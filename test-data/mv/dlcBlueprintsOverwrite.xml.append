@@ -1,0 +1,3976 @@
+<FTL>
+<!-- 
+**********************************************************************************************************************
+                                                 PLAYER SHIPS 
+**********************************************************************************************************************
+-->
+<shipBlueprint name="PLAYER_SHIP_KESTREL_3" layout="mup_kestrel_c" img="mup_kestrel_c">
+	<class>Kestrel Cruiser</class>
+	<name>Bird of Prey</name>
+	<unlock id="ship_PLAYER_SHIP_KESTREL_3_unlock"/>
+	<desc>This boarding vessel comes only with human crew, but is able to protect itself adequately while in combat.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="12" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="9" start="false" img="room_battery_13" />
+		<cloaking power="1" room="6" start="true" img="room_cloaking" />
+		<clonebay power="1" room="7" start="true">
+			<slot>
+				<number>0</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="13" start="true" img="room_doors">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="8" start="false" img="room_drones_15" />
+		<engines power="2" room="20" start="true" img="room_engines_9">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="17" start="false" img="room_hacking_4" />
+		<medbay power="1" room="7" start="false" img="room_medbay_4">
+			<slot>
+				<number>0</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="18" start="false" img="room_mind_9" />
+		<oxygen power="2" room="21" start="true" img="room_oxygen_2" />
+		<pilot power="1" room="0" start="true" img="room_pilot_2">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="14" start="true" img="room_sensors">
+			<slot>
+				<direction>down</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="3" room="24" start="true" img="room_shields_11">
+			<slot>
+				<direction>down</direction>
+				<number>1</number>
+			</slot>
+		</shields>
+		<teleporter power="2" room="16" start="true" />
+		<weapons max="8" power="1" room="19" start="true" img="room_weapons">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="0" count="4">
+		<weapon name="LASER_BURST_2" />
+	</weaponList>
+	<droneList drones="0" count="2" />
+	<health amount="30" />
+	<maxPower amount="6" />
+	<crewCount amount="1" class="soldier" />
+	<crewCount amount="1" class="medic" />
+	<crewCount amount="1" class="human" />
+	<aug name="EX_O2_MASKS" />
+	<aug name="SPEED_SUITS" />
+	<shieldImage>mupc_haynes</shieldImage>
+	<cloakImage>mupc_haynes</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_SPIDER_3" layout="mup_spider_c" img="mup_spider_c">
+	<class>Spider Hunter Cruiser</class>
+	<name>Cyriopagopus</name>
+	<unlock id="ship_PLAYER_SHIP_SPIDER_3_unlock"/>
+	<desc>This cruiser once belonged to an esteemed Shell biologist studying the G.A.S., but after her untimely death the Spiders have now taken control of the ship.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="12" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="15" start="false" img="room_battery_14" />
+		<cloaking power="1" room="5" start="false" img="room_cloaking_11" />
+		<clonebay power="1" room="0" start="true">
+			<slot>
+				<number>1</number>
+			</slot>
+		</clonebay>
+		<doors power="2" room="18" start="true" img="room_doors_2">
+			<slot>
+				<direction>down</direction>
+				<number>0</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="7" start="true" img="room_drones_6" />
+		<engines power="2" room="2" start="true" img="room_engines_2">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="14" start="false" img="room_hacking_5" />
+		<medbay power="1" room="0" start="false" img="room_medbay">
+			<slot>
+				<number>1</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="13" start="false" img="room_mind_6" />
+		<oxygen power="1" room="17" start="true" img="room_oxygen_2" />
+		<pilot power="1" room="1" start="true" img="room_pilot">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</pilot>
+		<sensors power="2" room="21" start="true" img="room_sensors_2">
+			<slot>
+				<direction>up</direction>
+				<number>0</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="8" start="true" img="room_shields_10">
+			<slot>
+				<direction>down</direction>
+				<number>3</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="22" start="false" />
+		<weapons max="8" power="4" room="6" start="true" img="room_weapons_6">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>3</weaponSlots>
+	<droneSlots>3</droneSlots>
+	<weaponList missiles="0" count="3">
+		<weapon name="ENERGY_CHARGEGUN" />
+		<weapon name="BEAM_FIRE_PLAYER" />
+	</weaponList>
+	<droneList drones="5" count="3">
+		<drone name="REPAIR" />
+		<drone name="BATTLETOG_DEFEND" />
+	</droneList>
+	<health amount="30" />
+	<maxPower amount="10" />
+	<crewCount amount="1" class="weaver" />
+	<crewCount amount="1" class="weaver" />
+	<crewCount amount="1" class="spider" />
+	<crewCount amount="1" class="spider" />
+	<aug name="EX_LAB_SPIDER_SILK" />
+	<shieldImage>mupc_queen</shieldImage>
+	<cloakImage>mup_spider_a</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_TUCO_3" layout="mup_tuco_c" img="mup_tuco_c">
+	<class>Tuco's Cruiser</class>
+	<name>The Ugly</name>
+	<unlock id="ship_PLAYER_SHIP_TUCO_3_unlock"/>
+	<desc>After a successful bout of gambling, Tuco became so rich that he was able to build a ship whose hull is made almost entirely out of gold.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="7" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="6" start="false" img="room_battery_13" />
+		<cloaking power="1" room="4" start="false" img="room_cloaking_2" />
+		<clonebay power="1" room="3" start="true">
+			<slot>
+				<number>2</number>
+			</slot>
+		</clonebay>
+		<doors power="2" room="11" start="true" img="room_doors">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="13" start="false" img="room_drones_11" />
+		<engines power="2" room="16" start="true" img="room_engines">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="14" start="false" img="room_hacking_9" />
+		<medbay power="1" room="3" start="false" img="room_medbay_7">
+			<slot>
+				<number>2</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="15" start="false" img="room_mind_11" />
+		<oxygen power="1" room="1" start="true" img="room_oxygen_4" />
+		<pilot power="2" room="0" start="true" img="room_pilot">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="12" start="true" img="room_sensors">
+			<slot>
+				<direction>down</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="5" start="true" img="room_shields_8">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="2" start="false" />
+		<weapons max="8" power="3" room="10" start="true" img="room_weapons">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="0" count="4">
+		<weapon name="SHOTGUN_GOLD" />
+		<weapon name="BEAM_CONSERVATIVE" />
+	</weaponList>
+	<droneList drones="0" count="2" />
+	<health amount="15" />
+	<maxPower amount="8" />
+	<crewCount amount="1" class="slug" />
+	<crewCount amount="1" class="human" />
+	<crewCount amount="1" class="anaerobic" />
+	<aug name="GOLD_ARMOR" />
+	<shieldImage>mupc_nights</shieldImage>
+	<cloakImage>mup_tuco_a</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_PLEASURE_3" layout="mup_pleasure_c" img="mup_pleasure_c">
+	<class>Haunted Pleasure Barge</class>
+	<name>The Necromancer</name>
+	<unlock id="ship_PLAYER_SHIP_PLEASURE_3_unlock"/>
+	<desc>A clan of Ghosts managed to obtain a stolen Slug pleasure barge. Unsure how to use a large portion of the strange looking weapons and torture devices inside, they have refitted the ship as they see fit.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="6" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="1" start="false" img="room_battery_15" />
+		<cloaking power="1" room="18" start="false" img="room_cloaking_8" />
+		<clonebay power="1" room="3" start="false">
+			<slot>
+				<number>1</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="5" start="true" img="room_doors_7">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="11" start="false" img="room_drones_13" />
+		<engines power="2" room="14" start="true" img="room_engines_9">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="9" start="false" img="room_hacking_4" />
+		<medbay power="1" room="3" start="false" img="room_medbay">
+			<slot>
+				<number>1</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="15" start="false" img="room_mind_9" />
+		<oxygen power="1" room="7" start="false" img="room_oxygen_2" />
+		<pilot power="1" room="0" start="true" img="room_pilot_5">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="2" start="false" img="room_sensors_4">
+			<slot>
+				<direction>left</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="16" start="true" img="room_shields_6">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="8" start="true" />
+		<weapons max="8" power="1" room="4" start="true" img="room_weapons">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="11" count="4">
+		<weapon name="BOMB_HEAL" />
+		<weapon name="BEAM_1" />
+	</weaponList>
+	<droneList drones="3" count="2" />
+	<health amount="25" />
+	<maxPower amount="7" />
+	<crewCount amount="1" class="phantom" />
+	<crewCount amount="1" class="goul" />
+	<crewCount amount="1" class="mare" />
+	<crewCount amount="1" class="wraith" />
+	<aug name="SLUG_DUPLICATOR_GHOST" />
+	<aug name="EX_TELEPORT_HEAL" />
+	<shieldImage>mupc_anointed</shieldImage>
+	<cloakImage>mup_pleasure_a</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_CLOAK_3" layout="mup_stealth_c" img="mup_stealth_c">
+	<class>Stealth Cruiser</class>
+	<name>Skojare</name>
+	<unlock id="ship_PLAYER_SHIP_CLOAK_3_unlock"/>
+	<desc>This ship specializes in manipulating the enemy ship while it stays hidden with its Cloaking system.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="6" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="1" start="false" img="room_battery_13" />
+		<cloaking power="1" room="13" start="true" img="room_cloaking_2" />
+		<clonebay power="1" room="7" start="true">
+			<slot>
+				<number>0</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="2" start="true" img="room_doors_9">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="19" start="false" img="room_drones_3" />
+		<engines power="3" room="8" start="true" img="room_engines_4">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="18" start="false" img="room_hacking_3" />
+		<medbay power="1" room="7" start="false" img="room_medbay_4">
+			<slot>
+				<number>0</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="14" start="true" img="room_mind_9" />
+		<oxygen power="1" room="4" start="true" img="room_oxygen_2" />
+		<pilot power="2" room="0" start="true" img="room_pilot_2">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</pilot>
+		<sensors power="2" room="3" start="true" img="room_sensors">
+			<slot>
+				<direction>down</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="5" start="false" img="room_shields_11">
+			<slot>
+				<direction>down</direction>
+				<number>1</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="15" start="false" />
+		<weapons max="8" power="3" room="12" start="true" img="room_weapons_7">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="0" count="4">
+		<weapon name="BEAM_STUN" />
+		<weapon name="ENERGY_STUN_PLAYER" />
+		<weapon name="LASER_CONSERVATIVE" />
+	</weaponList>
+	<droneList drones="7" count="2" />
+	<health amount="30" />
+	<maxPower amount="8" />
+	<crewCount amount="1" class="sabo" />
+	<crewCount amount="1" class="monk" />
+	<crewCount amount="1" class="human" />
+	<crewCount amount="1" class="wraith" />
+	<aug name="ADV_SCANNERS" />
+	<aug name="EX_CLOAK_FIRE" />
+	<shieldImage>mupc_alkali</shieldImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_BISHOP_3" layout="mup_bishop_c" img="mup_bishop_c">
+	<class>Bishop Cruiser</class>
+	<name>Photuris</name>
+	<unlock id="ship_PLAYER_SHIP_BISHOP_3_unlock"/>
+	<desc>This cruiser specializes in incapacitating the enemy crew while the boarding team causes havoc.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="6" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="12" start="false" img="room_battery_8" />
+		<cloaking power="2" room="5" start="true" img="room_cloaking_10" />
+		<clonebay power="1" room="8" start="true">
+			<slot>
+				<number>1</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="27" start="true" img="room_doors_2">
+			<slot>
+				<direction>down</direction>
+				<number>0</number>
+			</slot>
+		</doors>
+		<drones max="8" power="3" room="21" start="true" img="room_drones_11" />
+		<engines power="2" room="20" start="true" img="room_engines">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="14" start="false" img="room_hacking_2" />
+		<medbay power="1" room="8" start="false" img="room_medbay_8">
+			<slot>
+				<number>-2</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="7" start="false" img="room_mind_1" />
+		<oxygen power="2" room="16" start="true" img="room_oxygen_2" />
+		<pilot power="2" room="0" start="true" img="room_pilot_4">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="28" start="true" img="room_sensors_2">
+			<slot>
+				<direction>up</direction>
+				<number>0</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="15" start="false" img="room_shields_7">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</shields>
+		<teleporter power="2" room="22" start="true" />
+		<weapons max="8" power="2" room="17" start="true" img="room_weapons">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>2</weaponSlots>
+	<droneSlots>3</droneSlots>
+	<weaponList missiles="8" count="2">
+		<weapon name="ION_STUN_CHARGEGUN_PLAYER" />
+		<weapon name="BOMB_ION" />
+	</weaponList>
+	<droneList drones="10" count="3">
+		<drone name="BOARDER_ION" />
+	</droneList>
+	<health amount="25" />
+	<maxPower amount="8" />
+	<crewCount amount="1" class="bishop" />
+	<crewCount amount="1" class="slug" />
+	<crewCount amount="1" class="monk" />
+	<aug name="LOCKED_SUZERAIN_CREW_STIMS" />
+	<shieldImage>mupc_anointed</shieldImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_SALT_3" layout="mup_salt_c" img="mup_salt_c">
+	<class>Sodium Cruiser</class>
+	<name>Gemstone</name>
+	<unlock id="ship_PLAYER_SHIP_SALT_3_unlock"/>
+	<desc>This cruiser was once an old mining ship, before it was repurposed as a boarding vessel by the one and only Salt Man.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="15" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="2" start="false" img="room_battery_17" />
+		<cloaking power="1" room="14" start="false" img="room_cloaking_7" />
+		<clonebay power="1" room="5" start="true">
+			<slot>
+				<number>0</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="10" start="true" img="room_doors_8">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="13" start="true" img="room_drones_12" />
+		<engines power="1" room="11" start="true" img="room_engines_3">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="8" start="false" img="room_hacking_9" />
+		<medbay power="1" room="5" start="false" img="room_medbay_4">
+			<slot>
+				<number>0</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="17" start="false" img="room_mind_1" />
+		<oxygen power="1" room="6" start="true" img="room_oxygen" />
+		<pilot power="1" room="0" start="true" img="room_pilot_2">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="12" start="true" img="room_sensors_4">
+			<slot>
+				<direction>left</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="3" start="true" img="room_shields">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="9" start="true" />
+		<weapons max="8" power="1" room="4" start="true" img="room_weapons">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>3</weaponSlots>
+	<droneSlots>3</droneSlots>
+	<weaponList missiles="0" count="3" />
+	<droneList drones="5" count="3">
+		<drone name="COMBAT_1_BEAM" />
+	</droneList>
+	<health amount="30" />
+	<maxPower amount="7" />
+	<!--crew in hyperspace.xml-->
+	<aug name="SALT_ARMOR" />
+	<aug name="SCRAP_COLLECTOR" />
+	<aug name="SCRAP_COLLECTOR" />
+	<shieldImage>mupc_ariadne</shieldImage>
+	<cloakImage>mupc_obyn</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_GHOST_3" layout="mup_ghostbuster_c" img="mup_ghostbuster_c">
+    <class>Spook Chaser Cruiser</class>
+    <name>Phoenix Jones</name>
+    <unlock id="ship_PLAYER_SHIP_GHOST_3_unlock"/>
+    <desc>This model of Spook Chaser ship was re-acquired by the Rebels. Instead of tracking Ghosts, it was repurposed to hunt particular Multiverse Renegades.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="26" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="3" start="true" img="room_battery_13" />
+		<cloaking power="1" room="11" start="false" img="room_cloaking_10" />
+		<clonebay power="1" room="8" start="true">
+			<slot>
+				<number>3</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="21" start="false" img="room_doors_4">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="12" start="false" img="room_drones_9" />
+		<engines power="2" room="27" start="true" img="room_engines_4">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="6" start="false" img="room_hacking_4" />
+		<medbay power="1" room="8" start="false" img="room_medbay_3">
+			<slot>
+				<number>3</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="7" start="false" img="room_mind_8" />
+		<oxygen power="1" room="1" start="true" img="room_oxygen_2" />
+		<pilot power="1" room="0" start="true" img="room_pilot_2">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="22" start="true" img="room_sensors_6">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="28" start="true" img="room_shields">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="10" start="false" />
+		<weapons max="8" power="2" room="9" start="true" img="room_weapons">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="7" count="4">
+		<weapon name="BEAM_BATTERY" />
+		<weapon name="ION_PIERCE_CHAIN" />
+		<weapon name="ION_CONSERVATIVE" />
+	</weaponList>
+	<droneList drones="0" count="2" />
+	<health amount="30" />
+	<maxPower amount="6" />
+	<crewCount amount="1" class="soldier" />
+	<crewCount amount="1" class="engineer" />
+	<crewCount amount="1" class="medic" />
+	<crewCount amount="1" class="human" />
+	<aug name="MVBOSS_SPAWNER" />
+	<shieldImage>mupc_anointed</shieldImage>
+	<cloakImage>mup_ghostbuster_a</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_DYNASTY_3" layout="mup_dynasty_c" img="mup_dynasty_c">
+	<class>Spectral Cruiser</class>
+	<name>The Monolith</name>
+	<unlock id="ship_PLAYER_SHIP_DYNASTY_3_unlock"/>
+	<desc>This massive but peculiar Dynasty ship is armed with technology from an era long forgotten by most of the Ghosts themselves.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="27" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="28" start="false" img="room_battery_14" />
+		<cloaking power="1" room="18" start="false" img="room_cloaking_2" />
+		<clonebay power="1" room="17" start="true">
+			<slot>
+				<number>3</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="14" start="true" img="room_doors_8">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="4" start="false" img="room_drones_12" />
+		<engines power="2" room="16" start="true" img="room_engines_7">
+			<slot>
+				<direction>right</direction>
+				<number>3</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="2" start="false" img="room_hacking_4" />
+		<medbay power="1" room="17" start="false" img="room_medbay_3">
+			<slot>
+				<number>3</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="7" start="false" img="room_mind_10" />
+		<oxygen power="1" room="20" start="false" img="room_oxygen_13" />
+		<pilot power="1" room="0" start="true" img="room_pilot">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</pilot>
+		<sensors power="2" room="15" start="true" img="room_sensors_4">
+			<slot>
+				<direction>left</direction>
+				<number>2</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="22" start="true" img="room_shields_4">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="1" start="true" />
+		<weapons max="8" power="2" room="3" start="true" img="room_weapons">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="0" count="4">
+		<weapon name="ANCIENT_STUN" />
+		<weapon name="ANCIENT_STUN" />
+	</weaponList>
+	<droneList drones="0" count="2" />
+	<health amount="30" />
+	<maxPower amount="6" />
+	<crewCount amount="1" class="wraithalpha" />
+	<crewCount amount="1" class="phantom" />
+	<crewCount amount="1" class="augmented" />
+	<crewCount amount="1" class="mare" />
+	<aug name="GHOST_DUPLICATOR" />
+	<aug name="ANCIENT_SHIELD" />
+	<shieldImage>mupc_a55</shieldImage>
+	<cloakImage>mupc_dessius</cloakImage>
+</shipBlueprint>
+
+<!--HYPERSPACE SHIPS
+The following cruisers will ONLY work for people with hyperspace installed.-->
+<shipBlueprint name="PLAYER_SHIP_REBEL_3" layout="mup_rebel_c" img="mup_rebel_c">
+	<class>Rebel Cruiser</class>
+	<name>Bloody Mary</name>
+	<unlock id="ship_PLAYER_SHIP_REBEL_3_unlock"/>
+	<desc>Armed with (probably stolen) prototype weaponry, this ship can be dangerous in the hands of a well trained captain.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="10" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="14" start="false" img="room_battery_17" />
+		<cloaking power="1" room="8" start="false" img="room_cloaking_11" />
+		<clonebay power="1" room="7" start="true">
+			<slot>
+				<number>0</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="11" start="true" img="room_doors">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="17" start="false" img="room_drones_3" />
+		<engines power="2" room="12" start="true" img="room_engines">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="1" start="false" img="room_hacking_4" />
+		<medbay power="1" room="7" start="false" img="room_medbay_4">
+			<slot>
+				<number>0</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="13" start="false" img="room_mind_6" />
+		<oxygen power="1" room="2" start="true" img="room_oxygen_2" />
+		<pilot power="1" room="0" start="true" img="room_pilot">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="5" start="true" img="room_sensors">
+			<slot>
+				<direction>down</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="4" start="true" img="room_shields_2">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="15" start="false" />
+		<weapons max="8" power="4" room="3" start="true" img="room_weapons_7">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="8" count="4">
+		<weapon name="BEAM_PIERCE" />
+		<weapon name="BOMB_CLUSTER" />
+	</weaponList>
+	<droneList drones="0" count="2" />
+	<health amount="30" />
+	<maxPower amount="8" />
+	<crewCount amount="1" class="phantom" />
+	<crewCount amount="1" class="rock" />
+	<crewCount amount="1" class="engi" />
+	<aug name="EX_EXPLOSIVE_REPLICATOR" />
+	<aug name="REBEL_ID" />
+	<shieldImage>mupc_alkali</shieldImage>
+	<cloakImage>mupc_jerry</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_ENGINEER_3" layout="mup_engineer_c" img="mup_engineer_c">
+    <class>Engineer Cruiser</class>
+    <name>HAL-9001</name>
+    <unlock id="ship_PLAYER_SHIP_ENGINEER_3_unlock"/>
+    <desc>This cruiser, despite its size, has only one crew running it. As such, it must rely on its staff of Manager drones to run the rest of the ship.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="2" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="13" start="false" img="room_battery_15" />
+		<cloaking power="1" room="4" start="false" img="room_cloaking_2" />
+		<clonebay power="1" room="3" start="true">
+			<slot>
+				<number>1</number>
+			</slot>
+		</clonebay>
+		<doors power="2" room="19" start="true" img="room_doors_8">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</doors>
+		<drones max="8" power="3" room="7" start="true" img="room_drones_8" />
+		<engines power="2" room="22" start="true" img="room_engines_4">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="21" start="false" img="room_hacking_9" />
+		<medbay power="1" room="3" start="false" img="room_medbay">
+			<slot>
+				<number>1</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="20" start="false" img="room_mind" />
+		<oxygen power="1" room="11" start="true" img="room_oxygen_3" />
+		<pilot power="1" room="0" start="true" img="room_pilot">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="16" start="true" img="room_sensors_4">
+			<slot>
+				<direction>left</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="23" start="true" img="room_shields_2">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="1" start="false" />
+		<weapons max="8" power="3" room="8" start="true" img="room_weapons">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>2</weaponSlots>
+	<droneSlots>4</droneSlots>
+	<weaponList missiles="0" count="2">
+		<weapon name="LASER_BURST_3" />
+		<weapon name="ION_STUN" />
+	</weaponList>
+	<droneList drones="6" count="4">
+		<drone name="MANNING" />
+		<drone name="MANNING" />
+		<drone name="REPAIR" />
+	</droneList>
+	<health amount="30" />
+	<maxPower amount="7" />
+	<crewCount amount="1" class="engineer" />
+	<aug name="EX_DRONE_SPEED" />
+	<shieldImage>mupc_a55</shieldImage>
+	<cloakImage>mupc_a55</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_MILITIA_3" layout="mup_militia_c" img="mup_militia_c">
+    <class>Militia Cruiser</class>
+    <name>Rosenberg</name>
+    <unlock id="ship_PLAYER_SHIP_MILITIA_3_unlock"/>
+    <desc>A special ops Militia cruiser assisted by some extra elite manpower. With advanced stealth technology, the enemies won't even see this ship coming.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="26" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="17" start="false" img="room_battery_14" />
+		<cloaking power="2" room="12" start="true" img="room_cloaking_10" />
+		<clonebay power="1" room="18" start="true">
+			<slot>
+				<number>0</number>
+			</slot>
+		</clonebay>
+		<doors power="2" room="6" start="true" img="room_doors">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="23" start="false" img="room_drones_13" />
+		<engines power="2" room="2" start="true" img="room_engines_8">
+			<slot>
+				<direction>left</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="11" start="false" img="room_hacking_2" />
+		<medbay power="1" room="18" start="false" img="room_medbay_4">
+			<slot>
+				<number>0</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="10" start="false" img="room_mind_5" />
+		<oxygen power="1" room="16" start="true" img="room_oxygen_2" />
+		<pilot power="1" room="0" start="true" img="room_pilot">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="7" start="true" img="room_sensors">
+			<slot>
+				<direction>down</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="8" start="false" img="room_shields_5">
+			<slot>
+				<direction>up</direction>
+				<number>0</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="15" start="false" />
+		<weapons max="8" power="4" room="9" start="true" img="room_weapons_10">
+			<slot>
+				<direction>up</direction>
+				<number>0</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="5" count="4">
+		<weapon name="LASER_CHARGEGUN_3" />
+	</weaponList>
+	<droneList drones="0" count="2" />
+	<health amount="30" />
+	<maxPower amount="7" />
+	<crewCount amount="1" class="LIST_CREW_MILITIA_ELITE_RANDOM_PLAYER" />
+	<crewCount amount="1" class="LIST_CREW_MILITIA_RANDOM" />
+	<crewCount amount="1" class="LIST_CREW_MILITIA_RANDOM" />
+	<aug name="EX_SHIELD_RECHARGE" />
+	<aug name="EX_CLOAK_FIRE" />
+	<shieldImage>mupc_anointed</shieldImage>
+	<cloakImage>mupe_militia</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_HIVE_3" layout="mup_mantis_c" img="mup_mantis_c">
+	<class>Hive Cruiser</class>
+	<name>Pyrrhocoris</name>
+	<unlock id="ship_PLAYER_SHIP_HIVE_3_unlock"/>
+	<desc>Few things are quite as chaotic as a Mantis fighting aboard a ship ablaze.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="8" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="5" start="false" img="room_battery_12" />
+		<cloaking power="1" room="16" start="false" img="room_cloaking_2" />
+		<clonebay power="2" room="13" start="true">
+			<slot>
+				<number>1</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="10" start="true" img="room_doors">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="14" start="false" img="room_drones_7" />
+		<engines power="1" room="18" start="true" img="room_engines_3">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="4" start="false" img="room_hacking_6" />
+		<medbay power="1" room="13" start="false" img="room_medbay">
+			<slot>
+				<number>1</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="3" start="false" img="room_mind_9" />
+		<oxygen power="1" room="7" start="true" img="room_oxygen_9" />
+		<pilot power="1" room="0" start="true" img="room_pilot_3">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="11" start="false" img="room_sensors">
+			<slot>
+				<direction>down</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="2" start="true" img="room_shields_7">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="12" start="true" />
+		<weapons max="8" power="1" room="1" start="true" img="room_weapons_3">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>3</weaponSlots>
+	<droneSlots>3</droneSlots>
+	<weaponList missiles="15" count="3">
+		<weapon name="BEAM_FIRE_INSTANT" />
+		<weapon name="BOMB_FIRE" />
+	</weaponList>
+	<droneList drones="6" count="3" />
+	<health amount="30" />
+	<maxPower amount="6" />
+	<crewCount amount="1" class="mantis" />
+	<crewCount amount="1" class="freemantis" />
+	<crewCount amount="1" class="goul" />
+	<aug name="LOCKED_CREW_STIMS" />
+	<aug name="EX_LAB_MANTIS_FIRE" />
+	<shieldImage>mupc_kaz</shieldImage>
+	<cloakImage>mupc_kaz</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_BROOD_3" layout="mup_brood_c" img="mup_brood_c">
+	<class>Brood Cruiser</class>
+	<name>Geneva's Bane</name>
+	<unlock id="ship_PLAYER_SHIP_BROOD_3_unlock"/>
+	<desc>This cruiser wields one of the strangest weapons ever constructed in the galaxy.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="1" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="15" start="false" img="room_battery_17" />
+		<cloaking power="1" room="3" start="false" img="room_cloaking_7" />
+		<clonebay power="2" room="8" start="true">
+			<slot>
+				<number>0</number>
+			</slot>
+		</clonebay>
+		<doors power="2" room="23" start="true" img="room_doors_4">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="2" start="false" img="room_drones_6" />
+		<engines power="1" room="0" start="true" img="room_engines_4">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="12" start="false" img="room_hacking_4" />
+		<medbay power="2" room="8" start="false" img="room_medbay_10">
+			<slot>
+				<number>3</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="16" start="false" img="room_mind_2" />
+		<oxygen power="1" room="7" start="true" img="room_oxygen_2" />
+		<pilot power="1" room="11" start="true" img="room_pilot_6">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="24" start="true" img="room_sensors_6">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="10" start="true" img="room_shields_10">
+			<slot>
+				<direction>down</direction>
+				<number>3</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="6" start="false" />
+		<weapons max="8" power="3" room="9" start="true" img="room_weapons">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="5" count="4">
+		<weapon name="CLONE_CANNON" />
+		<weapon name="LASER_BURST_2" />
+	</weaponList>
+	<droneList drones="0" count="2" />
+	<health amount="30" />
+	<maxPower amount="8" />
+	<crewCount amount="1" class="crusader" />
+	<crewCount amount="1" class="monk" />
+	<crewCount amount="1" class="shell" />
+	<crewCount amount="1" class="spider" />
+	<aug name="CRATE_FUEL" />
+	<aug name="EX_BACKUP_DNA" />
+	<shieldImage>mupc_anointed</shieldImage>
+	<cloakImage>mup_brood_a</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_SUZERAIN_3" layout="mup_suzerain_c" img="mup_suzerain_c">
+	<class>Suzerain Cruiser</class>
+	<name>Fourth Horseman</name>
+	<unlock id="ship_PLAYER_SHIP_SUZERAIN_3_unlock"/>
+	<desc>This ship is armed to cause hell on the enemy ship, but its boarding crew are also at a particular risk.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="26" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="25" start="false" img="room_battery_10" />
+		<cloaking power="1" room="4" start="false" img="room_cloaking_2" />
+		<clonebay power="1" room="16" start="true">
+			<slot>
+				<number>0</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="20" start="false" img="room_doors_5">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</doors>
+		<drones max="8" power="3" room="22" start="true" img="room_drones_8" />
+		<engines power="2" room="7" start="true" img="room_engines_2">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="6" start="false" img="room_hacking_7" />
+		<medbay power="1" room="16" start="false" img="room_medbay_4">
+			<slot>
+				<number>0</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="21" start="false" img="room_mind_4" />
+		<oxygen power="2" room="24" start="true" img="room_oxygen_6" />
+		<pilot power="1" room="0" start="true" img="room_pilot">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="19" start="false" img="room_sensors_6">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="3" start="true" img="room_shields_10">
+			<slot>
+				<direction>down</direction>
+				<number>3</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="23" start="true" />
+		<weapons max="8" power="2" room="5" start="true" img="room_weapons">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>3</weaponSlots>
+	<droneSlots>3</droneSlots>
+	<weaponList missiles="0" count="3">
+		<weapon name="ION_STUN_HEAVY" />
+	</weaponList>
+	<droneList drones="22" count="3">
+		<drone name="HELLRAISER_FIRE" />
+		<drone name="PEST_BREACH" />
+		<drone name="PEST_BREACH" />
+	</droneList>
+	<health amount="30" />
+	<maxPower amount="10" />
+	<crewCount amount="1" class="suzerain" />
+	<crewCount amount="1" class="suzerain" />
+	<crewCount amount="1" class="separatist" />
+	<aug name="LOCKED_SUZERAIN_CREW_STIMS" />
+	<aug name="DRONE_RECOVERY" />
+	<shieldImage>mupc_anointed</shieldImage>
+	<cloakImage>mup_suzerain_a</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_FREEMANTIS_3" layout="mup_freemantis_c" img="mup_freemantis_c">
+	<class>Free Mantis Cruiser</class>
+	<name>Cristatus</name>
+	<unlock id="ship_PLAYER_SHIP_FREEMANTIS_3_unlock"/>
+	<desc>This ship is equipped with a Zoltan Shield in return for its Shield Bypass. However, it lacks in reactor power to properly sustain its systems.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="8" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="11" start="true" img="room_battery_13" />
+		<cloaking power="1" room="1" start="false" img="room_cloaking_2" />
+		<clonebay power="1" room="3" start="true">
+			<slot>
+				<number>0</number>
+			</slot>
+		</clonebay>
+		<doors power="2" room="19" start="true" img="room_doors_4">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="23" start="false" img="room_drones_16" />
+		<engines power="1" room="2" start="true" img="room_engines_8">
+			<slot>
+				<direction>left</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="5" start="false" img="room_hacking_4" />
+		<medbay power="1" room="3" start="false" img="room_medbay_4">
+			<slot>
+				<number>0</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="6" start="false" img="room_mind_9" />
+		<oxygen power="1" room="12" start="true" img="room_oxygen_9" />
+		<pilot power="1" room="4" start="true" img="room_pilot">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="20" start="true" img="room_sensors_6">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="22" start="true" img="room_shields">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="13" start="true" />
+		<weapons max="8" power="3" room="0" start="true" img="room_weapons">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="0" count="4">
+		<weapon name="ZOLTAN_DELETER" />
+	</weaponList>
+	<droneList drones="0" count="2" />
+	<health amount="30" />
+	<maxPower amount="7" />
+	<crewCount amount="1" class="freemantis" />
+	<crewCount amount="1" class="freemantis" />
+	<crewCount amount="1" class="radical" />
+	<aug name="LOCKED_SUPER_CREW_STIMS" />
+	<aug name="ENERGY_SHIELD" />
+	<shieldImage>mupc_anointed</shieldImage>
+	<cloakImage>mupc_freddy</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_ROCKMAN_3" layout="mup_rock_c" img="mup_rock_c">
+	<class>Rock Cruiser</class>
+	<name>Obsidian</name>
+	<unlock id="ship_PLAYER_SHIP_ROCKMAN_3_unlock"/>
+	<desc>This Rock ship lacks Shields, but has a special augment that can be improved at empty beacons for potentially extreme protection.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="0" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="18" start="false" img="room_battery_10" />
+		<cloaking power="1" room="4" start="true" img="room_cloaking_10" />
+		<clonebay power="1" room="5" start="true">
+			<slot>
+				<number>2</number>
+			</slot>
+		</clonebay>
+		<doors power="2" room="16" start="true" img="room_doors_3">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="9" start="false" img="room_drones" />
+		<engines power="1" room="8" start="true" img="room_engines_9">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="1" start="false" img="room_hacking_8" />
+		<medbay power="1" room="5" start="false" img="room_medbay_7">
+			<slot>
+				<number>2</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="2" start="false" img="room_mind_10" />
+		<oxygen power="1" room="3" start="true" img="room_oxygen_7" />
+		<pilot power="1" room="15" start="true" img="room_pilot_4">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="17" start="true" img="room_sensors_2">
+			<slot>
+				<direction>up</direction>
+				<number>0</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="6" start="false" img="room_shields_3">
+			<slot>
+				<direction>left</direction>
+				<number>2</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="14" start="false" />
+		<weapons max="8" power="4" room="7" start="true" img="room_weapons_3">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="18" count="4">
+		<weapon name="MISSILES_4_PLAYER" />
+		<weapon name="LASER_HEAVY_PIERCE" />
+	</weaponList>
+	<droneList drones="0" count="2" />
+	<health amount="30" />
+	<maxPower amount="7" />
+	<crewCount amount="1" class="rock" />
+	<crewCount amount="1" class="rock" />
+	<crewCount amount="1" class="rock" />
+	<crewCount amount="1" class="crystal" />
+	<aug name="OBSIDIAN_ARMOR_1" />
+	<shieldImage>mupc_ariadne</shieldImage>
+	<cloakImage>mupc_symbiote</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_CULTIST_3" layout="mup_cultist_c" img="mup_cultist_c">
+	<class>Ember Cruiser</class>
+	<name>Labyrinth</name>
+	<unlock id="ship_PLAYER_SHIP_CULTIST_3_unlock"/>
+	<desc>This ship has a painfully inefficient room layout, so your drug-addicted cult following must subject themselves to more injections just to get from place to place.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="43" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="2" start="false" img="room_battery_13" />
+		<cloaking power="1" room="39" start="false" img="room_cloaking" />
+		<clonebay power="1" room="4" start="false">
+			<slot>
+				<number>1</number>
+			</slot>
+		</clonebay>
+		<doors power="2" room="12" start="true" img="room_doors_8">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="40" start="false" img="room_drones_12" />
+		<engines power="1" room="16" start="true" img="room_engines">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="42" start="false" img="room_hacking_4" />
+		<medbay power="1" room="4" start="true" img="room_medbay">
+			<slot>
+				<number>1</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="6" start="false" img="room_mind_10" />
+		<oxygen power="1" room="7" start="true" img="room_oxygen_2" />
+		<pilot power="1" room="3" start="true" img="room_pilot_2">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="10" start="true" img="room_sensors_4">
+			<slot>
+				<direction>left</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="17" start="true" img="room_shields">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="1" start="false" />
+		<weapons max="8" power="2" room="5" start="true" img="room_weapons">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="4" count="4">
+		<weapon name="CRYSTAL_CHARGEGUN_RED" />
+	</weaponList>
+	<droneList drones="0" count="2" />
+	<health amount="30" />
+	<maxPower amount="6" />
+	<crewCount amount="1" class="cultist" />
+	<crewCount amount="1" class="cultist" />
+	<crewCount amount="1" class="crusader" />
+	<aug name="LOCKED_ROCK_ARMOR" />
+	<aug name="EX_MEDBAY_SPEED" />
+	<shieldImage>mupc_a55</shieldImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_LOSTSUN_3" layout="mup_lostsun_c" img="mup_lostsun_c">
+	<class>Lost Sun Cruiser</class>
+	<name>Atkins</name>
+	<unlock id="ship_PLAYER_SHIP_LOSTSUN_3_unlock"/>
+	<desc>With no direct damaging weapons, this vessel will have to rely on the different modes of its drones to determine whether it'll cause chaos with fires or destroy the enemy's hull.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="5" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="0" start="false" img="room_battery_15" />
+		<cloaking power="1" room="10" start="false" img="room_cloaking_10" />
+		<clonebay power="1" room="13" start="true">
+			<slot>
+				<number>1</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="19" start="false" img="room_doors_2">
+			<slot>
+				<direction>down</direction>
+				<number>0</number>
+			</slot>
+		</doors>
+		<drones max="8" power="4" room="14" start="true" img="room_drones" />
+		<engines power="1" room="20" start="true" img="room_engines_2">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="2" start="false" img="room_hacking_3" />
+		<medbay power="1" room="13" start="false" img="room_medbay">
+			<slot>
+				<number>1</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="4" start="false" img="room_mind_12" />
+		<oxygen power="2" room="12" start="true" img="room_oxygen_5" />
+		<pilot power="1" room="15" start="true" img="room_pilot_4">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</pilot>
+		<sensors power="2" room="18" start="true" img="room_sensors_2">
+			<slot>
+				<direction>up</direction>
+				<number>0</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="17" start="true" img="room_shields_7">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="11" start="false" />
+		<weapons max="8" power="2" room="16" start="true" img="room_weapons_7">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>3</weaponSlots>
+	<droneSlots>3</droneSlots>
+	<weaponList missiles="10" count="3">
+		<weapon name="ION_FIRE" />
+	</weaponList>
+	<droneList drones="24" count="3">
+		<drone name="HELLRAISER_HULL_PLAYER" />
+		<drone name="ASSAULT_PARTICLE" />
+	</droneList>
+	<health amount="30" />
+	<maxPower amount="9" />
+	<crewCount amount="1" class="commando" />
+	<crewCount amount="1" class="outcast" />
+	<crewCount amount="1" class="separatist" />
+	<aug name="LOCKED_REGEN_ARMOR" />
+	<aug name="EX_FIRE_EXTINGUISHERS" />
+	<shieldImage>mupc_ariadne</shieldImage>
+	<cloakImage>mupc_ariadne</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_OUTCAST_3" layout="mup_outcast_c" img="mup_outcast_c">
+	<class>Outcast Cruiser</class>
+	<name>Perpetuality</name>
+	<unlock id="ship_PLAYER_SHIP_OUTCAST_3_unlock"/>
+	<desc>This ship might lack a proper medical system, but it can more than make up for it thanks to its reconstructive teleporter.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="11" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="22" start="true" img="room_battery_6" />
+		<cloaking power="1" room="8" start="false" img="room_cloaking_7" />
+		<clonebay power="1" room="21" start="false">
+			<slot>
+				<number>0</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="10" start="true" img="room_doors_2">
+			<slot>
+				<direction>down</direction>
+				<number>0</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="9" start="false" img="room_drones_7" />
+		<engines power="1" room="5" start="true" img="room_engines_2">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="16" start="false" img="room_hacking_3" />
+		<medbay power="1" room="21" start="false" img="room_medbay_6">
+			<slot>
+				<number>2</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="15" start="false" img="room_mind_2" />
+		<oxygen power="1" room="20" start="true" img="room_oxygen_6" />
+		<pilot power="2" room="0" start="true" img="room_pilot_2">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="1" start="true" img="room_sensors_3">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="14" start="true" img="room_shields_8">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</shields>
+		<teleporter power="2" room="4" start="true" />
+		<weapons max="8" power="2" room="17" start="true" img="room_weapons">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>3</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="14" count="3">
+		<weapon name="MISSILES_STUN" />
+	</weaponList>
+	<droneList drones="0" count="2" />
+	<health amount="30" />
+	<maxPower amount="5" />
+	<crewCount amount="1" class="outcast" />
+	<crewCount amount="1" class="outcast" />
+	<crewCount amount="1" class="orchid" />
+	<aug name="LOCKED_ROCK_ARMOR" />
+	<aug name="EX_TELEPORT_HEAL" />
+	<shieldImage>mupc_ariadne</shieldImage>
+	<cloakImage>mupc_tuco</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_PALADIN_3" layout="mup_paladin_c" img="mup_paladin_c">
+	<class>Paladin Cruiser</class>
+	<name>Dolly-96</name>
+	<desc>This ship must carefully manage the health of its incredibly tanky crew to its advantage, as it has neither airlocks nor the ability to install a Medbay!</desc>
+	<unlock id="ship_PLAYER_SHIP_PALADIN_3_unlock"/>
+	<systemList>
+		<artillery max="4" power="1" room="6" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="14" start="false" img="room_battery_14" />
+		<cloaking power="1" room="13" start="true" img="room_cloaking_2" />
+		<clonebay power="1" room="5" start="true">
+			<slot>
+				<number>2</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="18" start="false" img="room_doors">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="10" start="false" img="room_drones_12" />
+		<engines power="1" room="17" start="true" img="room_engines_10">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="8" start="false" img="room_hacking_8" />
+		<mind power="1" room="7" start="false" img="room_mind_5" />
+		<oxygen power="1" room="15" start="true" img="room_oxygen_2" />
+		<pilot power="1" room="11" start="true" img="room_pilot_3">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</pilot>
+		<sensors power="2" room="19" start="true" img="room_sensors">
+			<slot>
+				<direction>down</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="4" start="false" img="room_shields_2">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="9" start="true" />
+		<weapons max="8" power="1" room="12" start="true" img="room_weapons_7">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>0</droneSlots>
+	<weaponList missiles="15" count="4">
+		<weapon name="MISSILE_CHARGEGUN_PLAYER" />
+	</weaponList>
+	<droneList drones="0" count="0" />
+	<health amount="30" />
+	<maxPower amount="5" />
+	<crewCount amount="1" class="paladin" />
+	<crewCount amount="1" class="paladin" />
+	<crewCount amount="1" class="paladin" />
+	<aug name="PALADIN_ARMOR" />
+	<shieldImage>mupc_ariadne</shieldImage>
+	<cloakImage>mup_paladin_a</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_CRYSTALLINE_3" layout="mup_crystal_c" img="mup_crystal_c">
+	<class>Imperial Cruiser</class>
+	<name>Amber</name>
+	<unlock id="ship_PLAYER_SHIP_CRYSTALLINE_3_unlock"/>
+	<desc>This Crystal ship specializes in teleporting its crew aboard to lockdown enemy systems, then burning the enemy crew alive with several fire weapons.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="14" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="5" start="false" img="room_battery_17" />
+		<cloaking power="1" room="2" start="false" img="room_cloaking_11" />
+		<clonebay power="1" room="17" start="true">
+			<slot>
+				<number>3</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="10" start="true" img="room_doors_8">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="13" start="false" img="room_drones_9" />
+		<engines power="1" room="11" start="true" img="room_engines_7">
+			<slot>
+				<direction>right</direction>
+				<number>3</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="16" start="false" img="room_hacking_6" />
+		<medbay power="1" room="17" start="false" img="room_medbay_3">
+			<slot>
+				<number>3</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="3" start="false" img="room_mind" />
+		<oxygen power="2" room="7" start="true" img="room_oxygen_8" />
+		<pilot power="1" room="19" start="true" img="room_pilot">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</pilot>
+		<sensors power="2" room="21" start="true" img="room_sensors_3">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="0" start="true" img="room_shields_2">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</shields>
+		<teleporter power="2" room="15" start="true" />
+		<weapons max="8" power="3" room="18" start="true" img="room_weapons_7">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="7" count="4">
+		<weapon name="BOMB_FIRE" />
+		<weapon name="CRYSTAL_BURST_1" />
+		<weapon name="BEAM_FIRE_PLAYER" />
+	</weaponList>
+	<droneList drones="0" count="2" />
+	<health amount="30" />
+	<maxPower amount="8" />
+	<crewCount amount="1" class="sentinel" />
+	<crewCount amount="1" class="crystal" />
+	<crewCount amount="1" class="cultist" />
+	<aug name="LOCKED_CRYSTAL_SHARDS" />
+	<shieldImage>mupc_alkram</shieldImage>
+	<cloakImage>mupc_ruwen</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_SSLG_3" layout="mup_sslg_c" img="mup_sslg_c">
+	<class>SSLG Cruiser</class>
+	<name>Shardstorm</name>
+	<unlock id="ship_PLAYER_SHIP_SSLG_3_unlock"/>
+	<desc>Though this ship comes with limited defenses and not much damage output from its weapons, its unique armor provides it with an unusual and masochistic advantage.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="11" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="6" start="false" img="room_battery_5" />
+		<cloaking power="1" room="14" start="false" img="room_cloaking_10" />
+		<clonebay power="1" room="0" start="true">
+			<slot>
+				<number>0</number>
+			</slot>
+		</clonebay>
+		<doors power="2" room="13" start="true" img="room_doors_9">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="5" start="true" img="room_drones_5" />
+		<engines power="4" room="7" start="true" img="room_engines_2">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="2" start="false" img="room_hacking_6" />
+		<medbay power="1" room="0" start="false" img="room_medbay_4">
+			<slot>
+				<number>0</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="19" start="false" img="room_mind_12" />
+		<oxygen power="1" room="18" start="true" img="room_oxygen" />
+		<pilot power="1" room="16" start="true" img="room_pilot_2">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="17" start="true" img="room_sensors_4">
+			<slot>
+				<direction>left</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="10" start="false" img="room_shields_7">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="3" start="false" />
+		<weapons max="8" power="2" room="12" start="true" img="room_weapons_7">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="20" count="4">
+		<weapon name="ENERGY_1" />
+		<weapon name="CRYSTAL_BURST_1" />
+		<weapon name="BOMB_HEAL_SYSTEM_STRONG" />
+	</weaponList>
+	<droneList drones="20" count="2">
+		<drone name="SHIP_REPAIR" />
+	</droneList>
+	<health amount="30" />
+	<maxPower amount="7" />
+	<crewCount amount="1" class="sslg" />
+	<crewCount amount="1" class="sslg" />
+	<crewCount amount="1" class="separatist" />
+	<crewCount amount="1" class="anaerobic" />
+	<aug name="CRYSTAL_SHARDS_100" />
+	<aug name="REPAIR_ARM" />
+	<shieldImage>mupc_alkram</shieldImage>
+	<cloakImage>mupc_dianesh</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_ORCHID_3" layout="mup_orchid_c" img="mup_orchid_c">
+	<class>Floral Cruiser</class>
+	<name>Aveloz</name>
+	<unlock id="ship_PLAYER_SHIP_ORCHID_3_unlock"/>
+	<desc>Despite the Orchid race's weakness to fires, this ship draws power from solar flares to fuel its powerful but expensive Chain Kernel weapon.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="11" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="9" start="false" img="room_battery_2" />
+		<cloaking power="1" room="7" start="false" img="room_cloaking_3" />
+		<clonebay power="1" room="17" start="true">
+			<slot>
+				<number>0</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="1" start="false" img="room_doors">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="3" start="false" img="room_drones_15" />
+		<engines power="1" room="16" start="true" img="room_engines">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="13" start="false" img="room_hacking_4" />
+		<medbay power="1" room="17" start="false" img="room_medbay_4">
+			<slot>
+				<number>0</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="14" start="false" img="room_mind_3" />
+		<oxygen power="1" room="12" start="true" img="room_oxygen" />
+		<pilot power="1" room="0" start="true" img="room_pilot">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</pilot>
+		<sensors power="2" room="2" start="true" img="room_sensors">
+			<slot>
+				<direction>down</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="18" start="true" img="room_shields_9">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="20" start="false" />
+		<weapons max="8" power="4" room="19" start="true" img="room_shields_9">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="20" count="4">
+		<weapon name="KERNEL_CHAIN" />
+		<weapon name="LASER_HEAVY_1" />
+	</weaponList>
+	<droneList drones="0" count="2" />
+	<health amount="30" />
+	<maxPower amount="7" />
+	<crewCount amount="1" class="orchid" />
+	<crewCount amount="1" class="orchid" />
+	<crewCount amount="1" class="chieftain" />
+	<crewCount amount="1" class="anaerobic" />
+	<aug name="SOLAR_PANELS" />
+	<shieldImage>mupc_alkali</shieldImage>
+	<cloakImage>mupe_orchid</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_LEECH_3" layout="mup_leech_c" img="mup_leech_c">
+	<class>Eargen Cruiser</class>
+	<name>Cestodiasis</name>
+	<unlock id="ship_PLAYER_SHIP_LEECH_3_unlock"/>
+	<desc>This peculiar ship focuses on keeping its enemies disabled for as long as possible while your weapons slowly peck away at the enemy.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="10" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="11" start="false" img="room_battery_8" />
+		<cloaking power="1" room="1" start="true" img="room_cloaking" />
+		<clonebay power="1" room="9" start="true">
+			<slot>
+				<number>3</number>
+			</slot>
+		</clonebay>
+		<doors power="2" room="4" start="true" img="room_doors_6">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="12" start="false" img="room_drones_7" />
+		<engines power="2" room="8" start="true" img="room_engines_4">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="2" start="true" img="room_hacking_8" />
+		<medbay power="1" room="9" start="false" img="room_medbay_3">
+			<slot>
+				<number>3</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="14" start="false" img="room_mind" />
+		<oxygen power="1" room="15" start="true" img="room_oxygen_12" />
+		<pilot power="2" room="0" start="true" img="room_pilot">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="3" start="false" img="room_sensors_4">
+			<slot>
+				<direction>left</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="7" start="false" img="room_shields_7">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</shields>
+		<teleporter power="2" room="5" start="true" />
+		<weapons max="8" power="3" room="6" start="true" img="room_weapons_7">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>3</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="0" count="3">
+		<weapon name="LASER_LIGHT" />
+		<weapon name="BEAM_FIRE" />
+	</weaponList>
+	<droneList drones="11" count="2" />
+	<health amount="30" />
+	<maxPower amount="8" />
+	<crewCount amount="1" class="leech" />
+	<crewCount amount="1" class="leech" />
+	<crewCount amount="1" class="leech" />
+	<crewCount amount="1" class="crusader" />
+	<aug name="EX_BACKUP_DNA" />
+	<shieldImage>mupc_alkali</shieldImage>
+	<cloakImage>mupc_tyrdeo</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_ALKRAM_3" layout="mup_alkram_c" img="mup_alkram_c">
+	<class>Revolutionary Cruiser</class>
+	<name>Cymothoa</name>
+	<unlock id="ship_PLAYER_SHIP_ALKRAM_3_unlock"/>
+	<desc>This ship specializes in suffocating the enemy through the use of its unique set of crew.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="21" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="3" power="1" room="18" start="false" img="room_battery_13" />
+		<cloaking power="1" room="3" start="false" img="room_cloaking_2" />
+		<clonebay power="1" room="1" start="true">
+			<slot>
+				<number>0</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="17" start="true" img="room_doors_2">
+			<slot>
+				<direction>down</direction>
+				<number>0</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="11" start="false" img="room_drones_6" />
+		<engines power="2" room="8" start="true" img="room_engines_10">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="4" start="true" img="room_hacking_6" />
+		<medbay power="1" room="1" start="false" img="room_medbay_10">
+			<slot>
+				<number>-2</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="2" start="false" img="room_mind_4" />
+		<oxygen power="1" room="5" start="true" img="room_oxygen_3" />
+		<pilot power="1" room="0" start="true" img="room_pilot_2">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="16" start="true" img="room_sensors_2">
+			<slot>
+				<direction>up</direction>
+				<number>0</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="20" start="true" img="room_shields">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="6" start="true" />
+		<weapons max="8" power="3" room="19" start="true" img="room_weapons_3">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="0" count="4">
+		<weapon name="ION_CHAINGUN" />
+		<weapon name="BEAM_BREACH" />
+	</weaponList>
+	<droneList drones="12" count="2" />
+	<health amount="30" />
+	<maxPower amount="9" />
+	<crewCount amount="1" class="ampere" />
+	<crewCount amount="1" class="leech" />
+	<crewCount amount="1" class="vampweed" />
+	<aug name="EX_BACKUP_DNA" />
+	<shieldImage>mupc_alkram</shieldImage>
+	<cloakImage>mupc_alkram</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_SHELL_3" layout="mup_shell_c" img="mup_shell_c">
+    <class>Geniocracy Cruiser</class>
+    <name>Roy G. Biv</name>
+    <unlock id="ship_PLAYER_SHIP_SHELL_3_unlock"/>
+    <desc>This colorful Shell vessel bears crew from all 4 districts, and relies on the combination of their abilities to make do.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="15" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="21" start="false" img="room_battery_2" />
+		<cloaking power="1" room="14" start="false" img="room_cloaking_2" />
+		<clonebay power="1" room="23" start="true">
+			<slot>
+				<number>3</number>
+			</slot>
+		</clonebay>
+		<doors power="2" room="17" start="true" img="room_doors">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="20" start="false" img="room_drones_12" />
+		<engines power="1" room="18" start="true" img="room_engines_5">
+			<slot>
+				<direction>up</direction>
+				<number>0</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="6" start="false" img="room_hacking_8" />
+		<medbay power="1" room="23" start="false" img="room_medbay_3">
+			<slot>
+				<number>3</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="13" start="true" img="room_mind_5" />
+		<oxygen power="2" room="19" start="true" img="room_oxygen_4" />
+		<pilot power="1" room="10" start="true" img="room_pilot_2">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="11" start="true" img="room_sensors">
+			<slot>
+				<direction>down</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="3" room="4" start="true" img="room_shields">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="22" start="true" />
+		<weapons max="8" power="2" room="7" start="true" img="room_weapons_5">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>3</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="3" count="3">
+		<weapon name="BEAM_FIRE" />
+	</weaponList>
+	<droneList drones="0" count="2" />
+	<health amount="30" />
+	<maxPower amount="8" />
+	<crewCount amount="1" class="shell" />
+	<crewCount amount="1" class="shellmedic" />
+	<crewCount amount="1" class="shellrepair" />
+	<crewCount amount="1" class="shellguardian" />
+	<aug name="LOCKED_TOXIC_GAS" />
+	<shieldImage>mupc_alkali</shieldImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_SCIENTIST_3" layout="mup_scientist_c" img="mup_scientist_c">
+	<class>Geniocracy Science Cruiser</class>
+	<name>Davy-1807</name>
+	<unlock id="ship_PLAYER_SHIP_SCIENTIST_3_unlock"/>
+	<desc>Without any medical systems to start, this ship will rely entirely on its crew to heal.</desc>
+	<systemList>
+		<artillery power="1" room="4" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="11" start="false" img="room_battery_8" />
+		<cloaking power="1" room="18" start="false" img="room_cloaking_11" />
+		<clonebay power="1" room="15" start="false">
+			<slot>
+				<number>1</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="6" start="true" img="room_doors_4">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="8" start="false" img="room_drones_6" />
+		<engines power="1" room="10" start="true" img="room_engines_9">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="13" start="false" img="room_hacking_3" />
+		<medbay power="1" room="15" start="false" img="room_medbay">
+			<slot>
+				<number>1</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="19" start="true" img="room_mind_2" />
+		<oxygen power="2" room="7" start="true" img="room_oxygen_3" />
+		<pilot power="1" room="1" start="true" img="room_pilot_2">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</pilot>
+		<sensors power="3" room="5" start="true" img="room_sensors_6">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="3" room="9" start="true" img="room_shields_2">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="3" start="false" />
+		<weapons max="8" power="2" room="14" start="true" img="room_weapons">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>3</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="13" count="4">
+		<weapon name="LASER_HULL_1" />
+		<weapon name="LASER_LIGHT" />
+	</weaponList>
+	<droneList drones="3" count="2" />
+	<health amount="30" />
+	<maxPower amount="9" />
+	<aug name="LOCKED_REGEN_GAS" />
+	<shieldImage>mupc_alkali</shieldImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_MECHANIC_3" layout="mup_mech_c" img="mup_mech_c">
+    <class>Geniocracy Management Cruiser</class>
+    <name>The Chist</name>
+    <unlock id="ship_PLAYER_SHIP_MECH_3_unlock"/>
+    <desc>This psychedelically colored Shell vessel has no shields, and only a basic Stealth system. It must rely on its crew for quick repairs, and repair-bot dispersal to heal itself.</desc>
+	<systemList>
+		<battery max="2" power="1" room="7" start="false" img="room_battery" />
+		<cloaking power="1" room="16" start="true" img="room_cloaking" />
+		<clonebay power="1" room="14" start="true">
+			<slot>
+				<number>0</number>
+			</slot>
+		</clonebay>
+		<doors power="2" room="5" start="true" img="room_doors">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones power="2" room="6" start="false" img="room_drones_4" />
+		<engines power="1" room="12" start="true" img="room_engines_4">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="9" start="false" img="room_hacking_8" />
+		<medbay power="1" room="14" start="false" img="room_medbay_4">
+			<slot>
+				<number>0</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="19" start="false" img="room_mind_10" />
+		<oxygen power="2" room="18" start="true" img="room_oxygen_3" />
+		<pilot power="1" room="1" start="true" img="room_pilot_4">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="11" start="true" img="room_sensors">
+			<slot>
+				<direction>down</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="3" start="false" img="room_shields_6">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="10" start="false" />
+		<weapons max="8" power="4" room="4" start="true" img="room_weapons_6">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>3</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="0" count="4">
+		<weapon name="BEAM_2" />
+		<weapon name="LASER_HEAVY_1" />
+	</weaponList>
+	<droneList drones="0" count="2" />
+	<health amount="30" />
+	<maxPower amount="8" />
+	<crewCount amount="1" class="shellrepair" />
+	<crewCount amount="1" class="shellrepair" />
+	<crewCount amount="1" class="shellrepair" />
+	<aug name="LOCKED_NANITE_GAS" />
+	<aug name="COMBAT_REPAIR" />
+	<shieldImage>mup_mech_a</shieldImage>
+	<cloakImage>mup_mech_a</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_MORPH_3" layout="mup_morph_c" img="mup_morph_c">
+	<class>Morph Spurgle Yurgle</class>
+	<name>Prootoo Lip Loo</name>
+	<unlock id="ship_PLAYER_SHIP_MORPH_3_unlock"/>
+	<desc>This rusty Shell vessel is inhabited by both Morphs and Ghosts. Who captured the ship first? We don't know...</desc>
+	<systemList>
+		<artillery max="4" power="1" room="14" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="13" start="false" img="room_battery_17" />
+		<cloaking power="1" room="12" start="false" img="room_cloaking_11" />
+		<clonebay power="1" room="10" start="true">
+			<slot>
+				<number>1</number>
+			</slot>
+		</clonebay>
+		<doors power="2" room="8" start="true" img="room_doors">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="9" start="false" img="room_drones_4" />
+		<engines power="1" room="2" start="true" img="room_engines_6">
+			<slot>
+				<direction>down</direction>
+				<number>3</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="3" start="false" img="room_hacking_4" />
+		<medbay power="1" room="10" start="false" img="room_medbay">
+			<slot>
+				<number>-2</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="16" start="false" img="room_mind_2" />
+		<oxygen power="1" room="5" start="false" img="room_oxygen_12" />
+		<pilot power="1" room="0" start="true" img="room_pilot_3">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="1" start="true" img="room_sensors_6">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="6" start="true" img="room_shields_3">
+			<slot>
+				<direction>left</direction>
+				<number>2</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="7" start="false" />
+		<weapons max="8" power="3" room="11" start="true" img="room_weapons_10">
+			<slot>
+				<direction>up</direction>
+				<number>0</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="0" count="4">
+		<weapon name="LASER_PIERCE_2" />
+	</weaponList>
+	<droneList drones="0" count="2" />
+	<health amount="30" />
+	<maxPower amount="6" />
+	<crewCount amount="1" class="goulalpha" />
+	<crewCount amount="1" class="blob" />
+	<crewCount amount="1" class="blob" />
+	<crewCount amount="1" class="techno" />
+	<aug name="MORPH_DATABASE" />
+	<aug name="GHOST_DUPLICATOR" />
+	<shieldImage>mupc_ooj</shieldImage>
+	<cloakImage>mupc_ooj</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_LANIUS_3" layout="mup_lanius_c" img="mup_lanius_c">
+	<class>Lanius Cruiser</class>
+	<name>The Tesar</name>
+	<unlock id="ship_PLAYER_SHIP_LANIUS_3_unlock"/>
+	<desc>This Lanius Cruiser specializes in boarding and suffocating the enemy crew.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="6" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="7" start="false" img="room_battery_9" />
+		<cloaking power="1" room="20" start="true" img="room_cloaking" />
+		<clonebay power="1" room="11" start="true">
+			<slot>
+				<number>3</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="8" start="true" img="room_doors_3">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="9" start="false" img="room_drones_7" />
+		<engines power="1" room="16" start="true" img="room_engines">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="14" start="false" img="room_hacking_7" />
+		<medbay power="1" room="11" start="false" img="room_medbay_3">
+			<slot>
+				<number>3</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="18" start="false" img="room_mind_2" />
+		<oxygen power="1" room="15" start="true" img="room_oxygen_12" />
+		<pilot power="1" room="17" start="true" img="room_pilot">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="10" start="true" img="room_sensors_3">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="12" start="true" img="room_shields_8">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="19" start="true" />
+		<weapons max="8" power="3" room="13" start="true" img="room_weapons_3">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="11" count="4">
+		<weapon name="BOMB_BREACH_1" />
+		<weapon name="BEAM_BREACH" />
+	</weaponList>
+	<droneList drones="0" count="2" />
+	<health amount="30" />
+	<maxPower amount="8" />
+	<crewCount amount="1" class="mare" />
+	<crewCount amount="1" class="welder" />
+	<crewCount amount="1" class="anaerobic" />
+	<crewCount amount="1" class="orchid" />
+	<aug name="EX_O2_MASKS" />
+	<shieldImage>mupc_anointed</shieldImage>
+	<cloakImage>mupc_eater</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_AUGMENTED_3" layout="mup_augmented_c" img="mup_augmented_c">
+	<class>Augmented Cruiser</class>
+	<name>Hand of God</name>
+	<unlock id="ship_PLAYER_SHIP_AUGMENTED_3_unlock"/>
+	<desc>This cruiser carries an impressive missile arsenal that doesn't require ammunition. However, it struggles with gaining scrap for other necessities.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="21" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="12" start="false" img="room_battery_2" />
+		<cloaking power="1" room="10" start="false" img="room_cloaking_10" />
+		<clonebay power="1" room="9" start="false">
+			<slot>
+				<number>0</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="6" start="true" img="room_doors_9">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="16" start="false" img="room_drones_12" />
+		<engines power="1" room="3" start="true" img="room_engines_9">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="13" start="false" img="room_hacking_3" />
+		<medbay power="2" room="9" start="true" img="room_medbay_10">
+			<slot>
+				<number>-2</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="11" start="false" img="room_mind_10" />
+		<oxygen power="1" room="18" start="false" img="room_oxygen_8" />
+		<pilot power="1" room="0" start="true" img="room_pilot_2">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="5" start="true" img="room_sensors_3">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="15" start="true" img="room_shields_4">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="14" start="false" />
+		<weapons max="8" power="4" room="2" start="true" img="room_weapons">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>3</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="2" count="4">
+		<weapon name="MISSILES_STUN" />
+		<weapon name="MISSILE_CHARGEGUN" />
+	</weaponList>
+	<droneList drones="0" count="2" />
+	<health amount="30" />
+	<maxPower amount="5" />
+	<crewCount amount="1" class="augmented" />
+	<crewCount amount="1" class="augmented" />
+	<crewCount amount="1" class="anaerobic" />
+	<aug name="REPAIR_HULL" />
+	<aug name="ANCIENT_REPLICATOR" />
+	<shieldImage>mupc_anointed</shieldImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_GUARD_3" layout="mup_guard_c" img="mup_guard_c">
+	<class>Guardian Cruiser</class>
+	<name>Wirn Pteare</name>
+	<desc>This ship comes crewed by a team of Cognitives instead of a drone system. However, if your crew die, there'll be nothing left to repair your systems if they are breached.</desc>
+	<unlock id="ship_PLAYER_SHIP_GUARD_3_unlock"/>
+	<systemList>
+		<artillery max="4" power="1" room="10" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="11" start="true" img="room_battery_8" />
+		<cloaking power="1" room="5" start="true" img="room_cloaking_3" />
+		<clonebay power="1" room="18" start="false">
+			<slot>
+				<number>1</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="0" start="false" img="room_doors_4">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="4" start="false" img="room_drones_4" />
+		<engines power="2" room="9" start="true" img="room_engines_2">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="6" start="false" img="room_hacking_8" />
+		<medbay power="1" room="18" start="false" img="room_medbay_5">
+			<slot>
+				<number>-2</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="19" start="false" img="room_mind_9" />
+		<oxygen power="1" room="13" start="false" img="room_oxygen_12" />
+		<pilot power="1" room="2" start="true" img="room_pilot_4">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</pilot>
+		<sensors power="3" room="1" start="true" img="room_sensors_6">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="3" start="true" img="room_shields_3">
+			<slot>
+				<direction>left</direction>
+				<number>2</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="12" start="true" />
+		<weapons max="8" power="3" room="14" start="true" img="room_weapons">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>3</droneSlots>
+	<weaponList missiles="15" count="4">
+		<weapon name="ANCIENT_MISSILES" />
+	</weaponList>
+	<droneList drones="20" count="3">
+		<drone name="MENDER" />
+		<drone name="ANCIENT_COMBAT_LASER" />
+	</droneList>
+	<health amount="30" />
+	<maxPower amount="6" />
+	<crewCount amount="1" class="avatar" />
+	<crewCount amount="1" class="avatar" />
+	<crewCount amount="1" class="avatar" />
+	<aug name="ANCIENT_SHIELD" />
+	<shieldImage>mup_guard_a</shieldImage>
+	<cloakImage>mup_guard_a</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_CIVILIAN_3" layout="mup_civilian_c" img="mup_civilian_c">
+	<class>Union Cruiser</class>
+	<name>Zacchaeus</name>
+	<unlock id="ship_PLAYER_SHIP_CIVILIAN_3_unlock"/>
+	<desc>The former ship of a former merchant. Though its owner was killed by Mantis warlords, the Federation was able to salvage his ship along with his merchant beacon.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="3" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="1" start="false" img="room_battery_8" />
+		<cloaking power="1" room="12" start="false" img="room_cloaking_10" />
+		<clonebay power="1" room="8" start="true">
+			<slot>
+				<number>0</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="17" start="true" img="room_doors_2">
+			<slot>
+				<direction>down</direction>
+				<number>0</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="11" start="false" img="room_drones" />
+		<engines power="2" room="14" start="true" img="room_engines_2">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="10" start="false" img="room_hacking_4" />
+		<medbay power="1" room="8" start="false" img="room_medbay_4">
+			<slot>
+				<number>0</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="7" start="true" img="room_mind_4" />
+		<oxygen power="1" room="4" start="true" img="room_oxygen_2" />
+		<pilot power="2" room="0" start="true" img="room_pilot">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="18" start="true" img="room_sensors_2">
+			<slot>
+				<direction>up</direction>
+				<number>0</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="5" start="true" img="room_shields">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="9" start="false" />
+		<weapons max="8" power="2" room="6" start="true" img="room_weapons_3">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="12" count="4">
+		<weapon name="BOMB_ION" />
+		<weapon name="LASER_CONSERVATIVE" />
+		<weapon name="LASER_HEAVY_1" />
+	</weaponList>
+	<droneList drones="0" count="2" />
+	<health amount="30" />
+	<maxPower amount="7" />
+	<crewCount amount="1" class="human" />
+	<crewCount amount="1" class="slug" />
+	<crewCount amount="1" class="human" />
+	<aug name="STORE_BEACON" />
+	<aug name="EX_SHIELD_RECHARGE" />
+	<shieldImage>mupc_nights</shieldImage>
+	<cloakImage>mup_civilian_a</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_FEDERATION_3" layout="mup_federation_c" img="mup_federation_c">
+	<class>Federation Cruiser</class>
+	<name>The Phoenix</name>
+	<unlock id="ship_PLAYER_SHIP_FEDERATION_3_unlock"/>
+	<desc>This ship is armed with a deadly fire-based Artillery Beam.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="17" start="true" weapon="ARTILLERY_FIRE" img="room_artillery" />
+		<battery max="2" power="1" room="5" start="false" img="room_battery" />
+		<cloaking power="1" room="9" start="false" img="room_cloaking_9" />
+		<clonebay power="1" room="18" start="true">
+			<slot>
+				<number>3</number>
+			</slot>
+		</clonebay>
+		<doors power="2" room="11" start="true" img="room_doors_9">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="13" start="false" img="room_drones_10" />
+		<engines power="2" room="4" start="true" img="room_engines_2">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="1" start="false" img="room_hacking_7" />
+		<medbay power="1" room="18" start="false" img="room_medbay_3">
+			<slot>
+				<number>3</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="8" start="false" img="room_mind_3" />
+		<oxygen power="1" room="14" start="true" img="room_oxygen_11" />
+		<pilot power="1" room="0" start="true" img="room_pilot">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</pilot>
+		<sensors power="2" room="10" start="true" img="room_sensors_6">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="2" start="true" img="room_shields">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="19" start="false" />
+		<weapons max="8" power="3" room="3" start="true" img="room_weapons">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="0" count="4">
+		<weapon name="ION_TRI" />
+		<weapon name="BEAM_FIRE_PLAYER" />
+	</weaponList>
+	<droneList drones="0" count="2" />
+	<health amount="30" />
+	<maxPower amount="8" />
+	<crewCount amount="1" class="human" />
+	<crewCount amount="1" class="engi" />
+	<crewCount amount="1" class="anaerobic" />
+	<crewCount amount="1" class="commando" />
+	<aug name="EX_FIRE_EXTINGUISHERS" />
+	<shieldImage>mupc_tully</shieldImage>
+	<cloakImage>mupc_tully</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_PROTOTYPE_3" layout="mup_smuggler_c" img="mup_smuggler_c">
+	<class>Prototype Cruiser</class>
+	<name>Ptolemy</name>
+	<unlock id="ship_PLAYER_SHIP_PROTOTYPE_3_unlock"/>
+	<desc>This ship wields strange tech that provides it a unique advantage in finding scores of loot.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="5" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="17" start="false" img="room_battery_13" />
+		<cloaking power="1" room="3" start="false" img="room_cloaking_10" />
+		<clonebay power="1" room="2" start="true">
+			<slot>
+				<number>2</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="16" start="true" img="room_doors_3">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="3" room="4" start="true" img="room_drones_12" />
+		<engines power="2" room="0" start="true" img="room_engines_3">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="11" start="false" img="room_hacking_7" />
+		<medbay power="1" room="2" start="false" img="room_medbay_7">
+			<slot>
+				<number>2</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="12" start="false" img="room_mind_3" />
+		<oxygen power="1" room="8" start="true" img="room_oxygen_13" />
+		<pilot power="1" room="1" start="true" img="room_pilot_2">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="14" start="true" img="room_sensors_3">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="6" start="true" img="room_shields_6">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="15" start="false" />
+		<weapons max="8" power="2" room="13" start="true" img="room_weapons_3">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="0" count="4">
+		<weapon name="LASER_BIO" />
+		<weapon name="LASER_BIO" />
+		<weapon name="ION_CONSERVATIVE" />
+		<weapon name="ION_CONSERVATIVE" />
+	</weaponList>
+	<droneList drones="8" count="2">
+		<drone name="HELLRAISER_FIRE" />
+	</droneList>
+	<health amount="30" />
+	<maxPower amount="9" />
+	<crewCount amount="1" class="LIST_CREW_PIRATE_RANDOM" />
+	<crewCount amount="1" class="LIST_CREW_PIRATE_RANDOM" />
+	<crewCount amount="1" class="LIST_CREW_PIRATE_RANDOM" />
+	<crewCount amount="1" class="LIST_CREW_PIRATE_RANDOM" />
+	<aug name="SCRAP_COLLECTOR" />
+	<aug name="LOOT_COMPASS" />
+	<shieldImage>mupc_ariadne</shieldImage>
+	<cloakImage>mup_smuggler_a</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_ANGEL_3" layout="mup_angel_c" img="mup_angel_c">
+	<class>Angelic Deathbringer</class>
+	<name>Icarus</name>
+	<unlock id="ship_PLAYER_SHIP_ANGEL_3_unlock"/>
+	<desc>Fire isn't known for its speed, though it makes an excellent method of causing chaos aboard the enemy ship. However, this stealth ship needs to light the enemy ablaze fast before it falls first.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="14" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="0" start="false" img="room_battery_2" />
+		<cloaking power="2" room="2" start="true" img="room_cloaking_2" />
+		<clonebay power="1" room="6" start="true">
+			<slot>
+				<number>3</number>
+			</slot>
+		</clonebay>
+		<doors power="2" room="17" start="true" img="room_doors">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="5" start="false" img="room_drones" />
+		<engines power="3" room="3" start="true" img="room_engines_4">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="11" start="false" img="room_hacking_3" />
+		<medbay power="1" room="6" start="false" img="room_medbay_3">
+			<slot>
+				<number>3</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="12" start="false" img="room_mind_1" />
+		<oxygen power="1" room="15" start="true" img="room_oxygen_9" />
+		<pilot power="1" room="16" start="true" img="room_pilot_2">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</pilot>
+		<sensors power="2" room="18" start="true" img="room_sensors">
+			<slot>
+				<direction>down</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="1" start="false" img="room_shields_5">
+			<slot>
+				<direction>up</direction>
+				<number>0</number>
+			</slot>
+		</shields>
+		<teleporter power="2" room="13" start="false" />
+		<weapons max="8" power="4" room="4" start="true" img="room_weapons">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="22" count="4">
+		<weapon name="BOMB_FIRE" />
+		<weapon name="BOMB_FIRE" />
+		<weapon name="BEAM_FIRE_PIERCE" />
+	</weaponList>
+	<droneList drones="0" count="2" />
+	<health amount="30" />
+	<maxPower amount="8" />
+	<crewCount amount="1" class="angel" />
+	<crewCount amount="1" class="commando" />
+	<crewCount amount="1" class="separatist" />
+	<aug name="EX_EXPLOSIVE_REPLICATOR" />
+	<aug name="EX_CLOAK_FIRE" />
+	<shieldImage>mupc_anointed</shieldImage>
+	<cloakImage>mup_angel_b</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_ENGI_3" layout="mup_engi_c" img="mup_engi_c">
+	<class>Engi Cruiser</class>
+	<name>The Trinity</name>
+	<unlock id="ship_PLAYER_SHIP_ENGI_3_unlock"/>
+	<desc>A perfect union between the 3 Engi sub-types, working together for a common goal they can all agree on.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="13" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="7" start="false" img="room_battery_13" />
+		<cloaking power="1" room="8" start="false" img="room_cloaking_10" />
+		<clonebay power="1" room="11" start="true">
+			<slot>
+				<number>2</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="10" start="true" img="room_doors_6">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="4" room="9" start="true" img="room_drones_5" />
+		<engines power="2" room="5" start="true" img="room_engines_9">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="2" start="false" img="room_hacking_4" />
+		<medbay power="1" room="11" start="false" img="room_medbay_7">
+			<slot>
+				<number>2</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="6" start="false" img="room_mind_11" />
+		<oxygen power="1" room="4" start="true" img="room_oxygen_9" />
+		<pilot power="1" room="0" start="true" img="room_pilot">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="15" start="true" img="room_sensors_2">
+			<slot>
+				<direction>up</direction>
+				<number>0</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="3" start="true" img="room_shields_10">
+			<slot>
+				<direction>down</direction>
+				<number>3</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="14" start="false" />
+		<weapons max="8" power="2" room="1" start="true" img="room_weapons">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>3</weaponSlots>
+	<droneSlots>3</droneSlots>
+	<weaponList missiles="8" count="3">
+		<weapon name="ENERGY_CHARGEGUN_PLAYER" />
+	</weaponList>
+	<droneList drones="13" count="3">
+		<drone name="AMPHI_DEFENSE" />
+		<drone name="AMPHI_DEFENSE" />
+	</droneList>
+	<health amount="30" />
+	<maxPower amount="10" />
+	<crewCount amount="1" class="engi" />
+	<crewCount amount="1" class="separatist" />
+	<crewCount amount="1" class="defend" />
+	<aug name="EX_DEFENSE_SCRAMBLER" />
+	<aug name="NANOBOT_DEFENSE_SYSTEM" />
+	<shieldImage>mupc_nights</shieldImage>
+	<cloakImage>mupc_turzil</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_SEPARATIST_3" layout="mup_separatist_c" img="mup_separatist_c">
+	<class>Separatist Cruiser</class>
+	<name>Sr-NO32</name>
+	<unlock id="ship_PLAYER_SHIP_SEPARATIST_3_unlock"/>
+	<desc>This ship has limited fire power, but can utilize the power of its crew to distract enemy crew while its drones assault the enemy.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="14" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="13" start="false" img="room_battery_8" />
+		<cloaking power="1" room="6" start="false" img="room_cloaking_3" />
+		<clonebay power="2" room="16" start="true">
+			<slot>
+				<number>1</number>
+			</slot>
+		</clonebay>
+		<doors power="2" room="15" start="true" img="room_doors_8">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</doors>
+		<drones max="8" power="3" room="12" start="true" img="room_drones_5" />
+		<engines power="1" room="11" start="true" img="room_engines_4">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="5" start="false" img="room_hacking_5" />
+		<medbay power="1" room="16" start="false" img="room_medbay_5">
+			<slot>
+				<number>-2</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="17" start="false" img="room_mind_9" />
+		<oxygen power="1" room="4" start="false" img="room_oxygen_13" />
+		<pilot power="2" room="0" start="true" img="room_pilot">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="1" start="false" img="room_sensors_4">
+			<slot>
+				<direction>left</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="3" room="3" start="true" img="room_shields_7">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="8" start="true" />
+		<weapons max="8" power="2" room="10" start="true" img="room_weapons_7">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>3</weaponSlots>
+	<droneSlots>3</droneSlots>
+	<weaponList missiles="12" count="3">
+		<weapon name="LASER_HEAVY_PIERCE" />
+		<weapon name="BOMB_STUN" />
+	</weaponList>
+	<droneList drones="20" count="3">
+		<drone name="MANNING" />
+		<drone name="BATTLETOG2_BOARDER" />
+		<drone name="REPAIR" />
+	</droneList>
+	<health amount="30" />
+	<maxPower amount="9" />
+	<crewCount amount="1" class="separatistblur" />
+	<aug name="LOCKED_NANOBOT_DEFENSE_SYSTEM" />
+	<aug name="EX_LIFE_SCANNER" />
+	<shieldImage>mupc_nights</shieldImage>
+	<cloakImage>mup_separatist_a</cloakImage>
+</shipBlueprint>
+
+<!--<shipBlueprint name="PLAYER_SHIP_COALITION_3" layout="mup_coalition_c" img="mup_coalition_c">
+	<class>Coalition Cruiser</class>
+	<name>Somnolite</name>
+	<desc>A dangerous elite Coalition ship that specializes in keeping enemy crew stunned while havoc is wrecked on their ship.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="25" start="false" weapon="ARTILLERY_COALITION_A" img="room_artillery" />
+		<battery max="2" power="1" room="12" start="false" img="room_battery_6" />
+		<cloaking power="1" room="8" start="false" img="room_cloaking_2" />
+		<clonebay power="1" room="17" start="true">
+			<slot>
+				<number>1</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="13" start="true" img="room_doors">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="15" start="false" img="room_drones_7" />
+		<engines power="3" room="1" start="true" img="room_engines">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="4" start="false" img="room_hacking_3" />
+		<medbay power="1" room="17" start="false" img="room_medbay">
+			<slot>
+				<number>1</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="16" start="true" img="room_mind_10" />
+		<oxygen power="1" room="5" start="true" img="room_oxygen_9" />
+		<pilot power="1" room="0" start="true" img="room_pilot_5">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="14" start="false" img="room_sensors">
+			<slot>
+				<direction>down</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="18" start="true" img="room_shields_7">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="22" start="false" />
+		<weapons max="8" power="4" room="6" start="true" img="room_weapons">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="10" count="4">
+		<weapon name="CRYSTAL_STUN_BURST" />
+		<weapon name="BOMB_STUN" />
+	</weaponList>
+	<droneList drones="9" count="2" />
+	<health amount="30" />
+	<maxPower amount="9" />
+	<crewCount amount="1" class="sabo" />
+	<crewCount amount="1" class="mantis" />
+	<crewCount amount="1" class="crystal" />
+	<crewCount amount="1" class="rock" />
+	<aug name="CRYSTAL_SHARDS" />
+	<aug name="SLUG_GEL" />
+	<aug name="ROCK_ARMOR" />
+</shipBlueprint>-->
+<shipBlueprint name="PLAYER_SHIP_COALITION_3" layout="mup_coalition_c" img="mup_coalition_c">
+	<class>Coalition Cruiser</class>
+	<name>Malacostraca</name>
+	<unlock id="ship_PLAYER_SHIP_COALITION_3_unlock"/>
+	<desc>Though the Coalition might typically opt for boarding strategies, this vessel is geared much more towards defense instead.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="2" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="18" start="false" img="room_battery_14" />
+		<cloaking power="1" room="9" start="false" img="room_cloaking" />
+		<clonebay power="1" room="10" start="true">
+			<slot>
+				<number>3</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="14" start="false" img="room_doors_3">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="6" start="false" img="room_drones_5" />
+		<engines power="2" room="5" start="true" img="room_engines_4">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="17" start="false" img="room_hacking_4" />
+		<medbay power="1" room="10" start="false" img="room_medbay_3">
+			<slot>
+				<number>3</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="16" start="true" img="room_mind_12" />
+		<oxygen power="1" room="15" start="true" img="room_oxygen_12" />
+		<pilot power="1" room="0" start="true" img="room_pilot_7">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="13" start="false" img="room_sensors_2">
+			<slot>
+				<direction>up</direction>
+				<number>0</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="4" room="7" start="true" img="room_shields_3">
+			<slot>
+				<direction>left</direction>
+				<number>2</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="1" start="false" />
+		<weapons max="8" power="1" room="8" start="true" img="room_weapons_10">
+			<slot>
+				<direction>up</direction>
+				<number>0</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>3</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="0" count="3">
+		<weapon name="ION_STUN" />
+		<weapon name="BEAM_BIO_CONSERVATIVE" />
+	</weaponList>
+	<droneList drones="0" count="2" />
+	<health amount="30" />
+	<maxPower amount="8" />
+	<crewCount amount="1" class="slug" />
+	<crewCount amount="1" class="rock" />
+	<crewCount amount="1" class="mantis" />
+	<crewCount amount="1" class="leech" />
+	<aug name="LOCKED_SLUG_GEL" />
+	<aug name="LOCKED_ROCK_ARMOR" />
+	<shieldImage>mupc_a55</shieldImage>
+	<cloakImage>mupe_coalition</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_ZOLTAN_3" layout="mup_zoltan_c" img="mup_zoltan_c">
+	<class>Ministry Cruiser</class>
+	<name>C-F-B-31</name>
+	<unlock id="ship_PLAYER_SHIP_ZOLTAN_3_unlock"/>
+	<desc>This cruiser is capable of crippling enemy reactors, but as a result has virtually no reactor of its own and must rely on Zoltan crew and Conservative weapons.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="17" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="19" start="false" img="room_battery_9" />
+		<cloaking power="1" room="13" start="false" img="room_cloaking_3" />
+		<clonebay power="1" room="7" start="true">
+			<slot>
+				<number>1</number>
+			</slot>
+		</clonebay>
+		<doors power="2" room="1" start="true" img="room_doors">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="9" start="false" img="room_drones_12" />
+		<engines power="1" room="0" start="true" img="room_engines_4">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="11" start="false" img="room_hacking_9" />
+		<medbay power="1" room="7" start="false" img="room_medbay">
+			<slot>
+				<number>1</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="21" start="false" img="room_mind_7" />
+		<oxygen power="2" room="10" start="true" img="room_oxygen_5" />
+		<pilot power="1" room="6" start="true" img="room_pilot_4">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="3" start="true" img="room_sensors_6">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="15" start="true" img="room_shields_7">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="2" start="false" />
+		<weapons max="8" power="1" room="16" start="true" img="room_weapons_7">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="5" count="4">
+		<weapon name="ENERGY_CONSERVATIVE" />
+		<weapon name="ENERGY_CONSERVATIVE" />
+		<weapon name="BEAM_CONSERVATIVE" />
+	</weaponList>
+	<droneList drones="0" count="2" />
+	<health amount="30" />
+	<maxPower amount="1" />
+	<crewCount amount="1" class="energy" />
+	<crewCount amount="1" class="energy" />
+	<crewCount amount="1" class="energy" />
+	<crewCount amount="1" class="peace" />
+	<aug name="LOCKED_ENERGY_SHIELD" />
+	<aug name="COMBAT_POWER" />
+	<aug name="LOCKED_COMBAT_REACTOR_JAMMER" />
+	<shieldImage>mupc_devorak</shieldImage>
+	<cloakImage>mupe_zoltan</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_DUSKBRINGER_3" layout="mup_dusk_c" img="mup_dusk_c">
+	<class>Duskbringer Cruiser</class>
+	<name>Kogekitai</name>
+	<unlock id="ship_PLAYER_SHIP_DUSKBRINGER_3_unlock"/>
+	<desc>This ship comes considerably understaffed - forcing you rely on Recon drones to sabotage enemy systems and aid your crew in their suicidal mission.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="5" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="3" start="true" img="room_battery_2" />
+		<cloaking power="1" room="0" start="false" img="room_cloaking_10" />
+		<clonebay power="2" room="17" start="true">
+			<slot>
+				<number>2</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="4" start="true" img="room_doors_6">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones power="2" room="13" start="true" img="room_drones_6" />
+		<engines power="1" room="2" start="true" img="room_engines_2">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="10" start="false" img="room_hacking_3" />
+		<medbay power="1" room="17" start="false" img="room_medbay_7">
+			<slot>
+				<number>2</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="14" start="false" img="room_mind_12" />
+		<oxygen power="1" room="7" start="true" img="room_oxygen_2" />
+		<pilot power="1" room="6" start="true" img="room_pilot_2">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="19" start="false" img="room_sensors_6">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="18" start="true" img="room_shields_3">
+			<slot>
+				<direction>left</direction>
+				<number>2</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="12" start="true" />
+		<weapons max="8" power="3" room="11" start="true" img="room_weapons">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>3</weaponSlots>
+	<droneSlots>3</droneSlots>
+	<weaponList missiles="15" count="3">
+		<weapon name="ENERGY_HULL" />
+		<weapon name="BOMB_BIO" />
+	</weaponList>
+	<droneList drones="25" count="3">
+		<drone name="RECON_BOARDER" />
+		<drone name="RECON_BOARDER" />
+	</droneList>
+	<health amount="30" />
+	<maxPower amount="6" />
+	<crewCount amount="1" class="radical" />
+	<aug name="LOCKED_ENERGY_SHIELD" />
+	<aug name="EX_BACKUP_DNA" />
+	<aug name="EXTRA_PREP" />
+	<shieldImage>mupc_devorak</shieldImage>
+	<cloakImage>mupc_devorak</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_SLUG_3" layout="mup_slug_c" img="mup_slug_c">
+	<class>Kleptocracy Cruiser</class>
+	<name>Scythian-4</name>
+	<unlock id="ship_PLAYER_SHIP_SLUG_3_unlock"/>
+	<desc>This Slug Cruiser has been armed with specialized Anti-Bio drone technology. Due to the randomized nature of drone targeting, they can't always be relied upon, so as backup it also comes with a Shield jamming combat augment.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="10" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="8" start="false" img="room_battery_14" />
+		<cloaking power="1" room="0" start="false" img="room_cloaking" />
+		<clonebay power="1" room="15" start="true">
+			<slot>
+				<number>3</number>
+			</slot>
+		</clonebay>
+		<doors power="2" room="19" start="true" img="room_doors">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="5" start="true" img="room_drones_13" />
+		<engines power="2" room="14" start="true" img="room_engines_4">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="1" start="false" img="room_hacking_6" />
+		<medbay power="1" room="15" start="false" img="room_medbay_3">
+			<slot>
+				<number>3</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="11" start="false" img="room_mind_4" />
+		<oxygen power="1" room="9" start="true" img="room_oxygen_2" />
+		<pilot power="1" room="2" start="true" img="room_pilot">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="18" start="false" img="room_sensors">
+			<slot>
+				<direction>down</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="12" start="true" img="room_shields_7">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="16" start="false" />
+		<weapons max="8" power="4" room="13" start="true" img="room_weapons_7">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>3</weaponSlots>
+	<droneSlots>3</droneSlots>
+	<weaponList missiles="10" count="3">
+		<weapon name="ION_BIO" />
+		<weapon name="MINELAUNCHER_STUN" />
+	</weaponList>
+	<droneList drones="12" count="2">
+		<drone name="COMBAT_BIO_BEAM" />
+	</droneList>
+	<health amount="30" />
+	<maxPower amount="10" />
+	<crewCount amount="1" class="slug" />
+	<crewCount amount="1" class="slug" />
+	<crewCount amount="1" class="engi" />
+	<aug name="LOCKED_SLUG_GEL" />
+	<aug name="COMBAT_SHIELDS_JAMMER" />
+	<shieldImage>mupc_ariadne</shieldImage>
+	<cloakImage>mupc_slocknog</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_CLAN_3" layout="mup_clan_c" img="mup_clan_c">
+	<class>Clansman Cruiser</class>
+	<name>Nematocysts</name>
+	<unlock id="ship_PLAYER_SHIP_CLAN_3_unlock"/>
+	<desc>This ship has no medical facilities, so you must rely on stun technology to keep enemy crew neutralized.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="18" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="6" start="false" img="room_battery_15" />
+		<cloaking power="1" room="11" start="false" img="room_cloaking_11" />
+		<clonebay power="1" room="15" start="false">
+			<slot>
+				<number>2</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="1" start="true" img="room_doors">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="9" start="false" img="room_drones_11" />
+		<engines power="2" room="16" start="true" img="room_engines">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="17" start="false" img="room_hacking_2" />
+		<medbay power="1" room="15" start="false" img="room_medbay_7">
+			<slot>
+				<number>2</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="13" start="false" img="room_mind_7" />
+		<oxygen power="1" room="3" start="true" img="room_oxygen_8" />
+		<pilot power="1" room="0" start="true" img="room_pilot_4">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="2" start="false" img="room_sensors">
+			<slot>
+				<direction>down</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="10" start="true" img="room_shields_4">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="12" start="true" />
+		<weapons max="8" power="3" room="14" start="true" img="room_weapons_10">
+			<slot>
+				<direction>up</direction>
+				<number>0</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="10" count="4">
+		<weapon name="BOMB_HEAL" />
+		<weapon name="BEAM_STUN" />
+		<weapon name="ION_STUN" />
+	</weaponList>
+	<droneList drones="0" count="2" />
+	<health amount="30" />
+	<maxPower amount="9" />
+	<crewCount amount="1" class="snail" />
+	<crewCount amount="1" class="snail" />
+	<crewCount amount="1" class="snail" />
+	<aug name="LOCKED_SLUG_GEL" />
+	<shieldImage>mupc_irwin</shieldImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_HEKTAR_3" layout="mup_hektar_c" img="mup_hektar_c">
+	<class>Hektar Cruiser(tm)</class>
+	<name>Enviro-Aware</name>
+	<unlock id="ship_PLAYER_SHIP_HEKTAR_3_unlock"/>
+	<desc>This cruiser comes armed with an array of Modular missiles, and Recycler tech to make use of them.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="13" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="12" start="false" img="room_battery_8" />
+		<cloaking power="1" room="8" start="false" img="room_cloaking_7" />
+		<clonebay power="1" room="3" start="true">
+			<slot>
+				<number>3</number>
+			</slot>
+		</clonebay>
+		<doors power="2" room="14" start="true" img="room_doors_2">
+			<slot>
+				<direction>down</direction>
+				<number>0</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="4" start="false" img="room_drones_12" />
+		<engines power="2" room="5" start="true" img="room_engines">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="6" start="false" img="room_hacking_4" />
+		<medbay power="1" room="3" start="false" img="room_medbay_3">
+			<slot>
+				<number>3</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="10" start="false" img="room_mind_6" />
+		<oxygen power="1" room="11" start="true" img="room_oxygen_12" />
+		<pilot power="1" room="0" start="true" img="room_pilot">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="15" start="false" img="room_sensors_2">
+			<slot>
+				<direction>up</direction>
+				<number>0</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="2" start="true" img="room_shields_4">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="17" start="false" />
+		<weapons max="8" power="4" room="1" start="true" img="room_weapons_6">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="25" count="4">
+		<weapon name="MODULAR_MISSILE_ACCURACY" />
+		<weapon name="MODULAR_MISSILE_BASE" />
+	</weaponList>
+	<droneList drones="0" count="2" />
+	<health amount="30" />
+	<maxPower amount="6" />
+	<crewCount amount="1" class="hektar" />
+	<crewCount amount="1" class="hektar" />
+	<crewCount amount="1" class="worker" />
+	<aug name="MODULAR_STORE" />
+	<aug name="LOCKED_SLUG_GEL" />
+	<aug name="EX_EXPLOSIVE_REPLICATOR" />
+	<shieldImage>mupc_ariadne</shieldImage>
+	<cloakImage>mupc_lizard</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_KNIGHT_3" layout="mup_knight_c" img="mup_knight_c">
+	<class>Knighted Cruiser</class>
+	<name>The Dove</name>
+	<unlock id="ship_PLAYER_SHIP_KNIGHT_3_unlock"/>
+	<desc>This ship carries no Shields or Cloaking to protect it; its crew must quickly sabotage the enemy systems, and use repair technology to save itself.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="4" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="9" start="false" img="room_battery_17" />
+		<cloaking power="1" room="11" start="false" img="room_cloaking_3" />
+		<clonebay power="1" room="14" start="true">
+			<slot>
+				<number>1</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="7" start="true" img="room_doors">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="6" start="true" img="room_drones_11" />
+		<engines power="3" room="3" start="true" img="room_engines_8">
+			<slot>
+				<direction>left</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="2" start="false" img="room_hacking_5" />
+		<medbay power="1" room="14" start="false" img="room_medbay_5">
+			<slot>
+				<number>3</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="10" start="false" img="room_mind_12" />
+		<oxygen power="1" room="13" start="true" img="room_oxygen_9" />
+		<pilot power="1" room="0" start="true" img="room_pilot">
+			<slot>
+				<direction>right</direction>
+				<number>0</number>
+			</slot>
+		</pilot>
+		<sensors power="2" room="8" start="false" img="room_sensors">
+			<slot>
+				<direction>down</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="12" start="false" img="room_shields_11">
+			<slot>
+				<direction>down</direction>
+				<number>1</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="5" start="true" />
+		<weapons max="8" power="3" room="1" start="true" img="room_weapons">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="18" count="4">
+		<weapon name="LASER_HEAVY_PIERCE" />
+		<weapon name="BEAM_2_PLAYER" />
+		<weapon name="BOMB_HEAL_SYSTEM_STRONG" />
+	</weaponList>
+	<droneList drones="26" count="2">
+		<drone name="SHIP_REPAIR" />
+		<drone name="REPAIR" />
+	</droneList>
+	<health amount="15" />
+	<maxPower amount="8" />
+	<crewCount amount="1" class="sabo" />
+	<crewCount amount="1" class="wraith" />
+	<crewCount amount="1" class="monk" />
+	<aug name="EX_ION_ARMOR" />
+	<aug name="LOCKED_SLUG_GEL" />
+	<aug name="SYSTEM_CASING_NEW" />
+	<shieldImage>mupc_nights</shieldImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_HACKER_3" layout="mup_hacker_c" img="mup_hacker_c">
+	<class>Hacker Cruiser</class>
+	<name>F1R3-5T4RT3R</name>
+	<unlock id="ship_PLAYER_SHIP_HACKED_3_unlock"/>
+	<desc>This cruiser wields a powerful Combustion Drone and Particle Beam that can start fires and cause system damage, but cannot pierce shields without help from its Hacking system.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="8" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="6" start="false" img="room_battery_14" />
+		<cloaking power="1" room="1" start="false" img="room_cloaking_11" />
+		<clonebay power="1" room="18" start="true">
+			<slot>
+				<number>1</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="5" start="true" img="room_doors">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="3" room="9" start="true" img="room_drones_8" />
+		<engines power="1" room="10" start="true" img="room_engines">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="2" room="14" start="true" img="room_hacking_7" />
+		<medbay power="1" room="18" start="false" img="room_medbay_2">
+			<slot>
+				<number>-2</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="16" start="false" img="room_mind_11" />
+		<oxygen power="1" room="2" start="true" img="room_oxygen_9" />
+		<pilot power="1" room="0" start="true" img="room_pilot_5">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="7" start="false" img="room_sensors">
+			<slot>
+				<direction>down</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="3" start="true" img="room_shields_10">
+			<slot>
+				<direction>down</direction>
+				<number>3</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="13" start="false" />
+		<weapons max="8" power="2" room="4" start="true" img="room_weapons">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>3</weaponSlots>
+	<droneSlots>3</droneSlots>
+	<weaponList missiles="0" count="3">
+		<weapon name="BEAM_PARTICLE" />
+	</weaponList>
+	<droneList drones="13" count="3">
+		<drone name="HELLRAISER_FIRE" />
+	</droneList>
+	<health amount="30" />
+	<maxPower amount="9" />
+	<crewCount amount="1" class="sabo" />
+	<crewCount amount="1" class="rock" />
+	<aug name="EX_HACKING_STUN" />
+	<aug name="EX_DEFENSE_SCRAMBLER" />
+	<aug name="LOCKED_SLUG_GEL" />
+	<shieldImage>mupc_alkali</shieldImage>
+	<cloakImage>mup_hacker_a</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_MONK_3" layout="mup_monk_c" img="mup_monk_c">
+	<class>Monk Cruiser</class>
+	<name>Deviant</name>
+	<unlock id="ship_PLAYER_SHIP_MONK_3_unlock"/>
+	<desc>The monks aboard this ship critically misunderstood their faith. The only reason this ship exists is that its crew don't have to directly kill the enemy.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="11" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="1" room="7" start="false" img="room_battery_17" />
+		<cloaking power="1" room="6" start="false" img="room_cloaking" />
+		<clonebay power="1" room="18" start="true">
+			<slot>
+				<number>0</number>
+			</slot>
+		</clonebay>
+		<doors power="2" room="4" start="true" img="room_doors">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</doors>
+		<drones max="8" power="2" room="1" start="false" img="room_drones" />
+		<engines power="2" room="2" start="true" img="room_engines_9">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="21" start="false" img="room_hacking_9" />
+		<medbay power="1" room="18" start="false" img="room_medbay_4">
+			<slot>
+				<number>0</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="14" start="false" img="room_mind_3" />
+		<oxygen power="1" room="19" start="true" img="room_oxygen_9" />
+		<pilot power="1" room="16" start="true" img="room_pilot_5">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</pilot>
+		<sensors power="2" room="3" start="true" img="room_sensors">
+			<slot>
+				<direction>down</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="5" start="true" img="room_shields_3">
+			<slot>
+				<direction>left</direction>
+				<number>2</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="0" start="true" />
+		<weapons max="8" power="3" room="9" start="true" img="room_weapons">
+			<slot>
+				<direction>up</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>3</weaponSlots>
+	<droneSlots>3</droneSlots>
+	<weaponList missiles="0" count="3">
+		<weapon name="BEAM_ADAPT" />
+		<weapon name="BEAM_REPAIR" />
+		<weapon name="ION_CONSERVATIVE" />
+	</weaponList>
+	<droneList drones="0" count="3" />
+	<health amount="30" />
+	<maxPower amount="5" />
+	<crewCount amount="1" class="monk" />
+	<crewCount amount="1" class="monk" />
+	<crewCount amount="1" class="monk" />
+	<crewCount amount="1" class="monk" />
+	<aug name="LOCKED_ENERGY_SHIELD" />
+	<shieldImage>mupc_devorak</shieldImage>
+	<cloakImage>mup_monk_a</cloakImage>
+</shipBlueprint>
+
+<shipBlueprint name="PLAYER_SHIP_OSMIA_3" layout="mup_osmia_c" img="mup_osmia_c">
+	<class>Osmian Cruiser</class>
+	<name>The Suspension</name>
+	<unlock id="ship_PLAYER_SHIP_OSMIA_3_unlock"/>
+	<desc>This science vessel carries an array of recovered cryo-chambers holding ancient Osmians. With a little bit of fuel, they can finally be freed.</desc>
+	<systemList>
+		<artillery max="4" power="1" room="18" start="false" weapon="ARTILLERY_BEAM" img="room_artillery" />
+		<battery max="2" power="2" room="5" start="true" img="room_battery_11" />
+		<cloaking power="1" room="3" start="false" img="room_cloaking_4" />
+		<clonebay power="1" room="9" start="true">
+			<slot>
+				<number>2</number>
+			</slot>
+		</clonebay>
+		<doors power="1" room="14" start="true" img="room_doors_8">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</doors>
+		<drones max="8" power="3" room="8" start="true" img="room_drones_5" />
+		<engines power="2" room="7" start="true" img="room_engines_4">
+			<slot>
+				<direction>down</direction>
+				<number>2</number>
+			</slot>
+		</engines>
+		<hacking power="1" room="13" start="false" img="room_hacking_4" />
+		<medbay power="1" room="9" start="false" img="room_medbay_7">
+			<slot>
+				<number>2</number>
+			</slot>
+		</medbay>
+		<mind power="1" room="10" start="false" img="room_mind_7" />
+		<oxygen power="2" room="6" start="true" img="room_oxygen_12" />
+		<pilot power="1" room="4" start="true" img="room_pilot_2">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</pilot>
+		<sensors power="1" room="11" start="true" img="room_sensors_6">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</sensors>
+		<shields max="8" power="2" room="15" start="true" img="room_shields_6">
+			<slot>
+				<direction>left</direction>
+				<number>0</number>
+			</slot>
+		</shields>
+		<teleporter power="1" room="17" start="false" />
+		<weapons max="8" power="2" room="16" start="true" img="room_weapons_5">
+			<slot>
+				<direction>right</direction>
+				<number>1</number>
+			</slot>
+		</weapons>
+	</systemList>
+	<weaponSlots>4</weaponSlots>
+	<droneSlots>2</droneSlots>
+	<weaponList missiles="6" count="4">
+		<weapon name="ENERGY_1" />
+		<weapon name="ENERGY_1" />
+	</weaponList>
+	<droneList drones="20" count="2">
+		<drone name="FOCUS_1_AMP2" />
+		<drone name="REPAIR" />
+	</droneList>
+	<health amount="30" />
+	<maxPower amount="2" />
+	<crewCount amount="1" class="zoltan" />
+	<crewCount amount="1" class="sslg" />
+	<aug name="EX_ION_ARMOR" />
+	<aug name="ZOLTAN_SPAWNER" />
+	<shieldImage>mupc_devorak</shieldImage>
+	<cloakImage>mup_osmia_a</cloakImage>
+</shipBlueprint>
+</FTL>

@@ -1,0 +1,864 @@
+<FTL>
+<!--
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+					GENERIC STUFF
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+-->	
+<eventList name="RUINS_GENERIC"> <!--not used, just a template-->
+	<event load="RUINS_ENCOUNTERS_GENERIC"/>
+	<event load="RUINS_TRAP"/>
+	<event load="RUINS_STAR"/>
+</eventList>
+<eventList name="RUINS_ENCOUNTERS_GENERIC">
+	<event load="RUINS_REBEL_AUTO"/>
+	<event load="RUINS_GHOST"/>
+	<event load="RUINS_CLANSMAN"/>
+	<event load="RUINS_CRYSTAL"/>
+</eventList>
+
+<textList name="TEXT_RUINS">
+	<text planet="PLANET_MOONS">In front of you lays a massive monolith structure on the surface of a moon. The exterior is entirely black, with a few dim lights here and there. Maybe it holds something of value?</text>
+	<text planet="PLANET_LAVA">A half cubical ship, split straight down the middle, has crash landed on the nearby lava planet. Though the conditions are hazardous, there might be something of worth remaining.</text>
+	<text>Before you lies ruins unlike anything you've ever seen. Entirely black and cubical, the skeletons of a few massive warships remain at this beacon. Maybe you can salvage something here?</text>
+	<text>A humongous cubical mega-structure lies in your wake, transmitting a short but undecipherable message. Surely if this thing still has enough power to send a message, maybe it has something worth taking?</text>
+	<text>You appear to be witnessing the aftermath of a terribly damaged and brutally torn apart mega-class carrier ship, larger than your cruiser or even the Federation's largest fleet ships. Even stranger, the wreck is entirely black and cubical. Maybe it contains something worth salvaging?</text>
+	<text>The remains of a couple strange looking Auto-ships, certainly not of Rebel design though similar in tech according to scans, are scattered around the remains of a massive cubical cruiser. Maybe there's more tech aboard the ship?</text>
+	<text>The wreck of a dated and foreign vessel is being pelted by a small and thinly dispersed asteroid field. Though the asteroids have clearly caused some damage, the storm has mostly passed by, and won't be an issue for much longer. Maybe something of value is left behind?</text>
+</textList>
+
+<eventList name="RUINS_SALVAGE">
+	<event>
+		<text>Unfortunately, the ruins don't contain anything exciting. Any tech has been dismantled, so you content yourself with taking some resources that were left behind.</text>
+		<autoReward level="HIGH">stuff</autoReward>
+	</event>
+	<event>
+		<text>The ruins only contain a single weapon crate left behind, but to your disappointment it appears to have belonged to some pirate who stashed it here to hide. It might not be ancient tech, but it's still a free weapon.</text>
+		<weapon name="RANDOM"/>
+	</event>
+	<event>
+		<text>You don't find any weapons or drones, but you do find a damaged combustion engine in there that resembles a modern engine system in some capacity. You strip it for parts, intended to upgrade yours with what remains.</text>
+		<upgrade amount="1" system="engines"/>
+	</event>
+	<event>
+		<text>Alas, the ruins yield no military weaponry. You do however discover an incredibly advanced generator. With these parts, maybe you can improve your own!</text>
+		<upgrade amount="1" system="reactor"/>
+	</event>
+	<event>
+		<text>While salvaging the ruins, you find a strange triangular drone. With some tinkering, you even get it to function for a short while. You run some scans and construct a schematic to bring back to the ship.</text>
+		<drone name="MENDER"/>
+	</event>
+	<event>
+		<text>While exploring the ruins, you nearly mistake a drone for a statue before you recognize a dim glow from its lights. A cylindrical design with 2 rings, the drone appears to be designed to interface with a system to manage it. You construct a schematic using some scans and bring it back to the ship.</text>
+		<drone name="DIRECTOR"/>
+	</event>
+	<event>
+		<text>You're amazed to find an armory inside the structure, but unfortunately most of the weapons inside are completely dysfunctional. You do however find a Laser of some sort that you bring back to the ship.</text>
+		<weapon name="ANCIENT_LASER"/>
+	</event>
+	<event>
+		<text>A still functional Bomb launcher, similar to modern ones yet very old, is laying in a central chamber in the structure. You bring it back to the ship.</text>
+		<weapon name="ANCIENT_BOMB"/>
+	</event>
+</eventList>
+
+<!--AUTO ENCOUNTER-->
+<ship name="SHIP_RUINS_REBEL_AUTO" auto_blueprint="LIST_SHIPS_AUTO_LARGE">
+	<destroyed>
+		<text>The Auto-ship has been defeated. You scrap their ship.</text>
+		<autoReward level="MED">standard</autoReward>
+		<choice hidden="true">
+			<text>Salvage the ruins.</text>
+			<event load="RUINS_SALVAGE"/>
+		</choice>
+	</destroyed>
+</ship>
+<event name="RUINS_REBEL_AUTO">
+	<text load="TEXT_RUINS"/>
+	<choice hidden="true">
+		<text>Continue...</text>
+		<event>
+			<text>An automated vessel is scanning the wreckage. There's no way you can access whatever the structure holds without first taking care of the ship.</text>
+			<ship load="SHIP_RUINS_REBEL_AUTO" hostile="false"/>
+			<choice hidden="true">
+				<text>Attack!</text>
+				<event>
+					<text>Whatever is in these ruins, you need them. You attack the other ship!</text>
+					<ship hostile="true"/>
+					<choice hidden="true">
+						<text>Continue...</text>
+						<event load="COMBAT_CHECK"/>
+					</choice>
+				</event>
+			</choice>
+			<choice hidden="true" req="engineer">
+				<text>(Engineer Crew) Shut down the Auto.</text>
+				<event>
+					<text>Your Engineer struggles to shut down the Auto, but they do manage to change its primary directive to fleeing the beacon, leaving you alone with the ruins.</text>
+					<choice hidden="true">
+						<text>Salvage the ruins.</text>
+						<event load="RUINS_SALVAGE"/>
+					</choice>
+				</event>
+			</choice>
+			<choice hidden="true">
+				<text>Ignore the ruins.</text>
+				<event>
+					<text>Whatever the ruins have to offer isn't worth the effort.</text>
+					<choice hidden="true">
+						<text>Check the storage.</text>
+						<event load="STORAGE_CHECK"/>
+					</choice>
+					<choice hidden="true">
+						<text>Do nothing.</text>
+						<event/>
+					</choice>
+				</event>
+			</choice>
+		</event>
+	</choice>
+</event>
+
+<!--GHOST ENCOUNTER-->
+<ship name="SHIP_RUINS_DYNASTY" auto_blueprint="LIST_SHIPS_DYNASTY_FIGHT">
+	<destroyed>
+		<text>The Ghosts have been defeated. You scrap their ship.</text>
+		<autoReward level="LOW">standard</autoReward>
+		<choice hidden="true">
+			<text>Salvage the ruins.</text>
+			<event load="RUINS_SALVAGE"/>
+		</choice>
+	</destroyed>
+	<deadCrew>
+		<text>The Ghosts have been defeated. You scrap their ship.</text>
+		<autoReward level="LOW">standard</autoReward>
+		<choice hidden="true">
+			<text>Salvage the ruins.</text>
+			<event load="RUINS_SALVAGE"/>
+		</choice>
+	</deadCrew>
+</ship>
+<event name="RUINS_GHOST">
+	<text load="TEXT_RUINS"/>
+	<choice hidden="true">
+		<text>Continue...</text>
+		<event>
+			<text>It appears a Dynasty vessel is scanning the wreckage. You aren't sure why they're so curious about it, but if you want whatever is inside you'll have to take them out first.</text>
+			<ship load="SHIP_RUINS_GHOST" hostile="false"/>
+			<choice hidden="true">
+				<text>Attack!</text>
+				<event>
+					<text>Whatever is in these ruins, you need them. You attack the other ship!</text>
+					<ship hostile="true"/>
+					<choice hidden="true">
+						<text>Continue...</text>
+						<event load="COMBAT_CHECK"/>
+					</choice>
+				</event>
+			</choice>
+			<choice hidden="true">
+				<text>Ignore the ruins.</text>
+				<event>
+					<text>Whatever the ruins have to offer isn't worth the effort.</text>
+					<choice hidden="true">
+						<text>Check the storage.</text>
+						<event load="STORAGE_CHECK"/>
+					</choice>
+					<choice hidden="true">
+						<text>Do nothing.</text>
+						<event/>
+					</choice>
+				</event>
+			</choice>
+		</event>
+	</choice>
+</event>
+
+<!--CRYSTAL ENCOUNTER-->
+<ship name="SHIP_RUINS_CRYSTAL" auto_blueprint="LIST_SHIPS_CRYSTAL_A_FIGHT">
+	<destroyed>
+		<text>The Crystals have been defeated. You scrap their ship.</text>
+		<autoReward level="LOW">standard</autoReward>
+		<choice hidden="true">
+			<text>Salvage the ruins.</text>
+			<event load="RUINS_SALVAGE"/>
+		</choice>
+	</destroyed>
+	<deadCrew>
+		<text>The Crystals have been defeated. You scrap their ship.</text>
+		<autoReward level="LOW">standard</autoReward>
+		<choice hidden="true">
+			<text>Salvage the ruins.</text>
+			<event load="RUINS_SALVAGE"/>
+		</choice>
+	</deadCrew>
+</ship>
+<event name="RUINS_CRYSTAL">
+	<text load="TEXT_RUINS"/>
+	<choice hidden="true">
+		<text>Continue...</text>
+		<event>
+			<text>A Crystal ship is sifting through the remains of the Ancient wreckage. Knowing the territorial nature of the Crystals, its not likely they'll let you any closer without a fight!</text>
+			<ship load="SHIP_RUINS_CRYSTAL" hostile="false"/>
+			<choice hidden="true">
+				<text>Attack!</text>
+				<event>
+					<text>Whatever is in these ruins, you need them. You attack the other ship!</text>
+					<ship hostile="true"/>
+					<choice hidden="true">
+						<text>Continue...</text>
+						<event load="COMBAT_CHECK"/>
+					</choice>
+				</event>
+			</choice>
+			<choice hidden="true">
+				<text>Ignore the ruins.</text>
+				<event>
+					<text>Whatever the ruins have to offer isn't worth the effort.</text>
+					<choice hidden="true">
+						<text>Check the storage.</text>
+						<event load="STORAGE_CHECK"/>
+					</choice>
+					<choice hidden="true">
+						<text>Do nothing.</text>
+						<event/>
+					</choice>
+				</event>
+			</choice>
+		</event>
+	</choice>
+</event>
+
+<!--GHOST ENCOUNTER-->
+<ship name="SHIP_RUINS_CLANSMAN" auto_blueprint="LIST_SHIPS_CLAN_FIGHT">
+	<destroyed>
+		<text>The Clansmen have been defeated. You scrap their ship.</text>
+		<autoReward level="LOW">standard</autoReward>
+		<choice hidden="true">
+			<text>Salvage the ruins.</text>
+			<event load="RUINS_SALVAGE"/>
+		</choice>
+	</destroyed>
+	<deadCrew>
+		<text>The Clansmen have been defeated. You scrap their ship.</text>
+		<autoReward level="LOW">standard</autoReward>
+		<choice hidden="true">
+			<text>Salvage the ruins.</text>
+			<event load="RUINS_SALVAGE"/>
+		</choice>
+	</deadCrew>
+	<crew>
+		<crewMember type="snail" prop="0.7"/>
+		<crewMember type="ranger" prop="0.3"/>
+	</crew>
+</ship>
+<event name="RUINS_CLANSMAN">
+	<text load="TEXT_RUINS"/>
+	<choice hidden="true">
+		<text>Continue...</text>
+		<event>
+			<text>A Clansman ship seems to have already discovered the ruins, probably hoping to take back a trophy to the Exotic Hunters Guild. If you want a trophy of your own, you'll have to fight the Clansmen yourself!</text>
+			<ship load="SHIP_RUINS_CLANSMAN" hostile="false"/>
+			<choice hidden="true">
+				<text>Attack!</text>
+				<event>
+					<text>Whatever is in these ruins, you need them. You attack the other ship!</text>
+					<ship hostile="true"/>
+					<choice hidden="true">
+						<text>Continue...</text>
+						<event load="COMBAT_CHECK"/>
+					</choice>
+				</event>
+			</choice>
+			<choice hidden="true">
+				<text>Ignore the ruins.</text>
+				<event>
+					<text>Whatever the ruins have to offer isn't worth the effort.</text>
+					<choice hidden="true">
+						<text>Check the storage.</text>
+						<event load="STORAGE_CHECK"/>
+					</choice>
+					<choice hidden="true">
+						<text>Do nothing.</text>
+						<event/>
+					</choice>
+				</event>
+			</choice>
+		</event>
+	</choice>
+</event>
+
+<!--TRAP-->
+<event name="RUINS_TRAP" unique="true">
+	<text>In front of your ship is a massive cubical cruiser, its exterior covered in small green lights. Though the ship is completely unmoving, the dim glow from the lights suggests there must still be some form of power aboard.</text>
+	<choice hidden="true">
+		<text>Continue...</text>
+		<event>
+			<text>It's very possible the ship might contain something of value, but you can't guarantee it. Do you want to send a team aboard?</text>
+			<choice hidden="true">
+				<text>Board the ship.</text>
+				<event>
+					<text>Your crew find the interior of the ship void of oxygen, and scans show no life support has ever been installed on the ship. How do we proceed?</text>
+					<choice hidden="true" req="BLUELIST_CREW_NO2">
+						<text>(Anaerobic Crew) Send in the anaerobic crew.</text>
+						<event load="RUINS_TRAP_CONTINUE"/>
+					</choice>
+					<choice hidden="true" req="EX_O2_MASKS">
+						<text>(Emergency Respirators) Use the respirators.</text>
+						<event load="RUINS_TRAP_CONTINUE"/>
+					</choice>
+					<choice hidden="true" req="LIST_CREW_ORCHID">
+						<text>(Orchid Crew) No breaches detected, the Orchid should be able to provide oxygen.</text>
+						<event load="RUINS_TRAP_CONTINUE"/>
+					</choice>
+					<choice hidden="true">
+						<text>We have nothing to proceed with.</text>
+						<event>
+							<text>Unfortunately, you have no choice but to pull away from the cruiser.</text>
+							<choice hidden="true">
+								<text>Check the storage.</text>
+								<event load="STORAGE_CHECK"/>
+							</choice>
+							<choice hidden="true">
+								<text>Do nothing.</text>
+								<event/>
+							</choice>
+						</event>
+					</choice>
+				</event>
+			</choice>
+			<choice hidden="true">
+				<text>Ignore the ruins.</text>
+				<event>
+					<text>Whatever the ruins have to offer isn't worth the effort.</text>
+					<choice hidden="true">
+						<text>Check the storage.</text>
+						<event load="STORAGE_CHECK"/>
+					</choice>
+					<choice hidden="true">
+						<text>Do nothing.</text>
+						<event/>
+					</choice>
+				</event>
+			</choice>
+		</event>
+	</choice>
+</event>
+<event name="RUINS_TRAP_CONTINUE">
+	<text>As soon as you are inside, the crew find themselves in a large antechamber, decorated with various artifacts you don't recognize, resting on what appear to be pressure sensors. You could probably grab one of them, but you don't know what will happen, if anything.</text>
+	<choice hidden="true">
+		<text>There's a weapon here, grab it!</text>
+		<event>
+			<text>You grab the weapon, and as soon as you lift it from its pedestal an alarm sounds in the ship. An atom shaped drone comes out of the walls, weapons primed and firing down at your crew!</text>
+			<weapon name="ANCIENT_BEAM"/>
+			<choice hidden="true">
+				<text>Hurry back to the ship!</text>
+				<event>
+					<text>Your crew run back to the ship, pursued by the drone. You try to seal the airlocks quickly, but unfortunately the drone make it aboard. Get ready to defend the ship!</text>
+					<boarders min="1" max="1" class="atom"/>
+				</event>
+			</choice>
+			<choice hidden="true" req="teleporter">
+				<text>(Teleporter) Teleport them back!</text>
+				<event>
+					<text>Fortunately, you're able to teleport back all of the crew in time. The drones are left behind on the ship as you pull away.</text>
+				</event>
+			</choice>
+		</event>
+	</choice>
+	<choice hidden="true">
+		<text>There's a drone here, grab it!</text>
+		<event>
+			<text>You grab the drone, and as soon as you lift it from its pedestal an alarm sounds in the ship. 2 drones come out of the walls, weapons primed and firing down at your crew!</text>
+			<drone name="ANCIENT_COMBAT_LASER"/>
+			<choice hidden="true">
+				<text>Hurry back to the ship!</text>
+				<event>
+					<text>Your crew run back to the ship, pursued by the drones. You try to seal the airlocks quickly, but unfortunately the drones make it aboard. Get ready to defend the ship!</text>
+					<boarders min="2" max="2" class="atom"/>
+				</event>
+			</choice>
+			<choice hidden="true" req="teleporter">
+				<text>(Teleporter) Teleport them back!</text>
+				<event>
+					<text>Fortunately, you're able to teleport back all of the crew in time. The drones are left behind on the ship as you pull away.</text>
+				</event>
+			</choice>
+		</event>
+	</choice>
+	<choice hidden="true">
+		<text>Too risky, pull back to the ship.</text>
+		<event>
+			<text>You were really hoping for something worthwhile, but the risk is too great for the mission.</text>
+		</event>
+	</choice>
+</event>
+
+<!--STAR-->
+<event name="RUINS_STAR" unique="true">
+	<text>A massive cubical structure, possibly a station, is caught in the gravitational pull of the nearby star, and is slowly pulling closer. Though the inevitable destruction of the station cannot be avoided, there might be enough time to salvage whatever might be aboard.</text>
+	<environment type="sun"/>
+	<choice hidden="true">
+		<text>Move in closer.</text>
+		<event>
+			<text>As you approach, it becomes clear the environment is too hazardous to go through with this without taking a hit. You're going to have to bear a solar flare or two, unless you have the right defenses.</text>
+			<choice hidden="true">
+				<text>Continue, we can take a hit.</text>
+				<event load="RUINS_STAR_PROCEED"/>
+			</choice>
+			<choice hidden="true" req="shields" lvl="6">
+				<text>(Adv Shields) Our shields will protect us.</text>
+				<event load="RUINS_STAR_PROCEED_SHIELDS"/>
+			</choice>
+			<choice hidden="true">
+				<text>Too risky.</text>
+				<event>
+					<text>Whatever the ruins have to offer isn't worth the effort.</text>
+					<choice hidden="true">
+						<text>Check the storage.</text>
+						<event load="STORAGE_CHECK"/>
+					</choice>
+					<choice hidden="true">
+						<text>Do nothing.</text>
+						<event/>
+					</choice>
+				</event>
+			</choice>
+		</event>
+	</choice>
+</event>
+<event name="RUINS_STAR_PROCEED">
+	<text>A solar flare rocks your ship, starting a fire. Still, you press forward and dock with the station. With the timer ticking, your crew explore the interior. They find what appears to be a crew drone of sorts, but an inferno has consumed the room!</text>
+	<damage amount="2" effect="fire"/>
+	<choice hidden="true">
+		<text>Grab the drone and get out!</text>
+		<event>
+			<text>Your crew grab the drone, pulling it back, but it's a lot heavier than expected. Working together, they manage to drag it out of the fire, but another solar flare passes by, rocking the hull once again. Most of your crew make it back to the ship, but one of them trips, dropping the drone. Scans show the star is flaring up again, and you only have time to save one of them!</text>
+			<damage amount="1" effect="fire" system="random"/>
+			<choice hidden="true">
+				<text>Save the drone!</text>
+				<event>
+					<text>You leave your crew for dead, taking the drone and head back to the ship. You manage to pull away before the flare hits, but the wreck takes it full blast and is torn in half!</text>
+					<drone name="DIRECTOR"/>
+					<removeCrew>
+						<clone>true</clone>
+						<text>Fortunately, the Clone Bay revives your crew. You can tell they're mad about the situation, but they'll get over it soon enough.</text>
+					</removeCrew>
+				</event>
+			</choice>
+			<choice hidden="true">
+				<text>Save your crew!</text>
+				<event>
+					<text>You leave the drone, dragging your crew back to the ship and pulling away before the flare hits. The wreck takes it full blast and is torn in half, undoubtedly destroying the drone with it too.</text>
+				</event>
+			</choice>
+			<choice hidden="true">
+				<text>Save both but risk some more damage.</text>
+				<event>
+					<text>You pull the ship closer, taking the force of another solar flare. Luckily, you're still able to save both your crew and drone and fly away.</text>
+					<drone name="DIRECTOR"/>
+					<damage amount="2" effect="fire" system="random"/>
+				</event>
+			</choice>
+			<choice hidden="true" req="teleporter" lvl="2">
+				<text>(Upg. Teleporter) Save both quickly.</text>
+				<event>
+					<text>Thanks to your teleporter, you're able to beam up both your crew and the drone before another solar flare hits.</text>
+					<drone name="DIRECTOR"/>
+				</event>
+			</choice>
+		</event>
+	</choice>
+</event>
+<event name="RUINS_STAR_PROCEED_SHIELDS">
+	<text>A solar flare rocks your ship, starting a fire. Still, you press forward and dock with the station. With the timer ticking, your crew explore the interior. They find what appears to be a crew drone of sorts, but an inferno has consumed the room!</text>
+	<damage amount="0" effect="fire"/>
+	<choice hidden="true">
+		<text>Grab the drone and get out!</text>
+		<event>
+			<text>Your crew grab the drone, pulling it back, but it's a lot heavier than expected. Working together, they manage to drag it out of the fire, but another solar flare passes by, rocking the hull once again. Most of your crew make it back to the ship, but one of them trips, dropping the drone. Scans show the star is flaring up again, and you only have time to save one of them without taking damage!</text>
+			<damage amount="0" effect="fire" system="random"/>
+			<choice hidden="true">
+				<text>Save the drone!</text>
+				<event>
+					<text>You leave your crew for dead, taking the drone and head back to the ship. You manage to pull away before the flare hits, but the wreck takes it full blast and is torn in half!</text>
+					<drone name="DIRECTOR"/>
+					<removeCrew>
+						<clone>true</clone>
+						<text>Fortunately, the Clone Bay revives your crew. You can tell they're mad about the situation, but they'll get over it soon enough.</text>
+					</removeCrew>
+				</event>
+			</choice>
+			<choice hidden="true">
+				<text>Save your crew!</text>
+				<event>
+					<text>You leave the drone, dragging your crew back to the ship and pulling away before the flare hits. The wreck takes it full blast and is torn in half, undoubtedly destroying the drone with it too.</text>
+				</event>
+			</choice>
+			<choice hidden="true">
+				<text>Save both but risk some more damage.</text>
+				<event>
+					<text>You pull the ship closer, taking the force of another solar flare. Luckily, you're still able to save both your crew and drone and fly away.</text>
+					<drone name="DIRECTOR"/>
+					<damage amount="2" effect="fire" system="random"/>
+				</event>
+			</choice>
+			<choice hidden="true" req="teleporter" lvl="2">
+				<text>(Upg. Teleporter) Save both quickly.</text>
+				<event>
+					<text>Thanks to your teleporter, you're able to beam up both your crew and the drone before another solar flare hits.</text>
+					<drone name="DIRECTOR"/>
+				</event>
+			</choice>
+		</event>
+	</choice>
+</event>
+
+<!--
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+					ENGI SECTOR
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+-->	
+<eventList name="RUINS_ENGI">
+	<event load="RUINS_ENCOUNTERS_ENGI"/>
+	<event load="RUINS_TRAP"/>
+	<event load="RUINS_STAR"/>
+	
+	<event load="HOSTILE_HARMONY"/>
+	<event load="HOSTILE_HARMONY"/>
+	<event load="HOSTILE_HARMONY"/>
+</eventList>
+<eventList name="RUINS_ENCOUNTERS_ENGI">
+	<event load="RUINS_REBEL_AUTO"/>
+	<event load="RUINS_CRYSTAL"/>
+</eventList>
+
+<!--
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+					SEPARATIST SECTOR
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+-->	
+<eventList name="RUINS_SEPARATIST">
+	<event load="RUINS_ENCOUNTERS_SEPARATIST"/>
+	<event load="RUINS_TRAP"/>
+	<event load="RUINS_STAR"/>
+	
+	<event load="HOSTILE_SEPERATIST"/>
+	<event load="HOSTILE_SEPERATIST"/>
+	<event load="HOSTILE_SEPERATIST"/>
+</eventList>
+<eventList name="RUINS_ENCOUNTERS_SEPARATIST">
+	<event load="RUINS_REBEL_AUTO"/>
+	<event load="RUINS_CRYSTAL"/>
+</eventList>
+
+<!--
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+					CRYSTAL SECTOR
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+-->	
+<eventList name="RUINS_CRYSTAL">
+	<event load="RUINS_ENCOUNTERS_CRYSTAL"/>
+	<event load="RUINS_TRAP"/>
+	<event load="RUINS_STAR"/>
+	
+	<event load="HOSTILE_CRYSTAL"/>
+	<event load="HOSTILE_CRYSTAL"/>
+	<event load="HOSTILE_CRYSTAL"/>
+</eventList>
+<eventList name="RUINS_ENCOUNTERS_CRYSTAL">
+	<event load="RUINS_CLANSMAN"/>
+	<event load="RUINS_CRYSTAL"/>
+</eventList>
+
+<!--
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+					SPECTRAL WASTELAND SECTOR 
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+-->	
+<eventList name="RUINS_GHOSTWASTE">
+	<event load="RUINS_VAGABOND_GHOSTWASTE"/>
+	<event load="RUINS_DYNASTY_GHOSTWASTE"/>
+</eventList>
+
+<ship name="SHIP_RUINS_DYNASTY_ELITE" auto_blueprint="LIST_SHIPS_DYNASTY_ELITE_FIGHT">
+	<destroyed>
+		<text>The Ghosts have been defeated. You scrap their ship.</text>
+		<autoReward level="LOW">standard</autoReward>
+		<choice hidden="true">
+			<text>Salvage the ruins.</text>
+			<event load="RUINS_SALVAGE_GHOSTWASTE"/>
+		</choice>
+	</destroyed>
+	<deadCrew>
+		<text>The Ghosts have been defeated. You scrap their ship.</text>
+		<autoReward level="MED">standard</autoReward>
+		<choice hidden="true">
+			<text>Salvage the ruins.</text>
+			<event load="RUINS_SALVAGE_GHOSTWASTE"/>
+		</choice>
+	</deadCrew>
+</ship>
+<event name="RUINS_DYNASTY_GHOSTWASTE">
+	<text load="TEXT_RUINS"/>
+	<choice hidden="true">
+		<text>Continue...</text>
+		<event>
+			<text>It appears a Dynasty vessel is scanning the wreckage. You aren't sure why they're so curious about it, but if you want whatever is inside you'll have to take them out first.</text>
+			<ship load="SHIP_RUINS_DYNASTY_ELITE" hostile="false"/>
+			<choice hidden="true">
+				<text>Attack!</text>
+				<event>
+					<text>Whatever is in these ruins, you need them. You attack the other ship!</text>
+					<ship hostile="true"/>
+					<choice hidden="true">
+						<text>Continue...</text>
+						<event load="COMBAT_CHECK"/>
+					</choice>
+				</event>
+			</choice>
+			<choice hidden="true">
+				<text>Ignore the ruins.</text>
+				<event>
+					<text>Whatever the ruins have to offer isn't worth the effort.</text>
+					<choice hidden="true">
+						<text>Check the storage.</text>
+						<event load="STORAGE_CHECK"/>
+					</choice>
+					<choice hidden="true">
+						<text>Do nothing.</text>
+						<event/>
+					</choice>
+				</event>
+			</choice>
+		</event>
+	</choice>
+</event>
+
+<ship name="SHIP_RUINS_VAGABOND_GHOSTWASTE" auto_blueprint="LIST_SHIPS_GHOST_ELITE">
+	<destroyed>
+		<text>The Ghosts have been defeated. You scrap their ship.</text>
+		<autoReward level="LOW">stuff</autoReward>
+		<choice hidden="true">
+			<text>Salvage the ruins.</text>
+			<event load="RUINS_SALVAGE_GHOSTWASTE"/>
+		</choice>
+	</destroyed>
+	<deadCrew>
+		<text>The Ghosts have been defeated. You scrap their ship.</text>
+		<autoReward level="MED">stuff</autoReward>
+		<choice hidden="true">
+			<text>Salvage the ruins.</text>
+			<event load="RUINS_SALVAGE_GHOSTWASTE"/>
+		</choice>
+	</deadCrew>
+</ship>
+<event name="RUINS_VAGABOND_GHOSTWASTE">
+	<text load="TEXT_RUINS"/>
+	<choice hidden="true">
+		<text>Continue...</text>
+		<event>
+			<text>A Clansman ship seems to have already discovered the ruins, probably hoping to take back a trophy to the Exotic Hunters Guild. If you want a trophy of your own, you'll have to fight the Clansmen yourself!</text>
+			<ship load="SHIP_RUINS_CLANSMAN" hostile="false"/>
+			<choice hidden="true">
+				<text>Attack!</text>
+				<event>
+					<text>Whatever is in these ruins, you need them. You attack the other ship!</text>
+					<ship hostile="true"/>
+					<choice hidden="true">
+						<text>Continue...</text>
+						<event load="COMBAT_CHECK"/>
+					</choice>
+				</event>
+			</choice>
+			<choice hidden="true">
+				<text>Ignore the ruins.</text>
+				<event>
+					<text>Whatever the ruins have to offer isn't worth the effort.</text>
+					<choice hidden="true">
+						<text>Check the storage.</text>
+						<event load="STORAGE_CHECK"/>
+					</choice>
+					<choice hidden="true">
+						<text>Do nothing.</text>
+						<event/>
+					</choice>
+				</event>
+			</choice>
+		</event>
+	</choice>
+</event>
+
+<eventList name="RUINS_SALVAGE_GHOSTWASTE">
+	<event>
+		<text>Unfortunately, the ruins don't contain anything exciting. Any tech has been dismantled, so you content yourself with taking some resources that were left behind.</text>
+		<autoReward level="HIGH">stuff</autoReward>
+	</event>
+	<event>
+		<text>The ruins only contain a single weapon crate left behind, but to your disappointment it appears to have belonged to some pirate who stashed it here to hide. It might not be ancient tech, but it's still a free weapon.</text>
+		<weapon name="RANDOM"/>
+	</event>
+	<event>
+		<text>You don't find any weapons or drones, but you do find a damaged combustion engine in there that resembles a modern engine system in some capacity. You strip it for parts, intended to upgrade yours with what remains.</text>
+		<upgrade amount="1" system="engines"/>
+	</event>
+	<event>
+		<text>Alas, the ruins yield no military weaponry. You do however discover an incredibly advanced generator. With these parts, maybe you can improve your own!</text>
+		<upgrade amount="1" system="reactor"/>
+	</event>
+	<event>
+		<text>You pry open the ruins only to find an ancient Phantom Alpha, who claims to come all the way back from an ancient war. Having been trapped in the ruin for centuries, they're a bit mentally questionable but more than eager to work for you.</text>
+		<crewMember amount="1" class="phantomalpha"/>
+	</event>
+	<event>
+		<text>A still functional Bomb launcher, similar to modern ones yet very old, is laying in a central chamber in the structure. You bring it back to the ship.</text>
+		<weapon name="ANCIENT_BOMB"/>
+	</event>
+	<event>
+		<text>Looks like a weapon is mounted on a wall of the structure inside a vast armory. The technology is beyond that which you recognize, but you bring it aboard to investigate later.</text>
+		<weapon name="ANCIENT_HAVOC"/>
+	</event>
+</eventList>
+
+<!--
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+					AUGMENTED SECTOR 
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+-->	
+<ship name="SHIP_RUINS_AUGMENTED" auto_blueprint="LIST_SHIPS_AUGMENTED_RUINS">
+	<destroyed>
+		<text>The Lanius have been defeated. You scrap their ship.</text>
+		<autoReward level="HIGH">standard</autoReward>
+		<choice hidden="true">
+			<text>Salvage the ruins.</text>
+			<event load="RUINS_SALVAGE_AUGMENTED"/>
+		</choice>
+	</destroyed>
+	<deadCrew>
+		<text>The Lanius have been defeated. You scrap their ship.</text>
+		<autoReward level="HIGH">standard</autoReward>
+		<choice hidden="true">
+			<text>Salvage the ruins.</text>
+			<event load="RUINS_SALVAGE_AUGMENTED"/>
+		</choice>
+	</deadCrew>
+</ship>
+
+<event name="RUINS_AUGMENTED">
+	<text load="TEXT_RUINS"/>
+	<choice hidden="true">
+		<text>Continue...</text>
+		<event>
+			<text>An Augmented ship is melting away part of the ruins. You doubt they'll so kindly let you do any salvaging yourself, so if you want through you'll have to fight them for it!</text>
+			<ship load="SHIP_RUINS_AUGMENTED" hostile="false"/>
+			<choice hidden="true">
+				<text>Attack!</text>
+				<event>
+					<text>Whatever is in these ruins, you need them. You attack the other ship!</text>
+					<ship hostile="true"/>
+					<choice hidden="true">
+						<text>Continue...</text>
+						<event load="COMBAT_CHECK"/>
+					</choice>
+				</event>
+			</choice>
+			<choice hidden="true">
+				<text>Ignore the ruins.</text>
+				<event>
+					<text>Whatever the ruins have to offer isn't worth the effort.</text>
+					<choice hidden="true">
+						<text>Check the storage.</text>
+						<event load="STORAGE_CHECK"/>
+					</choice>
+					<choice hidden="true">
+						<text>Do nothing.</text>
+						<event/>
+					</choice>
+				</event>
+			</choice>
+		</event>
+	</choice>
+</event>
+<eventList name="RUINS_SALVAGE_AUGMENTED">
+	<event>
+		<text>While salvaging the ruins, you find a strange triangular drone. With some tinkering, you even get it to function for a short while. You run some scans and construct a schematic to bring back to the ship.</text>
+		<drone name="MENDER"/>
+		<choice hidden="true" req="MARKER_AUGMENTED_RUINS" lvl="0" max_lvl="2" max_group="0" blue="false">
+			<text>Continue...</text>
+			<event load="RUINS_SALVAGE_STANDARD"/>
+		</choice>
+		<choice hidden="true" req="MARKER_AUGMENTED_RUINS" lvl="2" max_group="0" blue="false">
+			<text>Continue...</text>
+			<event load="RUINS_SALVAGE_AUGMENTED_UNLOCK"/>
+		</choice>
+	</event>
+	<event>
+		<text>While exploring the ruins, you nearly mistake a drone for a statue before you recognize a dim glow from its lights. A cylindrical design with 2 rings, the drone appears to be designed to interface with a system to manage it. You construct a schematic using some scans and bring it back to the ship.</text>
+		<drone name="DIRECTOR"/>
+		<choice hidden="true" req="MARKER_AUGMENTED_RUINS" lvl="0" max_lvl="2" max_group="0" blue="false">
+			<text>Continue...</text>
+			<event load="RUINS_SALVAGE_STANDARD"/>
+		</choice>
+		<choice hidden="true" req="MARKER_AUGMENTED_RUINS" lvl="2" max_group="0" blue="false">
+			<text>Continue...</text>
+			<event load="RUINS_SALVAGE_AUGMENTED_UNLOCK"/>
+		</choice>
+	</event>
+	<event>
+		<text>You're amazed to find an armory inside the structure, but unfortunately most of the weapons inside are completely dysfunctional. You do however find a Laser of some sort that you bring back to the ship.</text>
+		<weapon name="ANCIENT_LASER"/>
+		<choice hidden="true" req="MARKER_AUGMENTED_RUINS" lvl="0" max_lvl="2" max_group="0" blue="false">
+			<text>Continue...</text>
+			<event load="RUINS_SALVAGE_STANDARD"/>
+		</choice>
+		<choice hidden="true" req="MARKER_AUGMENTED_RUINS" lvl="2" max_group="0" blue="false">
+			<text>Continue...</text>
+			<event load="RUINS_SALVAGE_AUGMENTED_UNLOCK"/>
+		</choice>
+	</event>
+	<event>
+		<text>A still functional Bomb launcher, similar to modern ones yet very old, is laying in a central chamber in the structure. You bring it back to the ship.</text>
+		<weapon name="ANCIENT_BOMB"/>
+		<choice hidden="true" req="MARKER_AUGMENTED_RUINS" lvl="0" max_lvl="2" max_group="0" blue="false">
+			<text>Continue...</text>
+			<event load="RUINS_SALVAGE_STANDARD"/>
+		</choice>
+		<choice hidden="true" req="MARKER_AUGMENTED_RUINS" lvl="2" max_group="0" blue="false">
+			<text>Continue...</text>
+			<event load="RUINS_SALVAGE_AUGMENTED_UNLOCK"/>
+		</choice>
+	</event>
+</eventList>
+<event name="RUINS_SALVAGE_STANDARD">
+	<text>You salvage a little extra from the ruin and continue on.</text>
+	<autoReward level="LOW">standard</autoReward>
+</event>
+<event name="RUINS_SALVAGE_AUGMENTED_UNLOCK">
+	<text>It appears you've salvaged all of the ruins in this sector! This last one must have been quite the find too, because you notice a massive wreck of an Augmented cruiser in the distance. On-board, you even find blueprints for the ship!</text>
+	<autoReward level="HIGH">standard</autoReward>
+	<unlockCustomShip silent="false">PLAYER_SHIP_AUGMENTED</unlockCustomShip>
+</event>
+</FTL>

@@ -1,0 +1,234 @@
+<FTL>
+<!--
+<choice hidden="true">
+	<text>Continue...</text>
+	<event load="MORALITY_UPDATE_GENERAL"/>
+</choice>
+-->
+<event name="MORALITY_UPDATE_GENERAL">
+	<text>[NOTORIETY INCREASED]
+	Your actions here, justifiable or not, will likely not go over well with the Federation or Militia. Continuously perform actions like this and you might start to see negative reactions from certain guards or other Federation forces.</text>
+</event>
+<event name="MORALITY_UPDATE_GENERAL_FIGHT">
+	<text>[NOTORIETY INCREASED]
+	Your actions here, justifiable or not, will likely not go over well with the Federation or Militia. Continuously perform actions like this and you might start to see negative reactions from certain guards or other Federation forces.</text>
+	<choice hidden="true">
+		<text>Continue...</text>
+		<event load="COMBAT_CHECK"/>
+	</choice>
+</event>
+
+<event name="MORALITY_REMOVE_GENERAL">
+	<text>[NOTORIETY DECREASED]
+	Your actions here should improve your outlooks from Federation or Militia forces.</text>
+	<remove name="HIDDEN MORALITY_CRIME"/>
+</event>
+
+<!--
+<choice hidden="true">
+	<text>Continue...</text>
+	<event load="MORALITY_UPDATE_ENGI"/>
+</choice>
+-->
+<event name="MORALITY_UPDATE_ENGI">
+	<text>[NOTORIETY INCREASED]
+	Your actions here might not please the Engi Harmony. Continuously perform actions like this and you might start to see negative reactions from Engi guards.</text>
+</event>
+<event name="MORALITY_UPDATE_ENGI_FIGHT">
+	<text>[NOTORIETY INCREASED]
+	Your actions here might not please the Engi Harmony. Continuously perform actions like this and you might start to see negative reactions from Engi guards.</text>
+	<choice hidden="true">
+		<text>Continue...</text>
+		<event load="COMBAT_CHECK"/>
+	</choice>
+</event>
+
+<!--
+<choice hidden="true">
+	<text>Continue...</text>
+	<event load="MORALITY_UPDATE_ZOLTAN"/>
+</choice>
+-->
+<event name="MORALITY_UPDATE_ZOLTAN">
+	<text>[NOTORIETY INCREASED]
+	Your actions here might not please the Zoltan people. Continuously perform actions like this and you might start to see negative reactions from Zoltan guards.</text>
+</event>
+<event name="MORALITY_UPDATE_ZOLTAN_FIGHT">
+	<text>[NOTORIETY INCREASED]
+	Your actions here might not please the Zoltan people. Continuously perform actions like this and you might start to see negative reactions from Zoltan guards.</text>
+	<choice hidden="true">
+		<text>Continue...</text>
+		<event load="COMBAT_CHECK"/>
+	</choice>
+</event>
+
+<!--
+<choice hidden="true">
+	<text>Continue...</text>
+	<event load="MORALITY_UPDATE_ORCHID"/>
+</choice>
+-->
+<event name="MORALITY_UPDATE_ORCHID">
+	<text>[NOTORIETY INCREASED]
+	Your actions here might not please the Orchid people. Continuously perform actions like this and you might start to see negative reactions from Orchid guards.</text>
+</event>
+<event name="MORALITY_UPDATE_ORCHID_FIGHT">
+	<text>[NOTORIETY INCREASED]
+	Your actions here might not please the Orchid people. Continuously perform actions like this and you might start to see negative reactions from Orchid guards.</text>
+	<choice hidden="true">
+		<text>Continue...</text>
+		<event load="COMBAT_CHECK"/>
+	</choice>
+</event>
+
+<event name="MORALITY_REMOVE_ORCHID">
+	<text>[NOTORIETY DECREASED]
+	Your actions here should improve your outlooks from the Orchids.</text>
+	<remove name="HIDDEN MORALITY_ORCHID"/>
+</event>
+
+<!--
+<choice hidden="true">
+	<text>Continue...</text>
+	<event load="MORALITY_UPDATE_FREEMANTIS"/>
+</choice>
+-->
+<event name="MORALITY_UPDATE_FREEMANTIS">
+	<text>[NOTORIETY INCREASED]
+	Your actions here might not please the Free Mantis. Continuously perform actions like this and you might start to see negative reactions from Free Mantis guards.</text>
+</event>
+<event name="MORALITY_UPDATE_FREEMANTIS_FIGHT">
+	<text>[NOTORIETY INCREASED]
+	Your actions here might not please the Free Mantis. Continuously perform actions like this and you might start to see negative reactions from Free Mantis guards.</text>
+	<choice hidden="true">
+		<text>Continue...</text>
+		<event load="COMBAT_CHECK"/>
+	</choice>
+</event>
+
+
+<!--
+<choice hidden="true">
+	<text>Continue...</text>
+	<event load="MORALITY_UPDATE_CRYSTAL"/>
+</choice>
+-->
+<event name="MORALITY_UPDATE_CRYSTAL">
+	<text>[NOTORIETY INCREASED]
+	Your actions here might not please the Crystalline people. Continuously perform actions like this and you might start to see negative reactions from Crystalline guards.</text>
+</event>
+<event name="MORALITY_UPDATE_CRYSTAL_FIGHT">
+	<text>[NOTORIETY INCREASED]
+	Your actions here might not please the Crystalline people. Continuously perform actions like this and you might start to see negative reactions from Crystalline guards.</text>
+	<choice hidden="true">
+		<text>Continue...</text>
+		<event load="COMBAT_CHECK"/>
+	</choice>
+</event>
+
+<event name="MORALITY_REMOVE_CRYSTAL">
+	<text>[NOTORIETY DECREASED]
+	Your actions here should improve your outlooks from the Crystalline people.</text>
+	<removeItem>MORALITY_CRYSTAL</removeItem>
+</event>
+<!--
+<choice hidden="true">
+	<text>Continue...</text>
+	<event load="MORALITY_UPDATE_SHELL"/>
+</choice>
+-->
+<event name="MORALITY_UPDATE_SHELL">
+	<text>[NOTORIETY INCREASED]
+	Your actions here might not please the Shell people. Continuously perform actions like this and you might start to see negative reactions from Shell guards.</text>
+</event>
+<event name="MORALITY_UPDATE_SHELL_FIGHT">
+	<text>[NOTORIETY INCREASED]
+	Your actions here might not please the Shell people. Continuously perform actions like this and you might start to see negative reactions from Shell guards.</text>
+	<choice hidden="true">
+		<text>Continue...</text>
+		<event load="COMBAT_CHECK"/>
+	</choice>
+</event>
+
+<event name="MORALITY_REMOVE_SHELL">
+	<text>[NOTORIETY DECREASED]
+	Your actions here should improve your outlooks from the Shell people.</text>
+	<remove name="HIDDEN MORALITY_SHELL"/>
+</event>
+
+<!--
+<choice hidden="true">
+	<text>Continue...</text>
+	<event load="MORALITY_UPDATE_SLUG"/>
+</choice>
+-->
+<event name="MORALITY_UPDATE_SLUG">
+	<text>[NOTORIETY INCREASED]
+	Your actions here might not please the Slug people. Continuously perform actions like this and you might start to see negative reactions from Slug guards.</text>
+</event>
+<event name="MORALITY_UPDATE_SLUG_FIGHT">
+	<text>[NOTORIETY INCREASED]
+	Your actions here might not please the Slug people. Continuously perform actions like this and you might start to see negative reactions from Slug guards.</text>
+	<choice hidden="true">
+		<text>Continue...</text>
+		<event load="COMBAT_CHECK"/>
+	</choice>
+</event>
+
+<!--
+<choice hidden="true">
+	<text>Continue...</text>
+	<event load="MORALITY_OUTCAST_ARMS"/>
+</choice>
+-->
+<event name="MORALITY_OUTCAST_ARMS">
+	<text>[OUTCASTS ARMED]
+	You've convinced the Outcasts that the Inquisition is approaching. In the event of an Inquisition attack the Outcasts will be prepared.</text>
+	<hiddenAug>MARKER_BADLAND_ALLIES</hiddenAug>
+</event>
+<event name="MORALITY_OUTCAST_FIRESUPPORT"> <!--UNUSED-->
+	<text>The outcast forces have responded to your request. Additional fire support will be provided during the fight!</text>
+	<environment type="PDS" target="enemy"/>
+	<choice hidden="true">
+		<text>Continue...</text>
+		<event load="COMBAT_CHECK"/>
+	</choice>
+</event>
+
+
+<!--
+<choice hidden="true">
+	<text>Continue...</text>
+	<event load="MORALITY_UPDATE_JERRY"/>
+</choice>
+-->
+<event name="MORALITY_UPDATE_JERRY">
+	<text>[NOTORIETY INCREASED]
+	Your actions here won't go unnoticed by Jerry. Perhaps it is not a good idea to anger Vance's nephew in his own sector?</text>
+</event>
+<event name="MORALITY_UPDATE_JERRY_FIGHT">
+	<text>[NOTORIETY INCREASED]
+	Your actions here won't go unnoticed by Jerry. Perhaps it is not a good idea to anger Vance's nephew in his own sector?</text>
+	<choice hidden="true">
+		<text>Continue...</text>
+		<event load="COMBAT_CHECK"/>
+	</choice>
+</event>
+
+<event name="MORALITY_UPDATE_NEXUS">
+	<text>[NOTORIETY INCREASED]
+	Your actions here, justified or not, won't go unnoticed by the Sylvans. Actions like these might begin to influence the way you're treated here.</text>
+</event>
+<event name="MORALITY_UPDATE_NEXUS_FIGHT">
+	<text>[NOTORIETY INCREASED]
+	Your actions here, justified or not, won't go unnoticed by the Sylvans. Actions like these might begin to influence the way you're treated here.</text>
+	<choice hidden="true">
+		<text>Continue...</text>
+		<event load="COMBAT_CHECK"/>
+	</choice>
+</event>
+<event name="MORALITY_UPDATE_NEXUS_NOTHING">
+	<text>[NOTORIETY UNAFFECTED]
+	You really doubt anyone will care that this weirdo is dead.</text>
+</event>
+</FTL>
