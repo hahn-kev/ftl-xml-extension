@@ -1,10 +1,8 @@
 import {expect} from "chai";
 import { performance } from 'perf_hooks';
-import {window} from 'vscode';
 import {setup} from '../../setup';
 
-suite('Extension Test Suite', () => {
-    window.showInformationMessage('Start all tests.');
+suite('Performance', () => {
 
     async function parseTest(folderName: string) {
         let {ftlParser} = setup();
@@ -19,7 +17,7 @@ suite('Extension Test Suite', () => {
 
     test('Loading MV test', async function () {
         // this.skip();
-        this.timeout('500s');
+        this.timeout('50s');
 
         /*
             parse files: 12.146s
@@ -30,7 +28,7 @@ suite('Extension Test Suite', () => {
         expect(execution).to.lt(13000);
     });
     test('Loading base test', async function () {
-        this.timeout('500s');
+        this.timeout('50s');
 
         let execution = await parseTest('ftl-base');
         expect(execution).to.lt(6500);
