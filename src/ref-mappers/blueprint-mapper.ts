@@ -21,9 +21,15 @@ export class BlueprintMapper implements RefMapperBase {
     defs = new Map<string, FtlBlueprintList>();
 
     lookupDef(node: Node, document: TextDocument, position: Position): Location | undefined {
-        const refName = this.getRefName(node, document, position);
-        if (!refName) return;
-        return this.doMapper(true, mapper => mapper.defs.get(refName))?.toLocation();
+        const ref = this.getRefNameAndMapper(node, document, position);
+        if (!ref) return;
+        let refName = ref.name;
+        if (ref.mapper.typeName == this.typeName) {
+            return this.doMapper(true, mapper => mapper.defs.get(refName))?.toLocation();
+        }
+
+        return ref.mapper.defs.get(refName)?.toLocation() ??
+            this.defs.get(refName)?.toLocation();
     }
 
 
@@ -156,6 +162,11 @@ export class BlueprintMapper implements RefMapperBase {
         let ref = this.getRefNameAndMapper(node, document);
         if (!ref) return [];
         let refName = ref.name;
+
+        //quick return if defined in the matching mapper
+        if (ref.mapper.defs.has(refName) || ref.mapper.defaults?.includes(refName))
+            return [];
+
         let def: FtlValue | undefined;
         let defMapper: RefMapperBase | undefined;
         for (defMapper of [this, ...this.blueprintMappers]) {
