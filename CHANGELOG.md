@@ -33,3 +33,6 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 
 ## 0.2.1 
 - Include patch notes for 0.2.0
+
+## 0.2.2
+- Update readme

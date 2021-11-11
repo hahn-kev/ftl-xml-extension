@@ -7,7 +7,7 @@ FTL XML is intended to improve the editing experience for any mod dev, please le
 * Autocomplete, Go to definition and references supported for
   * events
   * ships
-  * blueprints
+  * all blueprints
   * text
 * Warnings 
   * if trying to load an event that can't be found
@@ -15,6 +15,9 @@ FTL XML is intended to improve the editing experience for any mod dev, please le
   * if trying to load an autoblueprint that can't be found
   * if trying to load text that can't be found
   * if a tag was not closed properly
+  * when a blueprint list references itself
+  * when a blueprint can not be found
+  * when a blueprint of an invalid type is referenced
 
 ## Known Issues
 
