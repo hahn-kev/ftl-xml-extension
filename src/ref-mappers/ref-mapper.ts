@@ -57,8 +57,12 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
         this.defs.clear();
         this.autoCompleteValues.values.length = 0;
 
-        let customNames = files.flatMap(this.fileSelector).map(value => value.name);
-        this.autoCompleteValues.values.push(...customNames.concat(this.defaults).map(name => ({name})));
+        let names = new Set(files.flatMap(this.fileSelector)
+            .map(value => value.name)
+            .concat(this.defaults));
+
+        this.autoCompleteValues.values
+            .push(...Array.from(names.values()).map(name => ({name})));
 
         for (let file of files) {
             this.fileRefSelector(file).forEach((value, key) => addToKey(this.refs, key, value));

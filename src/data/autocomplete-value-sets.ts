@@ -36,3 +36,7 @@ export const CrewNames: IValueSet = {
     name: 'crew-names',
     values: [{name: 'loading...'}]
 }
+export const SystemNames: IValueSet = {
+    name: 'system-names',
+    values: [{name: 'loading...'}]
+}

@@ -8,7 +8,7 @@ import {
     AugmentNames,
     AutoblueprintNames, CrewNames, DroneNames,
     EventNamesValueSet,
-    ShipNames,
+    ShipNames, SystemNames,
     TextIdNames,
     WeaponNames
 } from '../data/autocomplete-value-sets';
@@ -28,6 +28,8 @@ import {FtlAugment} from '../models/ftlAugment';
 import {defaultAugments} from '../data/default-augments';
 import {FtlCrew} from '../models/ftl-crew';
 import {defaultCrew} from '../data/default-crew';
+import {FtlSystem} from '../models/ftl-system';
+import {defaultSystems} from '../data/default-systems';
 
 export namespace mappers {
 
@@ -127,6 +129,21 @@ export namespace mappers {
         "Crew",
         defaultCrew);
 
+    export const systemMapper = new RefMapper(file => file.systems,
+        file => file.systemRefs,
+        (name, file, node, document) => new FtlSystem(name, file, node, document),
+        {
+            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
+                return getAttrValueForTag(node, 'systemBlueprint', 'name', document, position);
+            },
+            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+                return getAttrValueForTag(node, 'status', 'system', document, position)
+            }
+        },
+        SystemNames,
+        "System",
+        defaultSystems);
+
     export const autoBlueprintMapper = new RefMapper(file => file.autoBlueprints,
         file => file.autoBlueprintRefs,
         (name, file, node, document) => new FtlAutoblueprint(name, file, node, document),
@@ -164,7 +181,8 @@ export namespace mappers {
         autoBlueprintMapper,
         dronesMapper,
         augmentsMapper,
-        crewMapper
+        crewMapper,
+        systemMapper
     ];
 
     export function setup(documentCache: DocumentCache) {

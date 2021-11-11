@@ -4,11 +4,12 @@ import {FtlShip} from './ftl-ship';
 import {FtlAutoblueprint} from './ftl-autoblueprint';
 import {FtlText} from './ftl-text';
 import {FtlWeapon} from './ftl-weapon';
-import {FtlBlueprintList, FtlBlueprintValue} from './ftl-blueprint-list';
+import {FtlBlueprintList} from './ftl-blueprint-list';
 import {FtlDrone} from './ftl-drone';
 import {FtlValue} from './ftl-value';
 import {FtlAugment} from './ftlAugment';
 import {FtlCrew} from './ftl-crew';
+import {FtlSystem} from './ftl-system';
 
 export class FtlFile {
 
@@ -36,6 +37,8 @@ export class FtlFile {
     augmentRefs = new Map<string, FtlAugment[]>();
     crew: FtlCrew[] = [];
     crewRefs = new Map<string, FtlCrew[]>();
+    systems: FtlSystem[] = [];
+    systemRefs = new Map<string, FtlSystem[]>();
 
     blueprintLists: FtlBlueprintList[] = [];
     blueprintListRefs = new Map<string, FtlValue[]>();

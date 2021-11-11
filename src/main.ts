@@ -17,7 +17,7 @@ import {
     AutoblueprintNames, CrewNames,
     DroneNames,
     EventNamesValueSet,
-    ShipNames,
+    ShipNames, SystemNames,
     TextIdNames,
     WeaponNames
 } from './data/autocomplete-value-sets';
@@ -62,6 +62,7 @@ export function activate(context: ExtensionContext) {
             let drones = DroneNames.values.map(d => d.name);
             let augs = AugmentNames.values.map(a => a.name);
             let crew = CrewNames.values.map(c => c.name);
+            let sys = SystemNames.values.map(s => s.name);
             let tmp = '';
         }
     });
