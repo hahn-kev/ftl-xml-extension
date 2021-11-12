@@ -1,6 +1,14 @@
 import {FtlParser} from './ftl-parser';
 import {FltDocumentValidator} from './flt-document-validator';
-import {CodeActionKind, CodeActionProviderMetadata, DocumentSelector, languages, window, workspace} from 'vscode';
+import {
+    CodeActionKind,
+    CodeActionProviderMetadata,
+    DocumentSelector,
+    languages,
+    RelativePattern,
+    window,
+    workspace
+} from 'vscode';
 import {getLanguageService} from 'vscode-html-languageservice';
 import {DocumentCache} from './document-cache';
 import {mappers} from './ref-mappers/mappers';
@@ -14,7 +22,7 @@ import {FtlCodeActionProvider} from './ftl-code-action-provider';
 export type disposable = { dispose(): any };
 
 export function setup(): { ftlParser: FtlParser; ftlDocumentValidator: FltDocumentValidator; subs: disposable[] } {
-    const ftlXmlDoc: DocumentSelector = {language: 'ftl-xml', scheme: 'file'};
+    const ftlXmlDoc: DocumentSelector & { language: string } = {language: 'ftl-xml', scheme: 'file'};
     let diagnosticCollection = languages.createDiagnosticCollection('ftl-xml');
     let service = getLanguageService({useDefaultDataProvider: false});
     let documentCache = new DocumentCache(service);
@@ -26,22 +34,38 @@ export function setup(): { ftlParser: FtlParser; ftlDocumentValidator: FltDocume
 
     let ftlDefinitionProvider = new FtlDefinitionProvider(documentCache, mappersList);
     let ftlDocumentValidator = new FltDocumentValidator(documentCache,
-                                                        diagnosticCollection,
-                                                        blueprintMapper,
-                                                        mappersList);
+        diagnosticCollection,
+        blueprintMapper,
+        mappersList);
     let ftlReferenceProvider = new FtlReferenceProvider(documentCache, mappersList);
     let hoverProvider = new FtlHoverProvider(documentCache, service);
     let completionItemProvider = new FtlCompletionProvider(documentCache, service, blueprintMapper, mappersList);
 
     window.onDidChangeActiveTextEditor(e => {
-        if (e) {
+        if (e?.document.languageId === ftlXmlDoc.language) {
             ftlDocumentValidator.validateDocument(e.document);
         }
     });
     workspace.onDidChangeTextDocument(e => {
-        if (e.document) {
-            ftlParser.parseFile(e.document.uri, e.document);
+        if (e.document?.languageId == ftlXmlDoc.language) {
+            ftlParser.parseFile(e.document);
             ftlDocumentValidator.validateDocument(e.document);
+        }
+    });
+    workspace.onDidChangeWorkspaceFolders(async e => {
+        if (e.removed.length > 0) {
+            //refresh all, todo just remove files that were in the workspace and call update data
+            await parseWorkspace(ftlParser, ftlDocumentValidator);
+        } else if (e.added.length > 0) {
+            //parse new files
+            for (let workspaceFolder of e.added) {
+                let pattern = new RelativePattern(workspaceFolder, '**/*.{xml,xml.append}');
+                let files = await workspace.findFiles(pattern);
+                await ftlParser.parseFiles(files);
+                for (let fileUri of files) {
+                    ftlDocumentValidator.validateDocument(await workspace.openTextDocument(fileUri));
+                }
+            }
         }
     });
 
@@ -62,4 +86,11 @@ export function setup(): { ftlParser: FtlParser; ftlDocumentValidator: FltDocume
             languages.registerCodeActionsProvider(ftlXmlDoc, ftlCodeAction, metadata)
         ]
     };
+}
+
+export async function parseWorkspace(ftlParser: FtlParser, ftlDocumentValidator: FltDocumentValidator) {
+    let files = await ftlParser.parseCurrentWorkspace();
+    for (let ftlFile of files.values()) {
+        ftlDocumentValidator.validateDocument(await workspace.openTextDocument(ftlFile.uri));
+    }
 }

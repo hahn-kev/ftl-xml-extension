@@ -1,4 +1,4 @@
-import {ExtensionContext, ExtensionMode, workspace,} from 'vscode';
+import {ExtensionContext, ExtensionMode,} from 'vscode';
 import {
     AugmentNames,
     AutoblueprintNames,
@@ -10,7 +10,7 @@ import {
     TextIdNames,
     WeaponNames
 } from './data/autocomplete-value-sets';
-import {setup} from './setup';
+import {parseWorkspace, setup} from './setup';
 
 
 // noinspection JSUnusedGlobalSymbols
@@ -20,14 +20,8 @@ export function activate(context: ExtensionContext) {
 
     if (context.extensionMode !== ExtensionMode.Test) {
         console.log('FTL Extension activated');
-        let ftlFilesPromise = ftlParser.parseCurrentWorkspace();
-
-        ftlFilesPromise.then(async (files) => {
-            let fileUris = Array.from(files.values()).map(file => file.uri);
-            for (let fileUri of fileUris) {
-                ftlDocumentValidator.validateDocument(await workspace.openTextDocument(fileUri));
-            }
-            let wantToUpdateDefaults = true;
+        parseWorkspace(ftlParser, ftlDocumentValidator).then(() => {
+            let wantToUpdateDefaults = context.extensionMode == ExtensionMode.Development;
             if (wantToUpdateDefaults) {
                 let eventNames = EventNamesValueSet.values.map(e => e.name);
                 let shipNames = ShipNames.values.map(v => v.name);
@@ -42,6 +36,4 @@ export function activate(context: ExtensionContext) {
             }
         });
     }
-
-
 }

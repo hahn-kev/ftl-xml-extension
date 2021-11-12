@@ -18,36 +18,40 @@ export class FtlParser {
     public files = new Map<string, FtlFile>();
 
     public async parseCurrentWorkspace(subFolder?: string) {
+        this.files.clear();
         let prefix = subFolder ? `${subFolder}/` : '';
         let files = await workspace.findFiles(prefix + '**/*.{xml,xml.append}');
         if (files.length > 0)
-            await window.withProgress({
-                                          title: 'Parsing FTL files',
-                                          location: ProgressLocation.Window
-                                      }, async (progress, token) => {
-                await this.parseFiles(files);
-            });
+            await this.parseFiles(files);
+
         return this.files;
     }
 
-    private async parseFiles(files: Uri[]) {
+    public async parseFiles(files: Uri[]) {
         if (files.length == 0) return;
+
         console.time('parse files');
-        for (let file of files) {
-            let document = await workspace.openTextDocument(file);
-            this._parseFile(file, document);
-        }
+        await window.withProgress({
+            title: 'Parsing FTL files',
+            location: ProgressLocation.Window
+        }, async (progress, token) => {
+            for (let file of files) {
+                let document = await workspace.openTextDocument(file);
+                this._parseFile(document);
+            }
+        });
+
         console.timeEnd('parse files');
         this._onFileParsedEmitter.fire({files: this.files});
     }
 
-    public parseFile(uri: Uri, document: TextDocument) {
-        this._parseFile(uri, document);
+    public parseFile(document: TextDocument) {
+        this._parseFile(document);
         this._onFileParsedEmitter.fire({files: this.files});
     }
 
-    private _parseFile(uri: Uri, document: TextDocument) {
-        let ftlFile: FtlFile = new FtlFile(uri);
+    private _parseFile(document: TextDocument) {
+        let ftlFile: FtlFile = new FtlFile(document.uri);
         this.files.set(ftlFile.uri.toString(), ftlFile);
 
         let htmlDocument = this.cache.getHtmlDocument(document);
