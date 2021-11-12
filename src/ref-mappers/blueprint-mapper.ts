@@ -65,7 +65,7 @@ export class BlueprintMapper implements RefMapperBase {
         if (name) {
             let ftlBlueprintList = new FtlBlueprintList(name, file, node, document);
             ftlBlueprintList.childRefNames = node.children.filter(c => c.tag == 'name')
-                .map(c => getNodeTextContent(c, document))
+                .map(c => this.getNameNodeText(c, document))
                 .filter((t): t is string => !!t);
 
             file.blueprintLists.push(ftlBlueprintList);
@@ -108,7 +108,10 @@ export class BlueprintMapper implements RefMapperBase {
 
     getNameNodeText(node: Node, document: TextDocument) {
         if (!this.isListChild(node)) return;
-        return getNodeTextContent(node, document);
+        let name = getNodeTextContent(node, document);
+        if (name?.startsWith('HIDDEN '))
+            return name?.substring('HIDDEN '.length);
+        return name;
     }
 
     isListChild(node: Node) {
