@@ -1,6 +1,6 @@
-import {RefMapperBase} from './ref-mapper';
+import {InvalidRef, RefMapperBase} from './ref-mapper';
 import {Node} from 'vscode-html-languageservice';
-import {Diagnostic, Location, Position, Range, TextDocument} from 'vscode';
+import {Diagnostic, Location, Position, TextDocument} from 'vscode';
 import {FtlFile} from '../models/ftl-file';
 import {FtlBlueprintList, FtlBlueprintValue} from '../models/ftl-blueprint-list';
 import {FtlValue} from '../models/ftl-value';
@@ -96,8 +96,7 @@ export class BlueprintMapper implements RefMapperBase {
         addToKey(file.blueprintListRefs, refName, new FtlBlueprintValue(refName, file, node, document));
     }
 
-    tryGetInvalidRefName(node: Node,
-                         document: TextDocument): { name: string, range: Range, typeName: string } | undefined {
+    tryGetInvalidRefName(node: Node, document: TextDocument): InvalidRef | undefined {
         const refName = this.getNameNodeText(node, document);
         if (!refName) {
             for (let blueprintMapper of this.blueprintMappers) {
