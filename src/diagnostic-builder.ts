@@ -20,9 +20,6 @@ export class DiagnosticBuilder {
                             listTypeName: string,
                             childNode: Node,
                             document: TextDocument) {
-        if (type == BlueprintListTypeAny) {
-            type = 'Blueprint List';
-        }
         let message = `Blueprint '${blueprintName}' is an '${type}' does not match type the list '${listTypeName}'`;
         return this.diag(toRange(childNode.start, childNode.end, document),
             message,
@@ -44,6 +41,9 @@ export class DiagnosticBuilder {
                                    defType: string,
                                    refName: string,
                                    refType: string) {
+        if (defType == BlueprintListTypeAny) {
+            defType = 'Blueprint List';
+        }
         return new Diagnostic(toRange(node.start, node.startTagEnd ?? node.end, document),
             `${refType} can't reference a ${defType}, which is the type of blueprint: '${refName}' `,
             DiagnosticSeverity.Warning);

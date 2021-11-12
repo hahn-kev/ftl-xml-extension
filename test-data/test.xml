@@ -38,9 +38,10 @@
         <name>weapon-1</name>
     </blueprintList>
 
-    <blueprintList name="ship-list-1">
+    <blueprintList name="ship-list-1" type="any">
         <name>ship-blueprint-1</name>
         <name>ship-blueprint-2</name>
+        <name>weapon-1</name>
     </blueprintList>
 
     <blueprintList name="list-1">
