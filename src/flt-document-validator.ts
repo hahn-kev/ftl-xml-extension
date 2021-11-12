@@ -43,13 +43,15 @@ export class FltDocumentValidator {
 
         // this.validateAllowedChildren(node, document, diagnostics);
         this.validateRequiredChildren(node, document, diagnostics);
-        let refDiagnostic = this.blueprintMapper.validateListRefLoop(node, document);
-        if (refDiagnostic) {
-            diagnostics.push(refDiagnostic)
+        let listRefLoop = this.blueprintMapper.validateListRefLoop(node, document);
+        if (listRefLoop) {
+            diagnostics.push(listRefLoop)
         } else {
             diagnostics.push(...this.blueprintMapper.validateListType(node, document));
         }
-        diagnostics.push(...this.blueprintMapper.validateRefType(node, document));
+        let refTypeDiagnostic = this.blueprintMapper.validateRefType(node, document);
+        if (refTypeDiagnostic)
+            diagnostics.push(refTypeDiagnostic);
 
         if (node.tag && this.isMissingEnd(node, document)) {
             let warningStart = node.endTagStart ?? node.start;

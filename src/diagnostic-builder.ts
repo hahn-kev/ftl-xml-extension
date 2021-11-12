@@ -1,6 +1,7 @@
 import {Diagnostic, DiagnosticSeverity, Range, TextDocument} from 'vscode';
 import {Node} from 'vscode-html-languageservice';
 import {toRange} from './helpers';
+import {BlueprintListTypeAny} from './data/ftl-data';
 
 export enum FtlErrorCode {
     listTypeMismatch = 'ftl-listTypeMismatch',
@@ -9,7 +10,7 @@ export enum FtlErrorCode {
 
 export class DiagnosticBuilder {
     static diag(range: Range, message: string, severity: DiagnosticSeverity, code: FtlErrorCode) {
-        const diagnostic = new Diagnostic(range, message, DiagnosticSeverity.Warning);
+        const diagnostic = new Diagnostic(range, message, severity);
         diagnostic.code = code;
         return diagnostic;
     }
@@ -19,7 +20,10 @@ export class DiagnosticBuilder {
                             listTypeName: string,
                             childNode: Node,
                             document: TextDocument) {
-        let message = `Blueprint '${blueprintName}' is type: '${type}' does not match type of list: '${listTypeName}'`;
+        if (type == BlueprintListTypeAny) {
+            type = 'Blueprint List';
+        }
+        let message = `Blueprint '${blueprintName}' is an '${type}' does not match type the list '${listTypeName}'`;
         return this.diag(toRange(childNode.start, childNode.end, document),
             message,
             DiagnosticSeverity.Warning,

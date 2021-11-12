@@ -36,3 +36,10 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 
 ## 0.2.2
 - Update readme
+
+## 0.2.3
+- Add default text ids from misc, sectorname and tooltips
+- fix hidden arg issues
+- remove duplicate elements in autocomplete
+- allow a blueprint list to contain anything and don't warn about type
+- fix an issue where blueprint loops would break the parser
