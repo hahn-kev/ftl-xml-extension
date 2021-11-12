@@ -33,6 +33,7 @@ import {FtlCrew} from '../models/ftl-crew';
 import {defaultCrew} from '../data/default-crew';
 import {FtlSystem} from '../models/ftl-system';
 import {defaultSystems} from '../data/default-systems';
+import {defaultText} from '../data/default-text';
 
 export namespace mappers {
 
@@ -270,7 +271,7 @@ export namespace mappers {
                 return getAttrValueForTag(node, 'text', 'load', document, position)
                     ?? getAttrValueForTag(node, 'text', 'id', document, position);
             }
-        }, TextIdNames, "Text", []);
+        }, TextIdNames, "Text", defaultText);
 
     const blueprintMappers: RefMapperBase[] = [
         weaponsMapper,

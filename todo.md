@@ -1,0 +1,3 @@
+- add snippets for events and animations
+- add path complete for animations and other files
+- allow specifying the type of a list manually
