@@ -1,10 +1,19 @@
 import {RefMapperBase} from './ref-mapper';
 import {Node} from 'vscode-html-languageservice';
-import {Diagnostic, DiagnosticSeverity, Location, Position, Range, TextDocument} from 'vscode';
+import {Diagnostic, Location, Position, Range, TextDocument} from 'vscode';
 import {FtlFile} from '../models/ftl-file';
 import {FtlBlueprintList, FtlBlueprintValue} from '../models/ftl-blueprint-list';
 import {FtlValue} from '../models/ftl-value';
-import {addToKey, firstWhere, getAttrValueForTag, getNodeTextContent, toRange} from '../helpers';
+import {
+    addToKey,
+    firstWhere,
+    getAttrValueForTag,
+    getNodeTextContent,
+    normalizeAttributeName,
+    toRange
+} from '../helpers';
+import {BlueprintListTypeAny} from '../data/ftl-data';
+import {DiagnosticBuilder} from '../diagnostic-builder';
 
 export class BlueprintMapper implements RefMapperBase {
 
@@ -51,7 +60,9 @@ export class BlueprintMapper implements RefMapperBase {
         return result?.name;
     }
 
-    getRefNameAndMapper(node: Node, document: TextDocument, position?: Position): { name: string, mapper: RefMapperBase } | undefined {
+    getRefNameAndMapper(node: Node,
+                        document: TextDocument,
+                        position?: Position): { name: string, mapper: RefMapperBase } | undefined {
         let refName = this.getNameNodeText(node, document);
         if (refName) return {name: refName, mapper: this};
         for (let blueprintMapper of this.blueprintMappers) {
@@ -85,7 +96,8 @@ export class BlueprintMapper implements RefMapperBase {
         addToKey(file.blueprintListRefs, refName, new FtlBlueprintValue(refName, file, node, document));
     }
 
-    tryGetInvalidRefName(node: Node, document: TextDocument): { name: string, range: Range, typeName: string } | undefined {
+    tryGetInvalidRefName(node: Node,
+                         document: TextDocument): { name: string, range: Range, typeName: string } | undefined {
         const refName = this.getNameNodeText(node, document);
         if (!refName) {
             for (let blueprintMapper of this.blueprintMappers) {
@@ -162,7 +174,9 @@ export class BlueprintMapper implements RefMapperBase {
     }
 
     validateRefType(node: Node, document: TextDocument): Diagnostic[] {
+        //skip name's in list because they're done in validateListType
         if (node.tag == 'name') return [];
+
         let ref = this.getRefNameAndMapper(node, document);
         if (!ref) return [];
         let refName = ref.name;
@@ -184,11 +198,9 @@ export class BlueprintMapper implements RefMapperBase {
             defType = this.getListTypeFromBlueprint(def);
         }
         if (ref.mapper.typeName === defType || !defType) return [];
-        let message = `${ref.mapper.typeName} can't reference a ${defType}, which is the type of blueprint: '${refName}' `;
-
-        return [new Diagnostic(toRange(node.start, node.startTagEnd ?? node.end, document),
-            message,
-            DiagnosticSeverity.Warning)]
+        return [
+            DiagnosticBuilder.blueprintRefTypeInvalid(node, document, defType, refName, ref.mapper.typeName)
+        ];
     }
 
     validateListRefLoop(node: Node, document: TextDocument): Diagnostic | undefined {
@@ -204,11 +216,7 @@ export class BlueprintMapper implements RefMapperBase {
             let childList = this.defs.get(childName);
             if (!childList) continue;
             if (nameSet.has(childName)) {
-                return new Diagnostic(
-                    toRange(node.start, node.startTagEnd ?? node.end, document),
-                    `Blueprint List: ${listName} is self referencing (possibly through another list)`,
-                    DiagnosticSeverity.Error
-                );
+                return DiagnosticBuilder.listHasRefLoop(node, document, listName);
             }
             nameSet.add(childName);
             children.push(...childList.childRefNames);
@@ -224,22 +232,27 @@ export class BlueprintMapper implements RefMapperBase {
         let typeResults = this.getListTypeInfoFromNode(node, document);
         if (!typeResults) return [];
         let {map: typeMapper, listTypeName} = typeResults;
+        if (listTypeName == BlueprintListTypeAny) return [];
+
         let results: Diagnostic[] = [];
-        typeMapper.forEach((nodes, key) => {
-            if (key == listTypeName) return;
-            results.push(...nodes.map(childNode => {
-                let name = this.getNameNodeText(childNode, document);
-                let message = `Blueprint '${name}' is type: '${key}' does not match type of list: '${listTypeName}'`;
-                return new Diagnostic(toRange(childNode.start, childNode.end, document),
-                    message,
-                    DiagnosticSeverity.Warning);
-            }));
+        typeMapper.forEach((nodes, type) => {
+            if (type == listTypeName) return;
+            results.push(...nodes.map(childNode =>
+                DiagnosticBuilder.listTypeMisMatch(this.getNameNodeText(childNode, document),
+                    type,
+                    listTypeName,
+                    childNode,
+                    document)));
         });
         return results;
     }
 
-    getListTypeInfoFromNode(node: Node, document: TextDocument): { map: Map<string, Node[]>, listTypeName: string } | undefined {
+    getListTypeInfoFromNode(node: Node,
+                            document: TextDocument): { map: Map<string, Node[]>, listTypeName: string } | undefined {
         if (node.tag != 'blueprintList') return;
+        if (normalizeAttributeName(node.attributes?.type) === BlueprintListTypeAny)
+            return {map: new Map(), listTypeName: BlueprintListTypeAny};
+
         let typeMapper = new Map<string, Node[]>();
         for (let child of node.children) {
             let refName = this.getNameNodeText(child, document);
@@ -251,6 +264,7 @@ export class BlueprintMapper implements RefMapperBase {
     }
 
     getListTypeFromBlueprint(blueprintList: FtlBlueprintList) {
+        if (blueprintList.isAnyType) return BlueprintListTypeAny;
         let typeMapper = new Map<string, string[]>();
         for (let refName of blueprintList.childRefNames) {
             let type = this.getRefType(refName);

@@ -31,7 +31,7 @@ export function convertRange(range: HtmlRange): Range {
     return new Range(new Position(start.line, start.character), new Position(end.line, end.character));
 }
 
-export function normalizeAttributeName(attr: string | null | undefined) {
+export function normalizeAttributeName(attr: string | null | undefined): string | undefined {
     return attr?.slice(1, -1);
 }
 

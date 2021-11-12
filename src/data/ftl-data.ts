@@ -98,6 +98,7 @@ let shipTags: XmlTag[] = [
 ];
 let shipTagNames = [...shipTags.map(t => t.name), 'crewMember'];
 
+export const BlueprintListTypeAny = 'any';
 export const FtlData: XmlData = {
     version: 1.1,
     tags: [
@@ -156,7 +157,8 @@ export const FtlData: XmlData = {
             name: 'blueprintList',
             tags: ['name'],
             attributes: [
-                {name: 'name'}
+                {name: 'name'},
+                {name: 'type', values: [{name: BlueprintListTypeAny}]}
             ]
         },
         {

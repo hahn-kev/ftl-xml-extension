@@ -1,6 +1,6 @@
 import {FtlParser} from './ftl-parser';
 import {FltDocumentValidator} from './flt-document-validator';
-import {DocumentSelector, languages, window, workspace} from 'vscode';
+import {CodeActionKind, CodeActionProviderMetadata, DocumentSelector, languages, window, workspace} from 'vscode';
 import {getLanguageService} from 'vscode-html-languageservice';
 import {DocumentCache} from './document-cache';
 import {mappers} from './ref-mappers/mappers';
@@ -9,6 +9,7 @@ import {FtlDefinitionProvider} from './ftl-definition-provider';
 import {FtlReferenceProvider} from './ftl-reference-provider';
 import {FtlHoverProvider} from './ftl-hover-provider';
 import {FtlCompletionProvider} from './ftl-completion-provider';
+import {FtlCodeActionProvider} from './ftl-code-action-provider';
 
 export type disposable = { dispose(): any };
 
@@ -20,6 +21,7 @@ export function setup(): { ftlParser: FtlParser; ftlDocumentValidator: FltDocume
     let {mappers: mappersList, blueprintMapper} = mappers.setup(documentCache);
     let ftlParser = new FtlParser(documentCache, mappersList);
     let ftlDataProvider = new FtlDataProvider(ftlParser.onFileParsed, mappersList);
+    let ftlCodeAction = new FtlCodeActionProvider(documentCache);
     service.setDataProviders(false, [ftlDataProvider]);
 
     let ftlDefinitionProvider = new FtlDefinitionProvider(documentCache, mappersList);
@@ -43,6 +45,11 @@ export function setup(): { ftlParser: FtlParser; ftlDocumentValidator: FltDocume
         }
     });
 
+    let metadata: CodeActionProviderMetadata = {
+        providedCodeActionKinds: [
+            CodeActionKind.QuickFix
+        ]
+    };
     return {
         ftlParser,
         ftlDocumentValidator,
@@ -51,6 +58,8 @@ export function setup(): { ftlParser: FtlParser; ftlDocumentValidator: FltDocume
             languages.registerCompletionItemProvider(ftlXmlDoc, completionItemProvider, '<', '"'),
             languages.registerHoverProvider(ftlXmlDoc, hoverProvider),
             languages.registerDefinitionProvider(ftlXmlDoc, ftlDefinitionProvider),
-            languages.registerReferenceProvider(ftlXmlDoc, ftlReferenceProvider),]
+            languages.registerReferenceProvider(ftlXmlDoc, ftlReferenceProvider),
+            languages.registerCodeActionsProvider(ftlXmlDoc, ftlCodeAction, metadata)
+        ]
     };
 }
