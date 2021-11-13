@@ -178,8 +178,10 @@ export class BlueprintMapper implements RefMapperBase {
         if (node.tag == 'name') return;
 
         let ref = this.getRefNameAndMapper(node, document);
-        if (!ref) return ;
+        if (!ref) return;
         let refName = ref.name;
+        //fixes case for RANDOM which is valid for multiple names
+        if (ref.mapper.isNameValid(refName)) return;
 
         let defType = this.getRefType(refName);
         if (ref.mapper.typeName === defType) return;
