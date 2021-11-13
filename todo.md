@@ -1,2 +1,4 @@
 - add snippets for events and animations
 - add path complete for animations and other files
+- add color support
+- add sound support

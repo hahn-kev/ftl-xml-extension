@@ -210,7 +210,7 @@ export class BlueprintMapper implements RefMapperBase {
         }
     }
 
-    static ignoreListNames = ['DLC_ITEMS'];
+    static ignoreListNames = ['DLC_ITEMS', 'DEMO_LOCKED_ITEMS'];
 
     validateListType(node: Node, document: TextDocument): Diagnostic[] {
         let listName = getAttrValueForTag(node, 'blueprintList', 'name');

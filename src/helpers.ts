@@ -1,6 +1,5 @@
-import {MarkupContent, Node, Range as HtmlRange, TextDocument as HtmlTextDocument} from "vscode-html-languageservice";
-import {MarkdownString, Position, Range, TextDocument} from "vscode";
-
+import {MarkupContent, Node, Range as HtmlRange, TextDocument as HtmlTextDocument} from 'vscode-html-languageservice';
+import {MarkdownString, Position, Range, TextDocument} from 'vscode';
 
 export function toTextDocumentHtml(d: TextDocument): HtmlTextDocument {
     return {...d, uri: d.uri.toString()};
@@ -16,9 +15,10 @@ export function convertDocumentation(documentation: string | MarkupContent | und
     return documentation;
 }
 
-export function getNodeTextContent(node: Node, document: TextDocument) {
+export function getNodeTextContent(node: Node, document: TextDocument, whenTagName?: string) {
     if (node.startTagEnd === undefined || node.endTagStart === undefined) return undefined;
-    return document.getText(new Range(document.positionAt(node.startTagEnd), document.positionAt(node.endTagStart)));
+    if (typeof whenTagName === 'string' && node.tag !== whenTagName) return undefined;
+    return document.getText(toRange(node.startTagEnd, node.endTagStart, document));
 }
 
 export function toRange(start: number, end: number, document: TextDocument) {

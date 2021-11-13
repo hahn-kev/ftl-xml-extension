@@ -11,4 +11,6 @@ export const defaultCrew: string[] = [
     "anaerobic",
     "random",
     "CREW_RANDOM",
+    'ghost',
+    'traitor'
 ];

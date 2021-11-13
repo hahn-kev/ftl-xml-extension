@@ -7,18 +7,31 @@ import {
     SnippetString,
     TextDocument
 } from 'vscode';
-import {CompletionItem as HtmlCompletionItem, HTMLDocument, LanguageService, Node} from 'vscode-html-languageservice';
+import {
+    CompletionItem as HtmlCompletionItem,
+    HTMLDocument,
+    IValueSet,
+    LanguageService,
+    Node
+} from 'vscode-html-languageservice';
 import {convertDocumentation, convertRange, toTextDocumentHtml} from './helpers';
 import {DocumentCache} from './document-cache';
-import {EventNamesValueSet} from './data/autocomplete-value-sets';
 import {BlueprintMapper} from './ref-mappers/blueprint-mapper';
 import {RefMapperBase} from './ref-mappers/ref-mapper';
+import {FtlData, XmlTag} from './data/ftl-data';
 
 export class FtlCompletionProvider implements CompletionItemProvider {
+    private completeContentMap: Map<string, IValueSet>;
+
     constructor(private documentCache: DocumentCache,
                 private languageService: LanguageService,
                 private blueprintMapper: BlueprintMapper,
                 private mappers: RefMapperBase[]) {
+        this.completeContentMap = new Map<string, IValueSet>(
+            FtlData.tags.filter((t: XmlTag): t is XmlTag & { contentsValueSet: string } => !!t.contentsValueSet)
+                .map(t => [t.name, FtlData.valueSets?.find(set => set.name == t.contentsValueSet)] as const)
+                .filter((arr): arr is [string, IValueSet] => !!arr[1])
+        );
     }
 
 
@@ -55,9 +68,9 @@ export class FtlCompletionProvider implements CompletionItemProvider {
     private tryCompleteCustom(document: TextDocument, htmlDocument: HTMLDocument, position: Position): CompletionItem[] | undefined {
         const offset = document.offsetAt(position);
         const node = htmlDocument.findNodeBefore(offset);
-        if (node.tag == "loadEvent" && this.shouldCompleteForNodeContents(node, offset)) {
-            return this.eventNames();
-        }
+        let results = this.tryCompleteNodContents(node, offset);
+        if (results) return results;
+
         if (node.parent && this.blueprintMapper.isListChild(node) && this.shouldCompleteForNodeContents(node, offset)) {
             let blueprintListNode = node.parent;
             let typeInfo = this.blueprintMapper.getListTypeInfoFromNode(blueprintListNode, document);
@@ -76,20 +89,29 @@ export class FtlCompletionProvider implements CompletionItemProvider {
         }
     }
 
+    private tryCompleteNodContents(node: Node, offset: number): CompletionItem[] | undefined {
+        if (!node.tag || !this.shouldCompleteForNodeContents(node, offset)) return;
+        let valueSet = this.completeContentMap.get(node.tag);
+        if (!valueSet) return;
+        return this.valueSetToCompletionItems(valueSet);
+    }
+
+    private valueSetToCompletionItems(valueSet: IValueSet): CompletionItem[] {
+        return valueSet.values.map(value => {
+            let strDes: string | undefined = typeof value.description === 'string' ? value.description : value.description?.value;
+            return {
+                label: {label: value.name, description: strDes},
+                kind: CompletionItemKind.Unit,
+                documentation: convertDocumentation(value.description)
+            };
+        });
+    }
+
     private shouldCompleteForNodeContents(node: Node, offset: number) {
         let startTagEnd = node.startTagEnd ?? node.start;
         let endTagStart = node.endTagStart ?? -1;
 
         return startTagEnd <= offset && endTagStart >= offset;
 
-    }
-
-    private eventNames(): CompletionItem[] {
-        return EventNamesValueSet.values.map(value => {
-            return {
-                label: value.name,
-                kind: CompletionItemKind.Unit,
-            };
-        })
     }
 }

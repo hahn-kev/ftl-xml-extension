@@ -269,7 +269,12 @@ export namespace mappers {
             },
             getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
                 return getAttrValueForTag(node, 'text', 'load', document, position)
-                    ?? getAttrValueForTag(node, 'text', 'id', document, position);
+                    ?? getAttrValueForTag(node, 'text', 'id', document, position)
+                    ?? getAttrValueForTag(node, 'title', 'id', document, position)
+                    ?? getAttrValueForTag(node, 'short', 'id', document, position)
+                    ?? getAttrValueForTag(node, 'desc', 'id', document, position)
+                    ?? getAttrValueForTag(node, 'tooltip', 'id', document, position)
+                    ?? getNodeTextContent(node, document, 'tip');
             }
         }, TextIdNames, "Text", defaultText);
 
