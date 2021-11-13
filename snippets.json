@@ -34,5 +34,11 @@
       "\t</event>",
       "</choice>",
     ]
+  },
+  "Auto Reward": {
+    "prefix": "auto-reward",
+    "body": [
+      "<autoReward level=\"${1:MED}\">${2:standard}</autoReward>"
+    ]
   }
 }

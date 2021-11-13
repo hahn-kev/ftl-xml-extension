@@ -15,7 +15,7 @@ export interface XmlTag extends ITagData {
     tags?: string[] | undefined;
     requiredTags?: string[];
     contentsValueSet?: string;
-    requiredTagsByParent?: {[key: string]: string[]}
+    requiredTagsByParent?: { [key: string]: string[] };
 }
 
 type XmlData = HTMLDataV1 & { tags: XmlTag[] };
@@ -40,7 +40,16 @@ let eventChildTags: XmlTag[] = [
     {name: 'fleet', attributes: []},
     {name: 'distressBeacon', attributes: []},
     {name: 'repair', attributes: []},
-    {name: 'autoReward', attributes: [{name: 'level'}]},
+    {
+        name: 'autoReward',
+        attributes: [
+            {
+                name: 'level',
+                values: [{name: 'LOW'}, {name: 'MED'}, {name: 'HIGH'}]
+            }
+        ],
+        contentsValueSet: 'auto-reward-set'
+    },
     {
         name: 'boarders',
         attributes: [{name: 'class'}, {name: 'min'}, {name: 'max'}]
@@ -349,6 +358,16 @@ export const FtlData: XmlData = {
                 {name: '4'},
                 {name: '5', description: 'least frequent'},
                 {name: '0', description: 'never shows up'},
+            ]
+        },
+        {
+            name: 'auto-reward-set', values: [
+                {name: 'stuff'},
+                {name: 'standard'},
+                {name: 'scrap_only'},
+                {name: 'weapon'},
+                {name: 'droneparts'},
+                {name: 'missiles'},
             ]
         },
         EventNamesValueSet,
