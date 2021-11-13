@@ -50,3 +50,8 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 - add ghost and traitor as default crew names
 - add required elements for weaponBlueprints
 - add rarity autocomplete
+
+## 0.3.2
+- Add snippet for auto reward
+- Add tag data for auto reward
+- fix issue with weaponBlueprint tags required error when in drone
