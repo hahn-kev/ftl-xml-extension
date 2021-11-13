@@ -18,6 +18,8 @@ FTL XML is intended to improve the editing experience for any mod dev, please le
   * when a blueprint list references itself
   * when a blueprint can not be found
   * when a blueprint of an invalid type is referenced
+### Snippets
+  ![Snippets](gifs/snippet-example.webp)
 
 ## Known Issues
 
