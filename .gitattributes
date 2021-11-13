@@ -1,3 +1,5 @@
 # Set default behavior to automatically normalize line endings.
 * text=auto
-
+*.stg filter=lfs diff=lfs merge=lfs -text
+*.gif filter=lfs diff=lfs merge=lfs -text
+*.webp filter=lfs diff=lfs merge=lfs -text
