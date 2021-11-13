@@ -1,0 +1,38 @@
+{
+  "New Event":{
+    "prefix": "new-event",
+    "body": [
+      "<event name=\"$1\">",
+      "\t<text>${2:tab to select next}</text>",
+      "\t<choice>",
+      "\t\t<text>$3</text>",
+      "\t\t<event>",
+      "\t\t\t$0",
+      "\t\t</event>",
+      "\t</choice>",
+      "</event>"
+    ]
+  },
+  "New Choice":{
+    "prefix": "new-choice",
+    "body": [
+      "<choice$1>",
+      "\t<text>${2:tab to select next}</text>",
+      "\t<event>",
+      "\t\t$0",
+      "\t</event>",
+      "</choice>",
+    ]
+  },
+  "New Choice hidden":{
+    "prefix": "new-choice-hidden",
+    "body": [
+      "<choice hidden=\"true\">",
+      "\t<text>${1:tab to select next}</text>",
+      "\t<event>",
+      "\t\t$0",
+      "\t</event>",
+      "</choice>",
+    ]
+  }
+}

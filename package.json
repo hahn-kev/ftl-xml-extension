@@ -46,6 +46,12 @@
         "scopeName": "text.xml",
         "path": "./syntaxes/xml.tmLanguage"
       }
+    ],
+    "snippets": [
+      {
+        "language": "ftl-xml",
+        "path": "./snippets.json"
+      }
     ]
   },
   "scripts": {
