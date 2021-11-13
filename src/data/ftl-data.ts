@@ -105,7 +105,6 @@ let weaponTags: XmlTag[] = [
     {name: 'locked', attributes: []},
     {name: 'desc', attributes: [{name: 'id', valueSet: TextIdNames.name}]},
     {name: 'tooltip', attributes: [{name: 'id', valueSet: TextIdNames.name}]},
-    {name: 'damage', attributes: []},
     {name: 'ion', attributes: []},
     {name: 'sysDamage', attributes: []},
     {name: 'persDamage', attributes: []},
