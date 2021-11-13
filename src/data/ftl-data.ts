@@ -15,6 +15,7 @@ export interface XmlTag extends ITagData {
     tags?: string[] | undefined;
     requiredTags?: string[];
     contentsValueSet?: string;
+    requiredTagsByParent?: {[key: string]: string[]}
 }
 
 type XmlData = HTMLDataV1 & { tags: XmlTag[] };
@@ -256,14 +257,18 @@ export const FtlData: XmlData = {
             name: 'weaponBlueprint',
             tags: weaponTagNames,
             requiredTags: [
-                'type', 'title', 'short', 'tip', 'desc', 'tooltip', 'damage', 'sp',
-                'fireChance', 'breachChance', 'cooldown', 'power', 'cost', 'bp',
-                'rarity', 'image', 'launchSounds', 'hitShipSounds', 'weaponArt'
+                'type', 'title', 'short', 'desc', 'tooltip', 'cooldown',
+                'power', 'cost', 'rarity', 'weaponArt', 'launchSounds',
             ],
+            requiredTagsByParent: {'droneBlueprint': []},
             attributes: [{name: 'name'}]
         },
         ...weaponTags,
-        {name: 'droneBlueprint', attributes: [{name: 'name'}]},
+        {
+            name: 'droneBlueprint',
+            attributes: [{name: 'name'}],
+            tags: ['weaponBlueprint']
+        },
         {name: 'augmentBlueprint', attributes: [{name: 'name'}]},
         {
             name: 'damage',

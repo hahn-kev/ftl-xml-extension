@@ -6,4 +6,4 @@ node_modules
 src/
 out-test/
 tsconfig.json
-**/*.stg
+gifs/

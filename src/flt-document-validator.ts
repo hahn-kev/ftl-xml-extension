@@ -84,14 +84,16 @@ export class FltDocumentValidator {
         diagnostics.push(...errors);
     }
 
-    requiredChildrenMap: Map<string, string[]> = new Map(FtlData.tags
+    requiredChildrenMap: Map<string, XmlTag> = new Map(FtlData.tags
                                                              .filter((tag: XmlTag): tag is XmlTag & { requiredTags: string[] } => !!tag.requiredTags)
-                                                             .map(tag => [tag.name, tag.requiredTags]));
+                                                             .map(tag => [tag.name, tag]));
 
     private validateRequiredChildren(node: Node, document: TextDocument, diagnostics: Diagnostic[]) {
         if (!node.tag) return;
-        const requiredChildren = this.requiredChildrenMap.get(node.tag);
-        if (requiredChildren === undefined) return;
+        const xmlTag = this.requiredChildrenMap.get(node.tag);
+
+        let requiredChildren = xmlTag?.requiredTagsByParent?.[node.parent?.tag ?? ''] ?? xmlTag?.requiredTags;
+        if (requiredChildren === undefined || requiredChildren.length < 1) return;
         let childNames = new Set(node.children.map(c => c.tag).filter((t: string | undefined): t is string => !!t));
         let errors = requiredChildren.filter(requiredTagName => !childNames.has(requiredTagName))
             .map(requiredTagName => {
