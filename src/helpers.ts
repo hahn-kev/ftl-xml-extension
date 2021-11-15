@@ -56,9 +56,27 @@ export function isInAttrValue(node: Node, document: TextDocument, attrName: stri
         document.positionAt(node.startTagEnd ?? node.end)
     );
     let text = document.getText(textRange);
+    let nameRange = attrNameRange(node, document, position);
+    if (!nameRange) return false;
+    let attrStart = document.offsetAt(nameRange.start) - node.start;
+    let attrEnd = document.offsetAt(nameRange.end) - node.start
+
+    let foundAttrName = text.substring(attrStart, attrEnd);
+    return foundAttrName === attrName;
+}
+
+export function attrNameRange(node: Node,
+                              document: TextDocument,
+                              position: Position): Range | undefined {
+    let startPosition = document.positionAt(node.start);
+    let textRange = new Range(
+        startPosition,
+        document.positionAt(node.startTagEnd ?? node.end)
+    );
+    let text = document.getText(textRange);
     let positionOffset = document.offsetAt(position);
 
-    if (positionOffset < node.start || (node.startTagEnd ?? node.end) < positionOffset) return false;
+    if (positionOffset < node.start || (node.startTagEnd ?? node.end) < positionOffset) return;
     let cursorOffsetInText = positionOffset - node.start;
 
     let attrEnd: number | undefined;
@@ -76,10 +94,8 @@ export function isInAttrValue(node: Node, document: TextDocument, attrName: stri
             break;
         }
     }
-
-    if (attrEnd === undefined || attrStart === undefined) return false;
-    let foundAttrName = text.substring(attrStart, attrEnd);
-    return foundAttrName === attrName;
+    if (attrEnd === undefined || attrStart === undefined) return;
+    return toRange(node.start + attrStart, node.start + attrEnd, document);
 }
 
 export function firstWhere<T, R>(list: T[], map: (value: T) => R) {
