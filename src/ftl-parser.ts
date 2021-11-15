@@ -61,7 +61,7 @@ export class FtlParser {
     private parseNodes(nodes: Node[], ftlFile: FtlFile, document: TextDocument) {
         for (let node of nodes) {
             for (let mapper of this.mappers) {
-                mapper.parseNode(node, ftlFile, document);
+                mapper.parser.parseNode(node, ftlFile, document);
             }
             // this.visitNode(node, document);
 

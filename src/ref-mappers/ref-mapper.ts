@@ -1,9 +1,12 @@
-import {FtlFile} from '../models/ftl-file';
+import {FtlFile, FtlFileValue} from '../models/ftl-file';
 import {IValueSet, Node} from 'vscode-html-languageservice';
 import {Location, Position, Range, TextDocument} from 'vscode';
 import {addToKey, toRange} from '../helpers';
 import {FtlValue} from '../models/ftl-value';
+import {IRefParser, RefParser} from './ref-parser';
+
 export type InvalidRef = { name: string, range: Range, typeName: string }
+
 export interface RefMapperBase {
     updateData(files: FtlFile[]): void;
 
@@ -17,16 +20,12 @@ export interface RefMapperBase {
     readonly autoCompleteValues?: IValueSet;
     readonly refs: Map<string, FtlValue[]>;
     readonly defs: Map<string, FtlValue>;
-    readonly fileSelector?: (file: FtlFile) => FtlValue[],
-    readonly fileRefSelector?: (file: FtlFile) => Map<string, FtlValue[]>,
+    readonly fileDataSelector?: (file: FtlFile) => FtlFileValue<FtlValue>,
+    readonly parser: IRefParser,
 
     tryGetInvalidRefName(node: Node, document: TextDocument): InvalidRef | undefined;
 
-    parseNode(node: Node, file: FtlFile, document: TextDocument): void;
-
     isNameValid(name: string): boolean;
-
-    getRefName(node: Node, document: TextDocument, position?: Position): string | undefined;
 }
 
 export interface NodeMap {
@@ -35,18 +34,16 @@ export interface NodeMap {
     getRefName(node: Node, document: TextDocument, position?: Position): string | undefined;
 }
 
-interface AdditionalDefsProvider {
-    isNameValid(name: string): boolean;
-}
-
 export class RefMapper<T extends FtlValue> implements RefMapperBase {
     readonly refs = new Map<string, T[]>();
     readonly defs = new Map<string, T>();
 
-    constructor(public readonly fileSelector: (file: FtlFile) => T[],
-                public readonly fileRefSelector: (file: FtlFile) => Map<string, T[]>,
-                private readonly newFromNode: (name: string, file: FtlFile, node: Node, document: TextDocument) => T,
-                public readonly nodeMap: NodeMap,
+
+    public get nodeMap(): NodeMap {
+        return this.parser.nodeMap;
+    }
+
+    constructor(public parser: RefParser<T>,
                 public readonly autoCompleteValues: IValueSet,
                 public readonly typeName: string,
                 public defaults: readonly string[] = []) {
@@ -57,16 +54,16 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
         this.defs.clear();
         this.autoCompleteValues.values.length = 0;
 
-        let names = new Set(files.flatMap(this.fileSelector)
-                                .map(value => value.name)
-                                .concat(this.defaults));
+        let names = new Set(files.flatMap(file => this.parser.fileDataSelector(file).defs)
+            .map(value => value.name)
+            .concat(this.defaults));
 
         this.autoCompleteValues.values
             .push(...Array.from(names.values()).map(name => ({name})));
 
         for (let file of files) {
-            this.fileRefSelector(file).forEach((value, key) => addToKey(this.refs, key, value));
-            for (let value of this.fileSelector(file)) {
+            this.parser.fileDataSelector(file).refs.forEach((value, key) => addToKey(this.refs, key, value));
+            for (let value of this.parser.fileDataSelector(file).defs) {
                 this.defs.set(value.name, value);
             }
         }
@@ -87,13 +84,14 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
     }
 
     getRefName(node: Node, document: TextDocument, position: Position) {
-        return this.nodeMap.getNameDef(node, document, position) ?? this.nodeMap.getRefName(node, document, position);
+        return this.parser.nodeMap.getNameDef(node, document, position) ??
+            this.parser.nodeMap.getRefName(node, document, position);
     }
 
     tryGetInvalidRefName(node: Node, document: TextDocument): InvalidRef | undefined {
         if (this.defs.size == 0) return;
 
-        let refName = this.nodeMap.getRefName(node, document);
+        let refName = this.parser.nodeMap.getRefName(node, document);
         if (refName && !this.isNameValid(refName))
             return {
                 name: refName,
@@ -104,20 +102,6 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
 
     isNameValid(name: string) {
         return this.defs.has(name) || this.defaults.includes(name);
-    }
-
-    parseNode(node: Node, file: FtlFile, document: TextDocument) {
-        let nameDef = this.nodeMap.getNameDef(node, document);
-        if (nameDef) {
-            let ftlEvent = this.newFromNode(nameDef, file, node, document);
-            this.fileSelector(file).push(ftlEvent);
-            addToKey(this.fileRefSelector(file), nameDef, ftlEvent);
-        } else {
-            let nameRef = this.nodeMap.getRefName(node, document);
-            if (nameRef) {
-                addToKey(this.fileRefSelector(file), nameRef, this.newFromNode(nameRef, file, node, document));
-            }
-        }
     }
 }
 

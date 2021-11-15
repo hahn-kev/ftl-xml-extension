@@ -10,36 +10,32 @@ import {FtlValue} from './ftl-value';
 import {FtlAugment} from './ftlAugment';
 import {FtlCrew} from './ftl-crew';
 import {FtlSystem} from './ftl-system';
+import {addToKey} from '../helpers';
+
+
 
 export class FtlFile {
-
     constructor(public uri: Uri) {
     }
 
-    events: FtlEvent[] = [];
-    eventRefs = new Map<string, FtlEvent[]>();
+    event = new FtlFileValue<FtlEvent>();
+    ship = new FtlFileValue<FtlShip>();
+    autoBlueprint = new FtlFileValue<FtlAutoblueprint>();
+    text = new FtlFileValue<FtlText>();
+    weapon = new FtlFileValue<FtlWeapon>();
+    drone = new FtlFileValue<FtlDrone>();
+    augment = new FtlFileValue<FtlAugment>();
+    crews = new FtlFileValue<FtlCrew>();
+    system = new FtlFileValue<FtlSystem>();
+    blueprintList = new FtlFileValue<FtlBlueprintList, FtlValue>();
 
-    ships: FtlShip[] = [];
-    shipRefs = new Map<string, FtlShip[]>();
+}
 
-    autoBlueprints: FtlAutoblueprint[] = [];
-    autoBlueprintRefs = new Map<string, FtlAutoblueprint[]>();
+export class FtlFileValue<TDef extends FtlValue, TRef extends FtlValue = TDef> {
+    defs: TDef[] = [];
+    refs = new Map<string, TRef[]>();
 
-    texts: FtlText[] = [];
-    textRefs = new Map<string, FtlText[]>();
-
-    weapons: FtlWeapon[] = [];
-    weaponRefs = new Map<string, FtlWeapon[]>();
-
-    drones: FtlDrone[] = [];
-    droneRefs = new Map<string, FtlDrone[]>();
-    augments: FtlAugment[] = [];
-    augmentRefs = new Map<string, FtlAugment[]>();
-    crew: FtlCrew[] = [];
-    crewRefs = new Map<string, FtlCrew[]>();
-    systems: FtlSystem[] = [];
-    systemRefs = new Map<string, FtlSystem[]>();
-
-    blueprintLists: FtlBlueprintList[] = [];
-    blueprintListRefs = new Map<string, FtlValue[]>();
+    addRef(name: string, value: TRef) {
+        addToKey(this.refs, name, value);
+    }
 }

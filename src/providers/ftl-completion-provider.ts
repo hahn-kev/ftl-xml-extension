@@ -71,7 +71,7 @@ export class FtlCompletionProvider implements CompletionItemProvider {
         let results = this.tryCompleteNodContents(node, offset);
         if (results) return results;
 
-        if (node.parent && this.blueprintMapper.isListChild(node) && this.shouldCompleteForNodeContents(node, offset)) {
+        if (node.parent && this.blueprintMapper.parser.isListChild(node) && this.shouldCompleteForNodeContents(node, offset)) {
             let blueprintListNode = node.parent;
             let typeInfo = this.blueprintMapper.getListTypeInfoFromNode(blueprintListNode, document);
             if (!typeInfo) return;
