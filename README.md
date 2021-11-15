@@ -21,6 +21,9 @@ FTL XML is intended to improve the editing experience for any mod dev, please le
 ### Snippets
   ![Snippets](gifs/snippet-example.webp)
 
+### Hovering Text Ids
+![Hover Text](gifs/hover-text.png)
+
 ## Known Issues
 
 You must wait for the loading indicator to finish.

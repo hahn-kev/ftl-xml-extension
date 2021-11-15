@@ -3,7 +3,7 @@ import {FtlEvent} from '../models/ftl-event';
 import {Node} from 'vscode-html-languageservice';
 import {Position, TextDocument} from 'vscode';
 import {events} from '../events';
-import {getAttrValueForTag, getNodeTextContent} from '../helpers';
+import {getAttrValueForTag, getNodeTextContent, hasAttr, normalizeAttributeName} from '../helpers';
 import {
     AugmentNames,
     AutoblueprintNames,
@@ -251,15 +251,19 @@ export namespace mappers {
             FtlText,
             {
                 getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-                    return getAttrValueForTag(node, 'text', 'name', document, position)
-                        ?? getAttrValueForTag(node,
-                            'textList',
-                            'name',
-                            document,
-                            position);
+
+                    if (node.tag == 'text' && hasAttr(node, 'name', document, position)) {
+                        //filter out language files
+                        if (document.uri.path.split('/').pop()?.startsWith('text-'))
+                            return undefined;
+                        return normalizeAttributeName(node.attributes.name);
+                    }
+
+                    return getAttrValueForTag(node, 'textList', 'name', document, position);
                 },
                 getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
                     return getAttrValueForTag(node, 'text', 'load', document, position)
+                        ?? getAttrValueForTag(node, 'text', 'name', document, position)
                         ?? getAttrValueForTag(node, 'text', 'id', document, position)
                         ?? getAttrValueForTag(node, 'title', 'id', document, position)
                         ?? getAttrValueForTag(node, 'short', 'id', document, position)

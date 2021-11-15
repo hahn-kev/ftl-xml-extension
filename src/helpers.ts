@@ -40,7 +40,7 @@ export function getAttrValueForTag(node: Node, tagName: string, attrName: string
         return normalizeAttributeName(node.attributes[attrName]);
 }
 
-export function hasAttr<T extends string>(node: Node, name: T, document?: TextDocument, atPosition?: Position): node is Node & { attributes: { T: string } } {
+export function hasAttr<T extends string>(node: Node, name: T, document?: TextDocument, atPosition?: Position): node is Node & { attributes: Record<T, string> } {
     if (!node.attributes) return false;
     if (!(name in node.attributes)) return false;
     if (document && atPosition) {
