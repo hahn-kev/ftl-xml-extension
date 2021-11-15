@@ -219,11 +219,9 @@ export namespace mappers {
                     position);
             },
             getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-                return getAttrValueForTag(node,
-                    'status',
-                    'system',
-                    document,
-                    position)
+                return getAttrValueForTag(node, 'status', 'system', document, position) ??
+                    getAttrValueForTag(node, 'upgrade', 'system', document, position) ??
+                    getAttrValueForTag(node, 'damage', 'system', document, position);
             }
         },
         SystemNames,

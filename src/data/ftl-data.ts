@@ -60,7 +60,7 @@ let eventChildTags: XmlTag[] = [
     {name: 'unlockShip', attributes: []},
     {name: 'item_modify', attributes: [], tags: ['item']},
     {name: 'secretSector', attributes: []},
-    {name: 'upgrade', attributes: []},
+    {name: 'upgrade', attributes: [{name: 'system', valueSet: SystemNames.name}]},
     ...hyperspaceEventChildren
 ];
 let eventChildTagNames = eventChildTags.map(t => t.name);
@@ -281,7 +281,7 @@ export const FtlData: XmlData = {
         {name: 'augmentBlueprint', attributes: [{name: 'name'}]},
         {
             name: 'damage',
-            attributes: [{name: 'amount'}, {name: 'system'}, {name: 'effect'}]
+            attributes: [{name: 'amount'}, {name: 'system', valueSet: SystemNames.name}, {name: 'effect'}]
         },
         {
             name: 'crewMember',
@@ -377,6 +377,7 @@ export const FtlData: XmlData = {
         WeaponNames,
         DroneNames,
         AugmentNames,
-        CrewNames
+        CrewNames,
+        SystemNames
     ]
 };

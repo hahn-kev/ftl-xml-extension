@@ -55,3 +55,6 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 - Add snippet for auto reward
 - Add tag data for auto reward
 - fix issue with weaponBlueprint tags required error when in drone
+
+## 0.3.3
+- Fix issue with status/damage/upgrade system auto complete~~~~
