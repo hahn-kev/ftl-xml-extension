@@ -5,7 +5,7 @@ import {
     CrewNames,
     DroneNames,
     EventNamesValueSet,
-    ShipNames,
+    ShipNames, SoundNames,
     SystemNames,
     TextIdNames,
     WeaponNames
@@ -32,6 +32,7 @@ export function activate(context: ExtensionContext) {
                 let augs = AugmentNames.values.map(a => a.name);
                 let crew = CrewNames.values.map(c => c.name);
                 let sys = SystemNames.values.map(s => s.name);
+                let sounds = SoundNames.values.map(s => s.name);
                 let tmp = '';
             }
         });

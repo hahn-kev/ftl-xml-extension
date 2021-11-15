@@ -60,3 +60,4 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 - Fix issue with status/damage/upgrade system auto complete
 - When hovering over a text id show the actual text
 - Make sure text defs come from primary translation
+- Add support for sound refs

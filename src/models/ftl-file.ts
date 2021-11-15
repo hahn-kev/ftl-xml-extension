@@ -11,10 +11,12 @@ import {FtlAugment} from './ftlAugment';
 import {FtlCrew} from './ftl-crew';
 import {FtlSystem} from './ftl-system';
 import {addToKey} from '../helpers';
-
+import {FtlSound} from './ftl-sound';
 
 
 export class FtlFile {
+    sounds = new FtlFileValue<FtlSound>();
+
     constructor(public uri: Uri) {
     }
 

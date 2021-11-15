@@ -3,7 +3,14 @@ import {FtlEvent} from '../models/ftl-event';
 import {Node} from 'vscode-html-languageservice';
 import {Position, TextDocument} from 'vscode';
 import {events} from '../events';
-import {getAttrValueForTag, getNodeTextContent, hasAttr, normalizeAttributeName} from '../helpers';
+import {
+    fileName,
+    getAttrValueForTag,
+    getNodeTextContent,
+    hasAncestor,
+    hasAttr,
+    normalizeAttributeName
+} from '../helpers';
 import {
     AugmentNames,
     AutoblueprintNames,
@@ -11,6 +18,7 @@ import {
     DroneNames,
     EventNamesValueSet,
     ShipNames,
+    SoundNames,
     SystemNames,
     TextIdNames,
     WeaponNames
@@ -35,6 +43,8 @@ import {FtlSystem} from '../models/ftl-system';
 import {defaultSystems} from '../data/default-systems';
 import {defaultText} from '../data/default-text';
 import {RefParser} from './ref-parser';
+import {FtlSound} from '../models/ftl-sound';
+import {defaultSounds} from '../data/default-sounds';
 
 export namespace mappers {
 
@@ -254,7 +264,7 @@ export namespace mappers {
 
                     if (node.tag == 'text' && hasAttr(node, 'name', document, position)) {
                         //filter out language files
-                        if (document.uri.path.split('/').pop()?.startsWith('text-'))
+                        if (fileName(document)?.startsWith('text-'))
                             return undefined;
                         return normalizeAttributeName(node.attributes.name);
                     }
@@ -277,6 +287,33 @@ export namespace mappers {
         'Text',
         defaultText);
 
+    const validSoundFileNames = ['dlcSounds.xml','dlcSounds.xml.append', 'sounds.xml', 'sounds.xml.append'];
+    export const soundMapper = new RefMapper(
+        new RefParser(file => file.sounds,
+            FtlSound,
+            {
+                getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
+                    if (!node.tag || node.tag == 'FTL') return;
+                    let docFileName = fileName(document);
+                    if (docFileName && validSoundFileNames.includes(docFileName) && !hasAncestor(node, 'music', true)) {
+                        return node.tag;
+                    }
+                },
+                getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+                    return getNodeTextContent(node, document, 'sound')
+                        ?? getNodeTextContent(node, document, 'powerSound')
+                        ?? getNodeTextContent(node, document, 'shootingSound')
+                        ?? getNodeTextContent(node, document, 'deathSound')
+                        ?? getNodeTextContent(node, document, 'finishSound')
+                        ?? getNodeTextContent(node, document, 'repairSound')
+                        ?? getNodeTextContent(node, document, 'timerSound');
+                }
+            }),
+        SoundNames,
+        'Sound',
+        defaultSounds
+    );
+
     const blueprintMappers: RefMapperBase[] = [
         weaponsMapper,
         autoBlueprintMapper,
@@ -292,6 +329,7 @@ export namespace mappers {
             eventsMapper,
             shipsMapper,
             textMapper,
+            soundMapper,
             blueprintMapper
         ];
         return {blueprintMapper, mappers};

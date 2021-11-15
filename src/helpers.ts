@@ -1,5 +1,5 @@
 import {MarkupContent, Node, Range as HtmlRange, TextDocument as HtmlTextDocument} from 'vscode-html-languageservice';
-import {MarkdownString, Position, Range, TextDocument} from 'vscode';
+import {MarkdownString, Position, Range, TextDocument, Uri} from 'vscode';
 
 export function toTextDocumentHtml(d: TextDocument): HtmlTextDocument {
     return {...d, uri: d.uri.toString()};
@@ -13,6 +13,13 @@ export function convertDocumentation(documentation: string | MarkupContent | und
         return documentation.value;
     }
     return documentation;
+}
+
+export function hasAncestor(node: Node, name: string, includeSelf: boolean): boolean {
+    if (!node.tag) return  false;
+    if (includeSelf && node.tag == name) return true;
+    if (!node.parent) return false;
+    return hasAncestor(node.parent, name, true);
 }
 
 export function getNodeTextContent(node: Node, document: TextDocument, whenTagName?: string) {
@@ -125,4 +132,9 @@ export function addToKey<T, Key>(map: Map<Key, T[]>, key: Key, value: T | T[]) {
 
 export function maxBy<T>(arr: T[], map: (value: T) => number) {
 
+}
+
+export function fileName(uri: Uri|TextDocument): string | undefined {
+    if ('uri' in uri) uri = uri.uri;
+    return uri.path.split('/').pop();
 }

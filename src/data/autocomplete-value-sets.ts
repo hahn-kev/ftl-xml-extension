@@ -40,3 +40,8 @@ export const SystemNames: IValueSet = {
     name: 'system-names',
     values: [{name: 'loading...'}]
 }
+
+export const SoundNames: IValueSet = {
+    name: 'sound-names',
+    values: [{name: 'loading...'}]
+}
