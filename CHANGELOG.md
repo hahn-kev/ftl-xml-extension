@@ -61,3 +61,6 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 - When hovering over a text id show the actual text
 - Make sure text defs come from primary translation
 - Add support for sound refs
+
+## 0.3.4
+- Fix issue with sound tag not having autocomplete

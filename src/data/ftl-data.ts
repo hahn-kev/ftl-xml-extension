@@ -5,7 +5,7 @@ import {
     CrewNames,
     DroneNames,
     EventNamesValueSet,
-    ShipNames,
+    ShipNames, SoundNames,
     SystemNames,
     TextIdNames,
     WeaponNames
@@ -327,6 +327,7 @@ export const FtlData: XmlData = {
         {name: 'transformRace', attributes: []},
         {name: 'changeBackground', attributes: []},
         {name: 'playSound', attributes: []},
+        {name: 'sound', attributes: [], contentsValueSet: SoundNames.name},
         {name: 'jumpEvent', attributes: []},
         {name: 'clearTriggeredEvent', attributes: []},
         {name: 'enemyDamage', attributes: []},
@@ -378,6 +379,7 @@ export const FtlData: XmlData = {
         DroneNames,
         AugmentNames,
         CrewNames,
-        SystemNames
+        SystemNames,
+        SoundNames
     ]
 };
