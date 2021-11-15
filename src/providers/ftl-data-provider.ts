@@ -5,10 +5,10 @@ import {
     IValueData,
     newHTMLDataProvider
 } from "vscode-html-languageservice";
-import {FtlData} from './data/ftl-data';
-import {FtlFile} from './models/ftl-file';
+import {FtlData} from '../data/ftl-data';
+import {FtlFile} from '../models/ftl-file';
 import {Event} from 'vscode';
-import {RefMapperBase} from './ref-mappers/ref-mapper';
+import {RefMapperBase} from '../ref-mappers/ref-mapper';
 
 export class FtlDataProvider implements IHTMLDataProvider {
 

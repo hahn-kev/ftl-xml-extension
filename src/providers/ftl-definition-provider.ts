@@ -7,8 +7,8 @@ import {
     ProviderResult,
     TextDocument
 } from 'vscode';
-import {DocumentCache} from './document-cache';
-import {RefMapperBase} from './ref-mappers/ref-mapper';
+import {DocumentCache} from '../document-cache';
+import {RefMapperBase} from '../ref-mappers/ref-mapper';
 
 export class FtlDefinitionProvider implements DefinitionProvider {
 

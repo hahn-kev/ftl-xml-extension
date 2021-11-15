@@ -11,10 +11,10 @@ import {
     TextDocument,
     WorkspaceEdit
 } from 'vscode';
-import {DocumentCache} from './document-cache';
-import {FtlErrorCode} from './diagnostic-builder';
+import {DocumentCache} from '../document-cache';
+import {FtlErrorCode} from '../diagnostic-builder';
 import {Node} from 'vscode-html-languageservice';
-import {BlueprintListTypeAny} from './data/ftl-data';
+import {BlueprintListTypeAny} from '../data/ftl-data';
 
 export class FtlCodeActionProvider implements CodeActionProvider {
     constructor(private documentCache: DocumentCache) {

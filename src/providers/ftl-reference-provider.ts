@@ -7,8 +7,8 @@ import {
     ReferenceProvider,
     TextDocument
 } from 'vscode';
-import {DocumentCache} from './document-cache';
-import {RefMapperBase} from './ref-mappers/ref-mapper';
+import {DocumentCache} from '../document-cache';
+import {RefMapperBase} from '../ref-mappers/ref-mapper';
 
 export class FtlReferenceProvider implements ReferenceProvider {
     constructor(private documentCache: DocumentCache, private mappers: RefMapperBase[]) {

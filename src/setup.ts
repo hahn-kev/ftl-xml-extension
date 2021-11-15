@@ -12,12 +12,12 @@ import {
 import {getLanguageService} from 'vscode-html-languageservice';
 import {DocumentCache} from './document-cache';
 import {mappers} from './ref-mappers/mappers';
-import {FtlDataProvider} from './ftl-data-provider';
-import {FtlDefinitionProvider} from './ftl-definition-provider';
-import {FtlReferenceProvider} from './ftl-reference-provider';
-import {FtlHoverProvider} from './ftl-hover-provider';
-import {FtlCompletionProvider} from './ftl-completion-provider';
-import {FtlCodeActionProvider} from './ftl-code-action-provider';
+import {FtlDataProvider} from './providers/ftl-data-provider';
+import {FtlDefinitionProvider} from './providers/ftl-definition-provider';
+import {FtlReferenceProvider} from './providers/ftl-reference-provider';
+import {FtlHoverProvider} from './providers/ftl-hover-provider';
+import {FtlCompletionProvider} from './providers/ftl-completion-provider';
+import {FtlCodeActionProvider} from './providers/ftl-code-action-provider';
 
 export type disposable = { dispose(): any };
 

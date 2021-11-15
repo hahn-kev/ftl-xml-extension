@@ -1,7 +1,7 @@
 import {CancellationToken, Hover, HoverProvider, MarkdownString, Position, ProviderResult, TextDocument} from 'vscode';
-import {DocumentCache} from './document-cache';
+import {DocumentCache} from '../document-cache';
 import {LanguageService, TextDocument as HtmlTextDocument} from 'vscode-html-languageservice';
-import {convertDocumentation, convertRange} from './helpers';
+import {convertDocumentation, convertRange} from '../helpers';
 
 export class FtlHoverProvider implements HoverProvider {
     constructor(private documentCache: DocumentCache, private service: LanguageService) {

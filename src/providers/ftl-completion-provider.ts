@@ -14,11 +14,11 @@ import {
     LanguageService,
     Node
 } from 'vscode-html-languageservice';
-import {convertDocumentation, convertRange, toTextDocumentHtml} from './helpers';
-import {DocumentCache} from './document-cache';
-import {BlueprintMapper} from './ref-mappers/blueprint-mapper';
-import {RefMapperBase} from './ref-mappers/ref-mapper';
-import {FtlData, XmlTag} from './data/ftl-data';
+import {convertDocumentation, convertRange, toTextDocumentHtml} from '../helpers';
+import {DocumentCache} from '../document-cache';
+import {BlueprintMapper} from '../ref-mappers/blueprint-mapper';
+import {RefMapperBase} from '../ref-mappers/ref-mapper';
+import {FtlData, XmlTag} from '../data/ftl-data';
 
 export class FtlCompletionProvider implements CompletionItemProvider {
     private completeContentMap: Map<string, IValueSet>;

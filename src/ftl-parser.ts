@@ -63,8 +63,16 @@ export class FtlParser {
             for (let mapper of this.mappers) {
                 mapper.parseNode(node, ftlFile, document);
             }
+            // this.visitNode(node, document);
 
             this.parseNodes(node.children, ftlFile, document);
+        }
+    }
+
+    systemTags = new Set<string>();
+    private visitNode(node: Node, document: TextDocument) {
+        if (node.tag && node.attributes && 'system' in node.attributes) {
+            this.systemTags.add(node.tag);
         }
     }
 }
