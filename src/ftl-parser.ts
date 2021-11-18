@@ -10,6 +10,10 @@ export class FtlParser {
     }
 
     private _onFileParsedEmitter = new Emitter<{ files: Map<string, FtlFile> }>();
+    private _isParsing = false;
+    public get isParsing() {
+        return this._isParsing;
+    }
 
     public get onFileParsed() {
         return this._onFileParsedEmitter.event;
@@ -29,7 +33,7 @@ export class FtlParser {
 
     public async parseFiles(files: Uri[]) {
         if (files.length == 0) return;
-
+        this._isParsing = true;
         console.time('parse files');
         await window.withProgress({
             title: 'Parsing FTL files',
@@ -41,6 +45,7 @@ export class FtlParser {
             }
         });
 
+        this._isParsing = false;
         console.timeEnd('parse files');
         this._onFileParsedEmitter.fire({files: this.files});
     }

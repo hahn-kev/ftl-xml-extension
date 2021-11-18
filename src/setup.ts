@@ -3,6 +3,7 @@ import {FltDocumentValidator} from './flt-document-validator';
 import {
     CodeActionKind,
     CodeActionProviderMetadata,
+    commands,
     DocumentSelector,
     languages,
     RelativePattern,
@@ -67,6 +68,10 @@ export function setup(): { ftlParser: FtlParser; ftlDocumentValidator: FltDocume
                 }
             }
         }
+    });
+    commands.registerCommand('ftl-xml.parse-workspace', async () => {
+        if (!ftlParser.isParsing)
+            await parseWorkspace(ftlParser, ftlDocumentValidator);
     });
 
     let metadata: CodeActionProviderMetadata = {

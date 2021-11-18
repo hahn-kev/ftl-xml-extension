@@ -3,7 +3,6 @@
 - add path complete for animations and other files
 - add color support
 - add sound support
-- add command to parse files again
 
 
 ## Research required

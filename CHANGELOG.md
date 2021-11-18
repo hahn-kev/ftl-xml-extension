@@ -64,3 +64,6 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 
 ## 0.3.4
 - Fix issue with sound tag not having autocomplete
+
+## 0.3.5
+- Add parse command to allow running it manually

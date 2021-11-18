@@ -52,6 +52,22 @@
         "language": "ftl-xml",
         "path": "./snippets.json"
       }
+    ],
+    "commands": [
+      {
+        "command": "ftl-xml.parse-workspace",
+        "title": "FTL: Parse XML Files"
+      }
+    ],
+    "menus": [
+      {
+        "commandPalette": [
+          {
+            "command": "ftl-xml.parse-workspace",
+            "when": "editorLangId == ftl-xml"
+          }
+        ]
+      }
     ]
   },
   "scripts": {
