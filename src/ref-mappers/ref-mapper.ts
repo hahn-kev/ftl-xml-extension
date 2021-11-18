@@ -3,7 +3,7 @@ import {IValueSet, Node} from 'vscode-html-languageservice';
 import {Location, Position, Range, TextDocument} from 'vscode';
 import {addToKey, toRange} from '../helpers';
 import {FtlValue} from '../models/ftl-value';
-import {IRefParser, RefParser} from './ref-parser';
+import {FtlRefParser, RefParser} from './ref-parser';
 
 export type InvalidRef = { name: string, range: Range, typeName: string }
 
@@ -21,7 +21,7 @@ export interface RefMapperBase {
     readonly refs: Map<string, FtlValue[]>;
     readonly defs: Map<string, FtlValue>;
     readonly fileDataSelector?: (file: FtlFile) => FtlFileValue<FtlValue>,
-    readonly parser: IRefParser,
+    readonly parser: FtlRefParser,
 
     tryGetInvalidRefName(node: Node, document: TextDocument): InvalidRef | undefined;
 

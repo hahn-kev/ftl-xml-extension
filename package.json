@@ -59,16 +59,14 @@
         "title": "FTL: Parse XML Files"
       }
     ],
-    "menus": [
-      {
-        "commandPalette": [
-          {
-            "command": "ftl-xml.parse-workspace",
-            "when": "editorLangId == ftl-xml"
-          }
-        ]
-      }
-    ]
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "ftl-xml.parse-workspace",
+          "when": "editorLangId == ftl-xml"
+        }
+      ]
+    }
   },
   "scripts": {
     "compile": "npm run esbuild-base -- --sourcemap",

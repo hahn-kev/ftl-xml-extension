@@ -12,6 +12,7 @@ import {FtlCrew} from './ftl-crew';
 import {FtlSystem} from './ftl-system';
 import {addToKey} from '../helpers';
 import {FtlSound} from './ftl-sound';
+import {FtlColor} from './ftl-color';
 
 
 export class FtlFile {
@@ -30,7 +31,7 @@ export class FtlFile {
     crews = new FtlFileValue<FtlCrew>();
     system = new FtlFileValue<FtlSystem>();
     blueprintList = new FtlFileValue<FtlBlueprintList, FtlValue>();
-
+    colors: FtlColor[] = [];
 }
 
 export class FtlFileValue<TDef extends FtlValue, TRef extends FtlValue = TDef> {

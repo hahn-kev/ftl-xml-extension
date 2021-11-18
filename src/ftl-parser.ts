@@ -3,61 +3,72 @@ import {Node} from 'vscode-html-languageservice';
 import {FtlFile} from './models/ftl-file';
 import {DocumentCache} from './document-cache';
 import {Emitter} from 'vscode-languageclient';
-import {RefMapperBase} from './ref-mappers/ref-mapper';
+import {FtlXmlParser} from './ref-mappers/ref-parser';
 
 export class FtlParser {
-    constructor(private cache: DocumentCache, private mappers: RefMapperBase[]) {
+    constructor(private cache: DocumentCache, private parsers: FtlXmlParser[]) {
     }
 
     private _onFileParsedEmitter = new Emitter<{ files: Map<string, FtlFile> }>();
-    private _isParsing = false;
-    public get isParsing() {
-        return this._isParsing;
+    private _parsingPromise?: Thenable<void>;
+
+    public get isParsing(): boolean {
+        return !!this._parsingPromise;
+    }
+
+    public get files() {
+        if (this._parsingPromise) return this._parsingPromise.then(() => this._files);
+        return this._files;
     }
 
     public get onFileParsed() {
         return this._onFileParsedEmitter.event;
     }
 
-    public files = new Map<string, FtlFile>();
+    private _files = new Map<string, FtlFile>();
 
     public async parseCurrentWorkspace(subFolder?: string) {
-        this.files.clear();
-        let prefix = subFolder ? `${subFolder}/` : '';
-        let files = await workspace.findFiles(prefix + '**/*.{xml,xml.append}');
-        if (files.length > 0)
-            await this.parseFiles(files);
+        console.log('parse workspace');
+        if (this.isParsing)
+            return this.files;
 
-        return this.files;
+        this._files.clear();
+        let prefix = subFolder ? `${subFolder}/` : '';
+        this._parsingPromise = workspace.findFiles(prefix + '**/*.{xml,xml.append}')
+            .then(files => {
+                if (files.length > 0)
+                    return this.parseFiles(files);
+            });
+
+        await this._parsingPromise;
+
+        return this._files;
     }
 
     public async parseFiles(files: Uri[]) {
         if (files.length == 0) return;
-        this._isParsing = true;
         console.time('parse files');
         await window.withProgress({
             title: 'Parsing FTL files',
             location: ProgressLocation.Window
-        }, async (progress, token) => {
+        }, async () => {
             for (let file of files) {
                 let document = await workspace.openTextDocument(file);
                 this._parseFile(document);
             }
         });
-
-        this._isParsing = false;
         console.timeEnd('parse files');
-        this._onFileParsedEmitter.fire({files: this.files});
+        this._onFileParsedEmitter.fire({files: this._files});
     }
 
     public parseFile(document: TextDocument) {
         this._parseFile(document);
-        this._onFileParsedEmitter.fire({files: this.files});
+        this._onFileParsedEmitter.fire({files: this._files});
     }
 
     private _parseFile(document: TextDocument) {
         let ftlFile: FtlFile = new FtlFile(document.uri);
-        this.files.set(ftlFile.uri.toString(), ftlFile);
+        this._files.set(ftlFile.uri.toString(), ftlFile);
 
         let htmlDocument = this.cache.getHtmlDocument(document);
         this.parseNodes(htmlDocument.roots, ftlFile, document);
@@ -65,8 +76,8 @@ export class FtlParser {
 
     private parseNodes(nodes: Node[], ftlFile: FtlFile, document: TextDocument) {
         for (let node of nodes) {
-            for (let mapper of this.mappers) {
-                mapper.parser.parseNode(node, ftlFile, document);
+            for (let parser of this.parsers) {
+                parser.parseNode(node, ftlFile, document);
             }
             // this.visitNode(node, document);
 
@@ -74,7 +85,9 @@ export class FtlParser {
         }
     }
 
-    systemTags = new Set<string>();
+    private systemTags = new Set<string>();
+
+    // noinspection JSUnusedLocalSymbols
     private visitNode(node: Node, document: TextDocument) {
         if (node.tag && node.attributes && 'system' in node.attributes) {
             this.systemTags.add(node.tag);

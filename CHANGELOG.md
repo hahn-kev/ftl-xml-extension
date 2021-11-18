@@ -67,3 +67,4 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 
 ## 0.3.5
 - Add parse command to allow running it manually
+- Add color picker support

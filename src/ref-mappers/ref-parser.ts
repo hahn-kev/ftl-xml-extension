@@ -4,9 +4,11 @@ import {Position, TextDocument} from 'vscode';
 import {NodeMap} from './ref-mapper';
 import {FtlValue} from '../models/ftl-value';
 
-export interface IRefParser {
+export interface FtlXmlParser {
     parseNode(node: Node, file: FtlFile, document: TextDocument): void;
+}
 
+export interface FtlRefParser extends FtlXmlParser {
     getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined;
 
     getRefName(node: Node, document: TextDocument, position?: Position): string | undefined;
@@ -15,7 +17,7 @@ export interface IRefParser {
 type FtlValueConst<T> = { new(name: string, file: FtlFile, node: Node, document: TextDocument): T; }
     | { new(name: string, file: FtlFile, node: Node, document: TextDocument, isDef: boolean): T; };
 
-export class RefParser<T extends FtlValue = FtlValue> implements IRefParser {
+export class RefParser<T extends FtlValue = FtlValue> implements FtlXmlParser, FtlRefParser {
     constructor(public fileDataSelector: (file: FtlFile) => FtlFileValue<T>,
                 private readonly newFromNode: FtlValueConst<T>,
                 public readonly nodeMap: NodeMap) {

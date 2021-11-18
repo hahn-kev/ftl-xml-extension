@@ -14,9 +14,9 @@ import {
 } from '../helpers';
 import {BlueprintListTypeAny} from '../data/ftl-data';
 import {DiagnosticBuilder} from '../diagnostic-builder';
-import {IRefParser} from './ref-parser';
+import {FtlXmlParser} from './ref-parser';
 
-class BlueprintParser implements IRefParser {
+class BlueprintParser implements FtlXmlParser {
     constructor(private blueprintMappers: RefMapperBase[]) {
     }
 

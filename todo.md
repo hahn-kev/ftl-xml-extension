@@ -1,8 +1,8 @@
 ## Going to implement
-- add snippets for events and animations
+- add snippets for animations
 - add path complete for animations and other files
-- add color support
 - add sound support
+- format support
 
 
 ## Research required

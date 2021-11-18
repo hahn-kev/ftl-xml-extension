@@ -24,6 +24,9 @@ FTL XML is intended to improve the editing experience for any mod dev, please le
 ### Hovering Text Ids
 ![Hover Text](gifs/hover-text.png)
 
+### Easy Color Editing
+![Color Editing](gifs/color-example.webp)
+
 ## Known Issues
 
 You must wait for the loading indicator to finish.

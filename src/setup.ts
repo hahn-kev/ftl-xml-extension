@@ -19,6 +19,8 @@ import {FtlReferenceProvider} from './providers/ftl-reference-provider';
 import {FtlHoverProvider} from './providers/ftl-hover-provider';
 import {FtlCompletionProvider} from './providers/ftl-completion-provider';
 import {FtlCodeActionProvider} from './providers/ftl-code-action-provider';
+import {FtlColorProvider} from './providers/ftl-color-provider';
+import {FtlXmlParser} from './ref-mappers/ref-parser';
 
 export type disposable = { dispose(): any };
 
@@ -28,7 +30,12 @@ export function setup(): { ftlParser: FtlParser; ftlDocumentValidator: FltDocume
     let service = getLanguageService({useDefaultDataProvider: false});
     let documentCache = new DocumentCache(service);
     let {mappers: mappersList, blueprintMapper} = mappers.setup(documentCache);
-    let ftlParser = new FtlParser(documentCache, mappersList);
+    let parsers: FtlXmlParser[] = mappersList.map(value => value.parser);
+    let ftlParser = new FtlParser(documentCache, parsers);
+    let ftlColor = new FtlColorProvider(ftlParser);
+    //kinda ugly, but the ftlParser depends on a list of parsers, and the color provider depends on the parser
+    //I should split them out, but I like the parsing and color providing in the same place
+    parsers.push(ftlColor);
     let ftlDataProvider = new FtlDataProvider(ftlParser.onFileParsed, mappersList);
     let ftlCodeAction = new FtlCodeActionProvider(documentCache);
     service.setDataProviders(false, [ftlDataProvider]);
@@ -88,7 +95,8 @@ export function setup(): { ftlParser: FtlParser; ftlDocumentValidator: FltDocume
             languages.registerHoverProvider(ftlXmlDoc, hoverProvider),
             languages.registerDefinitionProvider(ftlXmlDoc, ftlDefinitionProvider),
             languages.registerReferenceProvider(ftlXmlDoc, ftlReferenceProvider),
-            languages.registerCodeActionsProvider(ftlXmlDoc, ftlCodeAction, metadata)
+            languages.registerCodeActionsProvider(ftlXmlDoc, ftlCodeAction, metadata),
+            languages.registerColorProvider(ftlXmlDoc, ftlColor)
         ]
     };
 }
