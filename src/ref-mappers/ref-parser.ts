@@ -3,10 +3,7 @@ import {FtlFile, FtlFileValue} from '../models/ftl-file';
 import {Position, TextDocument} from 'vscode';
 import {NodeMap} from './ref-mapper';
 import {FtlValue} from '../models/ftl-value';
-
-export interface FtlXmlParser {
-    parseNode(node: Node, file: FtlFile, document: TextDocument): void;
-}
+import {FtlXmlParser} from '../parsers/ftl-xml-parser';
 
 export interface FtlRefParser extends FtlXmlParser {
     getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined;

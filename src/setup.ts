@@ -20,7 +20,8 @@ import {FtlHoverProvider} from './providers/ftl-hover-provider';
 import {FtlCompletionProvider} from './providers/ftl-completion-provider';
 import {FtlCodeActionProvider} from './providers/ftl-code-action-provider';
 import {FtlColorProvider} from './providers/ftl-color-provider';
-import {FtlXmlParser} from './ref-mappers/ref-parser';
+import {FtlXmlParser} from './parsers/ftl-xml-parser';
+import {IncompleteTagParser} from './parsers/incomplete-tag-parser';
 
 export type disposable = { dispose(): any };
 
@@ -30,7 +31,10 @@ export function setup(): { ftlParser: FtlParser; ftlDocumentValidator: FltDocume
     let service = getLanguageService({useDefaultDataProvider: false});
     let documentCache = new DocumentCache(service);
     let {mappers: mappersList, blueprintMapper} = mappers.setup(documentCache);
-    let parsers: FtlXmlParser[] = mappersList.map(value => value.parser);
+    let parsers: FtlXmlParser[] = [
+        ...mappersList.map(value => value.parser),
+        new IncompleteTagParser(),
+    ];
     let ftlParser = new FtlParser(documentCache, parsers);
     let ftlColor = new FtlColorProvider(ftlParser);
     //kinda ugly, but the ftlParser depends on a list of parsers, and the color provider depends on the parser
@@ -44,7 +48,8 @@ export function setup(): { ftlParser: FtlParser; ftlDocumentValidator: FltDocume
     let ftlDocumentValidator = new FltDocumentValidator(documentCache,
         diagnosticCollection,
         blueprintMapper,
-        mappersList);
+        mappersList,
+        ftlParser);
     let ftlReferenceProvider = new FtlReferenceProvider(documentCache, mappersList);
     let hoverProvider = new FtlHoverProvider(documentCache, service);
     let completionItemProvider = new FtlCompletionProvider(documentCache, service, blueprintMapper, mappersList);

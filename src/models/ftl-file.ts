@@ -1,5 +1,5 @@
 import {FtlEvent} from './ftl-event';
-import {Uri} from 'vscode';
+import {Diagnostic, Uri} from 'vscode';
 import {FtlShip} from './ftl-ship';
 import {FtlAutoblueprint} from './ftl-autoblueprint';
 import {FtlText} from './ftl-text';
@@ -17,6 +17,7 @@ import {FtlColor} from './ftl-color';
 
 export class FtlFile {
     sounds = new FtlFileValue<FtlSound>();
+    diagnostics: Diagnostic[] = [];
 
     constructor(public uri: Uri) {
     }

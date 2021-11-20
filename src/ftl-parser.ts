@@ -3,7 +3,7 @@ import {Node} from 'vscode-html-languageservice';
 import {FtlFile} from './models/ftl-file';
 import {DocumentCache} from './document-cache';
 import {Emitter} from 'vscode-languageclient';
-import {FtlXmlParser} from './ref-mappers/ref-parser';
+import {FtlXmlParser} from './parsers/ftl-xml-parser';
 
 export class FtlParser {
     constructor(private cache: DocumentCache, private parsers: FtlXmlParser[]) {

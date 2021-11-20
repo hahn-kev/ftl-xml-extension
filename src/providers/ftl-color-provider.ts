@@ -9,11 +9,11 @@ import {
     TextEdit
 } from 'vscode';
 import {FtlParser} from '../ftl-parser';
-import {FtlXmlParser} from '../ref-mappers/ref-parser';
 import {Node} from 'vscode-html-languageservice';
 import {FtlFile} from '../models/ftl-file';
 import {FtlColor} from '../models/ftl-color';
 import {normalizeAttributeName, toRange} from '../helpers';
+import {FtlXmlParser} from '../parsers/ftl-xml-parser';
 
 export class FtlColorProvider implements DocumentColorProvider, FtlXmlParser {
     constructor(private ftlParser: FtlParser) {

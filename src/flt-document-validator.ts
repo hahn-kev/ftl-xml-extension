@@ -5,20 +5,30 @@ import {toRange} from './helpers';
 import {BlueprintMapper} from './ref-mappers/blueprint-mapper';
 import {RefMapperBase} from './ref-mappers/ref-mapper';
 import {FtlData, XmlTag} from './data/ftl-data';
+import {FtlParser} from './ftl-parser';
+import {FtlFile} from './models/ftl-file';
 
 export class FltDocumentValidator {
 
     constructor(private documentCache: DocumentCache,
                 private diagnosticCollection: DiagnosticCollection,
                 private blueprintMapper: BlueprintMapper,
-                private mappers: RefMapperBase[]) {
+                private mappers: RefMapperBase[],
+                private parser: FtlParser) {
     }
 
-    validateDocument(document: TextDocument) {
-        let htmlDocument = this.documentCache.getHtmlDocument(document);
+    async validateDocument(document: TextDocument) {
+        let files = await this.parser.files;
+        let file = files.get(document.uri.toString());
         let diagnostics: Diagnostic[] = [];
+        if (file) this.validateFile(file, diagnostics);
+        let htmlDocument = this.documentCache.getHtmlDocument(document);
         this.validateNodes(htmlDocument.roots, diagnostics, document);
         this.diagnosticCollection.set(document.uri, diagnostics);
+    }
+
+    validateFile(file: FtlFile, diagnostics: Diagnostic[]) {
+        diagnostics.push(...file.diagnostics);
     }
 
     validateNodes(nodes: Node[], diagnostics: Diagnostic[], document: TextDocument) {
@@ -53,19 +63,7 @@ export class FltDocumentValidator {
         if (refTypeDiagnostic)
             diagnostics.push(refTypeDiagnostic);
 
-        if (node.tag && this.isMissingEnd(node, document)) {
-            let warningStart = node.endTagStart ?? node.start;
-            //when the end and startTagEnd are the same then it's self closing
-            let isSelfClosing = node.end == node.startTagEnd;
-            let extraForOpening = isSelfClosing || !node.endTagStart ? '<'.length : '</'.length;
-            let warningEnd = warningStart + node.tag.length + extraForOpening;
 
-            diagnostics.push(new Diagnostic(
-                toRange(warningStart, warningEnd, document),
-                `Tag '${node.tag}' is not properly closed`,
-                DiagnosticSeverity.Warning
-            ));
-        }
     }
 
     allowedChildrenMap: Map<string, Set<string>> = new Map(FtlData.tags.map((tag: XmlTag) => [tag.name, new Set(tag.tags)]));
