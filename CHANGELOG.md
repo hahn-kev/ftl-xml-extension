@@ -68,3 +68,7 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 ## 0.3.5
 - Add parse command to allow running it manually
 - Add color picker support
+
+## 0.3.6
+- Remove 'min_level' as an attribute from 'choice'
+- fix bug with 'damage', system can be 'room' or 'random'

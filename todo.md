@@ -1,6 +1,5 @@
 ## Going to implement
-- fix bug with damage, system can be 'room' or 'random' that's currently an error
-- check find refs works with multiple root folders
+- check find refs works with multiple root folders. Checked, waiting on response
 - add snippets for animations
 - validate events will show up somewhere, basically it's referenced somewhere, either another event or from a sector beacon map
 - add path complete for animations and other files

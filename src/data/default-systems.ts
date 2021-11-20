@@ -1,4 +1,5 @@
 export const defaultSystems: string[] = [
+    "random",
     "oxygen",
     "teleporter",
     "cloaking",
@@ -15,5 +16,6 @@ export const defaultSystems: string[] = [
     "hacking",
     "battery",
     "mind",
-    "reactor"
+    "reactor",
+    "room"
 ];
