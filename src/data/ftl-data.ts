@@ -183,8 +183,7 @@ export const FtlData: XmlData = {
                 {name: 'lvl'},
                 boolAttr('blue'),
                 {name: 'max_group'},
-                {name: 'max_lvl'},
-                {name: 'min_level'}
+                {name: 'max_lvl'}
             ]
         },
         //event tags
