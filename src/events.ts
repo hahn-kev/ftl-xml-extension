@@ -46,6 +46,9 @@ class eventsMap implements NodeMap {
             }
         }
 
+        if (node.tag == 'triggeredEvent')
+            return getAttrValueForTag(node, 'triggeredEvent', 'event', document, position);
+
         if (node.tag == 'loadEvent') {
             return getNodeTextContent(node, document);
         }
@@ -56,6 +59,8 @@ class eventsMap implements NodeMap {
             && hasAttr(node, 'name', document, position))
             return normalizeAttributeName(node.attributes.name);
         return getNodeTextContent(node, document, 'startEvent')
+            ?? getNodeTextContent(node, document, 'nebulaEvent')
+            ?? getNodeTextContent(node, document, 'jumpEvent')
             ?? getAttrValueForTag(node, 'destroyed', 'load', document, position)
             ?? getAttrValueForTag(node, 'deadCrew', 'load', document, position)
             ?? getAttrValueForTag(node, 'surrender', 'load', document, position)

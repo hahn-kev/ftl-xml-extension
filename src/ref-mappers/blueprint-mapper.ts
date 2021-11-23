@@ -230,6 +230,8 @@ export class BlueprintMapper implements RefMapperBase {
             if (refMapper.isNameValid(refName)) continue;
 
             let defType = this.getRefType(refName);
+            //skip because it'll be a warning from tryGetInvalidRefName
+            if (defType == 'Unknown') continue;
             if (refMapper.typeName === defType) continue;
             diagnostics.push(DiagnosticBuilder.blueprintRefTypeInvalid(node,
                 document,

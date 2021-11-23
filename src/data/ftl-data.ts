@@ -33,7 +33,8 @@ let hyperspaceEventChildren: XmlTag[] = [
     {name: 'unlockCustomShip', attributes: []},
     {name: 'preventQuest', attributes: []},
     {name: 'preventFleet', attributes: []},
-    {name: 'remove', attributes: [{name: 'name'}]}
+    {name: 'remove', attributes: [{name: 'name'}]},
+    {name: 'jumpEvent', attributes: [], contentsValueSet: EventNamesValueSet.name}
 ];
 let eventChildTags: XmlTag[] = [
     // ...allow XML tags of these types to be nested inside:
@@ -351,7 +352,7 @@ export const FtlData: XmlData = {
             ]
         },
         {name: 'store', attributes: []},
-        {name: 'triggeredEvent', attributes: []},
+        {name: 'triggeredEvent', attributes: [{name: 'event', valueSet: EventNamesValueSet.name}]},
         {name: 'hiddenAug', attributes: []},
 
         {name: 'aggressive', attributes: []},
@@ -380,7 +381,9 @@ export const FtlData: XmlData = {
         {name: 'resetFtl', attributes: []},
         {name: 'win', attributes: []},
         {name: 'disableScrapScore', attributes: []},
-        {name: 'eventList', attributes: [], tags: ['event']}
+        {name: 'eventList', attributes: [], tags: ['event']},
+//quest child tags
+        {name: 'nebulaEvent', attributes: [], contentsValueSet: EventNamesValueSet.name},
     ],
     valueSets: [
         {name: 'bool', values: [{name: 'true'}, {name: 'false'}]},
