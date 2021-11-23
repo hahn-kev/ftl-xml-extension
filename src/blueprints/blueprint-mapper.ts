@@ -1,12 +1,11 @@
 import {InvalidRef, RefMapperBase} from '../ref-mappers/ref-mapper';
 import {Node} from 'vscode-html-languageservice';
-import {Diagnostic, Location, Position, TextDocument} from 'vscode';
+import {Location, Position, TextDocument} from 'vscode';
 import {FtlFile} from '../models/ftl-file';
 import {FtlBlueprintList, FtlBlueprintValue} from '../models/ftl-blueprint-list';
 import {FtlValue} from '../models/ftl-value';
 import {addToKey, firstWhere, normalizeAttributeName, toRange} from '../helpers';
 import {BlueprintListTypeAny} from '../data/ftl-data';
-import {DiagnosticBuilder} from '../diagnostic-builder';
 import {BlueprintParser} from './blueprint-parser';
 
 
@@ -106,45 +105,24 @@ export class BlueprintMapper implements RefMapperBase {
 
         //we need to do this after the first iteration of files because we need the defs to be setup already
         for (let file of files) {
-            for (let mapper of this.blueprintMappers) {
-                if (mapper.fileDataSelector)
-                    this.addRefs(mapper.fileDataSelector(file).refs.values());
-            }
-        }
-    }
-
-    private addRefs(valuesList: IterableIterator<FtlValue[]>) {
-        for (let values of valuesList) {
-            for (let value of values) {
-                if (this.defs.has(value.name)) {
-                    addToKey(this.refs, value.name, value);
+            for (let {ref: listRef} of this.listRefs(file)) {
+                if (this.defs.has(listRef.name)) {
+                    addToKey(this.refs, listRef.name, listRef);
                 }
             }
         }
     }
 
-    validateRefType(node: Node, document: TextDocument, diagnostics: Diagnostic[]) {
-        //skip name's in list because they're done in validateListType
-        if (node.tag == 'name') return;
-
-        let refs = this.parser.getRefNameAndMapper(node, document);
-        if (!refs) return;
-        for (let ref of refs) {
-            let refName = ref.name;
-            let refMapper = ref.mapper ?? this;
-
-            //fixes case for RANDOM which is valid for multiple names
-            if (refMapper.isNameValid(refName)) continue;
-
-            let defType = this.getRefType(refName);
-            //skip because it'll be a warning from tryGetInvalidRefName
-            if (defType == 'Unknown') continue;
-            if (refMapper.typeName === defType) continue;
-            diagnostics.push(DiagnosticBuilder.blueprintRefTypeInvalid(node,
-                document,
-                defType,
-                refName,
-                refMapper.typeName));
+    * listRefs(file: FtlFile): IterableIterator<{ ref: FtlValue, mapper: RefMapperBase }> {
+        for (let mapper of this.blueprintMappers) {
+            if (!mapper.fileDataSelector) {
+                continue;
+            }
+            for (let refs of mapper.fileDataSelector(file).refs.values()) {
+                for (let ref of refs) {
+                    yield {ref, mapper};
+                }
+            }
         }
     }
 
@@ -160,7 +138,6 @@ export class BlueprintMapper implements RefMapperBase {
             }
         }
     }
-
 
 
     getListTypeInfoFromNode(node: Node,
@@ -191,6 +168,7 @@ export class BlueprintMapper implements RefMapperBase {
         }
         return this.getTypeInfo(typeMapper);
     }
+
     getListTypeFromBlueprint(blueprintList: FtlBlueprintList) {
         return this.getListTypeInfoFromBlueprint(blueprintList)?.listTypeName;
     }

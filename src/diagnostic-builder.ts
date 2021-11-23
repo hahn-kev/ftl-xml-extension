@@ -39,15 +39,14 @@ export class DiagnosticBuilder {
         );
     }
 
-    static blueprintRefTypeInvalid(node: Node,
-                                   document: TextDocument,
+    static blueprintRefTypeInvalid(range: Range,
                                    defType: string,
                                    refName: string,
                                    refType: string) {
         if (defType == BlueprintListTypeAny) {
             defType = 'Blueprint List';
         }
-        return this.diag(toRange(node.start, node.startTagEnd ?? node.end, document),
+        return this.diag(range,
             `${refType} can't reference a ${defType}, which is the type of blueprint: '${refName}'`,
             DiagnosticSeverity.Warning,
             FtlErrorCode.refTypeInvalid);

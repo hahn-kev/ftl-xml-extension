@@ -11,10 +11,11 @@ export class BlueprintValidator implements Validator {
     }
 
     validateFile(file: FtlFile, document: TextDocument, diagnostics: Diagnostic[]): void {
-        this.validateListRefLoopFtlFile(file, diagnostics);
+        this.validateLists(file, diagnostics);
+        this.validateRefTypes(file, diagnostics);
     }
 
-    validateListRefLoopFtlFile(file: FtlFile, diagnostics: Diagnostic[]) {
+    validateLists(file: FtlFile, diagnostics: Diagnostic[]) {
         for (let def of file.blueprintList.defs) {
             this.validateList(def, diagnostics);
         }
@@ -47,6 +48,24 @@ export class BlueprintValidator implements Validator {
             diagnostics.push(...blueprintValues.map(value =>
                 DiagnosticBuilder.listTypeMisMatch(value.name, type, listTypeName, value.range)));
         });
+    }
 
+    validateRefTypes(file: FtlFile, diagnostics: Diagnostic[]) {
+        for (let {ref, mapper} of this.mapper.listRefs(file)) {
+            let refName = ref.name;
+            let refMapper = mapper;
+
+            //fixes case for RANDOM which is valid for multiple names
+            if (refMapper.isNameValid(refName)) continue;
+
+            let defType = this.mapper.getRefType(refName);
+            //skip because it'll be a warning from tryGetInvalidRefName
+            if (defType == 'Unknown') continue;
+            if (refMapper.typeName === defType) continue;
+            diagnostics.push(DiagnosticBuilder.blueprintRefTypeInvalid(ref.range,
+                defType,
+                refName,
+                refMapper.typeName));
+        }
     }
 }

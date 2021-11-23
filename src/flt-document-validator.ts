@@ -1,7 +1,6 @@
 import {DocumentCache} from './document-cache';
 import {Diagnostic, DiagnosticCollection, TextDocument, Uri, workspace} from 'vscode';
 import {Node} from 'vscode-html-languageservice';
-import {BlueprintMapper} from './blueprints/blueprint-mapper';
 import {RefMapperBase} from './ref-mappers/ref-mapper';
 import {FtlData, XmlTag} from './data/ftl-data';
 import {FtlParser} from './ftl-parser';
@@ -13,7 +12,6 @@ export class FltDocumentValidator {
 
     constructor(private documentCache: DocumentCache,
                 private diagnosticCollection: DiagnosticCollection,
-                private blueprintMapper: BlueprintMapper,
                 private mappers: RefMapperBase[],
                 private parser: FtlParser,
                 private validators: Validator[]) {
@@ -64,7 +62,6 @@ export class FltDocumentValidator {
         }
 
         // this.validateAllowedChildren(node, document, diagnostics);
-        this.blueprintMapper.validateRefType(node, document, diagnostics);
     }
 
     allowedChildrenMap: Map<string, Set<string>> = new Map(FtlData.tags.map((tag: XmlTag) => [tag.name, new Set(tag.tags)]));

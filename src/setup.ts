@@ -52,7 +52,6 @@ export function setup(): { ftlParser: FtlParser; ftlDocumentValidator: FltDocume
     let ftlDefinitionProvider = new FtlDefinitionProvider(documentCache, mappersList);
     let ftlDocumentValidator = new FltDocumentValidator(documentCache,
         diagnosticCollection,
-        blueprintMapper,
         mappersList,
         ftlParser,
         [new EventUsedValidator(eventsMapper, shipsMapper), new BlueprintValidator(blueprintMapper)]);
