@@ -57,21 +57,12 @@ export namespace mappers {
                 },
                 getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
                     return events.getEventRefName(node, document, position)
-                        ?? getAttrValueForTag(node,
-                            'destroyed',
-                            'load',
-                            document,
-                            position)
-                        ?? getAttrValueForTag(node,
-                            'deadCrew',
-                            'load',
-                            document,
-                            position)
-                        ?? getAttrValueForTag(node,
-                            'surrender',
-                            'load',
-                            document,
-                            position);
+                        ?? getNodeTextContent(node, document, 'startEvent')
+                        ?? getAttrValueForTag(node, 'destroyed', 'load', document, position)
+                        ?? getAttrValueForTag(node, 'deadCrew', 'load', document, position)
+                        ?? getAttrValueForTag(node, 'surrender', 'load', document, position)
+                        ?? getAttrValueForTag(node, 'escape', 'load', document, position)
+                        ?? getAttrValueForTag(node, 'quest', 'event', document, position);
                 }
             }
         ),
@@ -287,7 +278,7 @@ export namespace mappers {
         'Text',
         defaultText);
 
-    const validSoundFileNames = ['dlcSounds.xml','dlcSounds.xml.append', 'sounds.xml', 'sounds.xml.append'];
+    const validSoundFileNames = ['dlcSounds.xml', 'dlcSounds.xml.append', 'sounds.xml', 'sounds.xml.append'];
     export const soundMapper = new RefMapper(
         new RefParser(file => file.sounds,
             FtlSound,

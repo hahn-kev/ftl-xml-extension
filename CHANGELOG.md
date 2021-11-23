@@ -73,3 +73,4 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 - Remove 'min_level' as an attribute from 'choice'
 - fix bug with 'damage', system can be 'room' or 'random'
 - show info when an event is not used anywhere
+- add escape and quest as event refs

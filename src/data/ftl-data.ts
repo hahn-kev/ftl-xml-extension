@@ -5,7 +5,8 @@ import {
     CrewNames,
     DroneNames,
     EventNamesValueSet,
-    ShipNames, SoundNames,
+    ShipNames,
+    SoundNames,
     SystemNames,
     TextIdNames,
     WeaponNames
@@ -56,7 +57,7 @@ let eventChildTags: XmlTag[] = [
     },
     {name: 'reveal_map', attributes: []},
     {name: 'modifyPursuit', attributes: []},
-    {name: 'quest', attributes: [{name: 'event'}]},
+    {name: 'quest', attributes: [{name: 'event', valueSet: EventNamesValueSet.name}]},
     {name: 'unlockShip', attributes: []},
     {name: 'item_modify', attributes: [], tags: ['item']},
     {name: 'secretSector', attributes: []},
@@ -153,6 +154,14 @@ let weaponTags: XmlTag[] = [
     {name: 'stun', attributes: []},
 ];
 let weaponTagNames = [...weaponTags.map(t => t.name), 'title'];
+
+let sectorDescriptionTags: XmlTag[] = [
+    {name: 'startEvent', attributes: [], contentsValueSet: EventNamesValueSet.name},
+    {name: 'rarityList', attributes: []},
+    {name: 'trackList', attributes: []},
+    {name: 'nameList', attributes: []},
+];
+
 export const BlueprintListTypeAny = 'any';
 export const FtlData: XmlData = {
     version: 1.1,
@@ -278,6 +287,16 @@ export const FtlData: XmlData = {
             tags: ['weaponBlueprint']
         },
         {name: 'augmentBlueprint', attributes: [{name: 'name'}]},
+        {
+            name: 'sectorDescription',
+            attributes: [
+                {name: 'name'},
+                {name: 'minSector'},
+                boolAttr('unique'),
+            ],
+            tags: sectorDescriptionTags.map(t => t.name)
+        },
+        ...sectorDescriptionTags,
         {
             name: 'damage',
             attributes: [{name: 'amount'}, {name: 'system', valueSet: SystemNames.name}, {name: 'effect'}]
