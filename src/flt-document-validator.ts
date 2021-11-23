@@ -1,5 +1,5 @@
 import {DocumentCache} from './document-cache';
-import {Diagnostic, DiagnosticCollection, DiagnosticSeverity, TextDocument} from 'vscode';
+import {Diagnostic, DiagnosticCollection, TextDocument, Uri, workspace} from 'vscode';
 import {Node} from 'vscode-html-languageservice';
 import {toRange} from './helpers';
 import {BlueprintMapper} from './ref-mappers/blueprint-mapper';
@@ -18,6 +18,17 @@ export class FltDocumentValidator {
                 private mappers: RefMapperBase[],
                 private parser: FtlParser,
                 private validators: Validator[]) {
+    }
+
+    async validateFiles(files: Uri[]) {
+        for (let fileUri of files) {
+            await this.validateDocument(await workspace.openTextDocument(fileUri));
+        }
+    }
+
+    async validateFtlFiles(files: FtlFile[]) {
+        //todo convert once we don't need to parse the file
+        await this.validateFiles(files.map(f => f.uri));
     }
 
     async validateDocument(document: TextDocument) {
@@ -54,14 +65,13 @@ export class FltDocumentValidator {
         }
 
         // this.validateAllowedChildren(node, document, diagnostics);
-        this.validateRequiredChildren(node, document, diagnostics);
         let listRefLoop = this.blueprintMapper.validateListRefLoop(node, document);
         if (listRefLoop) {
             diagnostics.push(listRefLoop);
         } else {
             diagnostics.push(...this.blueprintMapper.validateListType(node, document));
         }
-       this.blueprintMapper.validateRefType(node, document, diagnostics);
+        this.blueprintMapper.validateRefType(node, document, diagnostics);
     }
 
     allowedChildrenMap: Map<string, Set<string>> = new Map(FtlData.tags.map((tag: XmlTag) => [tag.name, new Set(tag.tags)]));
@@ -75,25 +85,5 @@ export class FltDocumentValidator {
                 return DiagnosticBuilder.childTagNotAllowed(node, child, document);
             });
         diagnostics.push(...errors);
-    }
-
-    requiredChildrenMap: Map<string, XmlTag> = new Map(FtlData.tags
-        .filter((tag: XmlTag): tag is XmlTag & { requiredTags: string[] } => !!tag.requiredTags)
-        .map(tag => [tag.name, tag]));
-
-    private validateRequiredChildren(node: Node, document: TextDocument, diagnostics: Diagnostic[]) {
-        if (!node.tag) return;
-        const xmlTag = this.requiredChildrenMap.get(node.tag);
-
-        let requiredChildren = xmlTag?.requiredTagsByParent?.[node.parent?.tag ?? ''] ?? xmlTag?.requiredTags;
-        if (requiredChildren === undefined || requiredChildren.length < 1) return;
-        let childNames = new Set(node.children.map(c => c.tag).filter((t: string | undefined): t is string => !!t));
-        let errors = requiredChildren.filter(requiredTagName => !childNames.has(requiredTagName))
-            .map(requiredTagName => DiagnosticBuilder.missingRequiredChild(node, requiredTagName, document));
-        diagnostics.push(...errors);
-    }
-
-    isMissingEnd(node: Node, document: TextDocument) {
-        return document.getText(toRange(node.end - 1, node.end, document)) !== '>';
     }
 }

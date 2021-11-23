@@ -24,6 +24,7 @@ import {IncompleteTagParser} from './parsers/incomplete-tag-parser';
 import {EventUsedValidator} from './validators/event-used-validator';
 import eventsMapper = mappers.eventsMapper;
 import shipsMapper = mappers.shipsMapper;
+import {RequiredChildrenParser} from './parsers/required-children-parser';
 
 export type disposable = { dispose(): any };
 
@@ -36,6 +37,7 @@ export function setup(): { ftlParser: FtlParser; ftlDocumentValidator: FltDocume
     let parsers: FtlXmlParser[] = [
         ...mappersList.map(value => value.parser),
         new IncompleteTagParser(),
+        new RequiredChildrenParser()
     ];
     let ftlParser = new FtlParser(documentCache, parsers);
     let ftlColor = new FtlColorProvider(ftlParser);
@@ -78,9 +80,7 @@ export function setup(): { ftlParser: FtlParser; ftlDocumentValidator: FltDocume
                 let pattern = new RelativePattern(workspaceFolder, '**/*.{xml,xml.append}');
                 let files = await workspace.findFiles(pattern);
                 await ftlParser.parseFiles(files);
-                for (let fileUri of files) {
-                    await ftlDocumentValidator.validateDocument(await workspace.openTextDocument(fileUri));
-                }
+                await ftlDocumentValidator.validateFiles(files);
             }
         }
     });
@@ -107,7 +107,5 @@ export function setup(): { ftlParser: FtlParser; ftlDocumentValidator: FltDocume
 
 export async function parseWorkspace(ftlParser: FtlParser, ftlDocumentValidator: FltDocumentValidator) {
     let files = await ftlParser.parseCurrentWorkspace();
-    for (let ftlFile of files.values()) {
-        ftlDocumentValidator.validateDocument(await workspace.openTextDocument(ftlFile.uri));
-    }
+    await ftlDocumentValidator.validateFtlFiles(Array.from(files.values()));
 }
