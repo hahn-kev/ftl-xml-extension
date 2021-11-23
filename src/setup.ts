@@ -24,6 +24,7 @@ import {FtlXmlParser} from './parsers/ftl-xml-parser';
 import {IncompleteTagParser} from './parsers/incomplete-tag-parser';
 import {EventUsedValidator} from './validators/event-used-validator';
 import eventsMapper = mappers.eventsMapper;
+import shipsMapper = mappers.shipsMapper;
 
 export type disposable = { dispose(): any };
 
@@ -52,7 +53,7 @@ export function setup(): { ftlParser: FtlParser; ftlDocumentValidator: FltDocume
         blueprintMapper,
         mappersList,
         ftlParser,
-        [new EventUsedValidator(eventsMapper)]);
+        [new EventUsedValidator(eventsMapper, shipsMapper)]);
     let ftlReferenceProvider = new FtlReferenceProvider(documentCache, mappersList);
     let hoverProvider = new FtlHoverProvider(documentCache, service);
     let completionItemProvider = new FtlCompletionProvider(documentCache, service, blueprintMapper, mappersList);
