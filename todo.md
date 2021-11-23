@@ -1,7 +1,5 @@
 ## Going to implement
-- check find refs works with multiple root folders. Checked, waiting on response
 - add snippets for animations
-- validate events will show up somewhere, basically it's referenced somewhere, either another event or from a sector beacon map
 - add path complete for animations and other files
 - add sound support
 - format support

@@ -2,6 +2,9 @@
     <event name="event-1">
         <bla/>
     </event>
+    <event name="event-2">
+        <bla/>
+    </event>
 
     <eventList name="list-1">
 

@@ -7,6 +7,7 @@ import {RefMapperBase} from './ref-mappers/ref-mapper';
 import {FtlData, XmlTag} from './data/ftl-data';
 import {FtlParser} from './ftl-parser';
 import {FtlFile} from './models/ftl-file';
+import {Validator} from './validators/validator';
 
 export class FltDocumentValidator {
 
@@ -14,21 +15,25 @@ export class FltDocumentValidator {
                 private diagnosticCollection: DiagnosticCollection,
                 private blueprintMapper: BlueprintMapper,
                 private mappers: RefMapperBase[],
-                private parser: FtlParser) {
+                private parser: FtlParser,
+                private validators: Validator[]) {
     }
 
     async validateDocument(document: TextDocument) {
         let files = await this.parser.files;
         let file = files.get(document.uri.toString());
         let diagnostics: Diagnostic[] = [];
-        if (file) this.validateFile(file, diagnostics);
+        if (file) this.validateFile(file, document, diagnostics);
         let htmlDocument = this.documentCache.getHtmlDocument(document);
         this.validateNodes(htmlDocument.roots, diagnostics, document);
         this.diagnosticCollection.set(document.uri, diagnostics);
     }
 
-    validateFile(file: FtlFile, diagnostics: Diagnostic[]) {
+    validateFile(file: FtlFile, document: TextDocument, diagnostics: Diagnostic[]) {
         diagnostics.push(...file.diagnostics);
+        for (let validator of this.validators) {
+            validator.validateFile(file, document, diagnostics);
+        }
     }
 
     validateNodes(nodes: Node[], diagnostics: Diagnostic[], document: TextDocument) {

@@ -22,6 +22,8 @@ import {FtlCodeActionProvider} from './providers/ftl-code-action-provider';
 import {FtlColorProvider} from './providers/ftl-color-provider';
 import {FtlXmlParser} from './parsers/ftl-xml-parser';
 import {IncompleteTagParser} from './parsers/incomplete-tag-parser';
+import {EventUsedValidator} from './validators/event-used-validator';
+import eventsMapper = mappers.eventsMapper;
 
 export type disposable = { dispose(): any };
 
@@ -49,7 +51,8 @@ export function setup(): { ftlParser: FtlParser; ftlDocumentValidator: FltDocume
         diagnosticCollection,
         blueprintMapper,
         mappersList,
-        ftlParser);
+        ftlParser,
+        [new EventUsedValidator(eventsMapper)]);
     let ftlReferenceProvider = new FtlReferenceProvider(documentCache, mappersList);
     let hoverProvider = new FtlHoverProvider(documentCache, service);
     let completionItemProvider = new FtlCompletionProvider(documentCache, service, blueprintMapper, mappersList);

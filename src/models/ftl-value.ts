@@ -1,22 +1,32 @@
 import {FtlFile} from './ftl-file';
 import {Node} from 'vscode-html-languageservice';
-import {Location, Position, TextDocument} from 'vscode';
+import {Location, Position, Range, TextDocument} from 'vscode';
 
 export abstract class FtlValue {
     constructor(name: string, file: FtlFile, node: Node, document: TextDocument) {
         this.file = file;
         this.name = name;
-        this.offset = node.start;
-        this.position = document.positionAt(node.start);
+        this.startOffset = node.start;
+        this.startTagEndOffset = node.startTagEnd;
+        this.endOffset = node.end;
+        this.endTagStartOffset = node.endTagStart;
+        this.positionStart = document.positionAt(node.start);
+        this.positionEnd = document.positionAt(node.end);
+        this.range = new Range(this.positionStart, document.positionAt(node.endTagStart ?? node.end));
     }
 
     public abstract readonly kind: string;
-    public file: FtlFile
+    public file: FtlFile;
     public name: string;
-    public offset: number;
-    public position: Position;
+    public startOffset: number;
+    public startTagEndOffset: number | undefined;
+    public endOffset: number;
+    public endTagStartOffset: number | undefined;
+    public positionStart: Position;
+    public positionEnd: Position;
+    public range: Range;
 
     toLocation() {
-        return new Location(this.file.uri, this.position);
+        return new Location(this.file.uri, this.range);
     }
 }
