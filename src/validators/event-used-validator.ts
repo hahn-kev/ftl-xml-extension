@@ -1,9 +1,10 @@
 import {Validator} from './validator';
 import {FtlFile} from '../models/ftl-file';
-import {Diagnostic, DiagnosticSeverity, TextDocument} from 'vscode';
+import {Diagnostic, TextDocument} from 'vscode';
 import {RefMapper} from '../ref-mappers/ref-mapper';
 import {FtlEvent} from '../models/ftl-event';
 import {FtlShip} from '../models/ftl-ship';
+import {DiagnosticBuilder} from '../diagnostic-builder';
 
 export class EventUsedValidator implements Validator {
     constructor(private eventRefMapper: RefMapper<FtlEvent>, private shipMapper: RefMapper<FtlShip>) {
@@ -14,18 +15,11 @@ export class EventUsedValidator implements Validator {
         let unusedEvents = file.event.defs.filter(event => !this.isEventUsed(event));
 
         if (unusedEvents.length > 0) {
-            diagnostics.push(...unusedEvents.map(event => new Diagnostic(
-                event.range,
-                `Event: ${event.name} is not used anywhere, is this a bug?`,
-                DiagnosticSeverity.Information)));
+            diagnostics.push(...unusedEvents.map(event => DiagnosticBuilder.refUnused('Event', event.name, event.range)));
         }
         let unusedShips = file.ship.defs.filter(ship => !this.isShipUsed(ship));
         if (unusedShips.length > 0) {
-            diagnostics.push(...unusedShips.map(ship => new Diagnostic(
-                ship.range,
-                `Ship: ${ship.name} is not used anywhere, is this a bug?`,
-                DiagnosticSeverity.Information
-            )));
+            diagnostics.push(...unusedShips.map(ship => DiagnosticBuilder.refUnused('Ship', ship.name, ship.range)));
         }
     }
 

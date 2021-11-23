@@ -8,6 +8,7 @@ import {FtlData, XmlTag} from './data/ftl-data';
 import {FtlParser} from './ftl-parser';
 import {FtlFile} from './models/ftl-file';
 import {Validator} from './validators/validator';
+import {DiagnosticBuilder} from './diagnostic-builder';
 
 export class FltDocumentValidator {
 
@@ -48,11 +49,7 @@ export class FltDocumentValidator {
         for (let mapper of this.mappers) {
             let invalidRef = mapper.tryGetInvalidRefName(node, document);
             if (invalidRef) {
-                diagnostics.push(new Diagnostic(
-                    invalidRef.range,
-                    `Invalid ${invalidRef.typeName} name: '${invalidRef.name}'`,
-                    DiagnosticSeverity.Warning
-                ));
+                diagnostics.push(DiagnosticBuilder.invalidRefName(invalidRef));
             }
         }
 
@@ -60,7 +57,7 @@ export class FltDocumentValidator {
         this.validateRequiredChildren(node, document, diagnostics);
         let listRefLoop = this.blueprintMapper.validateListRefLoop(node, document);
         if (listRefLoop) {
-            diagnostics.push(listRefLoop)
+            diagnostics.push(listRefLoop);
         } else {
             diagnostics.push(...this.blueprintMapper.validateListType(node, document));
         }
@@ -79,17 +76,14 @@ export class FltDocumentValidator {
         if (allowedChildren === undefined) return;
         let errors = node.children.filter(child => child.tag && !allowedChildren.has(child.tag))
             .map(child => {
-                let range = toRange(child.start, child.startTagEnd ?? child.end, document);
-                return new Diagnostic(range,
-                                      `Tag: ${child.tag} is not allowed in a ${node.tag}`,
-                                      DiagnosticSeverity.Warning);
+                return DiagnosticBuilder.childTagNotAllowed(node, child, document);
             });
         diagnostics.push(...errors);
     }
 
     requiredChildrenMap: Map<string, XmlTag> = new Map(FtlData.tags
-                                                             .filter((tag: XmlTag): tag is XmlTag & { requiredTags: string[] } => !!tag.requiredTags)
-                                                             .map(tag => [tag.name, tag]));
+        .filter((tag: XmlTag): tag is XmlTag & { requiredTags: string[] } => !!tag.requiredTags)
+        .map(tag => [tag.name, tag]));
 
     private validateRequiredChildren(node: Node, document: TextDocument, diagnostics: Diagnostic[]) {
         if (!node.tag) return;
@@ -99,12 +93,7 @@ export class FltDocumentValidator {
         if (requiredChildren === undefined || requiredChildren.length < 1) return;
         let childNames = new Set(node.children.map(c => c.tag).filter((t: string | undefined): t is string => !!t));
         let errors = requiredChildren.filter(requiredTagName => !childNames.has(requiredTagName))
-            .map(requiredTagName => {
-                let range = toRange(node.start, node.startTagEnd ?? node.end, document);
-                return new Diagnostic(range,
-                                      `Tag: ${node.tag} is missing the required child: ${requiredTagName}`,
-                                      DiagnosticSeverity.Warning);
-            });
+            .map(requiredTagName => DiagnosticBuilder.missingRequiredChild(node, requiredTagName, document));
         diagnostics.push(...errors);
     }
 

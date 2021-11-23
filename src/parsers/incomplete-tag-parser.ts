@@ -1,8 +1,9 @@
 import {FtlXmlParser} from './ftl-xml-parser';
 import {Node} from 'vscode-html-languageservice';
 import {FtlFile} from '../models/ftl-file';
-import {Diagnostic, DiagnosticSeverity, TextDocument} from 'vscode';
+import {TextDocument} from 'vscode';
 import {toRange} from '../helpers';
+import {DiagnosticBuilder} from '../diagnostic-builder';
 
 export class IncompleteTagParser implements FtlXmlParser {
     parseNode(node: Node, file: FtlFile, document: TextDocument): void {
@@ -13,11 +14,8 @@ export class IncompleteTagParser implements FtlXmlParser {
             let extraForOpening = isSelfClosing || !node.endTagStart ? '<'.length : '</'.length;
             let warningEnd = warningStart + node.tag.length + extraForOpening;
 
-            file.diagnostics.push(new Diagnostic(
-                toRange(warningStart, warningEnd, document),
-                `Tag '${node.tag}' is not properly closed`,
-                DiagnosticSeverity.Error
-            ));
+            file.diagnostics.push(DiagnosticBuilder.tagNotClosed(toRange(warningStart, warningEnd, document),
+                node.tag));
         }
     }
 
