@@ -17,7 +17,6 @@ import {
 import {convertDocumentation, convertRange, toTextDocumentHtml} from '../helpers';
 import {DocumentCache} from '../document-cache';
 import {BlueprintMapper} from '../blueprints/blueprint-mapper';
-import {RefMapperBase} from '../ref-mappers/ref-mapper';
 import {FtlData, XmlTag} from '../data/ftl-data';
 import {ShipNames} from '../data/autocomplete-value-sets';
 
@@ -73,7 +72,7 @@ export class FtlCompletionProvider implements CompletionItemProvider {
         let results = this.tryCompleteNodContents(node, offset);
         if (results) return results;
 
-        if (node.parent && this.blueprintMapper.parser.isListChild(node) && this.shouldCompleteForNodeContents(node, offset)) {
+        if (node.parent && this.blueprintMapper.parser.isListChild(node) && FtlCompletionProvider.shouldCompleteForNodeContents(node, offset)) {
             let blueprintListNode = node.parent;
             let listName = this.blueprintMapper.parser.getNameDef(blueprintListNode, document);
             if (!listName) return;
@@ -90,7 +89,7 @@ export class FtlCompletionProvider implements CompletionItemProvider {
     }
 
     private tryCompleteNodContents(node: Node, offset: number): CompletionItem[] | undefined {
-        if (!node.tag || !this.shouldCompleteForNodeContents(node, offset)) return;
+        if (!node.tag || !FtlCompletionProvider.shouldCompleteForNodeContents(node, offset)) return;
         let valueSet = this.completeContentMap.get(node.tag);
         if (!valueSet && node.parent?.tag) valueSet = this.completeContentMap.get(`${node.parent.tag}>${node.tag}`);
         if (!valueSet) return;
@@ -108,7 +107,7 @@ export class FtlCompletionProvider implements CompletionItemProvider {
         });
     }
 
-    private shouldCompleteForNodeContents(node: Node, offset: number) {
+    private static shouldCompleteForNodeContents(node: Node, offset: number) {
         let startTagEnd = node.startTagEnd ?? node.start;
         let endTagStart = node.endTagStart ?? -1;
 

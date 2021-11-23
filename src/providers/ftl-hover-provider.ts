@@ -5,7 +5,6 @@ import {
     MarkdownString,
     Position,
     ProviderResult,
-    Range,
     TextDocument
 } from 'vscode';
 import {DocumentCache} from '../document-cache';
