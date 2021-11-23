@@ -12,7 +12,8 @@ export abstract class FtlValue {
         this.endTagStartOffset = node.endTagStart;
         this.positionStart = document.positionAt(node.start);
         this.positionEnd = document.positionAt(node.end);
-        this.range = new Range(this.positionStart, document.positionAt(node.startTagEnd ?? node.end));
+        this.range = new Range(this.positionStart,
+            document.positionAt(node.children.length > 0 ? node.startTagEnd ?? node.end : node.end));
     }
 
     public abstract readonly kind: string;

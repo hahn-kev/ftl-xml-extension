@@ -1,4 +1,6 @@
-import {ExtensionContext, ExtensionMode,} from 'vscode';
+// noinspection JSUnusedLocalSymbols
+
+import {commands, ExtensionContext, ExtensionMode,} from 'vscode';
 import {
     AugmentNames,
     AutoblueprintNames,
@@ -20,6 +22,10 @@ export function activate(context: ExtensionContext) {
 
     if (context.extensionMode !== ExtensionMode.Test) {
         console.log('FTL Extension activated');
+        commands.registerCommand('ftl-xml.parse-workspace', async () => {
+            if (!ftlParser.isParsing)
+                await parseWorkspace(ftlParser, ftlDocumentValidator);
+        });
         parseWorkspace(ftlParser, ftlDocumentValidator).then(() => {
             let wantToUpdateDefaults = context.extensionMode == ExtensionMode.Development;
             if (wantToUpdateDefaults) {
