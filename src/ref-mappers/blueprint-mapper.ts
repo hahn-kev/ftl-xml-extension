@@ -16,6 +16,8 @@ import {BlueprintListTypeAny} from '../data/ftl-data';
 import {DiagnosticBuilder} from '../diagnostic-builder';
 import {FtlXmlParser} from '../parsers/ftl-xml-parser';
 
+type RefContext = { name: string, mapper?: RefMapperBase };
+
 class BlueprintParser implements FtlXmlParser {
     constructor(private blueprintMappers: RefMapperBase[]) {
     }
@@ -70,22 +72,33 @@ class BlueprintParser implements FtlXmlParser {
         }
     }
 
-    getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-        let result = this.getRefNameAndMapper(node, document, position);
-        return result?.name;
+    getRefName(node: Node, document: TextDocument, position: Position): string | undefined
+    getRefName(node: Node, document: TextDocument): string[] | undefined
+    getRefName(node: Node, document: TextDocument, position?: Position): string | string[] | undefined {
+        if (position) return this.getRefNameAndMapper(node, document, position)?.name;
+        return this.getRefNameAndMapper(node, document)?.map(c => c.name);
     }
 
     /**
      * returns undefined for mapper if it's mapped by the blueprint mapper
-    */
+     */
+    getRefNameAndMapper(node: Node, document: TextDocument, position: Position): RefContext | undefined
+    getRefNameAndMapper(node: Node, document: TextDocument): RefContext[] | undefined
     getRefNameAndMapper(node: Node,
                         document: TextDocument,
-                        position?: Position): { name: string, mapper?: RefMapperBase } | undefined {
+                        position?: Position): RefContext | RefContext[] | undefined {
         let refName = this.getNameNodeText(node, document);
+        if (refName && !position) return [{name: refName}];
         if (refName) return {name: refName};
         for (let blueprintMapper of this.blueprintMappers) {
-            let refName = blueprintMapper.parser.getRefName(node, document, position);
-            if (refName) return {name: refName, mapper: blueprintMapper};
+            let refName = position ? blueprintMapper.parser.getRefName(node, document, position)
+                : blueprintMapper.parser.getRefName(node, document);
+            if (!refName) continue;
+            if (typeof refName == 'string') {
+                if (position) return {name: refName, mapper: blueprintMapper};
+                refName = [refName];
+            }
+            return refName.map((rn: string) => ({name: rn, mapper: blueprintMapper}));
         }
     }
 }
@@ -135,25 +148,28 @@ export class BlueprintMapper implements RefMapperBase {
         return results.map(value => value.toLocation());
     }
 
-    tryGetInvalidRefName(node: Node, document: TextDocument): InvalidRef | undefined {
+    tryGetInvalidRefName(node: Node, document: TextDocument): InvalidRef[] | undefined {
         const refName = this.parser.getNameNodeText(node, document);
         if (!refName) {
             for (let blueprintMapper of this.blueprintMappers) {
-                let refName = blueprintMapper.parser.getRefName(node, document);
-                if (!refName) continue;
+                let refNames = blueprintMapper.parser.getRefName(node, document);
+                if (!refNames) continue;
+                if (typeof refNames === 'string') {
+                    refNames = [refNames];
+                }
 
-                if (this.defs.has(refName)) return;
+                if (!refNames.some(refName => !this.defs.has(refName))) return;
                 return blueprintMapper.tryGetInvalidRefName(node, document);
             }
             return;
         }
 
         if (!this.isNameValid(refName))
-            return {
+            return [{
                 name: refName,
                 typeName: this.typeName,
                 range: toRange(node.start, node.end, document)
-            };
+            }];
     }
 
     isNameValid(name: string): boolean {
@@ -200,22 +216,27 @@ export class BlueprintMapper implements RefMapperBase {
         }
     }
 
-    validateRefType(node: Node, document: TextDocument): Diagnostic | undefined {
+    validateRefType(node: Node, document: TextDocument, diagnostics: Diagnostic[]) {
         //skip name's in list because they're done in validateListType
         if (node.tag == 'name') return;
 
-        let ref = this.parser.getRefNameAndMapper(node, document);
-        if (!ref) return;
-        let refName = ref.name;
-        let refMapper = ref.mapper ?? this;
+        let refs = this.parser.getRefNameAndMapper(node, document);
+        if (!refs) return;
+        for (let ref of refs) {
+            let refName = ref.name;
+            let refMapper = ref.mapper ?? this;
 
-        //fixes case for RANDOM which is valid for multiple names
-        if (refMapper.isNameValid(refName)) return;
+            //fixes case for RANDOM which is valid for multiple names
+            if (refMapper.isNameValid(refName)) continue;
 
-        let defType = this.getRefType(refName);
-        if (refMapper.typeName === defType) return;
-        return DiagnosticBuilder.blueprintRefTypeInvalid(node, document, defType, refName, refMapper.typeName);
-
+            let defType = this.getRefType(refName);
+            if (refMapper.typeName === defType) continue;
+            diagnostics.push(DiagnosticBuilder.blueprintRefTypeInvalid(node,
+                document,
+                defType,
+                refName,
+                refMapper.typeName));
+        }
     }
 
     validateListRefLoop(node: Node, document: TextDocument): Diagnostic | undefined {

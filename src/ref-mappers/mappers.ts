@@ -48,24 +48,7 @@ import {defaultSounds} from '../data/default-sounds';
 
 export namespace mappers {
 
-    export const eventsMapper = new RefMapper(new RefParser(
-            file => file.event,
-            FtlEvent,
-            {
-                getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-                    return events.getEventNameDef(node, document, position);
-                },
-                getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-                    return events.getEventRefName(node, document, position)
-                        ?? getNodeTextContent(node, document, 'startEvent')
-                        ?? getAttrValueForTag(node, 'destroyed', 'load', document, position)
-                        ?? getAttrValueForTag(node, 'deadCrew', 'load', document, position)
-                        ?? getAttrValueForTag(node, 'surrender', 'load', document, position)
-                        ?? getAttrValueForTag(node, 'escape', 'load', document, position)
-                        ?? getAttrValueForTag(node, 'quest', 'event', document, position);
-                }
-            }
-        ),
+    export const eventsMapper = new RefMapper(new RefParser(file => file.event, FtlEvent, events),
         EventNamesValueSet,
         'Event',
         defaultEvents);
@@ -82,6 +65,7 @@ export namespace mappers {
                         position);
                 },
                 getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+                    if (node.tag == "ship" && node.parent?.tag == "shipOrder") return getNodeTextContent(node, document);
                     return getAttrValueForTag(node,
                         'ship',
                         'load',
@@ -239,7 +223,7 @@ export namespace mappers {
                     return getAttrValueForTag(node, 'shipBlueprint', 'name', document, position);
                 },
                 getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-                    return getAttrValueForTag(node, 'ship', 'auto_blueprint', document, position);
+                    return getAttrValueForTag(node, 'ship', 'auto_blueprint', document, position) ?? getNodeTextContent(node, document, 'bossShip');
                 }
             }
         ),

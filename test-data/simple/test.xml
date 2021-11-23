@@ -5,6 +5,7 @@
     <event name="event-2">
         <bla/>
     </event>
+	<exitBeacon event="FINISH_BEACON_CIVILIAN" nebulaEvent="FINISH_BEACON_NEBULA" rebelEvent="FINISH_BEACON_FLEET_ELITE"/>
 
     <eventList name="list-1">
 

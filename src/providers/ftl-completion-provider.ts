@@ -19,6 +19,7 @@ import {DocumentCache} from '../document-cache';
 import {BlueprintMapper} from '../ref-mappers/blueprint-mapper';
 import {RefMapperBase} from '../ref-mappers/ref-mapper';
 import {FtlData, XmlTag} from '../data/ftl-data';
+import {ShipNames} from '../data/autocomplete-value-sets';
 
 export class FtlCompletionProvider implements CompletionItemProvider {
     private completeContentMap: Map<string, IValueSet>;
@@ -32,6 +33,8 @@ export class FtlCompletionProvider implements CompletionItemProvider {
                 .map(t => [t.name, FtlData.valueSets?.find(set => set.name == t.contentsValueSet)] as const)
                 .filter((arr): arr is [string, IValueSet] => !!arr[1])
         );
+        //support custom maps, only complete for ship contents when parent is shipOrder
+        this.completeContentMap.set('shipOrder>ship', ShipNames);
     }
 
 
@@ -81,10 +84,7 @@ export class FtlCompletionProvider implements CompletionItemProvider {
                 return this.blueprintMapper.getAllBlueprintNames()
                     .map(name => ({label: name, kind: CompletionItemKind.Unit}));
             } else {
-                return mapper.autoCompleteValues.values.map(value => ({
-                    label: value.name,
-                    kind: CompletionItemKind.Unit
-                }));
+                return this.valueSetToCompletionItems(mapper.autoCompleteValues);
             }
         }
     }
@@ -92,6 +92,7 @@ export class FtlCompletionProvider implements CompletionItemProvider {
     private tryCompleteNodContents(node: Node, offset: number): CompletionItem[] | undefined {
         if (!node.tag || !this.shouldCompleteForNodeContents(node, offset)) return;
         let valueSet = this.completeContentMap.get(node.tag);
+        if (!valueSet && node.parent?.tag) valueSet = this.completeContentMap.get(`${node.parent.tag}>${node.tag}`);
         if (!valueSet) return;
         return this.valueSetToCompletionItems(valueSet);
     }

@@ -47,9 +47,9 @@ export class FltDocumentValidator {
 
     private validateNode(node: Node, diagnostics: Diagnostic[], document: TextDocument) {
         for (let mapper of this.mappers) {
-            let invalidRef = mapper.tryGetInvalidRefName(node, document);
-            if (invalidRef) {
-                diagnostics.push(DiagnosticBuilder.invalidRefName(invalidRef));
+            let invalidRefs = mapper.tryGetInvalidRefName(node, document);
+            if (invalidRefs && invalidRefs.length > 0) {
+                diagnostics.push(...invalidRefs.map(invalidRef => DiagnosticBuilder.invalidRefName(invalidRef)));
             }
         }
 
@@ -61,11 +61,7 @@ export class FltDocumentValidator {
         } else {
             diagnostics.push(...this.blueprintMapper.validateListType(node, document));
         }
-        let refTypeDiagnostic = this.blueprintMapper.validateRefType(node, document);
-        if (refTypeDiagnostic)
-            diagnostics.push(refTypeDiagnostic);
-
-
+       this.blueprintMapper.validateRefType(node, document, diagnostics);
     }
 
     allowedChildrenMap: Map<string, Set<string>> = new Map(FtlData.tags.map((tag: XmlTag) => [tag.name, new Set(tag.tags)]));

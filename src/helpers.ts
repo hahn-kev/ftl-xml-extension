@@ -38,6 +38,9 @@ export function convertRange(range: HtmlRange): Range {
     return new Range(new Position(start.line, start.character), new Position(end.line, end.character));
 }
 
+export function normalizeAttributeName(attr: string): string;
+export function normalizeAttributeName(attr: null | undefined): undefined;
+export function normalizeAttributeName(attr: string | null | undefined): string | undefined;
 export function normalizeAttributeName(attr: string | null | undefined): string | undefined {
     return attr?.slice(1, -1);
 }
@@ -128,10 +131,6 @@ export function addToKey<T, Key>(map: Map<Key, T[]>, key: Key, value: T | T[]) {
     arr ??= [];
     arr.push(value);
     if (shouldSet) map.set(key, arr);
-}
-
-export function maxBy<T>(arr: T[], map: (value: T) => number) {
-
 }
 
 export function fileName(uri: Uri|TextDocument): string | undefined {

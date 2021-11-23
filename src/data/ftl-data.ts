@@ -230,6 +230,7 @@ export const FtlData: XmlData = {
                 {name: 'name'}
             ]
         },
+        {name: 'bossShip', attributes: [], contentsValueSet: AutoblueprintNames.name},
         {
             name: 'crewBlueprint',
             attributes: [
@@ -333,6 +334,21 @@ export const FtlData: XmlData = {
         {
             name: 'augment',
             attributes: [{name: 'name', valueSet: AugmentNames.name}]
+        },
+        {
+            name: 'exitBeacon',
+            attributes: [
+                {name: 'event', valueSet: EventNamesValueSet.name},
+                {name: 'nebulaEvent', valueSet: EventNamesValueSet.name},
+                {name: 'rebelEvent', valueSet: EventNamesValueSet.name}
+            ]
+        },
+        {
+            name: 'rebelBeacon',
+            attributes: [
+                {name: 'event', valueSet: EventNamesValueSet.name},
+                {name: 'nebulaEvent', valueSet: EventNamesValueSet.name}
+            ]
         },
         {name: 'store', attributes: []},
         {name: 'triggeredEvent', attributes: []},
