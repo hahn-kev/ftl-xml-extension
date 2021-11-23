@@ -1,6 +1,6 @@
 import {Validator} from '../validators/validator';
 import {FtlFile} from '../models/ftl-file';
-import {Diagnostic, TextDocument} from 'vscode';
+import {Diagnostic} from 'vscode';
 import {DiagnosticBuilder} from '../diagnostic-builder';
 import {BlueprintMapper} from './blueprint-mapper';
 import {BlueprintListTypeAny} from '../data/ftl-data';
@@ -10,7 +10,7 @@ export class BlueprintValidator implements Validator {
     constructor(private mapper: BlueprintMapper) {
     }
 
-    validateFile(file: FtlFile, document: TextDocument, diagnostics: Diagnostic[]): void {
+    validateFile(file: FtlFile, diagnostics: Diagnostic[]): void {
         this.validateLists(file, diagnostics);
         this.validateRefTypes(file, diagnostics);
     }

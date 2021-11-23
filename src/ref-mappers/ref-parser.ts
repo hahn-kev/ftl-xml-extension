@@ -6,6 +6,7 @@ import {FtlValue} from '../models/ftl-value';
 import {FtlXmlParser} from '../parsers/ftl-xml-parser';
 
 export interface FtlRefParser extends FtlXmlParser, NodeMap {
+    fileDataSelector: (file: FtlFile) => FtlFileValue<FtlValue>;
 }
 
 type FtlValueConst<T> = { new(name: string, file: FtlFile, node: Node, document: TextDocument): T; }

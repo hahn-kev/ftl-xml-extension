@@ -30,6 +30,8 @@
     <ship name="ship-2" auto_blueprint="ship-blueprint-1"/>
     <ship load="ship-1"/>
     <ship load="ship-2"/>
+    <!-- should be ftl-invalid-ref-name -->
+    <ship load="ship-4"/>
 
     <shipBlueprint name="ship-blueprint-1"/>
     <shipBlueprint name="ship-blueprint-2"/>

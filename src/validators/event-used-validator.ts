@@ -1,6 +1,6 @@
 import {Validator} from './validator';
 import {FtlFile} from '../models/ftl-file';
-import {Diagnostic, TextDocument} from 'vscode';
+import {Diagnostic} from 'vscode';
 import {RefMapper} from '../ref-mappers/ref-mapper';
 import {FtlEvent} from '../models/ftl-event';
 import {FtlShip} from '../models/ftl-ship';
@@ -11,7 +11,7 @@ export class EventUsedValidator implements Validator {
 
     }
 
-    validateFile(file: FtlFile, document: TextDocument, diagnostics: Diagnostic[]) {
+    validateFile(file: FtlFile, diagnostics: Diagnostic[]) {
         let unusedEvents = file.event.defs.filter(event => !this.isEventUsed(event));
 
         if (unusedEvents.length > 0) {

@@ -26,6 +26,7 @@ import eventsMapper = mappers.eventsMapper;
 import shipsMapper = mappers.shipsMapper;
 import {RequiredChildrenParser} from './parsers/required-children-parser';
 import {BlueprintValidator} from './blueprints/blueprint-validator';
+import {AllowedChildrenParser} from './parsers/allowed-children-parser';
 
 export type disposable = { dispose(): any };
 
@@ -38,7 +39,8 @@ export function setup(): { ftlParser: FtlParser; ftlDocumentValidator: FltDocume
     let parsers: FtlXmlParser[] = [
         ...mappersList.map(value => value.parser),
         new IncompleteTagParser(),
-        new RequiredChildrenParser()
+        new RequiredChildrenParser(),
+        new AllowedChildrenParser()
     ];
     let ftlParser = new FtlParser(documentCache, parsers);
     let ftlColor = new FtlColorProvider(ftlParser);

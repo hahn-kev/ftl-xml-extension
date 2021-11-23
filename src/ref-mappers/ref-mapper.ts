@@ -1,9 +1,10 @@
 import {FtlFile, FtlFileValue} from '../models/ftl-file';
 import {IValueSet, Node} from 'vscode-html-languageservice';
-import {Location, Position, Range, TextDocument} from 'vscode';
-import {addToKey, toRange} from '../helpers';
+import {Diagnostic, Location, Position, Range, TextDocument} from 'vscode';
+import {addToKey} from '../helpers';
 import {FtlValue} from '../models/ftl-value';
 import {FtlRefParser, RefParser} from './ref-parser';
+import {DiagnosticBuilder} from '../diagnostic-builder';
 
 export type InvalidRef = { name: string, range: Range, typeName: string }
 
@@ -20,10 +21,10 @@ export interface RefMapperBase {
     readonly autoCompleteValues?: IValueSet;
     readonly refs: Map<string, FtlValue[]>;
     readonly defs: Map<string, FtlValue>;
-    readonly fileDataSelector?: (file: FtlFile) => FtlFileValue<FtlValue>,
+    readonly fileDataSelector: (file: FtlFile) => FtlFileValue<FtlValue>,
     readonly parser: FtlRefParser,
 
-    tryGetInvalidRefName(node: Node, document: TextDocument): InvalidRef[] | undefined;
+    validateRefNames(file: FtlFile, diagnostics: Diagnostic[]): void;
 
     isNameValid(name: string): boolean;
 }
@@ -41,7 +42,7 @@ export interface NodeMap {
 export class RefMapper<T extends FtlValue> implements RefMapperBase {
     readonly refs = new Map<string, T[]>();
     readonly defs = new Map<string, T>();
-
+    readonly fileDataSelector: (file: FtlFile) => FtlFileValue<FtlValue>;
 
     public get nodeMap(): NodeMap {
         return this.parser.nodeMap;
@@ -51,6 +52,7 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
                 public readonly autoCompleteValues: IValueSet,
                 public readonly typeName: string,
                 public defaults: readonly string[] = []) {
+        this.fileDataSelector = this.parser.fileDataSelector;
     }
 
     updateData(files: FtlFile[]) {
@@ -92,18 +94,16 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
             this.parser.nodeMap.getRefName(node, document, position);
     }
 
-    tryGetInvalidRefName(node: Node, document: TextDocument): InvalidRef[] | undefined {
-        if (this.defs.size == 0) return;
-
-        let refNames = this.parser.nodeMap.getRefName(node, document);
-        if (typeof refNames === 'string') refNames = [refNames];
-        return refNames?.filter(refName => !this.isNameValid(refName))
-            .map(refName => ({
-                name: refName,
-                typeName: this.typeName,
-                range: toRange(node.start, node.startTagEnd ?? node.end, document)
-            }));
+    validateRefNames(file: FtlFile, diagnostics: Diagnostic[]): void {
+        this.parser.fileDataSelector(file).refs.forEach((refs, refName) => {
+            if (this.isNameValid(refName)) return;
+            for (let ref of refs) {
+                diagnostics.push(DiagnosticBuilder.invalidRefName({name: refName, typeName: this.typeName, range: ref.range}));
+            }
+        });
     }
+
+
 
     isNameValid(name: string) {
         return this.defs.has(name) || this.defaults.includes(name);

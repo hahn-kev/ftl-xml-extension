@@ -1,13 +1,18 @@
 import {FtlXmlParser} from '../parsers/ftl-xml-parser';
 import {RefMapperBase} from '../ref-mappers/ref-mapper';
 import {Node} from 'vscode-html-languageservice';
-import {FtlFile} from '../models/ftl-file';
+import {FtlFile, FtlFileValue} from '../models/ftl-file';
 import {Position, TextDocument} from 'vscode';
 import {FtlBlueprintList, FtlBlueprintValue} from '../models/ftl-blueprint-list';
 import {addToKey, getAttrValueForTag, getNodeTextContent} from '../helpers';
+import {FtlValue} from '../models/ftl-value';
 
 type RefContext = { name: string, mapper?: RefMapperBase };
 export class BlueprintParser implements FtlXmlParser {
+    fileDataSelector(file: FtlFile): FtlFileValue<FtlBlueprintList, FtlValue> {
+        return file.blueprintList
+    }
+
     constructor(private blueprintMappers: RefMapperBase[]) {
     }
 
