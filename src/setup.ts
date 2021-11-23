@@ -59,7 +59,7 @@ export function setup(): { ftlParser: FtlParser; ftlDocumentValidator: FltDocume
         [new EventUsedValidator(eventsMapper, shipsMapper), new BlueprintValidator(blueprintMapper)]);
     let ftlReferenceProvider = new FtlReferenceProvider(documentCache, mappersList);
     let hoverProvider = new FtlHoverProvider(documentCache, service);
-    let completionItemProvider = new FtlCompletionProvider(documentCache, service, blueprintMapper, mappersList);
+    let completionItemProvider = new FtlCompletionProvider(documentCache, service, blueprintMapper);
 
     window.onDidChangeActiveTextEditor(e => {
         if (e?.document.languageId === ftlXmlDoc.language) {

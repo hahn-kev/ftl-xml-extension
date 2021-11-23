@@ -26,8 +26,7 @@ export class FtlCompletionProvider implements CompletionItemProvider {
 
     constructor(private documentCache: DocumentCache,
                 private languageService: LanguageService,
-                private blueprintMapper: BlueprintMapper,
-                private mappers: RefMapperBase[]) {
+                private blueprintMapper: BlueprintMapper) {
         this.completeContentMap = new Map<string, IValueSet>(
             FtlData.tags.filter((t: XmlTag): t is XmlTag & { contentsValueSet: string } => !!t.contentsValueSet)
                 .map(t => [t.name, FtlData.valueSets?.find(set => set.name == t.contentsValueSet)] as const)
@@ -76,9 +75,10 @@ export class FtlCompletionProvider implements CompletionItemProvider {
 
         if (node.parent && this.blueprintMapper.parser.isListChild(node) && this.shouldCompleteForNodeContents(node, offset)) {
             let blueprintListNode = node.parent;
-            let typeInfo = this.blueprintMapper.getListTypeInfoFromNode(blueprintListNode, document);
-            if (!typeInfo) return;
-            let mapper = this.blueprintMapper.getMapperForTypeName(typeInfo.listTypeName);
+            let listName = this.blueprintMapper.parser.getNameDef(blueprintListNode, document);
+            if (!listName) return;
+            let typeName = this.blueprintMapper.getRefType(listName);
+            let mapper = this.blueprintMapper.getMapperForTypeName(typeName);
 
             if (!mapper || mapper == this.blueprintMapper || !mapper.autoCompleteValues) {
                 return this.blueprintMapper.getAllBlueprintNames()

@@ -4,7 +4,7 @@ import {Diagnostic, Location, Position, TextDocument} from 'vscode';
 import {FtlFile, FtlFileValue} from '../models/ftl-file';
 import {FtlBlueprintList, FtlBlueprintValue} from '../models/ftl-blueprint-list';
 import {FtlValue} from '../models/ftl-value';
-import {addToKey, firstWhere, normalizeAttributeName} from '../helpers';
+import {addToKey, firstWhere} from '../helpers';
 import {BlueprintListTypeAny} from '../data/ftl-data';
 import {BlueprintParser} from './blueprint-parser';
 import {DiagnosticBuilder} from '../diagnostic-builder';
@@ -140,23 +140,6 @@ export class BlueprintMapper implements RefMapperBase {
                 return result;
             }
         }
-    }
-
-
-    getListTypeInfoFromNode(node: Node,
-                            document: TextDocument): { map: Map<string, Node[]>, listTypeName: string } | undefined {
-        if (node.tag != 'blueprintList') return;
-        if (normalizeAttributeName(node.attributes?.type) === BlueprintListTypeAny)
-            return {map: new Map(), listTypeName: BlueprintListTypeAny};
-
-        let typeMapper = new Map<string, Node[]>();
-        for (let child of node.children) {
-            let refName = this.parser.getNameNodeText(child, document);
-            if (!refName) continue;
-            let type = this.getRefType(refName);
-            addToKey(typeMapper, type, child);
-        }
-        return this.getTypeInfo(typeMapper);
     }
 
     getListTypeInfoFromBlueprint(blueprintList: FtlBlueprintList): { map: Map<string, FtlBlueprintValue[]>, listTypeName: string } {
