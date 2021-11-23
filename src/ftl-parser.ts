@@ -1,15 +1,14 @@
-import {ProgressLocation, TextDocument, Uri, window, workspace} from 'vscode';
+import {EventEmitter, ProgressLocation, TextDocument, Uri, window, workspace} from 'vscode';
 import {Node} from 'vscode-html-languageservice';
 import {FtlFile} from './models/ftl-file';
 import {DocumentCache} from './document-cache';
-import {Emitter} from 'vscode-languageclient';
 import {FtlXmlParser} from './parsers/ftl-xml-parser';
 
 export class FtlParser {
     constructor(private cache: DocumentCache, private parsers: FtlXmlParser[]) {
     }
 
-    private _onFileParsedEmitter = new Emitter<{ files: Map<string, FtlFile> }>();
+    private _onFileParsedEmitter = new EventEmitter<{ files: Map<string, FtlFile> }>();
     private _parsingPromise?: Thenable<void>;
 
     public get isParsing(): boolean {
