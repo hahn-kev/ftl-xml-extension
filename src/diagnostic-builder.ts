@@ -25,19 +25,15 @@ export class DiagnosticBuilder {
     static listTypeMisMatch(blueprintName: undefined | string,
                             type: string,
                             listTypeName: string,
-                            childNode: Node,
-                            document: TextDocument) {
+                            range: Range) {
         let message = `Blueprint '${blueprintName}' is an '${type}' does not match type the list '${listTypeName}'`;
-        return this.diag(toRange(childNode.start, childNode.end, document),
-            message,
-            DiagnosticSeverity.Warning,
-            FtlErrorCode.listTypeMismatch);
+        return this.diag(range, message, DiagnosticSeverity.Warning, FtlErrorCode.listTypeMismatch);
     }
 
-    static listHasRefLoop(node: Node, document: TextDocument, listName: string) {
+    static listHasRefLoop(range: Range, listName: string, namesInLoop: string[]) {
         return this.diag(
-            toRange(node.start, node.startTagEnd ?? node.end, document),
-            `Blueprint List: ${listName} is self referencing (possibly through another list)`,
+            range,
+            `Blueprint List: ${listName} is self referencing, path: ${namesInLoop.join(' -> ')}`,
             DiagnosticSeverity.Error,
             FtlErrorCode.refLoop
         );

@@ -2,9 +2,9 @@ import {InvalidRef, RefMapperBase} from '../ref-mappers/ref-mapper';
 import {Node} from 'vscode-html-languageservice';
 import {Diagnostic, Location, Position, TextDocument} from 'vscode';
 import {FtlFile} from '../models/ftl-file';
-import {FtlBlueprintList} from '../models/ftl-blueprint-list';
+import {FtlBlueprintList, FtlBlueprintValue} from '../models/ftl-blueprint-list';
 import {FtlValue} from '../models/ftl-value';
-import {addToKey, firstWhere, getAttrValueForTag, normalizeAttributeName, toRange} from '../helpers';
+import {addToKey, firstWhere, normalizeAttributeName, toRange} from '../helpers';
 import {BlueprintListTypeAny} from '../data/ftl-data';
 import {DiagnosticBuilder} from '../diagnostic-builder';
 import {BlueprintParser} from './blueprint-parser';
@@ -148,16 +148,6 @@ export class BlueprintMapper implements RefMapperBase {
         }
     }
 
-    validateListRefLoop(node: Node, document: TextDocument): Diagnostic | undefined {
-        let listName = getAttrValueForTag(node, 'blueprintList', 'name');
-        if (!listName) return;
-        let blueprintList = this.defs.get(listName);
-        if (!blueprintList) return;
-        let namesInLoop = this.findRefLoop(listName, blueprintList.childRefNames);
-        if (!namesInLoop) return;
-        return DiagnosticBuilder.listHasRefLoop(node, document, listName);
-    }
-
     findRefLoop(listName: string, children: string[]): string[] | undefined {
         for (let childName of children) {
             if (childName == listName) return [];
@@ -171,29 +161,7 @@ export class BlueprintMapper implements RefMapperBase {
         }
     }
 
-    static ignoreListNames = ['DLC_ITEMS', 'DEMO_LOCKED_ITEMS'];
 
-    validateListType(node: Node, document: TextDocument): Diagnostic[] {
-        let listName = getAttrValueForTag(node, 'blueprintList', 'name');
-        if (!listName || BlueprintMapper.ignoreListNames.includes(listName)) return [];
-
-        let typeResults = this.getListTypeInfoFromNode(node, document);
-        if (!typeResults) return [];
-        let {map: typeMapper, listTypeName} = typeResults;
-        if (listTypeName == BlueprintListTypeAny) return [];
-
-        let results: Diagnostic[] = [];
-        typeMapper.forEach((nodes, type) => {
-            if (type == listTypeName) return;
-            results.push(...nodes.map(childNode =>
-                DiagnosticBuilder.listTypeMisMatch(this.parser.getNameNodeText(childNode, document),
-                    type,
-                    listTypeName,
-                    childNode,
-                    document)));
-        });
-        return results;
-    }
 
     getListTypeInfoFromNode(node: Node,
                             document: TextDocument): { map: Map<string, Node[]>, listTypeName: string } | undefined {
@@ -211,18 +179,20 @@ export class BlueprintMapper implements RefMapperBase {
         return this.getTypeInfo(typeMapper);
     }
 
-    getListTypeFromBlueprint(blueprintList: FtlBlueprintList) {
-        if (blueprintList.isAnyType) return BlueprintListTypeAny;
+    getListTypeInfoFromBlueprint(blueprintList: FtlBlueprintList): { map: Map<string, FtlBlueprintValue[]>, listTypeName: string } {
+        if (blueprintList.isAnyType) return {map: new Map(), listTypeName: BlueprintListTypeAny};
         if (this.findRefLoop(blueprintList.name, blueprintList.childRefNames))
-            return this.typeName;
+            return {map: new Map(), listTypeName: this.typeName};
 
-        let typeMapper = new Map<string, string[]>();
-        for (let refName of blueprintList.childRefNames) {
-            let type = this.getRefType(refName);
-            addToKey(typeMapper, type, refName);
+        let typeMapper = new Map<string, FtlBlueprintValue[]>();
+        for (let child of blueprintList.children) {
+            let type = this.getRefType(child.name);
+            addToKey(typeMapper, type, child);
         }
-        let typeInfo = this.getTypeInfo(typeMapper);
-        return typeInfo.listTypeName;
+        return this.getTypeInfo(typeMapper);
+    }
+    getListTypeFromBlueprint(blueprintList: FtlBlueprintList) {
+        return this.getListTypeInfoFromBlueprint(blueprintList)?.listTypeName;
     }
 
     getTypeInfo<T>(typeMapper: Map<string, T[]>) {

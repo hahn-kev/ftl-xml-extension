@@ -1,7 +1,6 @@
 import {DocumentCache} from './document-cache';
 import {Diagnostic, DiagnosticCollection, TextDocument, Uri, workspace} from 'vscode';
 import {Node} from 'vscode-html-languageservice';
-import {toRange} from './helpers';
 import {BlueprintMapper} from './blueprints/blueprint-mapper';
 import {RefMapperBase} from './ref-mappers/ref-mapper';
 import {FtlData, XmlTag} from './data/ftl-data';
@@ -65,12 +64,6 @@ export class FltDocumentValidator {
         }
 
         // this.validateAllowedChildren(node, document, diagnostics);
-        let listRefLoop = this.blueprintMapper.validateListRefLoop(node, document);
-        if (listRefLoop) {
-            diagnostics.push(listRefLoop);
-        } else {
-            diagnostics.push(...this.blueprintMapper.validateListType(node, document));
-        }
         this.blueprintMapper.validateRefType(node, document, diagnostics);
     }
 

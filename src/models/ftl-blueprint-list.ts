@@ -14,6 +14,7 @@ export class FtlBlueprintList extends FtlValue {
     }
 
     public childRefNames: string[] = [];
+    public children: FtlBlueprintValue[] = [];
     public readonly isAnyType: boolean;
 }
 

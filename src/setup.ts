@@ -25,6 +25,7 @@ import {EventUsedValidator} from './validators/event-used-validator';
 import eventsMapper = mappers.eventsMapper;
 import shipsMapper = mappers.shipsMapper;
 import {RequiredChildrenParser} from './parsers/required-children-parser';
+import {BlueprintValidator} from './blueprints/blueprint-validator';
 
 export type disposable = { dispose(): any };
 
@@ -54,7 +55,7 @@ export function setup(): { ftlParser: FtlParser; ftlDocumentValidator: FltDocume
         blueprintMapper,
         mappersList,
         ftlParser,
-        [new EventUsedValidator(eventsMapper, shipsMapper)]);
+        [new EventUsedValidator(eventsMapper, shipsMapper), new BlueprintValidator(blueprintMapper)]);
     let ftlReferenceProvider = new FtlReferenceProvider(documentCache, mappersList);
     let hoverProvider = new FtlHoverProvider(documentCache, service);
     let completionItemProvider = new FtlCompletionProvider(documentCache, service, blueprintMapper, mappersList);
