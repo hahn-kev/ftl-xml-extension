@@ -25,7 +25,8 @@
         <badTag/
     </eventList>
 
-    <ship name="ship-1" auto_blueprint="ship-list-1"/>
+    <!-- should have ftl-refTypeInvalid because it's type is 'any' -->
+    <ship name="ship-1" auto_blueprint="bp-list-1"/>
     <ship name="ship-2" auto_blueprint="ship-blueprint-1"/>
     <ship load="ship-1"/>
     <ship load="ship-2"/>
@@ -35,19 +36,27 @@
     <weaponBlueprint name="weapon-1"/>
 
     <weapon name="weapon-list-1"/>
+    
+        <!-- should be ftl-invalid-ref-name -->
+    <weapon name="weapon-4"/>
     <weapon name="weapon-1"/>
 
     <blueprintList name="weapon-list-1">
         <name>weapon-1</name>
         <name>weapon-1</name>
+        <!-- should be ftl-invalid-ref-name -->
+        <name>weapon-5</name>
+        <!-- should be ftl-listTypeMismatch -->
+        <name>ship-blueprint-1</name>
     </blueprintList>
 
-    <blueprintList name="ship-list-1" type="any">
+    <blueprintList name="bp-list-1" type="any">
         <name>ship-blueprint-1</name>
         <name>ship-blueprint-2</name>
         <name>weapon-1</name>
     </blueprintList>
 
+    <!-- should have a self reference error -->
     <blueprintList name="list-1">
         <name>list-2</name>
     </blueprintList>

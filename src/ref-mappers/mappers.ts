@@ -30,7 +30,7 @@ import {FtlWeapon} from '../models/ftl-weapon';
 import {FtlAutoblueprint} from '../models/ftl-autoblueprint';
 import {defaultAutoBlueprints} from '../data/default-auto-blueprints';
 import {FtlText} from '../models/ftl-text';
-import {BlueprintMapper} from './blueprint-mapper';
+import {BlueprintMapper} from '../blueprints/blueprint-mapper';
 import {DocumentCache} from '../document-cache';
 import {defaultWeaponBlueprints} from '../data/default-weapon-blueprints';
 import {FtlDrone} from '../models/ftl-drone';

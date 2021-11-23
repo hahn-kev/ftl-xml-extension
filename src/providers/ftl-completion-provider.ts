@@ -16,7 +16,7 @@ import {
 } from 'vscode-html-languageservice';
 import {convertDocumentation, convertRange, toTextDocumentHtml} from '../helpers';
 import {DocumentCache} from '../document-cache';
-import {BlueprintMapper} from '../ref-mappers/blueprint-mapper';
+import {BlueprintMapper} from '../blueprints/blueprint-mapper';
 import {RefMapperBase} from '../ref-mappers/ref-mapper';
 import {FtlData, XmlTag} from '../data/ftl-data';
 import {ShipNames} from '../data/autocomplete-value-sets';

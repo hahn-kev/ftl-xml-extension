@@ -2,7 +2,7 @@ import {DocumentCache} from './document-cache';
 import {Diagnostic, DiagnosticCollection, TextDocument, Uri, workspace} from 'vscode';
 import {Node} from 'vscode-html-languageservice';
 import {toRange} from './helpers';
-import {BlueprintMapper} from './ref-mappers/blueprint-mapper';
+import {BlueprintMapper} from './blueprints/blueprint-mapper';
 import {RefMapperBase} from './ref-mappers/ref-mapper';
 import {FtlData, XmlTag} from './data/ftl-data';
 import {FtlParser} from './ftl-parser';
