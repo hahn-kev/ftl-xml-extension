@@ -1,0 +1,37 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "google"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {"project": ["./tsconfig.json", "./test.tsconfig.json"]},
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "rules": {
+    "linebreak-style": [
+      "error",
+      "windows"
+    ],
+    "comma-dangle": "off",
+    "require-jsdoc": "off",
+    "max-len": ["warn", 120],
+    "no-redeclare": "off",
+    "@typescript-eslint/no-redeclare": ["error"],
+    "no-dupe-class-members": "off",
+    "@typescript-eslint/no-dupe-class-members": ["error"],
+    "no-undef": "off",
+    "no-unused-vars": "off",
+    "operator-linebreak": ["warn", "before"],
+    "no-invalid-this": "off",
+    "@typescript-eslint/no-invalid-this": ["error"],
+    "@typescript-eslint/no-unused-vars": "off"
+  },
+  "ignorePatterns": ["out/**/", "out-test/**/"]
+}

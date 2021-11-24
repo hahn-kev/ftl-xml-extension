@@ -5,19 +5,18 @@ import {TextDocument} from 'vscode';
 import {FtlData, XmlTag} from '../data/ftl-data';
 
 export class AllowedChildrenParser implements FtlXmlParser {
-    allowedChildrenMap: Map<string, Set<string>> = new Map(FtlData.tags.map((tag: XmlTag) => [tag.name, new Set(tag.tags)]));
+  allowedChildrenMap: Map<string, Set<string>> = new Map(FtlData.tags.map((tag: XmlTag) => [tag.name, new Set(tag.tags)]));
 
-    parseNode(node: Node, file: FtlFile, document: TextDocument): void {
-        //disabled for now because it gives way too many errors
-        return;
-        // if (!node.tag) return;
-        // const allowedChildren = this.allowedChildrenMap.get(node.tag);
-        // if (allowedChildren === undefined) return;
-        // let errors = node.children.filter(child => child.tag && !allowedChildren.has(child.tag))
-        //     .map(child => {
-        //         return DiagnosticBuilder.childTagNotAllowed(node, child, document);
-        //     });
-        // file.diagnostics.push(...errors);
-    }
-
+  parseNode(node: Node, file: FtlFile, document: TextDocument): void {
+    // disabled for now because it gives way too many errors
+    return;
+    // if (!node.tag) return;
+    // const allowedChildren = this.allowedChildrenMap.get(node.tag);
+    // if (allowedChildren === undefined) return;
+    // let errors = node.children.filter(child => child.tag && !allowedChildren.has(child.tag))
+    //     .map(child => {
+    //         return DiagnosticBuilder.childTagNotAllowed(node, child, document);
+    //     });
+    // file.diagnostics.push(...errors);
+  }
 }

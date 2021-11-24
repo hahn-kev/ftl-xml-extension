@@ -16,30 +16,30 @@ import {FtlColor} from './ftl-color';
 
 
 export class FtlFile {
-    sounds = new FtlFileValue<FtlSound>();
-    diagnostics: Diagnostic[] = [];
+  sounds = new FtlFileValue<FtlSound>();
+  diagnostics: Diagnostic[] = [];
 
-    constructor(public uri: Uri) {
-    }
+  constructor(public uri: Uri) {
+  }
 
-    event = new FtlFileValue<FtlEvent>();
-    ship = new FtlFileValue<FtlShip>();
-    autoBlueprint = new FtlFileValue<FtlAutoblueprint>();
-    text = new FtlFileValue<FtlText>();
-    weapon = new FtlFileValue<FtlWeapon>();
-    drone = new FtlFileValue<FtlDrone>();
-    augment = new FtlFileValue<FtlAugment>();
-    crews = new FtlFileValue<FtlCrew>();
-    system = new FtlFileValue<FtlSystem>();
-    blueprintList = new FtlFileValue<FtlBlueprintList, FtlValue>();
-    colors: FtlColor[] = [];
+  event = new FtlFileValue<FtlEvent>();
+  ship = new FtlFileValue<FtlShip>();
+  autoBlueprint = new FtlFileValue<FtlAutoblueprint>();
+  text = new FtlFileValue<FtlText>();
+  weapon = new FtlFileValue<FtlWeapon>();
+  drone = new FtlFileValue<FtlDrone>();
+  augment = new FtlFileValue<FtlAugment>();
+  crews = new FtlFileValue<FtlCrew>();
+  system = new FtlFileValue<FtlSystem>();
+  blueprintList = new FtlFileValue<FtlBlueprintList, FtlValue>();
+  colors: FtlColor[] = [];
 }
 
 export class FtlFileValue<TDef extends FtlValue, TRef extends FtlValue = TDef> {
-    defs: TDef[] = [];
-    refs = new Map<string, TRef[]>();
+  defs: TDef[] = [];
+  refs = new Map<string, TRef[]>();
 
-    addRef(name: string, value: TRef) {
-        addToKey(this.refs, name, value);
-    }
+  addRef(name: string, value: TRef) {
+    addToKey(this.refs, name, value);
+  }
 }

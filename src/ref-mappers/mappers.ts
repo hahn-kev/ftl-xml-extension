@@ -1,27 +1,27 @@
-import {RefMapper, RefMapperBase,} from './ref-mapper';
+import {RefMapper, RefMapperBase} from './ref-mapper';
 import {FtlEvent} from '../models/ftl-event';
 import {Node} from 'vscode-html-languageservice';
 import {Position, TextDocument} from 'vscode';
 import {events} from '../events';
 import {
-    fileName,
-    getAttrValueForTag,
-    getNodeTextContent,
-    hasAncestor,
-    hasAttr,
-    normalizeAttributeName
+  fileName,
+  getAttrValueForTag,
+  getNodeTextContent,
+  hasAncestor,
+  hasAttr,
+  normalizeAttributeName
 } from '../helpers';
 import {
-    AugmentNames,
-    AutoblueprintNames,
-    CrewNames,
-    DroneNames,
-    EventNamesValueSet,
-    ShipNames,
-    SoundNames,
-    SystemNames,
-    TextIdNames,
-    WeaponNames
+  AugmentNames,
+  AutoblueprintNames,
+  CrewNames,
+  DroneNames,
+  EventNamesValueSet,
+  ShipNames,
+  SoundNames,
+  SystemNames,
+  TextIdNames,
+  WeaponNames
 } from '../data/autocomplete-value-sets';
 import {defaultEvents} from '../data/default-events';
 import {FtlShip} from '../models/ftl-ship';
@@ -46,268 +46,238 @@ import {RefParser} from './ref-parser';
 import {FtlSound} from '../models/ftl-sound';
 import {defaultSounds} from '../data/default-sounds';
 
-export namespace mappers {
+class Mappers {
+  readonly eventsMapper = new RefMapper(new RefParser((file) => file.event, FtlEvent, events),
+      EventNamesValueSet,
+      'Event',
+      defaultEvents);
 
-    export const eventsMapper = new RefMapper(new RefParser(file => file.event, FtlEvent, events),
-        EventNamesValueSet,
-        'Event',
-        defaultEvents);
 
-    export const shipsMapper = new RefMapper(new RefParser(
-            file => file.ship,
-            FtlShip,
-            {
-                getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-                    return getAttrValueForTag(node,
-                        'ship',
-                        'name',
-                        document,
-                        position);
-                },
-                getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-                    if (node.tag == "ship" && node.parent?.tag == "shipOrder") return getNodeTextContent(node, document);
-                    return getAttrValueForTag(node,
-                        'ship',
-                        'load',
-                        document,
-                        position);
-                }
+  readonly shipsMapper = new RefMapper(
+      new RefParser(
+          (file) => file.ship,
+          FtlShip,
+          {
+            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
+              return getAttrValueForTag(node, 'ship', 'name', document, position);
+            },
+            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+              if (node.tag == 'ship' && node.parent?.tag == 'shipOrder') return getNodeTextContent(node, document);
+              return getAttrValueForTag(node, 'ship', 'load', document, position);
             }
-        ),
-        ShipNames,
-        'Ship',
-        defaultShips);
+          }
+      ),
+      ShipNames,
+      'Ship',
+      defaultShips);
 
-    export const weaponsMapper = new RefMapper(new RefParser(
-            file => file.weapon,
-            FtlWeapon,
-            {
-                getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-                    return getAttrValueForTag(node,
-                        'weaponBlueprint',
-                        'name',
-                        document,
-                        position);
-                },
-                getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-
-                    let name = getAttrValueForTag(node,
-                        'weapon',
-                        'name',
-                        document,
-                        position);
-                    if (name) return name;
-                    if (node.tag == 'weaponBlueprint' && node.parent?.tag == 'droneBlueprint' && !node.attributes)
-                        return getNodeTextContent(node, document);
-                }
+  readonly weaponsMapper = new RefMapper(
+      new RefParser(
+          (file) => file.weapon,
+          FtlWeapon,
+          {
+            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
+              return getAttrValueForTag(node, 'weaponBlueprint', 'name', document, position);
+            },
+            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+              const name = getAttrValueForTag(node, 'weapon', 'name', document, position);
+              if (name) return name;
+              if (node.tag == 'weaponBlueprint' && node.parent?.tag == 'droneBlueprint' && !node.attributes) {
+                return getNodeTextContent(node, document);
+              }
             }
-        ),
-        WeaponNames,
-        'Weapon',
-        defaultWeaponBlueprints);
+          }
+      ),
+      WeaponNames,
+      'Weapon',
+      defaultWeaponBlueprints);
 
-    export const dronesMapper = new RefMapper(new RefParser(
-            file => file.drone,
-            FtlDrone,
-            {
-                getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-                    return getAttrValueForTag(node,
-                        'droneBlueprint',
-                        'name',
-                        document,
-                        position);
-                },
-                getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-                    return getAttrValueForTag(node,
-                        'drone',
-                        'name',
-                        document,
-                        position);
-                }
+  readonly dronesMapper = new RefMapper(
+      new RefParser(
+          (file) => file.drone,
+          FtlDrone,
+          {
+            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
+              return getAttrValueForTag(node, 'droneBlueprint', 'name', document, position);
+            },
+            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+              return getAttrValueForTag(node, 'drone', 'name', document, position);
             }
-        ),
-        DroneNames,
-        'Drone',
-        defaultDrones);
+          }
+      ),
+      DroneNames,
+      'Drone',
+      defaultDrones);
 
-    export const augmentsMapper = new RefMapper(new RefParser(
-            file => file.augment,
-            FtlAugment,
-            {
-                getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-                    return getAttrValueForTag(node,
-                        'augBlueprint',
-                        'name',
-                        document,
-                        position);
-                },
-                getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-                    return getAttrValueForTag(node,
-                            'augment',
-                            'name',
-                            document,
-                            position)
-                        ?? getAttrValueForTag(node,
-                            'aug',
-                            'name',
-                            document,
-                            position);
-                }
+  readonly augmentsMapper = new RefMapper(
+      new RefParser(
+          (file) => file.augment,
+          FtlAugment,
+          {
+            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
+              return getAttrValueForTag(node,
+                  'augBlueprint',
+                  'name',
+                  document,
+                  position);
+            },
+            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+              return getAttrValueForTag(node, 'augment', 'name', document, position)
+                  ?? getAttrValueForTag(node, 'aug', 'name', document, position);
             }
-        ),
-        AugmentNames,
-        'Augment',
-        defaultAugments);
+          }
+      ),
+      AugmentNames,
+      'Augment',
+      defaultAugments);
 
-    export const crewMapper = new RefMapper(new RefParser(
-            file => file.crews,
-            FtlCrew,
-            {
-                getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-                    return getAttrValueForTag(node,
-                        'crewBlueprint',
-                        'name',
-                        document,
-                        position);
-                },
-                getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-                    return getAttrValueForTag(node,
-                            'crewMember',
-                            'class',
-                            document,
-                            position)
-                        ?? getAttrValueForTag(node,
-                            'crewMember',
-                            'type',
-                            document,
-                            position)
-                        ?? getAttrValueForTag(node,
-                            'removeCrew',
-                            'class',
-                            document,
-                            position);
-                }
+  readonly crewMapper = new RefMapper(
+      new RefParser(
+          (file) => file.crews,
+          FtlCrew,
+          {
+            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
+              return getAttrValueForTag(node,
+                  'crewBlueprint',
+                  'name',
+                  document,
+                  position);
+            },
+            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+              return getAttrValueForTag(node, 'crewMember', 'class', document, position)
+                  ?? getAttrValueForTag(node, 'crewMember', 'type', document, position)
+                  ?? getAttrValueForTag(node, 'removeCrew', 'class', document, position);
             }
-        ),
-        CrewNames,
-        'Crew',
-        defaultCrew);
+          }
+      ),
+      CrewNames,
+      'Crew',
+      defaultCrew);
 
-    export const systemMapper = new RefMapper(new RefParser(
-            file => file.system,
-            FtlSystem,
-            {
-                getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-                    return getAttrValueForTag(node,
-                        'systemBlueprint',
-                        'name',
-                        document,
-                        position);
-                },
-                getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-                    return getAttrValueForTag(node, 'status', 'system', document, position) ??
-                        getAttrValueForTag(node, 'upgrade', 'system', document, position) ??
-                        getAttrValueForTag(node, 'damage', 'system', document, position);
-                }
+  readonly systemMapper = new RefMapper(
+      new RefParser(
+          (file) => file.system,
+          FtlSystem,
+          {
+            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
+              return getAttrValueForTag(node,
+                  'systemBlueprint',
+                  'name',
+                  document,
+                  position);
+            },
+            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+              return getAttrValueForTag(node, 'status', 'system', document, position)
+                  ?? getAttrValueForTag(node, 'upgrade', 'system', document, position)
+                  ?? getAttrValueForTag(node, 'damage', 'system', document, position);
             }
-        ),
-        SystemNames,
-        'System',
-        defaultSystems);
+          }
+      ),
+      SystemNames,
+      'System',
+      defaultSystems);
 
-    export const autoBlueprintMapper = new RefMapper(new RefParser(
-            file => file.autoBlueprint,
-            FtlAutoblueprint,
-            {
-                getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-                    return getAttrValueForTag(node, 'shipBlueprint', 'name', document, position);
-                },
-                getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-                    return getAttrValueForTag(node, 'ship', 'auto_blueprint', document, position) ?? getNodeTextContent(node, document, 'bossShip');
-                }
+
+  readonly autoBlueprintMapper = new RefMapper(
+      new RefParser(
+          (file) => file.autoBlueprint,
+          FtlAutoblueprint,
+          {
+            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
+              return getAttrValueForTag(node, 'shipBlueprint', 'name', document, position);
+            },
+            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+              return getAttrValueForTag(node, 'ship', 'auto_blueprint', document, position) ?? getNodeTextContent(node,
+                  document,
+                  'bossShip');
             }
-        ),
-        AutoblueprintNames,
-        'Auto Blueprint',
-        defaultAutoBlueprints);
+          }
+      ),
+      AutoblueprintNames,
+      'Auto Blueprint',
+      defaultAutoBlueprints);
 
-    export const textMapper = new RefMapper(new RefParser(
-            file => file.text,
-            FtlText,
-            {
-                getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-
-                    if (node.tag == 'text' && hasAttr(node, 'name', document, position)) {
-                        //filter out language files
-                        if (fileName(document)?.startsWith('text-'))
-                            return undefined;
-                        return normalizeAttributeName(node.attributes.name);
-                    }
-
-                    return getAttrValueForTag(node, 'textList', 'name', document, position);
-                },
-                getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-                    return getAttrValueForTag(node, 'text', 'load', document, position)
-                        ?? getAttrValueForTag(node, 'text', 'name', document, position)
-                        ?? getAttrValueForTag(node, 'text', 'id', document, position)
-                        ?? getAttrValueForTag(node, 'title', 'id', document, position)
-                        ?? getAttrValueForTag(node, 'short', 'id', document, position)
-                        ?? getAttrValueForTag(node, 'desc', 'id', document, position)
-                        ?? getAttrValueForTag(node, 'tooltip', 'id', document, position)
-                        ?? getNodeTextContent(node, document, 'tip');
+  readonly textMapper = new RefMapper(
+      new RefParser(
+          (file) => file.text,
+          FtlText,
+          {
+            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
+              if (node.tag == 'text' && hasAttr(node, 'name', document, position)) {
+                // filter out language files
+                if (fileName(document)?.startsWith('text-')) {
+                  return undefined;
                 }
+                return normalizeAttributeName(node.attributes.name);
+              }
+
+              return getAttrValueForTag(node, 'textList', 'name', document, position);
+            },
+            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+              return getAttrValueForTag(node, 'text', 'load', document, position)
+                  ?? getAttrValueForTag(node, 'text', 'name', document, position)
+                  ?? getAttrValueForTag(node, 'text', 'id', document, position)
+                  ?? getAttrValueForTag(node, 'title', 'id', document, position)
+                  ?? getAttrValueForTag(node, 'short', 'id', document, position)
+                  ?? getAttrValueForTag(node, 'desc', 'id', document, position)
+                  ?? getAttrValueForTag(node, 'tooltip', 'id', document, position)
+                  ?? getNodeTextContent(node, document, 'tip');
             }
-        ),
-        TextIdNames,
-        'Text',
-        defaultText);
+          }
+      ),
+      TextIdNames,
+      'Text',
+      defaultText);
 
-    const validSoundFileNames = ['dlcSounds.xml', 'dlcSounds.xml.append', 'sounds.xml', 'sounds.xml.append'];
-    export const soundMapper = new RefMapper(
-        new RefParser(file => file.sounds,
-            FtlSound,
-            {
-                getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-                    if (!node.tag || node.tag == 'FTL') return;
-                    let docFileName = fileName(document);
-                    if (docFileName && validSoundFileNames.includes(docFileName) && !hasAncestor(node, 'music', true)) {
-                        return node.tag;
-                    }
-                },
-                getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-                    return getNodeTextContent(node, document, 'sound')
-                        ?? getNodeTextContent(node, document, 'powerSound')
-                        ?? getNodeTextContent(node, document, 'shootingSound')
-                        ?? getNodeTextContent(node, document, 'deathSound')
-                        ?? getNodeTextContent(node, document, 'finishSound')
-                        ?? getNodeTextContent(node, document, 'repairSound')
-                        ?? getNodeTextContent(node, document, 'timerSound');
-                }
-            }),
-        SoundNames,
-        'Sound',
-        defaultSounds
-    );
 
+  readonly validSoundFileNames = ['dlcSounds.xml', 'dlcSounds.xml.append', 'sounds.xml', 'sounds.xml.append'];
+
+  readonly soundMapper = new RefMapper(
+      new RefParser((file) => file.sounds,
+          FtlSound,
+          {
+            getNameDef: (node: Node, document: TextDocument, position?: Position): string | undefined => {
+              if (!node.tag || node.tag == 'FTL') return;
+              const docFileName = fileName(document);
+              if (docFileName && this.validSoundFileNames.includes(docFileName) && !hasAncestor(node, 'music', true)) {
+                return node.tag;
+              }
+            },
+            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+              return getNodeTextContent(node, document, 'sound')
+                  ?? getNodeTextContent(node, document, 'powerSound')
+                  ?? getNodeTextContent(node, document, 'shootingSound')
+                  ?? getNodeTextContent(node, document, 'deathSound')
+                  ?? getNodeTextContent(node, document, 'finishSound')
+                  ?? getNodeTextContent(node, document, 'repairSound')
+                  ?? getNodeTextContent(node, document, 'timerSound');
+            }
+          }),
+      SoundNames,
+      'Sound',
+      defaultSounds
+  );
+
+
+  public setup(documentCache: DocumentCache) {
     const blueprintMappers: RefMapperBase[] = [
-        weaponsMapper,
-        autoBlueprintMapper,
-        dronesMapper,
-        augmentsMapper,
-        crewMapper,
-        systemMapper
+      this.weaponsMapper,
+      this.autoBlueprintMapper,
+      this.dronesMapper,
+      this.augmentsMapper,
+      this.crewMapper,
+      this.systemMapper
     ];
-
-    export function setup(documentCache: DocumentCache) {
-        const blueprintMapper = new BlueprintMapper(blueprintMappers);
-        const mappers: RefMapperBase[] = [
-            eventsMapper,
-            shipsMapper,
-            textMapper,
-            soundMapper,
-            blueprintMapper
-        ];
-        return {blueprintMapper, mappers};
-    }
-
+    const blueprintMapper = new BlueprintMapper(blueprintMappers);
+    const mappers: RefMapperBase[] = [
+      this.eventsMapper,
+      this.shipsMapper,
+      this.textMapper,
+      this.soundMapper,
+      blueprintMapper
+    ];
+    return {blueprintMapper, mappers};
+  }
 }
+
+export const mappers = new Mappers();
