@@ -19,17 +19,17 @@ import {parseWorkspace, setup} from './setup';
 
 // noinspection JSUnusedGlobalSymbols
 export function activate(context: ExtensionContext) {
-  const {subs, ftlParser, ftlDocumentValidator} = setup();
+  const {subs, workspaceParser} = setup();
   context.subscriptions.push(...subs);
 
   if (context.extensionMode !== ExtensionMode.Test) {
     console.log('FTL Extension activated');
     commands.registerCommand('ftl-xml.parse-workspace', async () => {
-      if (!ftlParser.isParsing) {
-        await parseWorkspace(ftlParser, ftlDocumentValidator);
+      if (!workspaceParser.isParsing) {
+        await workspaceParser.parseWorkspace();
       }
     });
-    parseWorkspace(ftlParser, ftlDocumentValidator).then(() => {
+    workspaceParser.parseWorkspace().then(() => {
       const wantToUpdateDefaults = context.extensionMode == ExtensionMode.Development;
       if (wantToUpdateDefaults) {
         const eventNames = EventNamesValueSet.values.map((e) => e.name);

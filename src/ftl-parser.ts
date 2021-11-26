@@ -3,6 +3,8 @@ import {Node} from 'vscode-html-languageservice';
 import {FtlFile} from './models/ftl-file';
 import {DocumentCache} from './document-cache';
 import {FtlXmlParser} from './parsers/ftl-xml-parser';
+import {FtlRoot} from './models/ftl-root';
+import {fileName} from './helpers';
 
 export class FtlParser {
   constructor(private cache: DocumentCache, private parsers: FtlXmlParser[]) {
@@ -16,15 +18,15 @@ export class FtlParser {
   }
 
   public get files() {
-    if (this._parsingPromise) return this._parsingPromise.then(() => this._files);
-    return this._files;
+    if (this._parsingPromise) return this._parsingPromise.then(() => this.root.files);
+    return this.root.files;
   }
 
   public get onFileParsed() {
     return this._onFileParsedEmitter.event;
   }
 
-  private _files = new Map<string, FtlFile>();
+  private root = new FtlRoot();
 
   public async parseCurrentWorkspace(subFolder?: string) {
     console.log('parse workspace');
@@ -32,9 +34,9 @@ export class FtlParser {
       return this.files;
     }
 
-    this._files.clear();
+    this.root.files.clear();
     const prefix = subFolder ? `${subFolder}/` : '';
-    this._parsingPromise = workspace.findFiles(prefix + '**/*.{xml,xml.append}')
+    this._parsingPromise = workspace.findFiles(prefix + '**/*.{xml,xml.append,ogg,wav}')
         .then((files) => {
           if (files.length > 0) {
             return this.parseFiles(files);
@@ -43,7 +45,7 @@ export class FtlParser {
 
     await this._parsingPromise;
 
-    return this._files;
+    return this.root.files;
   }
 
   public async parseFiles(files: Uri[]) {
@@ -54,23 +56,36 @@ export class FtlParser {
       location: ProgressLocation.Window
     }, async () => {
       for (const file of files) {
-        const document = await workspace.openTextDocument(file);
-        this._parseFile(document);
+        await this.parseFile(file);
       }
     });
     console.timeEnd('parse files');
-    this._onFileParsedEmitter.fire({files: this._files});
+    this._onFileParsedEmitter.fire({files: this.root.files});
   }
 
-  public parseFile(document: TextDocument) {
-    const ftlFile = this._parseFile(document);
-    this._onFileParsedEmitter.fire({files: this._files});
+  private async parseFile(file: Uri) {
+    if (this.isAudioFile(file)) {
+      this.root.soundFiles.push(file);
+      return;
+    }
+    const document = await workspace.openTextDocument(file);
+    this._parseDocument(document);
+  }
+
+  isAudioFile(file: Uri): boolean {
+    const name = fileName(file);
+    return (name?.endsWith('.ogg') || name?.endsWith('.wav')) ?? false;
+  }
+
+  public parseDocument(document: TextDocument) {
+    const ftlFile = this._parseDocument(document);
+    this._onFileParsedEmitter.fire({files: this.root.files});
     return ftlFile;
   }
 
-  private _parseFile(document: TextDocument) {
-    const ftlFile: FtlFile = new FtlFile(document.uri);
-    this._files.set(ftlFile.uri.toString(), ftlFile);
+  private _parseDocument(document: TextDocument) {
+    const ftlFile: FtlFile = new FtlFile(document.uri, this.root);
+    this.root.files.set(ftlFile.uri.toString(), ftlFile);
 
     const htmlDocument = this.cache.getHtmlDocument(document);
     this.parseNodes(htmlDocument.roots, ftlFile, document);

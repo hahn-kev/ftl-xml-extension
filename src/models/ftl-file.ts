@@ -13,13 +13,14 @@ import {FtlSystem} from './ftl-system';
 import {addToKey} from '../helpers';
 import {FtlSound} from './ftl-sound';
 import {FtlColor} from './ftl-color';
+import {FtlRoot} from './ftl-root';
 
 
 export class FtlFile {
   sounds = new FtlFileValue<FtlSound>();
   diagnostics: Diagnostic[] = [];
 
-  constructor(public uri: Uri) {
+  constructor(public uri: Uri, public root: FtlRoot) {
   }
 
   event = new FtlFileValue<FtlEvent>();
