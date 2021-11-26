@@ -19,6 +19,7 @@ import {BlueprintValidator} from './blueprints/blueprint-validator';
 import {AllowedChildrenParser} from './parsers/allowed-children-parser';
 import {RefNameValidator} from './validators/ref-name-validator';
 import {WorkspaceParser} from './workspace-parser';
+import {SoundFileNameValidator} from './validators/sound-file-name-validator';
 
 export type disposable = { dispose(): unknown };
 
@@ -52,7 +53,8 @@ export function setup(): Created {
       [
         new EventUsedValidator(mappers.eventsMapper, mappers.shipsMapper),
         new BlueprintValidator(blueprintMapper),
-        new RefNameValidator(mappersList, blueprintMapper)
+        new RefNameValidator(mappersList, blueprintMapper),
+        new SoundFileNameValidator()
       ]
   );
   const workspaceParser = new WorkspaceParser(ftlParser, ftlDocumentValidator);
