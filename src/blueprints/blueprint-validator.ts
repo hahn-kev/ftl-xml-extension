@@ -13,6 +13,7 @@ export class BlueprintValidator implements Validator {
   validateFile(file: FtlFile, diagnostics: Diagnostic[]): void {
     this.validateLists(file, diagnostics);
     this.validateRefTypes(file, diagnostics);
+    this.validateRefNames(file, diagnostics);
   }
 
   validateLists(file: FtlFile, diagnostics: Diagnostic[]) {
@@ -41,31 +42,42 @@ export class BlueprintValidator implements Validator {
     if (!typeResults) return [];
     const {map: typeMapper, listTypeName} = typeResults;
     if (listTypeName == BlueprintListTypeAny) return;
-
-    typeMapper.forEach((blueprintValues, type) => {
+    for (const [type, blueprintValues] of typeMapper) {
       // skip unknown because it'll be a warning from tryGetInvalidRefName
       if (type == listTypeName || type == 'Unknown') return;
-      diagnostics.push(...blueprintValues.map((value) =>
-        DiagnosticBuilder.listTypeMisMatch(value.name, type, listTypeName, value.range)));
-    });
+      diagnostics.push(...blueprintValues.map((value) => DiagnosticBuilder.listTypeMisMatch(value.name,
+          type,
+          listTypeName,
+          value.range)));
+    }
   }
 
   validateRefTypes(file: FtlFile, diagnostics: Diagnostic[]) {
     for (const {ref, mapper} of this.mapper.listRefs(file)) {
-      const refName = ref.name;
-      const refMapper = mapper;
-
       // fixes case for RANDOM which is valid for multiple names
-      if (refMapper.isNameValid(refName)) continue;
+      if (mapper.isNameValid(ref.name)) continue;
 
-      const defType = this.mapper.getRefType(refName);
+      const defType = this.mapper.getRefType(ref.name);
       // skip because it'll be a warning from tryGetInvalidRefName
       if (defType == 'Unknown') continue;
-      if (refMapper.typeName === defType) continue;
-      diagnostics.push(DiagnosticBuilder.blueprintRefTypeInvalid(ref.range,
-          defType,
-          refName,
-          refMapper.typeName));
+      if (mapper.typeName === defType) continue;
+      diagnostics.push(DiagnosticBuilder.blueprintRefTypeInvalid(ref.range, defType, ref.name, mapper.typeName));
+    }
+  }
+
+  validateRefNames(file: FtlFile, diagnostics: Diagnostic[]): void {
+    for (const [refName, refs, blueprintMapper] of this.mapper.refMaps(file)) {
+      if (this.mapper.isNameValid(refName)) continue;
+      for (const ref of refs) {
+        diagnostics.push(DiagnosticBuilder.invalidRefName(refName, ref.range, blueprintMapper.typeName));
+      }
+    }
+
+    for (const [refName, refs] of file.blueprintList.refs) {
+      if (this.mapper.isNameValid(refName)) continue;
+      for (const ref of refs) {
+        diagnostics.push(DiagnosticBuilder.invalidRefName(refName, ref.range, this.mapper.typeName));
+      }
     }
   }
 }

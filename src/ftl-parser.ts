@@ -63,8 +63,9 @@ export class FtlParser {
   }
 
   public parseFile(document: TextDocument) {
-    this._parseFile(document);
+    const ftlFile = this._parseFile(document);
     this._onFileParsedEmitter.fire({files: this._files});
+    return ftlFile;
   }
 
   private _parseFile(document: TextDocument) {
@@ -73,6 +74,7 @@ export class FtlParser {
 
     const htmlDocument = this.cache.getHtmlDocument(document);
     this.parseNodes(htmlDocument.roots, ftlFile, document);
+    return ftlFile;
   }
 
   private parseNodes(nodes: Node[], ftlFile: FtlFile, document: TextDocument) {

@@ -1,10 +1,9 @@
 import {FtlFile, FtlFileValue} from '../models/ftl-file';
 import {IValueSet, Node} from 'vscode-html-languageservice';
-import {Diagnostic, Location, Position, Range, TextDocument} from 'vscode';
+import {Location, Position, Range, TextDocument} from 'vscode';
 import {addToKey} from '../helpers';
 import {FtlValue} from '../models/ftl-value';
 import {FtlRefParser, RefParser} from './ref-parser';
-import {DiagnosticBuilder} from '../diagnostic-builder';
 
 export type InvalidRef = { name: string, range: Range, typeName: string }
 
@@ -23,8 +22,6 @@ export interface RefMapperBase {
   readonly defs: Map<string, FtlValue>;
   readonly fileDataSelector: (file: FtlFile) => FtlFileValue<FtlValue>,
   readonly parser: FtlRefParser,
-
-  validateRefNames(file: FtlFile, diagnostics: Diagnostic[]): void;
 
   isNameValid(name: string): boolean;
 }
@@ -92,15 +89,6 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
   getRefName(node: Node, document: TextDocument, position: Position) {
     return this.parser.nodeMap.getNameDef(node, document, position)
         ?? this.parser.nodeMap.getRefName(node, document, position);
-  }
-
-  validateRefNames(file: FtlFile, diagnostics: Diagnostic[]): void {
-    this.parser.fileDataSelector(file).refs.forEach((refs, refName) => {
-      if (this.isNameValid(refName)) return;
-      for (const ref of refs) {
-        diagnostics.push(DiagnosticBuilder.invalidRefName({name: refName, typeName: this.typeName, range: ref.range}));
-      }
-    });
   }
 
 

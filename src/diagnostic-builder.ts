@@ -2,7 +2,6 @@ import {Diagnostic, DiagnosticSeverity, Range, TextDocument} from 'vscode';
 import {Node} from 'vscode-html-languageservice';
 import {toRange} from './helpers';
 import {BlueprintListTypeAny} from './data/ftl-data';
-import {InvalidRef} from './ref-mappers/ref-mapper';
 
 export enum FtlErrorCode {
   listTypeMismatch = 'ftl-listTypeMismatch',
@@ -61,9 +60,9 @@ export class DiagnosticBuilder {
         FtlErrorCode.unusedRef);
   }
 
-  static invalidRefName(invalidRef: InvalidRef) {
-    return this.diag(invalidRef.range,
-        `Invalid ${invalidRef.typeName} name: '${invalidRef.name}'`,
+  static invalidRefName(name: string, range: Range, typeName: string) {
+    return this.diag(range,
+        `Invalid ${typeName} name: '${name}'`,
         DiagnosticSeverity.Warning,
         FtlErrorCode.invalidRefName);
   }

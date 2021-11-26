@@ -25,6 +25,7 @@ import {EventUsedValidator} from './validators/event-used-validator';
 import {RequiredChildrenParser} from './parsers/required-children-parser';
 import {BlueprintValidator} from './blueprints/blueprint-validator';
 import {AllowedChildrenParser} from './parsers/allowed-children-parser';
+import {RefNameValidator} from './validators/ref-name-validator';
 
 export type disposable = { dispose(): unknown };
 
@@ -52,9 +53,13 @@ export function setup(): { ftlParser: FtlParser; ftlDocumentValidator: FltDocume
   const ftlDefinitionProvider = new FtlDefinitionProvider(documentCache, mappersList);
   const ftlDocumentValidator = new FltDocumentValidator(documentCache,
       diagnosticCollection,
-      mappersList,
       ftlParser,
-      [new EventUsedValidator(mappers.eventsMapper, mappers.shipsMapper), new BlueprintValidator(blueprintMapper)]);
+      [
+        new EventUsedValidator(mappers.eventsMapper, mappers.shipsMapper),
+        new BlueprintValidator(blueprintMapper),
+        new RefNameValidator(mappersList, blueprintMapper)
+      ]
+  );
   const ftlReferenceProvider = new FtlReferenceProvider(documentCache, mappersList);
   const hoverProvider = new FtlHoverProvider(documentCache, service);
   const completionItemProvider = new FtlCompletionProvider(documentCache, service, blueprintMapper);
@@ -66,8 +71,8 @@ export function setup(): { ftlParser: FtlParser; ftlDocumentValidator: FltDocume
   });
   workspace.onDidChangeTextDocument((e) => {
     if (e.document?.languageId == ftlXmlDoc.language) {
-      ftlParser.parseFile(e.document);
-      ftlDocumentValidator.validateDocument(e.document);
+      const file = ftlParser.parseFile(e.document);
+      ftlDocumentValidator.validateFile(file);
     }
   });
   workspace.onDidChangeWorkspaceFolders(async (e) => {
@@ -107,5 +112,5 @@ export function setup(): { ftlParser: FtlParser; ftlDocumentValidator: FltDocume
 
 export async function parseWorkspace(ftlParser: FtlParser, ftlDocumentValidator: FltDocumentValidator) {
   const files = await ftlParser.parseCurrentWorkspace();
-  await ftlDocumentValidator.validateFtlFiles(Array.from(files.values()));
+  ftlDocumentValidator.validateFtlFiles(Array.from(files.values()));
 }

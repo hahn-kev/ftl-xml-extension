@@ -1,13 +1,12 @@
 import {RefMapperBase} from '../ref-mappers/ref-mapper';
 import {Node} from 'vscode-html-languageservice';
-import {Diagnostic, Location, Position, TextDocument} from 'vscode';
+import {Location, Position, TextDocument} from 'vscode';
 import {FtlFile, FtlFileValue} from '../models/ftl-file';
 import {FtlBlueprintList, FtlBlueprintValue} from '../models/ftl-blueprint-list';
 import {FtlValue} from '../models/ftl-value';
 import {addToKey, firstWhere} from '../helpers';
 import {BlueprintListTypeAny} from '../data/ftl-data';
 import {BlueprintParser} from './blueprint-parser';
-import {DiagnosticBuilder} from '../diagnostic-builder';
 
 
 export class BlueprintMapper implements RefMapperBase {
@@ -57,33 +56,6 @@ export class BlueprintMapper implements RefMapperBase {
     return results.map((value) => value.toLocation());
   }
 
-  validateRefNames(file: FtlFile, diagnostics: Diagnostic[]): void {
-    for (const blueprintMapper of this.blueprintMappers) {
-      if (!blueprintMapper.fileDataSelector) continue;
-      blueprintMapper.fileDataSelector(file).refs.forEach((refs, refName) => {
-        if (this.isNameValid(refName)) return;
-        for (const ref of refs) {
-          diagnostics.push(DiagnosticBuilder.invalidRefName({
-            name: refName,
-            typeName: blueprintMapper.typeName,
-            range: ref.range
-          }));
-        }
-      });
-    }
-
-    file.blueprintList.refs.forEach((refs, refName) => {
-      if (this.isNameValid(refName)) return;
-      for (const ref of refs) {
-        diagnostics.push(DiagnosticBuilder.invalidRefName({
-          name: refName,
-          typeName: this.typeName,
-          range: ref.range
-        }));
-      }
-    });
-  }
-
 
   isNameValid(name: string): boolean {
     return this.defs.has(name) || this.blueprintMappers.some((value) => value.isNameValid(name));
@@ -116,6 +88,18 @@ export class BlueprintMapper implements RefMapperBase {
         if (this.defs.has(listRef.name)) {
           addToKey(this.refs, listRef.name, listRef);
         }
+      }
+    }
+  }
+
+  * refMaps(file: FtlFile): IterableIterator<[string, FtlValue[], RefMapperBase]> {
+    for (const mapper of this.blueprintMappers) {
+      if (!mapper.fileDataSelector) {
+        continue;
+      }
+
+      for (const refKvp of mapper.fileDataSelector(file).refs) {
+        yield [...refKvp, mapper];
       }
     }
   }

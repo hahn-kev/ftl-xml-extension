@@ -1,6 +1,5 @@
 import {DocumentCache} from './document-cache';
-import {Diagnostic, DiagnosticCollection, TextDocument, Uri, workspace} from 'vscode';
-import {RefMapperBase} from './ref-mappers/ref-mapper';
+import {Diagnostic, DiagnosticCollection, TextDocument, Uri} from 'vscode';
 import {FtlParser} from './ftl-parser';
 import {FtlFile} from './models/ftl-file';
 import {Validator} from './validators/validator';
@@ -8,37 +7,42 @@ import {Validator} from './validators/validator';
 export class FltDocumentValidator {
   constructor(private documentCache: DocumentCache,
               private diagnosticCollection: DiagnosticCollection,
-              private mappers: RefMapperBase[],
               private parser: FtlParser,
               private validators: Validator[]) {
   }
 
   async validateFiles(files: Uri[]) {
+    console.time('validate file uris');
+    const ftlFiles = await this.parser.files;
     for (const fileUri of files) {
-      await this.validateDocument(await workspace.openTextDocument(fileUri));
+      const ftlFile = ftlFiles.get(fileUri.toString());
+      if (ftlFile) this.validateFile(ftlFile);
     }
+    console.timeEnd('validate file uris');
   }
 
-  async validateFtlFiles(files: FtlFile[]) {
-    // todo convert once we don't need to parse the file
-    await this.validateFiles(files.map((f) => f.uri));
+  validateFtlFiles(files: FtlFile[]) {
+    console.time('validate ftl files');
+    for (const file of files) {
+      this.validateFile(file);
+    }
+    console.timeEnd('validate ftl files');
   }
 
-  async validateDocument(document: TextDocument) {
-    const files = await this.parser.files;
-    const file = files.get(document.uri.toString());
+  validateFile(file: FtlFile) {
     const diagnostics: Diagnostic[] = [];
-    if (file) this.validateFile(file, document, diagnostics);
-    this.diagnosticCollection.set(document.uri, diagnostics);
-  }
-
-  validateFile(file: FtlFile, document: TextDocument, diagnostics: Diagnostic[]) {
     diagnostics.push(...file.diagnostics);
     for (const validator of this.validators) {
       validator.validateFile(file, diagnostics);
     }
-    for (const mapper of this.mappers) {
-      mapper.validateRefNames(file, diagnostics);
+    this.diagnosticCollection.set(file.uri, diagnostics);
+  }
+
+  async validateDocument(document: TextDocument) {
+    const ftlFiles = await this.parser.files;
+    const file = ftlFiles.get(document.uri.toString());
+    if (file) {
+      this.validateFile(file);
     }
   }
 }
