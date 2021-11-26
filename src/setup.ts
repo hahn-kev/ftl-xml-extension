@@ -42,7 +42,7 @@ export function setup(): Created {
   // kinda ugly, but the ftlParser depends on a list of parsers, and the color provider depends on the parser
   // I should split them out, but I like the parsing and color providing in the same place
   parsers.push(ftlColor);
-  const ftlDataProvider = new FtlDataProvider(ftlParser.onFileParsed, mappersList);
+  const ftlDataProvider = new FtlDataProvider(ftlParser.onParsed, mappersList);
   const ftlCodeAction = new FtlCodeActionProvider(documentCache);
   service.setDataProviders(false, [ftlDataProvider]);
 

@@ -45,3 +45,13 @@ export const SoundNames: IValueSet = {
   name: 'sound-names',
   values: [{name: 'loading...'}]
 };
+
+export const SoundPaths: IValueSet = {
+  name: 'sound-path-names',
+  values: [{name: 'loading...'}]
+};
+
+export const MusicPaths: IValueSet = {
+  name: 'music-path-names',
+  values: [{name: 'loading...'}]
+};

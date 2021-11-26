@@ -4,9 +4,9 @@ import {
   AutoblueprintNames,
   CrewNames,
   DroneNames,
-  EventNamesValueSet,
+  EventNamesValueSet, MusicPaths,
   ShipNames,
-  SoundNames,
+  SoundNames, SoundPaths,
   SystemNames,
   TextIdNames,
   WeaponNames
@@ -384,6 +384,9 @@ export const FtlData: XmlData = {
     {name: 'eventList', attributes: [], tags: ['event']},
     // quest child tags
     {name: 'nebulaEvent', attributes: [], contentsValueSet: EventNamesValueSet.name},
+
+    {name: 'explore', attributes: [], contentsValueSet: MusicPaths.name},
+    {name: 'combat', attributes: [], contentsValueSet: MusicPaths.name}
   ],
   valueSets: [
     {name: 'bool', values: [{name: 'true'}, {name: 'false'}]},
@@ -417,6 +420,8 @@ export const FtlData: XmlData = {
     AugmentNames,
     CrewNames,
     SystemNames,
-    SoundNames
+    SoundNames,
+    SoundPaths,
+    MusicPaths
   ]
 };

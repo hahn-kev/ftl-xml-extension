@@ -1,5 +1,5 @@
 import {FtlFile} from './ftl-file';
-import {Uri} from 'vscode';
+import {SoundFile} from './sound-file';
 
 export class FtlRoot {
   constructor() {
@@ -7,5 +7,6 @@ export class FtlRoot {
   }
 
   files: Map<string, FtlFile>;
-  soundFiles: Uri[] = [];
+  soundFiles: SoundFile[] = [];
+  musicFiles: SoundFile[] = [];
 }

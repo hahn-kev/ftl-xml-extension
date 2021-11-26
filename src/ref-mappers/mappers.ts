@@ -3,14 +3,7 @@ import {FtlEvent} from '../models/ftl-event';
 import {Node} from 'vscode-html-languageservice';
 import {Position, TextDocument} from 'vscode';
 import {events} from '../events';
-import {
-  fileName,
-  getAttrValueForTag,
-  getNodeTextContent,
-  hasAncestor,
-  hasAttr,
-  normalizeAttributeName
-} from '../helpers';
+import {fileName, getAttrValueForTag, getNodeTextContent, hasAttr, normalizeAttributeName} from '../helpers';
 import {
   AugmentNames,
   AutoblueprintNames,
@@ -45,6 +38,7 @@ import {defaultText} from '../data/default-text';
 import {RefParser} from './ref-parser';
 import {FtlSound} from '../models/ftl-sound';
 import {defaultSounds} from '../data/default-sounds';
+import {Sounds} from '../sounds';
 
 class Mappers {
   readonly eventsMapper = new RefMapper(new RefParser((file) => file.event, FtlEvent, events),
@@ -237,11 +231,7 @@ class Mappers {
           FtlSound,
           {
             getNameDef: (node: Node, document: TextDocument, position?: Position): string | undefined => {
-              if (!node.tag || node.tag == 'FTL') return;
-              const docFileName = fileName(document);
-              if (docFileName && this.validSoundFileNames.includes(docFileName) && !hasAncestor(node, 'music', true)) {
-                return node.tag;
-              }
+              return Sounds.isSoundNode(node, document) ? node.tag : undefined;
             },
             getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
               return getNodeTextContent(node, document, 'sound')

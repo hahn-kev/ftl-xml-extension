@@ -5,12 +5,13 @@ import {DocumentCache} from './document-cache';
 import {FtlXmlParser} from './parsers/ftl-xml-parser';
 import {FtlRoot} from './models/ftl-root';
 import {fileName} from './helpers';
+import {SoundFile} from './models/sound-file';
 
 export class FtlParser {
   constructor(private cache: DocumentCache, private parsers: FtlXmlParser[]) {
   }
 
-  private _onFileParsedEmitter = new EventEmitter<{ files: Map<string, FtlFile> }>();
+  private _onParsedEmitter = new EventEmitter<FtlRoot>();
   private _parsingPromise?: Thenable<void>;
 
   public get isParsing(): boolean {
@@ -22,8 +23,8 @@ export class FtlParser {
     return this.root.files;
   }
 
-  public get onFileParsed() {
-    return this._onFileParsedEmitter.event;
+  public get onParsed() {
+    return this._onParsedEmitter.event;
   }
 
   private root = new FtlRoot();
@@ -60,12 +61,17 @@ export class FtlParser {
       }
     });
     console.timeEnd('parse files');
-    this._onFileParsedEmitter.fire({files: this.root.files});
+    this._onParsedEmitter.fire(this.root);
   }
 
   private async parseFile(file: Uri) {
     if (this.isAudioFile(file)) {
-      this.root.soundFiles.push(file);
+      const soundFile = new SoundFile(file);
+      if (soundFile.type === 'wave') {
+        this.root.soundFiles.push(soundFile);
+      } else if (soundFile.type === 'music') {
+        this.root.musicFiles.push(soundFile);
+      }
       return;
     }
     const document = await workspace.openTextDocument(file);
@@ -79,7 +85,7 @@ export class FtlParser {
 
   public parseDocument(document: TextDocument) {
     const ftlFile = this._parseDocument(document);
-    this._onFileParsedEmitter.fire({files: this.root.files});
+    this._onParsedEmitter.fire(this.root);
     return ftlFile;
   }
 

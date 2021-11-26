@@ -1,7 +1,8 @@
 import {Validator} from './validator';
 import {FtlFile} from '../models/ftl-file';
-import {Diagnostic, Uri} from 'vscode';
+import {Diagnostic} from 'vscode';
 import {DiagnosticBuilder} from '../diagnostic-builder';
+import {SoundFile} from '../models/sound-file';
 
 export class SoundFileNameValidator implements Validator {
   validateFile(file: FtlFile, diagnostics: Diagnostic[]): void {
@@ -14,14 +15,12 @@ export class SoundFileNameValidator implements Validator {
     }
   }
 
-  private hasMatchingFile(soundFiles: Uri[], soundFilePath: string) {
-    let foundMatchingFile = false;
+  private hasMatchingFile(soundFiles: SoundFile[], soundFilePath: string) {
     for (const soundFile of soundFiles) {
-      if (soundFile.path.endsWith(soundFilePath)) {
-        foundMatchingFile = true;
-        break;
+      if (soundFile.matches(soundFilePath)) {
+        return true;
       }
     }
-    return foundMatchingFile;
+    return false;
   }
 }
