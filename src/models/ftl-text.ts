@@ -9,7 +9,7 @@ export class FtlText extends FtlValue {
   text?: string;
 
   constructor(name: string, file: FtlFile, node: Node, document: TextDocument, isDef: boolean) {
-    super(name, file, node, document);
+    super(name, file, node, document, isDef);
     if (isDef) {
       this.text = getNodeTextContent(node, document);
     }

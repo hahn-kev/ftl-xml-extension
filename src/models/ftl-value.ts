@@ -3,7 +3,7 @@ import {Node} from 'vscode-html-languageservice';
 import {Location, Position, Range, TextDocument} from 'vscode';
 
 export abstract class FtlValue {
-  constructor(name: string, file: FtlFile, node: Node, document: TextDocument) {
+  constructor(name: string, file: FtlFile, node: Node, document: TextDocument, isDef: boolean) {
     this.file = file;
     this.name = name;
     this.startOffset = node.start;

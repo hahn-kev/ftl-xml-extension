@@ -8,8 +8,8 @@ import {normalizeAttributeName} from '../helpers';
 export class FtlBlueprintList extends FtlValue {
   readonly kind = 'blueprint-list';
 
-  constructor(name: string, file: FtlFile, node: Node, document: TextDocument) {
-    super(name, file, node, document);
+  constructor(name: string, file: FtlFile, node: Node, document: TextDocument, isDef: boolean) {
+    super(name, file, node, document, isDef);
     this.isAnyType = normalizeAttributeName(node.attributes?.type) == BlueprintListTypeAny;
   }
 
@@ -20,8 +20,4 @@ export class FtlBlueprintList extends FtlValue {
 
 export class FtlBlueprintValue extends FtlValue {
   readonly kind = 'blueprint-list-value';
-
-  constructor(name: string, file: FtlFile, node: Node, document: TextDocument) {
-    super(name, file, node, document);
-  }
 }

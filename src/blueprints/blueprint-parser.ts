@@ -20,7 +20,7 @@ export class BlueprintParser implements FtlXmlParser {
   parseNode(node: Node, file: FtlFile, document: TextDocument): void {
     const name = this.getBlueprintListName(node, document);
     if (name) {
-      const ftlBlueprintList = new FtlBlueprintList(name, file, node, document);
+      const ftlBlueprintList = new FtlBlueprintList(name, file, node, document, true);
       ftlBlueprintList.childRefNames = node.children.filter((c) => c.tag == 'name')
           .map((c) => this.getNameNodeText(c, document))
           .filter((t): t is string => !!t);
@@ -43,7 +43,7 @@ export class BlueprintParser implements FtlXmlParser {
   parseListChild(node: Node, file: FtlFile, document: TextDocument) {
     const refName = this.getNameNodeText(node, document);
     if (!refName) return;
-    const ftlBlueprintValue = new FtlBlueprintValue(refName, file, node, document);
+    const ftlBlueprintValue = new FtlBlueprintValue(refName, file, node, document, false);
     addToKey(file.blueprintList.refs, refName, ftlBlueprintValue);
     return ftlBlueprintValue;
   }
