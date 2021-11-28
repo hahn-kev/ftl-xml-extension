@@ -1,14 +1,19 @@
 import {HTMLDataV1, IAttributeData, ITagData} from 'vscode-html-languageservice';
 import {
+  AnimationNames,
+  AnimationSheetNames,
   AugmentNames,
   AutoblueprintNames,
   CrewNames,
   DroneNames,
-  EventNamesValueSet, MusicPaths,
+  EventNamesValueSet,
+  MusicPaths,
   ShipNames,
-  SoundNames, SoundPaths,
+  SoundNames,
+  SoundPaths,
   SystemNames,
   TextIdNames,
+  WeaponAnimationNames,
   WeaponNames
 } from './autocomplete-value-sets';
 
@@ -135,13 +140,13 @@ const weaponTags: XmlTag[] = [
   {name: 'cost', attributes: []},
   {name: 'bp', attributes: []},
   {name: 'rarity', attributes: [], contentsValueSet: 'rarity-value-set'},
-  {name: 'image', attributes: []},
-  {name: 'explosion', attributes: []},
+  {name: 'image', attributes: [], contentsValueSet: AnimationNames.name},
+  {name: 'explosion', attributes: [], contentsValueSet: AnimationNames.name},
   {name: 'launchSounds', attributes: []},
   {name: 'hitShipSounds', attributes: []},
   {name: 'hitShieldSounds', attributes: []},
   {name: 'missSounds', attributes: []},
-  {name: 'weaponArt', attributes: []},
+  {name: 'weaponArt', attributes: [], contentsValueSet: WeaponAnimationNames.name},
   {name: 'tip', attributes: [], contentsValueSet: TextIdNames.name},
   {name: 'iconImage', attributes: []},
   {name: 'color', attributes: []},
@@ -283,6 +288,7 @@ export const FtlData: XmlData = {
       attributes: [{name: 'name'}]
     },
     ...weaponTags,
+    {name: 'projectile', attributes: [{name: 'count'}, boolAttr('fake')], contentsValueSet: AnimationNames.name},
     {
       name: 'droneBlueprint',
       attributes: [{name: 'name'}],
@@ -386,7 +392,12 @@ export const FtlData: XmlData = {
     {name: 'nebulaEvent', attributes: [], contentsValueSet: EventNamesValueSet.name},
 
     {name: 'explore', attributes: [], contentsValueSet: MusicPaths.name},
-    {name: 'combat', attributes: [], contentsValueSet: MusicPaths.name}
+    {name: 'combat', attributes: [], contentsValueSet: MusicPaths.name},
+
+    {name: 'anim', attributes: [{name: 'name'}]},
+    {name: 'weaponAnim', attributes: [{name: 'name'}]},
+    {name: 'sheet', attributes: [], contentsValueSet: AnimationSheetNames.name},
+    {name: 'animSheet', attributes: [{name: 'name'}]},
   ],
   valueSets: [
     {name: 'bool', values: [{name: 'true'}, {name: 'false'}]},
@@ -422,6 +433,9 @@ export const FtlData: XmlData = {
     SystemNames,
     SoundNames,
     SoundPaths,
-    MusicPaths
+    MusicPaths,
+    AnimationNames,
+    AnimationSheetNames,
+    WeaponAnimationNames,
   ]
 };

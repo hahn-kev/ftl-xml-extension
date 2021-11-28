@@ -14,10 +14,16 @@ import {addToKey} from '../helpers';
 import {FtlSound} from './ftl-sound';
 import {FtlColor} from './ftl-color';
 import {FtlRoot} from './ftl-root';
+import {FtlAnimation} from './ftl-animation';
+import {FtlWeaponAnimation} from './ftl-weapon-animation';
+import {FtlAnimationSheet} from './ftl-animation-sheet';
 
 
 export class FtlFile {
   sounds = new FtlFileValue<FtlSound>();
+  animations = new FtlFileValue<FtlAnimation>();
+  weaponAnimations = new FtlFileValue<FtlWeaponAnimation>();
+  animationSheets = new FtlFileValue<FtlAnimationSheet>();
   diagnostics: Diagnostic[] = [];
 
   constructor(public uri: Uri, public root: FtlRoot) {

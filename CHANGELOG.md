@@ -79,3 +79,4 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 ## 0.4.0
 - Add support for completing and validating sound file paths
 - add flavorType[id] is text ref
+- Add support for completing, validating, go to for animations

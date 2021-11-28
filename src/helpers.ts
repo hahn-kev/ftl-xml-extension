@@ -22,9 +22,14 @@ export function hasAncestor(node: Node, name: string, includeSelf: boolean): boo
   return hasAncestor(node.parent, name, true);
 }
 
-export function getNodeTextContent(node: Node, document: TextDocument, whenTagName?: string) {
+export function getNodeTextContent(
+    node: Node,
+    document: TextDocument,
+    whenTagName?: string,
+    whenParentTagName?: string) {
   if (node.startTagEnd === undefined || node.endTagStart === undefined) return undefined;
   if (typeof whenTagName === 'string' && node.tag !== whenTagName) return undefined;
+  if (typeof whenParentTagName === 'string' && node.parent?.tag !== whenParentTagName) return undefined;
   return document.getText(toRange(node.startTagEnd, node.endTagStart, document));
 }
 

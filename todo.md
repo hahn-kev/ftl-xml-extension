@@ -1,6 +1,5 @@
 ## Going to implement
 - add path complete for animations and other files
-- add sound support
 - format support
 - allow marking events that are unused as not an error, still show a hint about the issue so it can be undone.
 - add snippets for animations

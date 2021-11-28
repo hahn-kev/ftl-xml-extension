@@ -5,6 +5,8 @@ import {Position, TextDocument} from 'vscode';
 import {events} from '../events';
 import {fileName, getAttrValueForTag, getNodeTextContent, hasAttr, normalizeAttributeName} from '../helpers';
 import {
+  AnimationNames,
+  AnimationSheetNames,
   AugmentNames,
   AutoblueprintNames,
   CrewNames,
@@ -14,6 +16,7 @@ import {
   SoundNames,
   SystemNames,
   TextIdNames,
+  WeaponAnimationNames,
   WeaponNames
 } from '../data/autocomplete-value-sets';
 import {defaultEvents} from '../data/default-events';
@@ -39,6 +42,12 @@ import {RefParser} from './ref-parser';
 import {FtlSound} from '../models/ftl-sound';
 import {defaultSounds} from '../data/default-sounds';
 import {Sounds} from '../sounds';
+import {FtlAnimation} from '../models/ftl-animation';
+import {defaultAnimations} from '../data/default-animations';
+import {FtlAnimationSheet} from '../models/ftl-animation-sheet';
+import {defaultAnimationSheets} from '../data/default-animation-sheets';
+import {FtlWeaponAnimation} from '../models/ftl-weapon-animation';
+import {defaultWeaponAnimations} from '../data/default-weapon-animations';
 
 class Mappers {
   readonly eventsMapper = new RefMapper(new RefParser((file) => file.event, FtlEvent, events),
@@ -224,9 +233,6 @@ class Mappers {
       'Text',
       defaultText);
 
-
-  readonly validSoundFileNames = ['dlcSounds.xml', 'dlcSounds.xml.append', 'sounds.xml', 'sounds.xml.append'];
-
   readonly soundMapper = new RefMapper(
       new RefParser((file) => file.sounds,
           FtlSound,
@@ -249,6 +255,55 @@ class Mappers {
       defaultSounds
   );
 
+  readonly animationMapper = new RefMapper(
+      new RefParser((file) => file.animations,
+          FtlAnimation,
+          {
+            getNameDef: (node: Node, document: TextDocument, position?: Position): string | undefined => {
+              return getAttrValueForTag(node, 'anim', 'name', document, position);
+            },
+            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+              return getNodeTextContent(node, document, 'image')
+                  ?? getNodeTextContent(node, document, 'explosion', 'weaponBlueprint');
+            }
+          }),
+      AnimationNames,
+      'Animation',
+      defaultAnimations
+  );
+
+  readonly animationSheetMapper = new RefMapper(
+      new RefParser((file) => file.animationSheets,
+          FtlAnimationSheet,
+          {
+            getNameDef: (node: Node, document: TextDocument, position?: Position): string | undefined => {
+              return getAttrValueForTag(node, 'animSheet', 'name', document, position);
+            },
+            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+              return getNodeTextContent(node, document, 'sheet');
+            }
+          }),
+      AnimationSheetNames,
+      'Animation Sheet',
+      defaultAnimationSheets
+  );
+
+  readonly weaponAnimationMapper = new RefMapper(
+      new RefParser((file) => file.weaponAnimations,
+          FtlWeaponAnimation,
+          {
+            getNameDef: (node: Node, document: TextDocument, position?: Position): string | undefined => {
+              return getAttrValueForTag(node, 'weaponAnim', 'name', document, position);
+            },
+            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+              return getNodeTextContent(node, document, 'weaponArt');
+            }
+          }),
+      WeaponAnimationNames,
+      'Weapon Animation',
+      defaultWeaponAnimations
+  );
+
 
   public setup(documentCache: DocumentCache) {
     const blueprintMappers: RefMapperBase[] = [
@@ -265,6 +320,9 @@ class Mappers {
       this.shipsMapper,
       this.textMapper,
       this.soundMapper,
+      this.animationMapper,
+      this.animationSheetMapper,
+      this.weaponAnimationMapper,
       blueprintMapper
     ];
     return {blueprintMapper, mappers};

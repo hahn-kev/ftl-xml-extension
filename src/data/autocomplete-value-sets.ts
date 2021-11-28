@@ -55,3 +55,18 @@ export const MusicPaths: IValueSet = {
   name: 'music-path-names',
   values: [{name: 'loading...'}]
 };
+
+export const AnimationNames: IValueSet = {
+  name: 'animation-names',
+  values: [{name: 'loading...'}]
+};
+
+export const AnimationSheetNames: IValueSet = {
+  name: 'animation-sheet-names',
+  values: [{name: 'loading...'}]
+};
+
+export const WeaponAnimationNames: IValueSet = {
+  name: 'weapon-animation-names',
+  values: [{name: 'loading...'}]
+};

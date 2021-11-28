@@ -3,6 +3,7 @@
 
 import {commands, ExtensionContext, ExtensionMode} from 'vscode';
 import {
+  AnimationNames, AnimationSheetNames,
   AugmentNames,
   AutoblueprintNames,
   CrewNames,
@@ -11,10 +12,10 @@ import {
   ShipNames,
   SoundNames,
   SystemNames,
-  TextIdNames,
+  TextIdNames, WeaponAnimationNames,
   WeaponNames
 } from './data/autocomplete-value-sets';
-import {parseWorkspace, setup} from './setup';
+import {setup} from './setup';
 
 
 // noinspection JSUnusedGlobalSymbols
@@ -42,6 +43,9 @@ export function activate(context: ExtensionContext) {
         const crew = CrewNames.values.map((c) => c.name);
         const sys = SystemNames.values.map((s) => s.name);
         const sounds = SoundNames.values.map((s) => s.name);
+        const animations = AnimationNames.values.map((a) => a.name);
+        const animationSheets = AnimationSheetNames.values.map((a) => a.name);
+        const weaponAnimations = WeaponAnimationNames.values.map((a) => a.name);
         const tmp = '';
       }
     });
