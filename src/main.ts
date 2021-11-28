@@ -10,7 +10,7 @@ import {
   DroneNames,
   EventNamesValueSet,
   ShipNames,
-  SoundNames,
+  SoundWaveNames,
   SystemNames,
   TextIdNames, WeaponAnimationNames,
   WeaponNames
@@ -42,7 +42,7 @@ export function activate(context: ExtensionContext) {
         const augs = AugmentNames.values.map((a) => a.name);
         const crew = CrewNames.values.map((c) => c.name);
         const sys = SystemNames.values.map((s) => s.name);
-        const sounds = SoundNames.values.map((s) => s.name);
+        const sounds = SoundWaveNames.values.map((s) => s.name);
         const animations = AnimationNames.values.map((a) => a.name);
         const animationSheets = AnimationSheetNames.values.map((a) => a.name);
         const weaponAnimations = WeaponAnimationNames.values.map((a) => a.name);

@@ -1,4 +1,4 @@
-export const defaultSounds: string[] = [
+export const defaultSoundWaves: string[] = [
   'victory',
   'powerUpFail',
   'powerUpSystem',

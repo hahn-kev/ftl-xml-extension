@@ -18,7 +18,7 @@ import {convertDocumentation, convertRange, toTextDocumentHtml} from '../helpers
 import {DocumentCache} from '../document-cache';
 import {BlueprintMapper} from '../blueprints/blueprint-mapper';
 import {FtlData, XmlTag} from '../data/ftl-data';
-import {ShipNames, SoundPaths} from '../data/autocomplete-value-sets';
+import {ShipNames, SoundWavePaths} from '../data/autocomplete-value-sets';
 import {Sounds} from '../sounds';
 
 export class FtlCompletionProvider implements CompletionItemProvider {
@@ -95,8 +95,8 @@ export class FtlCompletionProvider implements CompletionItemProvider {
 
   private tryCompleteNodeContents(node: Node, document: TextDocument, offset: number): CompletionItem[] | undefined {
     if (!node.tag || !FtlCompletionProvider.shouldCompleteForNodeContents(node, offset)) return;
-    if (Sounds.isSoundNode(node, document)) {
-      return this.valueSetToCompletionItems(SoundPaths);
+    if (Sounds.isWaveNode(node, document)) {
+      return this.valueSetToCompletionItems(SoundWavePaths);
     }
     let valueSet = this.completeContentMap.get(node.tag);
     if (!valueSet && node.parent?.tag) valueSet = this.completeContentMap.get(`${node.parent.tag}>${node.tag}`);

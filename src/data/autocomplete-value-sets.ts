@@ -41,13 +41,13 @@ export const SystemNames: IValueSet = {
   values: [{name: 'loading...'}]
 };
 
-export const SoundNames: IValueSet = {
-  name: 'sound-names',
+export const SoundWaveNames: IValueSet = {
+  name: 'sound-wave-names',
   values: [{name: 'loading...'}]
 };
 
-export const SoundPaths: IValueSet = {
-  name: 'sound-path-names',
+export const SoundWavePaths: IValueSet = {
+  name: 'sound-wave-path-names',
   values: [{name: 'loading...'}]
 };
 

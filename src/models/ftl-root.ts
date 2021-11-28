@@ -7,6 +7,6 @@ export class FtlRoot {
   }
 
   files: Map<string, FtlFile>;
-  soundFiles: SoundFile[] = [];
+  soundWaveFiles: SoundFile[] = [];
   musicFiles: SoundFile[] = [];
 }

@@ -13,7 +13,7 @@ import {
   DroneNames,
   EventNamesValueSet,
   ShipNames,
-  SoundNames,
+  SoundWaveNames,
   SystemNames,
   TextIdNames,
   WeaponAnimationNames,
@@ -40,7 +40,7 @@ import {defaultSystems} from '../data/default-systems';
 import {defaultText} from '../data/default-text';
 import {RefParser} from './ref-parser';
 import {FtlSound} from '../models/ftl-sound';
-import {defaultSounds} from '../data/default-sounds';
+import {defaultSoundWaves} from '../data/default-sound-waves';
 import {Sounds} from '../sounds';
 import {FtlAnimation} from '../models/ftl-animation';
 import {defaultAnimations} from '../data/default-animations';
@@ -233,12 +233,12 @@ class Mappers {
       'Text',
       defaultText);
 
-  readonly soundMapper = new RefMapper(
+  readonly soundWaveMapper = new RefMapper(
       new RefParser((file) => file.sounds,
           FtlSound,
           {
             getNameDef: (node: Node, document: TextDocument, position?: Position): string | undefined => {
-              return Sounds.isSoundNode(node, document) ? node.tag : undefined;
+              return Sounds.isWaveNode(node, document) ? node.tag : undefined;
             },
             getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
               return getNodeTextContent(node, document, 'sound')
@@ -250,9 +250,9 @@ class Mappers {
                   ?? getNodeTextContent(node, document, 'timerSound');
             }
           }),
-      SoundNames,
-      'Sound',
-      defaultSounds
+      SoundWaveNames,
+      'Wave',
+      defaultSoundWaves
   );
 
   readonly animationMapper = new RefMapper(
@@ -320,7 +320,7 @@ class Mappers {
       this.eventsMapper,
       this.shipsMapper,
       this.textMapper,
-      this.soundMapper,
+      this.soundWaveMapper,
       this.animationMapper,
       this.animationSheetMapper,
       this.weaponAnimationMapper,

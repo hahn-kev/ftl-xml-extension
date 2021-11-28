@@ -6,7 +6,7 @@ import {SoundFile} from '../models/sound-file';
 
 export class SoundFileNameValidator implements Validator {
   validateFile(file: FtlFile, diagnostics: Diagnostic[]): void {
-    const soundFiles = file.root.soundFiles;
+    const soundFiles = file.root.soundWaveFiles;
     for (const sound of file.sounds.defs) {
       if (!sound.soundFilePath || this.hasMatchingFile(soundFiles, sound.soundFilePath)) {
         continue;

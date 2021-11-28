@@ -68,7 +68,7 @@ export class FtlParser {
     if (this.isAudioFile(file)) {
       const soundFile = new SoundFile(file);
       if (soundFile.type === 'wave') {
-        this.root.soundFiles.push(soundFile);
+        this.root.soundWaveFiles.push(soundFile);
       } else if (soundFile.type === 'music') {
         this.root.musicFiles.push(soundFile);
       }
