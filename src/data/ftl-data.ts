@@ -146,7 +146,7 @@ const weaponTags: XmlTag[] = [
   {name: 'iconImage', attributes: []},
   {name: 'color', attributes: []},
   {name: 'drone_targetable', attributes: []},
-  {name: 'flavorType', attributes: []},
+  {name: 'flavorType', attributes: [{name: 'id', valueSet: TextIdNames.name}]},
   {name: 'radius', attributes: []},
   {name: 'spin', attributes: []},
   {name: 'projectiles', attributes: []},

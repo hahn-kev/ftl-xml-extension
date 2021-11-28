@@ -215,6 +215,7 @@ class Mappers {
                   ?? getAttrValueForTag(node, 'short', 'id', document, position)
                   ?? getAttrValueForTag(node, 'desc', 'id', document, position)
                   ?? getAttrValueForTag(node, 'tooltip', 'id', document, position)
+                  ?? getAttrValueForTag(node, 'flavorType', 'id', document, position)
                   ?? getNodeTextContent(node, document, 'tip');
             }
           }

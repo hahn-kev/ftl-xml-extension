@@ -75,3 +75,7 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 - show info when an event is not used anywhere
 - add bossShip (hs) as a ship ref 
 - add escape, quest, triggeredEvent, nebulaEvent, jumpEvent, exitBeacon, rebelBeacon as event refs
+
+## 0.4.0
+- Add support for completing and validating sound file paths
+- add flavorType[id] is text ref
