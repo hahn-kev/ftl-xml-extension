@@ -64,25 +64,31 @@ export function setup(): Created {
   const hoverProvider = new FtlHoverProvider(documentCache, service);
   const completionItemProvider = new FtlCompletionProvider(documentCache, service, blueprintMapper);
 
-  window.onDidChangeActiveTextEditor((e) => {
+  const subs: disposable[] = [];
+  subs.push(window.onDidChangeActiveTextEditor((e) => {
     if (e?.document.languageId === ftlXmlDoc.language) {
       ftlDocumentValidator.validateDocument(e.document);
     }
-  });
-  workspace.onDidChangeTextDocument((e) => {
-    if (e.document?.languageId == ftlXmlDoc.language) {
+  }));
+  subs.push(workspace.onDidChangeTextDocument((e) => {
+    if (e.document?.languageId == ftlXmlDoc.language && e.contentChanges.length > 0) {
+      // todo look into partial document parsing, it's slow for animation files which are long
+      console.time('parse document');
       const file = ftlParser.parseDocument(e.document);
+      console.timeEnd('parse document');
+      console.time('validate file');
       ftlDocumentValidator.validateFile(file);
+      console.timeEnd('validate file');
     }
-  });
-  workspace.onDidChangeWorkspaceFolders(async (e) => {
+  }));
+  subs.push(workspace.onDidChangeWorkspaceFolders(async (e) => {
     if (e.removed.length > 0) {
       // refresh all, todo just remove files that were in the workspace and call update data
       await workspaceParser.parseWorkspace();
     } else if (e.added.length > 0) {
       await workspaceParser.parseWorkspaceFolders(e.added);
     }
-  });
+  }));
 
   const metadata: CodeActionProviderMetadata = {
     providedCodeActionKinds: [
@@ -98,7 +104,8 @@ export function setup(): Created {
       languages.registerDefinitionProvider(ftlXmlDoc, ftlDefinitionProvider),
       languages.registerReferenceProvider(ftlXmlDoc, ftlReferenceProvider),
       languages.registerCodeActionsProvider(ftlXmlDoc, ftlCodeAction, metadata),
-      languages.registerColorProvider(ftlXmlDoc, ftlColor)
+      languages.registerColorProvider(ftlXmlDoc, ftlColor),
+      ...subs
     ]
   };
 }
