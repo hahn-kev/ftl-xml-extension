@@ -4,6 +4,7 @@ import {
   CompletionItemKind,
   CompletionItemProvider,
   Position,
+  Range,
   SnippetString,
   TextDocument
 } from 'vscode';
@@ -14,7 +15,7 @@ import {
   LanguageService,
   Node
 } from 'vscode-html-languageservice';
-import {convertDocumentation, convertRange, toTextDocumentHtml} from '../helpers';
+import {convertDocumentation, convertRange, toRange, toTextDocumentHtml} from '../helpers';
 import {DocumentCache} from '../document-cache';
 import {BlueprintMapper} from '../blueprints/blueprint-mapper';
 import {FtlData, XmlTag} from '../data/ftl-data';
@@ -75,9 +76,10 @@ export class FtlCompletionProvider implements CompletionItemProvider {
     const results = this.tryCompleteNodeContents(node, document, offset);
     if (results) return results;
 
-    if (node.parent && this.blueprintMapper.parser.isListChild(node) && FtlCompletionProvider.shouldCompleteForNodeContents(
-        node,
-        offset)) {
+    if (node.parent
+        && this.blueprintMapper.parser.isListChild(node)
+        && FtlCompletionProvider.shouldCompleteForNodeContents(node, offset)) {
+      const range = toRange(node.startTagEnd, node.endTagStart, document);
       const blueprintListNode = node.parent;
       const listName = this.blueprintMapper.parser.getNameDef(blueprintListNode, document);
       if (!listName) return;
@@ -86,38 +88,45 @@ export class FtlCompletionProvider implements CompletionItemProvider {
 
       if (!mapper || mapper == this.blueprintMapper || !mapper.autoCompleteValues) {
         return this.blueprintMapper.getAllBlueprintNames()
-            .map((name) => ({label: name, kind: CompletionItemKind.Unit}));
+            .map((name) => ({label: name, kind: CompletionItemKind.Unit, range}));
       } else {
-        return this.valueSetToCompletionItems(mapper.autoCompleteValues);
+        return this.valueSetToCompletionItems(mapper.autoCompleteValues, range);
       }
     }
   }
 
   private tryCompleteNodeContents(node: Node, document: TextDocument, offset: number): CompletionItem[] | undefined {
     if (!node.tag || !FtlCompletionProvider.shouldCompleteForNodeContents(node, offset)) return;
+    const range = toRange(node.startTagEnd, node.endTagStart, document);
+
     if (Sounds.isWaveNode(node, document)) {
-      return this.valueSetToCompletionItems(SoundWavePaths);
+      return this.valueSetToCompletionItems(SoundWavePaths, range);
     }
     let valueSet = this.completeContentMap.get(node.tag);
     if (!valueSet && node.parent?.tag) valueSet = this.completeContentMap.get(`${node.parent.tag}>${node.tag}`);
     if (!valueSet) return;
-    return this.valueSetToCompletionItems(valueSet);
+
+    return this.valueSetToCompletionItems(valueSet, range);
   }
 
-  private valueSetToCompletionItems(valueSet: IValueSet): CompletionItem[] {
+  private valueSetToCompletionItems(valueSet: IValueSet, range: Range): CompletionItem[] {
     return valueSet.values.map((value) => {
       const strDes: string | undefined = typeof value.description === 'string' ? value.description : value.description?.value;
       return {
         label: {label: value.name, description: strDes},
         kind: CompletionItemKind.Unit,
-        documentation: convertDocumentation(value.description)
+        documentation: convertDocumentation(value.description),
+        range: range
       };
     });
   }
 
-  private static shouldCompleteForNodeContents(node: Node, offset: number) {
-    const startTagEnd = node.startTagEnd ?? node.start;
-    const endTagStart = node.endTagStart ?? -1;
+  public static shouldCompleteForNodeContents(
+      node: Node,
+      offset: number): node is Node & { startTagEnd: number, endTagStart: number } {
+    if (typeof node.startTagEnd === 'undefined' || typeof node.endTagStart === 'undefined') return false;
+    const startTagEnd = node.startTagEnd;
+    const endTagStart = node.endTagStart;
 
     return startTagEnd <= offset && endTagStart >= offset;
   }
