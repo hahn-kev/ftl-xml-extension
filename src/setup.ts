@@ -20,6 +20,7 @@ import {AllowedChildrenParser} from './parsers/allowed-children-parser';
 import {RefNameValidator} from './validators/ref-name-validator';
 import {WorkspaceParser} from './workspace-parser';
 import {SoundFileNameValidator} from './validators/sound-file-name-validator';
+import {ImgFileNameValidator} from './validators/img-file-name-validator';
 
 export type disposable = { dispose(): unknown };
 
@@ -46,7 +47,7 @@ export function setup(): Created {
   const ftlCodeAction = new FtlCodeActionProvider(documentCache);
   service.setDataProviders(false, [ftlDataProvider]);
 
-  const ftlDefinitionProvider = new FtlDefinitionProvider(documentCache, mappersList);
+  const ftlDefinitionProvider = new FtlDefinitionProvider(documentCache, mappersList, ftlParser);
   const ftlDocumentValidator = new FltDocumentValidator(documentCache,
       diagnosticCollection,
       ftlParser,
@@ -54,7 +55,8 @@ export function setup(): Created {
         new EventUsedValidator(mappers.eventsMapper, mappers.shipsMapper),
         new BlueprintValidator(blueprintMapper),
         new RefNameValidator(mappersList, blueprintMapper),
-        new SoundFileNameValidator()
+        new SoundFileNameValidator(),
+        new ImgFileNameValidator()
       ]
   );
   const workspaceParser = new WorkspaceParser(ftlParser, ftlDocumentValidator);

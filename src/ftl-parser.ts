@@ -4,8 +4,9 @@ import {FtlFile} from './models/ftl-file';
 import {DocumentCache} from './document-cache';
 import {FtlXmlParser} from './parsers/ftl-xml-parser';
 import {FtlRoot} from './models/ftl-root';
-import {fileName} from './helpers';
+import {getFileName} from './helpers';
 import {SoundFile} from './models/sound-file';
+import {FtlImg} from './models/ftl-img';
 
 export class FtlParser {
   constructor(private cache: DocumentCache, private parsers: FtlXmlParser[]) {
@@ -27,7 +28,7 @@ export class FtlParser {
     return this._onParsedEmitter.event;
   }
 
-  private root = new FtlRoot();
+  public readonly root = new FtlRoot();
 
   public async parseCurrentWorkspace(subFolder?: string) {
     console.log('parse workspace');
@@ -37,7 +38,7 @@ export class FtlParser {
 
     this.root.files.clear();
     const prefix = subFolder ? `${subFolder}/` : '';
-    this._parsingPromise = workspace.findFiles(prefix + '**/*.{xml,xml.append,ogg,wav}')
+    this._parsingPromise = workspace.findFiles(prefix + '**/*.{xml,xml.append,ogg,wav,png}')
         .then((files) => {
           if (files.length > 0) {
             return this.parseFiles(files);
@@ -65,7 +66,8 @@ export class FtlParser {
   }
 
   private async parseFile(file: Uri) {
-    if (this.isAudioFile(file)) {
+    const fileName = getFileName(file);
+    if (this.isAudioFile(fileName)) {
       const soundFile = new SoundFile(file);
       if (soundFile.type === 'wave') {
         this.root.soundWaveFiles.push(soundFile);
@@ -74,13 +76,20 @@ export class FtlParser {
       }
       return;
     }
+    if (this.isImgFile(fileName)) {
+      this.root.imgFiles.push(new FtlImg(file));
+      return;
+    }
     const document = await workspace.openTextDocument(file);
     this._parseDocument(document);
   }
 
-  isAudioFile(file: Uri): boolean {
-    const name = fileName(file);
+  isAudioFile(name: string | undefined): boolean {
     return (name?.endsWith('.ogg') || name?.endsWith('.wav')) ?? false;
+  }
+
+  isImgFile(name: string | undefined): boolean {
+    return name?.endsWith('.png') ?? false;
   }
 
   public parseDocument(document: TextDocument) {

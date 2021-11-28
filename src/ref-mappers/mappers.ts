@@ -3,7 +3,7 @@ import {FtlEvent} from '../models/ftl-event';
 import {Node} from 'vscode-html-languageservice';
 import {Position, TextDocument} from 'vscode';
 import {events} from '../events';
-import {fileName, getAttrValueForTag, getNodeTextContent, hasAttr, normalizeAttributeName} from '../helpers';
+import {getFileName, getAttrValueForTag, getNodeTextContent, hasAttr, normalizeAttributeName} from '../helpers';
 import {
   AnimationNames,
   AnimationSheetNames,
@@ -208,7 +208,7 @@ class Mappers {
             getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
               if (node.tag == 'text' && hasAttr(node, 'name', document, position)) {
                 // filter out language files
-                if (fileName(document)?.startsWith('text-')) {
+                if (getFileName(document)?.startsWith('text-')) {
                   return undefined;
                 }
                 return normalizeAttributeName(node.attributes.name);

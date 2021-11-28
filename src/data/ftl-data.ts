@@ -397,7 +397,8 @@ export const FtlData: XmlData = {
     {name: 'anim', attributes: [{name: 'name'}]},
     {name: 'weaponAnim', attributes: [{name: 'name'}]},
     {name: 'sheet', attributes: [], contentsValueSet: AnimationSheetNames.name},
-    {name: 'animSheet', attributes: [{name: 'name'}]},
+    {name: 'animSheet', attributes: [{name: 'name'}], contentsValueSet: ImgPathNames.name},
+    {name: 'chargeImage', attributes: [], contentsValueSet: ImgPathNames.name},
   ],
   valueSets: [
     {name: 'bool', values: [{name: 'true'}, {name: 'false'}]},
@@ -437,5 +438,6 @@ export const FtlData: XmlData = {
     AnimationNames,
     AnimationSheetNames,
     WeaponAnimationNames,
+    ImgPathNames,
   ]
 };

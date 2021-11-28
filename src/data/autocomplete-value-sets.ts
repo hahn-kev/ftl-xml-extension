@@ -70,3 +70,8 @@ export const WeaponAnimationNames: IValueSet = {
   name: 'weapon-animation-names',
   values: [{name: 'loading...'}]
 };
+
+export const ImgPathNames: IValueSet = {
+  name: 'img-path-names',
+  values: [{name: 'loading...'}]
+};

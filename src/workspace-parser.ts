@@ -12,6 +12,7 @@ export class WorkspaceParser {
   async parseWorkspace() {
     const files = await this.xmlParser.parseCurrentWorkspace();
     this.validator.validateFtlFiles(Array.from(files.values()));
+    return this.xmlParser.root;
   }
 
   async parseWorkspaceFolders(folders: readonly WorkspaceFolder[]) {

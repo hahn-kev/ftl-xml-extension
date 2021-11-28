@@ -30,7 +30,7 @@ export function activate(context: ExtensionContext) {
         await workspaceParser.parseWorkspace();
       }
     });
-    workspaceParser.parseWorkspace().then(() => {
+    workspaceParser.parseWorkspace().then((root) => {
       const wantToUpdateDefaults = context.extensionMode == ExtensionMode.Development;
       if (wantToUpdateDefaults) {
         const eventNames = EventNamesValueSet.values.map((e) => e.name);
@@ -46,6 +46,7 @@ export function activate(context: ExtensionContext) {
         const animations = AnimationNames.values.map((a) => a.name);
         const animationSheets = AnimationSheetNames.values.map((a) => a.name);
         const weaponAnimations = WeaponAnimationNames.values.map((a) => a.name);
+        const imgFiles = root.imgFiles.map((i) => i.modPath);
         const tmp = '';
       }
     });
