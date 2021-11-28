@@ -48,7 +48,8 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
   constructor(public parser: RefParser<T>,
               public readonly autoCompleteValues: IValueSet,
               public readonly typeName: string,
-              public defaults: readonly string[] = []) {
+              public defaults: readonly string[] = [],
+              private altRefMapper?: RefMapperBase) {
     this.fileDataSelector = this.parser.fileDataSelector;
   }
 
@@ -75,14 +76,14 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
   lookupRefs(node: Node, document: TextDocument, position: Position): Location[] | undefined {
     const name = this.getRefName(node, document, position);
     if (!name) return;
-    const values = this.refs.get(name);
+    const values = this.refs.get(name) ?? this.altRefMapper?.refs.get(name);
     return values?.map((value: FtlValue) => value.toLocation());
   }
 
   lookupDef(node: Node, document: TextDocument, position: Position): Location | undefined {
     const name = this.getRefName(node, document, position);
     if (!name) return;
-    const value = this.defs.get(name);
+    const value = this.defs.get(name) ?? this.altRefMapper?.defs.get(name);
     if (value) return value.toLocation();
   }
 
@@ -93,6 +94,8 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
 
 
   isNameValid(name: string) {
-    return this.defs.has(name) || this.defaults.includes(name);
+    return this.defs.has(name)
+        || this.defaults.includes(name)
+        || (this.altRefMapper?.isNameValid(name) ?? false);
   }
 }

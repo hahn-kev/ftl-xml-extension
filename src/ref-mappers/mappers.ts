@@ -301,7 +301,8 @@ class Mappers {
           }),
       WeaponAnimationNames,
       'Weapon Animation',
-      defaultWeaponAnimations
+      defaultWeaponAnimations,
+      this.animationMapper
   );
 
 
