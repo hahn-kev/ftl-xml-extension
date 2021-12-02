@@ -81,3 +81,6 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 - add flavorType[id] is text ref
 - Add support for completing, validating, go to for animations
 - Add support for img paths for animations
+
+## 0.4.1
+- Add default sound files from base ftl

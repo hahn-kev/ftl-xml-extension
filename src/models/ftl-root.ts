@@ -20,4 +20,11 @@ export class FtlRoot {
     }
     return;
   }
+
+  clear() {
+    this.files.clear();
+    this.soundWaveFiles.length = 0;
+    this.musicFiles.length = 0;
+    this.imgFiles.length = 0;
+  }
 }

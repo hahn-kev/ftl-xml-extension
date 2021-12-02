@@ -47,6 +47,7 @@ export function activate(context: ExtensionContext) {
         const animationSheets = AnimationSheetNames.values.map((a) => a.name);
         const weaponAnimations = WeaponAnimationNames.values.map((a) => a.name);
         const imgFiles = root.imgFiles.map((i) => i.modPath);
+        const soundFiles = root.soundWaveFiles.map((i) => i.modPath);
         const tmp = '';
       }
     });

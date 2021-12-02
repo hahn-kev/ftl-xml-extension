@@ -36,7 +36,7 @@ export class FtlParser {
       return this.files;
     }
 
-    this.root.files.clear();
+    this.root.clear();
     const prefix = subFolder ? `${subFolder}/` : '';
     this._parsingPromise = workspace.findFiles(prefix + '**/*.{xml,xml.append,ogg,wav,png}')
         .then((files) => {
