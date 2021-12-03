@@ -2,7 +2,7 @@ import {Validator} from './validator';
 import {FtlFile} from '../models/ftl-file';
 import {Diagnostic, Range} from 'vscode';
 import {DiagnosticBuilder} from '../diagnostic-builder';
-import {defaultImgFiles} from '../data/default-img-files';
+import {defaultImgFiles} from '../data/default-ftl-data/default-img-files';
 import {FtlRoot} from '../models/ftl-root';
 
 export class ImgFileNameValidator implements Validator {

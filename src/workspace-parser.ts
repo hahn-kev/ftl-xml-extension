@@ -6,7 +6,7 @@ export class WorkspaceParser {
   get isParsing() {
     return this.xmlParser.isParsing;
   }
-  constructor(private xmlParser: FtlParser, private validator: FltDocumentValidator) {
+  constructor(public xmlParser: FtlParser, private validator: FltDocumentValidator) {
   }
 
   async parseWorkspace() {

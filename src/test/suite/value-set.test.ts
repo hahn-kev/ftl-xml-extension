@@ -13,21 +13,21 @@ import {
   TextIdNames,
   WeaponNames
 } from '../../data/autocomplete-value-sets';
-import {defaultEvents} from '../../data/default-events';
-import {defaultShips} from '../../data/default-ships';
-import {defaultAutoBlueprints} from '../../data/default-auto-blueprints';
-import {defaultWeaponBlueprints} from '../../data/default-weapon-blueprints';
-import {defaultDrones} from '../../data/default-drones';
-import {defaultCrew} from '../../data/default-crew';
-import {defaultAugments} from '../../data/default-augments';
-import {defaultSystems} from '../../data/default-systems';
+import {defaultEvents} from '../../data/default-ftl-data/default-events';
+import {defaultShips} from '../../data/default-ftl-data/default-ships';
+import {defaultAutoBlueprints} from '../../data/default-ftl-data/default-auto-blueprints';
+import {defaultWeaponBlueprints} from '../../data/default-ftl-data/default-weapon-blueprints';
+import {defaultDrones} from '../../data/default-ftl-data/default-drones';
+import {defaultCrew} from '../../data/default-ftl-data/default-crew';
+import {defaultAugments} from '../../data/default-ftl-data/default-augments';
+import {defaultSystems} from '../../data/default-ftl-data/default-systems';
 
 suite('Value Set', () => {
   before(async function() {
     // eslint-disable-next-line @typescript-eslint/no-invalid-this
     this.timeout('30s');
-    const {ftlParser} = setup();
-    await ftlParser.parseCurrentWorkspace('mv');
+    const result = setup();
+    await result.workspaceParser.xmlParser.parseCurrentWorkspace('mv');
   });
 
   test('events value set', () => {

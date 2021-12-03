@@ -20,36 +20,36 @@ import {
   WeaponAnimationNames,
   WeaponNames
 } from '../data/autocomplete-value-sets';
-import {defaultEvents} from '../data/default-events';
+import {defaultEvents} from '../data/default-ftl-data/default-events';
 import {FtlShip} from '../models/ftl-ship';
-import {defaultShips} from '../data/default-ships';
+import {defaultShips} from '../data/default-ftl-data/default-ships';
 import {FtlWeapon} from '../models/ftl-weapon';
 import {FtlAutoblueprint} from '../models/ftl-autoblueprint';
-import {defaultAutoBlueprints} from '../data/default-auto-blueprints';
+import {defaultAutoBlueprints} from '../data/default-ftl-data/default-auto-blueprints';
 import {FtlText} from '../models/ftl-text';
 import {BlueprintMapper} from '../blueprints/blueprint-mapper';
 import {DocumentCache} from '../document-cache';
-import {defaultWeaponBlueprints} from '../data/default-weapon-blueprints';
+import {defaultWeaponBlueprints} from '../data/default-ftl-data/default-weapon-blueprints';
 import {FtlDrone} from '../models/ftl-drone';
-import {defaultDrones} from '../data/default-drones';
+import {defaultDrones} from '../data/default-ftl-data/default-drones';
 import {FtlAugment} from '../models/ftlAugment';
-import {defaultAugments} from '../data/default-augments';
+import {defaultAugments} from '../data/default-ftl-data/default-augments';
 import {FtlCrew} from '../models/ftl-crew';
-import {defaultCrew} from '../data/default-crew';
+import {defaultCrew} from '../data/default-ftl-data/default-crew';
 import {FtlSystem} from '../models/ftl-system';
-import {defaultSystems} from '../data/default-systems';
-import {defaultText} from '../data/default-text';
+import {defaultSystems} from '../data/default-ftl-data/default-systems';
+import {defaultText} from '../data/default-ftl-data/default-text';
 import {RefParser} from './ref-parser';
 import {FtlSound} from '../models/ftl-sound';
-import {defaultSoundWaves} from '../data/default-sound-waves';
+import {defaultSoundWaves} from '../data/default-ftl-data/default-sound-waves';
 import {Sounds} from '../sounds';
 import {FtlAnimation} from '../models/ftl-animation';
-import {defaultAnimations} from '../data/default-animations';
+import {defaultAnimations} from '../data/default-ftl-data/default-animations';
 import {FtlAnimationSheet} from '../models/ftl-animation-sheet';
-import {defaultAnimationSheets} from '../data/default-animation-sheets';
+import {defaultAnimationSheets} from '../data/default-ftl-data/default-animation-sheets';
 import {FtlWeaponAnimation} from '../models/ftl-weapon-animation';
-import {defaultWeaponAnimations} from '../data/default-weapon-animations';
-import {defaultImageLists} from '../data/default-image-lists';
+import {defaultWeaponAnimations} from '../data/default-ftl-data/default-weapon-animations';
+import {defaultImageLists} from '../data/default-ftl-data/default-image-lists';
 import {FtlImageList} from '../models/ftl-image-list';
 
 class Mappers {
