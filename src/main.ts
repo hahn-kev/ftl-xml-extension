@@ -16,15 +16,19 @@ import {
   WeaponNames
 } from './data/autocomplete-value-sets';
 import {setup} from './setup';
+import {addFtlDat} from './fs-provider-sample/add-ftl-dat';
 
 
 // noinspection JSUnusedGlobalSymbols
 export function activate(context: ExtensionContext) {
-  const {subs, workspaceParser} = setup();
+  const {subs, workspaceParser} = setup(true);
   context.subscriptions.push(...subs);
 
   if (context.extensionMode !== ExtensionMode.Test) {
     console.log('FTL Extension activated');
+    subs.push(commands.registerCommand('ftl-xml.add-ftl-dat', async (_) => {
+      await addFtlDat();
+    }));
     commands.registerCommand('ftl-xml.parse-workspace', async () => {
       if (!workspaceParser.isParsing) {
         await workspaceParser.parseWorkspace();

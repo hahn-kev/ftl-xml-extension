@@ -3,6 +3,7 @@ import {Diagnostic, DiagnosticCollection, TextDocument, Uri} from 'vscode';
 import {FtlParser} from './ftl-parser';
 import {FtlFile} from './models/ftl-file';
 import {Validator} from './validators/validator';
+import {FtlRoot} from './models/ftl-root';
 
 export class FltDocumentValidator {
   constructor(private documentCache: DocumentCache,
@@ -19,6 +20,10 @@ export class FltDocumentValidator {
       if (ftlFile) this.validateFile(ftlFile);
     }
     console.timeEnd('validate file uris');
+  }
+
+  validateFtlRoot(root: FtlRoot) {
+    this.validateFtlFiles(Array.from(root.files.values()));
   }
 
   validateFtlFiles(files: FtlFile[]) {

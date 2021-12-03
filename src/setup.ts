@@ -1,18 +1,8 @@
 import {FtlParser} from './ftl-parser';
 import {FltDocumentValidator} from './flt-document-validator';
-import {
-  CodeActionKind,
-  CodeActionProviderMetadata,
-  commands,
-  DocumentSelector,
-  languages,
-  Uri,
-  window,
-  workspace
-} from 'vscode';
+import {CodeActionKind, DocumentSelector, languages, window, workspace} from 'vscode';
 import {getLanguageService} from 'vscode-html-languageservice';
-import {VOID_ELEMENTS} from 'vscode-html-languageservice/lib/esm/languageFacts/fact';
-
+// import {VOID_ELEMENTS} from 'vscode-html-languageservice/lib/esm/languageFacts/fact';
 import {DocumentCache} from './document-cache';
 import {mappers} from './ref-mappers/mappers';
 import {FtlDataProvider} from './providers/ftl-data-provider';
@@ -33,7 +23,6 @@ import {WorkspaceParser} from './workspace-parser';
 import {SoundFileNameValidator} from './validators/sound-file-name-validator';
 import {ImgFileNameValidator} from './validators/img-file-name-validator';
 import {FtlDatFs} from './fs-provider-sample/ftl-dat-fs';
-import {setupFtlDataProvider} from './fs-provider-sample/ftl-data-provider-setup';
 import {FtlDatCache} from './fs-provider-sample/ftl-dat-cache';
 
 
@@ -41,14 +30,18 @@ export type disposable = { dispose(): unknown };
 
 type Created = { workspaceParser: WorkspaceParser, subs: disposable[] };
 
-export function setup(): Created {
+export function setup(registerProviders: boolean = false): Created {
   // hack to prevent img elements from getting marked as void and thus ending too soon
   // in fact.js isVoidElement is called by the parser to see if the element is self closing
-  VOID_ELEMENTS.length = 0;
+  // VOID_ELEMENTS.length = 0;
 
   const ftlLanguage = 'ftl-xml';
-  const ftlXmlDoc: DocumentSelector = [{language: ftlLanguage, scheme: 'file'}, {language: ftlLanguage, scheme: FtlDatFs.scheme}];
+  const ftlXmlDoc: DocumentSelector = [{language: ftlLanguage, scheme: 'file'}, {
+    language: ftlLanguage,
+    scheme: FtlDatFs.scheme
+  }];
   const diagnosticCollection = languages.createDiagnosticCollection('ftl-xml');
+  const subs: disposable[] = [diagnosticCollection];
   const service = getLanguageService({useDefaultDataProvider: false});
   const documentCache = new DocumentCache(service);
   const {mappers: mappersList, blueprintMapper} = mappers.setup(documentCache);
@@ -85,7 +78,6 @@ export function setup(): Created {
   const hoverProvider = new FtlHoverProvider(documentCache, service);
   const completionItemProvider = new FtlCompletionProvider(documentCache, service, blueprintMapper);
 
-  const subs: disposable[] = [];
   subs.push(window.onDidChangeActiveTextEditor((e) => {
     if (e?.document.languageId === ftlLanguage) {
       ftlDocumentValidator.validateDocument(e.document);
@@ -107,34 +99,28 @@ export function setup(): Created {
       // refresh all, todo just remove files that were in the workspace and call update data
       await workspaceParser.parseWorkspace();
     } else if (e.added.length > 0) {
-      await workspaceParser.parseWorkspaceFolders(e.added);
+      await workspaceParser.workspaceFoldersAdded(e.added);
     }
   }));
 
-  const metadata: CodeActionProviderMetadata = {
-    providedCodeActionKinds: [
-      CodeActionKind.QuickFix
-    ]
-  };
-  subs.push(...setupFtlDataProvider(ftlDatCache));
-
-
+  const ftlDatFS = new FtlDatFs(ftlDatCache);
+  if (registerProviders) {
+    subs.push(
+        workspace.registerFileSystemProvider(FtlDatFs.scheme, ftlDatFS, {isCaseSensitive: true, isReadonly: true}),
+        languages.registerCompletionItemProvider(ftlXmlDoc, completionItemProvider, '<', '"'),
+        languages.registerHoverProvider(ftlXmlDoc, hoverProvider),
+        languages.registerDefinitionProvider(ftlXmlDoc, ftlDefinitionProvider),
+        languages.registerReferenceProvider(ftlXmlDoc, ftlReferenceProvider),
+        languages.registerCodeActionsProvider(ftlXmlDoc, ftlCodeAction, {
+          providedCodeActionKinds: [
+            CodeActionKind.QuickFix
+          ]
+        }),
+        languages.registerColorProvider(ftlXmlDoc, ftlColor),
+    );
+  }
   return {
     workspaceParser,
-    subs: [
-      diagnosticCollection,
-      languages.registerCompletionItemProvider(ftlXmlDoc, completionItemProvider, '<', '"'),
-      languages.registerHoverProvider(ftlXmlDoc, hoverProvider),
-      languages.registerDefinitionProvider(ftlXmlDoc, ftlDefinitionProvider),
-      languages.registerReferenceProvider(ftlXmlDoc, ftlReferenceProvider),
-      languages.registerCodeActionsProvider(ftlXmlDoc, ftlCodeAction, metadata),
-      languages.registerColorProvider(ftlXmlDoc, ftlColor),
-      ...subs
-    ]
+    subs: [diagnosticCollection, ...subs]
   };
-}
-
-export async function parseWorkspace(ftlParser: FtlParser, ftlDocumentValidator: FltDocumentValidator) {
-  const files = await ftlParser.parseCurrentWorkspace();
-  ftlDocumentValidator.validateFtlFiles(Array.from(files.values()));
 }

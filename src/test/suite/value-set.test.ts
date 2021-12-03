@@ -27,7 +27,7 @@ suite('Value Set', () => {
     // eslint-disable-next-line @typescript-eslint/no-invalid-this
     this.timeout('30s');
     const result = setup();
-    await result.workspaceParser.xmlParser.parseCurrentWorkspace('mv');
+    await result.workspaceParser.parseWorkspace('mv');
   });
 
   test('events value set', () => {

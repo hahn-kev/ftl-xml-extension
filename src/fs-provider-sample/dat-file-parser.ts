@@ -109,7 +109,7 @@ export class DatFileParser {
       this.buffer.copy(data, 0, entry.dataOffset, entry.dataOffset + entry.dataSize);
       entry.data = data;
       if (entry.dataDeflated) {
-        entry;
+        throw new Error('deflated data not supported');
       }
 
       if (entry.dataOffset == 0) {

@@ -376,7 +376,6 @@ export const FtlData: XmlData = {
     {name: 'changeBackground', attributes: []},
     {name: 'playSound', attributes: []},
     {name: 'sound', attributes: [], contentsValueSet: SoundWaveNames.name},
-    {name: 'jumpEvent', attributes: []},
     {name: 'clearTriggeredEvent', attributes: []},
     {name: 'enemyDamage', attributes: []},
     {name: 'lose', attributes: []},

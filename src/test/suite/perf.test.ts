@@ -5,11 +5,11 @@ import {setup} from '../../setup';
 
 suite('Performance', () => {
   async function parseTest(folderName: string) {
-    const {ftlParser} = setup();
+    const {workspaceParser} = setup();
     console.log('begin parsing ' + folderName);
     const startTime = performance.now();
     console.time('parse ' + folderName);
-    await ftlParser.parseCurrentWorkspace(folderName);
+    await workspaceParser.parseWorkspace(folderName);
     console.timeEnd('parse ' + folderName);
     const endTime = performance.now();
     return endTime - startTime;
