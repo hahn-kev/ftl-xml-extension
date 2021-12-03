@@ -20,7 +20,8 @@
     "workspace"
   ],
   "activationEvents": [
-    "onLanguage:ftl-xml"
+    "onLanguage:ftl-xml",
+    "ftl-xml.add-ftl-dat"
   ],
   "main": "./out/main",
   "browser": "./out/main.js",
@@ -57,6 +58,10 @@
       {
         "command": "ftl-xml.parse-workspace",
         "title": "FTL: Parse XML Files"
+      },
+      {
+        "command": "ftl-xml.add-ftl-dat",
+        "title": "Add ftl.dat file"
       }
     ],
     "menus": {
@@ -64,6 +69,9 @@
         {
           "command": "ftl-xml.parse-workspace",
           "when": "editorLangId == ftl-xml"
+        },
+        {
+          "command": "ftl-xml.add-ftl-dat"
         }
       ]
     }
@@ -79,6 +87,7 @@
     "publish": "vsce publish"
   },
   "dependencies": {
+    "path-browserify": "^1.0.1",
     "vscode-html-languageservice": "^4.1.1"
   },
   "devDependencies": {

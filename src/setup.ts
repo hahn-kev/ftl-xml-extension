@@ -1,6 +1,15 @@
 import {FtlParser} from './ftl-parser';
 import {FltDocumentValidator} from './flt-document-validator';
-import {CodeActionKind, CodeActionProviderMetadata, DocumentSelector, languages, window, workspace} from 'vscode';
+import {
+  CodeActionKind,
+  CodeActionProviderMetadata,
+  commands,
+  DocumentSelector,
+  languages,
+  Uri,
+  window,
+  workspace
+} from 'vscode';
 import {getLanguageService} from 'vscode-html-languageservice';
 import {VOID_ELEMENTS} from 'vscode-html-languageservice/lib/esm/languageFacts/fact';
 
@@ -23,6 +32,9 @@ import {RefNameValidator} from './validators/ref-name-validator';
 import {WorkspaceParser} from './workspace-parser';
 import {SoundFileNameValidator} from './validators/sound-file-name-validator';
 import {ImgFileNameValidator} from './validators/img-file-name-validator';
+import {FtlDatFs} from './fs-provider-sample/ftl-dat-fs';
+import {setupFtlDataProvider} from './fs-provider-sample/ftl-data-provider-setup';
+import {FtlDatCache} from './fs-provider-sample/ftl-dat-cache';
 
 
 export type disposable = { dispose(): unknown };
@@ -66,7 +78,8 @@ export function setup(): Created {
         new ImgFileNameValidator()
       ]
   );
-  const workspaceParser = new WorkspaceParser(ftlParser, ftlDocumentValidator);
+  const ftlDatCache = new FtlDatCache();
+  const workspaceParser = new WorkspaceParser(ftlParser, ftlDocumentValidator, ftlDatCache);
   const ftlReferenceProvider = new FtlReferenceProvider(documentCache, mappersList);
   const hoverProvider = new FtlHoverProvider(documentCache, service);
   const completionItemProvider = new FtlCompletionProvider(documentCache, service, blueprintMapper);
@@ -102,6 +115,9 @@ export function setup(): Created {
       CodeActionKind.QuickFix
     ]
   };
+  subs.push(...setupFtlDataProvider(ftlDatCache));
+
+
   return {
     workspaceParser,
     subs: [
