@@ -17,12 +17,12 @@ export class FtlDatFs implements vscode.FileSystemProvider {
 
   public static readonly scheme = 'ftl-dat';
 
-  stat(uri: vscode.Uri): vscode.FileStat {
-    return this._lookup(uri, this.ftlDatCache.getDatFile(uri), false);
+  async stat(uri: vscode.Uri): Promise<vscode.FileStat> {
+    return this._lookup(uri, await this.ftlDatCache.getDatFile(uri), false);
   }
 
-  readDirectory(uri: vscode.Uri): [string, vscode.FileType][] {
-    const entry = this._lookupAsDirectory(uri, this.ftlDatCache.getDatFile(uri), false);
+  async readDirectory(uri: vscode.Uri): Promise<[string, vscode.FileType][]> {
+    const entry = this._lookupAsDirectory(uri, await this.ftlDatCache.getDatFile(uri), false);
     const result: [string, vscode.FileType][] = [];
     for (const [name, child] of entry.entries) {
       result.push([name, child.type]);
@@ -32,8 +32,8 @@ export class FtlDatFs implements vscode.FileSystemProvider {
 
   // --- manage file contents
 
-  readFile(uri: vscode.Uri): Uint8Array {
-    const data = this._lookupAsFile(uri, this.ftlDatCache.getDatFile(uri), false).data;
+  async readFile(uri: vscode.Uri): Promise<Uint8Array> {
+    const data = this._lookupAsFile(uri, await this.ftlDatCache.getDatFile(uri), false).data;
     if (data) {
       return data;
     }

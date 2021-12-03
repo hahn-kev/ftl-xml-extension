@@ -21,10 +21,14 @@
   ],
   "activationEvents": [
     "onLanguage:ftl-xml",
-    "ftl-xml.add-ftl-dat"
+    "ftl-xml.add-ftl-dat",
+    "onFileSystem:ftl-dat"
   ],
   "main": "./out/main",
   "browser": "./out/main.js",
+  "capabilities": {
+    "virtualWorkspaces": true
+  },
   "contributes": {
     "languages": [
       {
@@ -61,7 +65,7 @@
       },
       {
         "command": "ftl-xml.add-ftl-dat",
-        "title": "Add ftl.dat file"
+        "title": "Open ftl.dat file"
       }
     ],
     "menus": {

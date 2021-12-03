@@ -1,4 +1,5 @@
 ## Going to implement
+- improve dat fs performance, don't read data into file until requested
 - auto add newly added png and audio files
 - add validation that event text is not whitespace, and not over 440 chars
 - add validated based on 

@@ -1,4 +1,4 @@
-import {EventEmitter, ProgressLocation, TextDocument, Uri, window, workspace} from 'vscode';
+import {EventEmitter, FileType, ProgressLocation, TextDocument, Uri, window, workspace} from 'vscode';
 import {Node} from 'vscode-html-languageservice';
 import {FtlFile} from './models/ftl-file';
 import {DocumentCache} from './document-cache';
@@ -7,6 +7,7 @@ import {FtlRoot} from './models/ftl-root';
 import {getFileName} from './helpers';
 import {SoundFile} from './models/sound-file';
 import {FtlImg} from './models/ftl-img';
+import {FtlDatFs} from './fs-provider-sample/ftl-dat-fs';
 
 export class FtlParser {
   constructor(private cache: DocumentCache, private parsers: FtlXmlParser[]) {
@@ -38,7 +39,7 @@ export class FtlParser {
 
     this.root.clear();
     const prefix = subFolder ? `${subFolder}/` : '';
-    this._parsingPromise = workspace.findFiles(prefix + '**/*.{xml,xml.append,ogg,wav,png}')
+    this._parsingPromise = this.findFiles(subFolder)
         .then((files) => {
           if (files.length > 0) {
             return this.parseFiles(files);
@@ -46,8 +47,32 @@ export class FtlParser {
         });
 
     await this._parsingPromise;
-
+    this._parsingPromise = undefined;
     return this.root.files;
+  }
+
+  async findFiles(subFolder?: string): Promise<Uri[]> {
+    const prefix = subFolder ? `${subFolder}/` : '';
+    const files = await workspace.findFiles(prefix + '**/*.{xml,xml.append,ogg,wav,png}');
+    const datWorkspaces = workspace.workspaceFolders?.filter((f) => f.uri.scheme === FtlDatFs.scheme) ?? [];
+    for (const datWorkspace of datWorkspaces) {
+      files.push(...await this.listFiles(datWorkspace.uri));
+    }
+    return files;
+  }
+
+  async listFiles(dir: Uri): Promise<Uri[]> {
+    const results = await workspace.fs.readDirectory(dir);
+    const files: Uri[] = [];
+    for (const [fileName, type] of results) {
+      const uri = dir.with({path: `${dir.path}/${fileName}`});
+      if (type == FileType.File) {
+        files.push(uri);
+      } else {
+        files.push(...await this.listFiles(uri));
+      }
+    }
+    return files;
   }
 
   public async parseFiles(files: Uri[]) {
@@ -78,6 +103,9 @@ export class FtlParser {
     }
     if (this.isImgFile(fileName)) {
       this.root.imgFiles.push(new FtlImg(file));
+      return;
+    }
+    if (!fileName?.endsWith('.xml') && !fileName?.endsWith('.append.xml')) {
       return;
     }
     const document = await workspace.openTextDocument(file);

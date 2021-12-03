@@ -46,7 +46,8 @@ export function setup(): Created {
   // in fact.js isVoidElement is called by the parser to see if the element is self closing
   VOID_ELEMENTS.length = 0;
 
-  const ftlXmlDoc: DocumentSelector & { language: string } = {language: 'ftl-xml', scheme: 'file'};
+  const ftlLanguage = 'ftl-xml';
+  const ftlXmlDoc: DocumentSelector = [{language: ftlLanguage, scheme: 'file'}, {language: ftlLanguage, scheme: FtlDatFs.scheme}];
   const diagnosticCollection = languages.createDiagnosticCollection('ftl-xml');
   const service = getLanguageService({useDefaultDataProvider: false});
   const documentCache = new DocumentCache(service);
@@ -86,12 +87,12 @@ export function setup(): Created {
 
   const subs: disposable[] = [];
   subs.push(window.onDidChangeActiveTextEditor((e) => {
-    if (e?.document.languageId === ftlXmlDoc.language) {
+    if (e?.document.languageId === ftlLanguage) {
       ftlDocumentValidator.validateDocument(e.document);
     }
   }));
   subs.push(workspace.onDidChangeTextDocument((e) => {
-    if (e.document?.languageId == ftlXmlDoc.language && e.contentChanges.length > 0) {
+    if (e.document?.languageId == ftlLanguage && e.contentChanges.length > 0) {
       // todo look into partial document parsing, it's slow for animation files which are long
       console.time('parse document');
       const file = ftlParser.parseDocument(e.document);

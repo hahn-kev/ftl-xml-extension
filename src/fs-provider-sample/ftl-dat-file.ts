@@ -1,12 +1,9 @@
 import {Uri} from 'vscode';
 import {Directory} from './directory';
-import {File} from './file';
-import {DatFileParser} from './dat-file-parser';
 
 export class FtlDatFile extends Directory {
   constructor(workspaceFolder: Uri) {
     super('ftl.dat');
-    this.entries = new DatFileParser().parse(workspaceFolder);
   }
 
   static relativeToDat(file: Uri): string {

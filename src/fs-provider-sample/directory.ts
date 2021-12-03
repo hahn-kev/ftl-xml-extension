@@ -2,7 +2,7 @@ import vscode from 'vscode';
 import {File} from './file';
 
 export class Directory implements vscode.FileStat {
-  type: vscode.FileType;
+  type: vscode.FileType.Directory = vscode.FileType.Directory;
   ctime: number;
   mtime: number;
   size: number;
@@ -11,7 +11,6 @@ export class Directory implements vscode.FileStat {
   entries: Map<string, File | Directory>;
 
   constructor(name: string) {
-    this.type = vscode.FileType.Directory;
     this.ctime = Date.now();
     this.mtime = Date.now();
     this.size = 0;

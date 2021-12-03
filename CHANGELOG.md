@@ -85,3 +85,4 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 ## 0.4.1
 - Add default sound files from base ftl
 - Add support for imageLists
+- implemented the ability to load the ftl.dat file directly

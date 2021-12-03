@@ -23,7 +23,7 @@ export class WorkspaceParser {
   async parseWorkspaceFolders(folders: readonly WorkspaceFolder[]) {
     for (const folder of folders) {
       if (folder.uri.scheme === FtlDatFs.scheme) {
-        this.ftlDatCache.tryAdd(folder.uri);
+        await this.ftlDatCache.tryAdd(folder.uri);
       }
       const pattern = new RelativePattern(folder, '**/*.{xml,xml.append}');
       const files = await workspace.findFiles(pattern);
