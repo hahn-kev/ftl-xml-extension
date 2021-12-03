@@ -17,12 +17,14 @@ import {FtlRoot} from './ftl-root';
 import {FtlAnimation} from './ftl-animation';
 import {FtlWeaponAnimation} from './ftl-weapon-animation';
 import {FtlAnimationSheet} from './ftl-animation-sheet';
+import {FtlImageList} from './ftl-image-list';
 
 
 export class FtlFile {
   sounds = new FtlFileValue<FtlSound>();
   animations = new FtlFileValue<FtlAnimation>();
   weaponAnimations = new FtlFileValue<FtlWeaponAnimation>();
+  imageLists = new FtlFileValue<FtlImageList>();
   animationSheets = new FtlFileValue<FtlAnimationSheet>();
   diagnostics: Diagnostic[] = [];
 

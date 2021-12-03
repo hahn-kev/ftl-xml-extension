@@ -6,7 +6,9 @@ import {
   AutoblueprintNames,
   CrewNames,
   DroneNames,
-  EventNamesValueSet, ImgPathNames,
+  EventNamesValueSet,
+  ImageListNames,
+  ImgPathNames,
   MusicPaths,
   ShipNames,
   SoundWaveNames,
@@ -322,7 +324,12 @@ export const FtlData: XmlData = {
           valueSet: CrewNames.name
         }]
     },
-    {name: 'img', attributes: []},
+    {
+      name: 'img', attributes: [
+        {name: 'planet', valueSet: ImageListNames.name},
+        {name: 'back', valueSet: ImageListNames.name}
+      ]
+    },
     {
       name: 'removeCrew',
       attributes: [{
@@ -439,5 +446,6 @@ export const FtlData: XmlData = {
     AnimationSheetNames,
     WeaponAnimationNames,
     ImgPathNames,
+    ImageListNames
   ]
 };

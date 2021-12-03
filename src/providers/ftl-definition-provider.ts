@@ -29,7 +29,8 @@ export class FtlDefinitionProvider implements DefinitionProvider {
       const def = mapper.lookupDef(node, document, position);
       if (def) return def;
     }
-    if (node.tag == 'animSheet' && FtlCompletionProvider.shouldCompleteForNodeContents(node, offset)) {
+    if ((node.tag == 'animSheet' || node.tag == 'img' || node.tag == 'chargeImage')
+        && FtlCompletionProvider.shouldCompleteForNodeContents(node, offset)) {
       const imgPathName = getNodeTextContent(node, document);
       if (!imgPathName) return;
       const img = this.ftlParser.root.findMatchingImg(imgPathName);

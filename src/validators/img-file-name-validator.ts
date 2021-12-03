@@ -14,6 +14,9 @@ export class ImgFileNameValidator implements Validator {
     diagnostics.push(...file.weaponAnimations.defs
         .map((weaponAnim) => this.validatePath(weaponAnim.chargeImagePath, weaponAnim.chargeImageRange, file.root))
         .filter((d): d is Diagnostic => !!d));
+    diagnostics.push(...file.imageLists.defs.flatMap((list) => list.imgList)
+        .map((img) => this.validatePath(img.path, img.range, file.root))
+        .filter((d): d is Diagnostic => !!d));
   }
 
   validatePath(filePath: string | undefined, range: Range, root: FtlRoot) {

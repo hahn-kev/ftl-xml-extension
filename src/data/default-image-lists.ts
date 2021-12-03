@@ -1,0 +1,13 @@
+export const defaultImageLists: string[] = [
+  'NONE',
+  'PLANET',
+  'BACKGROUND',
+  'BG_NEBULA',
+  'BG_DARK',
+  'BG_BORING',
+  'PLANET_POPULATED',
+  'PLANET_POPULATED_SMALL',
+  'PLANET_UNPOPULATED',
+  'PLANET_UNPOPULATED_SMALL',
+  'PLANET_GAS',
+];

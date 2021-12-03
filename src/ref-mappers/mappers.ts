@@ -1,9 +1,9 @@
-import {RefMapper, RefMapperBase} from './ref-mapper';
+import {NodeMap, RefMapper, RefMapperBase} from './ref-mapper';
 import {FtlEvent} from '../models/ftl-event';
 import {Node} from 'vscode-html-languageservice';
 import {Position, TextDocument} from 'vscode';
 import {events} from '../events';
-import {getFileName, getAttrValueForTag, getNodeTextContent, hasAttr, normalizeAttributeName} from '../helpers';
+import {getAttrValueForTag, getFileName, getNodeTextContent, hasAttr, normalizeAttributeName} from '../helpers';
 import {
   AnimationNames,
   AnimationSheetNames,
@@ -12,6 +12,7 @@ import {
   CrewNames,
   DroneNames,
   EventNamesValueSet,
+  ImageListNames,
   ShipNames,
   SoundWaveNames,
   SystemNames,
@@ -48,6 +49,8 @@ import {FtlAnimationSheet} from '../models/ftl-animation-sheet';
 import {defaultAnimationSheets} from '../data/default-animation-sheets';
 import {FtlWeaponAnimation} from '../models/ftl-weapon-animation';
 import {defaultWeaponAnimations} from '../data/default-weapon-animations';
+import {defaultImageLists} from '../data/default-image-lists';
+import {FtlImageList} from '../models/ftl-image-list';
 
 class Mappers {
   readonly eventsMapper = new RefMapper(new RefParser((file) => file.event, FtlEvent, events),
@@ -305,6 +308,32 @@ class Mappers {
       this.animationMapper
   );
 
+  readonly imageListMapper = new RefMapper(
+      new RefParser((file) => file.imageLists,
+          FtlImageList,
+          <NodeMap>{
+            getNameDef: (node: Node, document: TextDocument, position?: Position): string | undefined => {
+              return getAttrValueForTag(node, 'imageList', 'name', document, position);
+            },
+            getRefName(node: Node, document: TextDocument, position?: Position): string | string[] | undefined {
+              if (node.tag === 'img' && node.parent?.tag === 'event') {
+                const refs: string[] = [];
+                if (hasAttr(node, 'back', document, position)) {
+                  refs.push(normalizeAttributeName(node.attributes.back));
+                }
+                if (hasAttr(node, 'planet', document, position)) {
+                  refs.push(normalizeAttributeName(node.attributes.planet));
+                }
+                if (position) return refs[0];
+                return refs;
+              }
+            }
+          }),
+      ImageListNames,
+      'Image List',
+      defaultImageLists
+  );
+
 
   public setup(documentCache: DocumentCache) {
     const blueprintMappers: RefMapperBase[] = [
@@ -324,6 +353,7 @@ class Mappers {
       this.animationMapper,
       this.animationSheetMapper,
       this.weaponAnimationMapper,
+      this.imageListMapper,
       blueprintMapper
     ];
     return {blueprintMapper, mappers};

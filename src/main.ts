@@ -8,7 +8,7 @@ import {
   AutoblueprintNames,
   CrewNames,
   DroneNames,
-  EventNamesValueSet,
+  EventNamesValueSet, ImageListNames,
   ShipNames,
   SoundWaveNames,
   SystemNames,
@@ -46,6 +46,7 @@ export function activate(context: ExtensionContext) {
         const animations = AnimationNames.values.map((a) => a.name);
         const animationSheets = AnimationSheetNames.values.map((a) => a.name);
         const weaponAnimations = WeaponAnimationNames.values.map((a) => a.name);
+        const imageLists = ImageListNames.values.map((a) => a.name);
         const imgFiles = root.imgFiles.map((i) => i.modPath);
         const soundFiles = root.soundWaveFiles.map((i) => i.modPath);
         const tmp = '';

@@ -75,3 +75,8 @@ export const ImgPathNames: IValueSet = {
   name: 'img-path-names',
   values: [{name: 'loading...'}]
 };
+
+export const ImageListNames: IValueSet = {
+  name: 'image-list-names',
+  values: [{name: 'loading...'}]
+};

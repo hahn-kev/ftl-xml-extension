@@ -1,5 +1,4 @@
 ## Going to implement
-- add support for imageList and img path autocomplete
 - auto add newly added png and audio files
 - add validation that event text is not whitespace, and not over 440 chars
 - add validated based on 

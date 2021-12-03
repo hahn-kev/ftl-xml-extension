@@ -2,6 +2,8 @@ import {FtlParser} from './ftl-parser';
 import {FltDocumentValidator} from './flt-document-validator';
 import {CodeActionKind, CodeActionProviderMetadata, DocumentSelector, languages, window, workspace} from 'vscode';
 import {getLanguageService} from 'vscode-html-languageservice';
+import {VOID_ELEMENTS} from 'vscode-html-languageservice/lib/esm/languageFacts/fact';
+
 import {DocumentCache} from './document-cache';
 import {mappers} from './ref-mappers/mappers';
 import {FtlDataProvider} from './providers/ftl-data-provider';
@@ -22,11 +24,16 @@ import {WorkspaceParser} from './workspace-parser';
 import {SoundFileNameValidator} from './validators/sound-file-name-validator';
 import {ImgFileNameValidator} from './validators/img-file-name-validator';
 
+
 export type disposable = { dispose(): unknown };
 
 type Created = { workspaceParser: WorkspaceParser, subs: disposable[] };
 
 export function setup(): Created {
+  // hack to prevent img elements from getting marked as void and thus ending too soon
+  // in fact.js isVoidElement is called by the parser to see if the element is self closing
+  VOID_ELEMENTS.length = 0;
+
   const ftlXmlDoc: DocumentSelector & { language: string } = {language: 'ftl-xml', scheme: 'file'};
   const diagnosticCollection = languages.createDiagnosticCollection('ftl-xml');
   const service = getLanguageService({useDefaultDataProvider: false});
