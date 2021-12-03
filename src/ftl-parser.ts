@@ -7,7 +7,6 @@ import {FtlRoot} from './models/ftl-root';
 import {getFileName} from './helpers';
 import {SoundFile} from './models/sound-file';
 import {FtlImg} from './models/ftl-img';
-import {FtlDatFs} from './fs-provider-sample/ftl-dat-fs';
 
 export class FtlParser {
   constructor(private cache: DocumentCache, private parsers: FtlXmlParser[]) {

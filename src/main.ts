@@ -16,7 +16,7 @@ import {
   WeaponNames
 } from './data/autocomplete-value-sets';
 import {setup} from './setup';
-import {addFtlDat} from './fs-provider-sample/add-ftl-dat';
+import {addFtlDat} from './dat-fs-provider/add-ftl-dat';
 
 
 // noinspection JSUnusedGlobalSymbols

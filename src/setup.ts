@@ -22,15 +22,15 @@ import {RefNameValidator} from './validators/ref-name-validator';
 import {WorkspaceParser} from './workspace-parser';
 import {SoundFileNameValidator} from './validators/sound-file-name-validator';
 import {ImgFileNameValidator} from './validators/img-file-name-validator';
-import {FtlDatFs} from './fs-provider-sample/ftl-dat-fs';
-import {FtlDatCache} from './fs-provider-sample/ftl-dat-cache';
+import {FtlDatFs} from './dat-fs-provider/ftl-dat-fs';
+import {FtlDatCache} from './dat-fs-provider/ftl-dat-cache';
 
 
 export type disposable = { dispose(): unknown };
 
 type Created = { workspaceParser: WorkspaceParser, subs: disposable[] };
 
-export function setup(registerProviders: boolean = false): Created {
+export function setup(registerProviders = false): Created {
   // hack to prevent img elements from getting marked as void and thus ending too soon
   // in fact.js isVoidElement is called by the parser to see if the element is self closing
   // VOID_ELEMENTS.length = 0;

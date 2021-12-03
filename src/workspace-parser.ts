@@ -1,8 +1,8 @@
 import {FtlParser} from './ftl-parser';
 import {FltDocumentValidator} from './flt-document-validator';
 import {FileType, RelativePattern, Uri, workspace, WorkspaceFolder} from 'vscode';
-import {FtlDatFs} from './fs-provider-sample/ftl-dat-fs';
-import {FtlDatCache} from './fs-provider-sample/ftl-dat-cache';
+import {FtlDatFs} from './dat-fs-provider/ftl-dat-fs';
+import {FtlDatCache} from './dat-fs-provider/ftl-dat-cache';
 
 export class WorkspaceParser {
   get isParsing() {
