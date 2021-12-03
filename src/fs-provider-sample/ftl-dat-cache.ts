@@ -5,22 +5,21 @@ import {DatFileParser} from './dat-file-parser';
 export class FtlDatCache {
   cache = new Map<string, Promise<FtlDatFile>>();
 
-  async tryAdd(workspaceFolder: Uri) {
-    if (this.cache.has(workspaceFolder.toString())) {
+  async tryAdd(datFileUri: Uri) {
+    if (this.cache.has(datFileUri.toString())) {
       return;
     }
-    this.cache.set(workspaceFolder.toString(), new DatFileParser().parse(workspaceFolder));
+    this.cache.set(datFileUri.toString(), new DatFileParser(datFileUri).parse());
   }
 
   async getDatFile(file: Uri): Promise<FtlDatFile> {
-    const ftlDat = FtlDatFile.asDat(file);
-    if (!ftlDat) throw vscode.FileSystemError.FileNotFound(file);
-    let datFile = this.cache.get(ftlDat.toString());
-    if (!datFile) {
-      const p = new DatFileParser().parse(ftlDat);
-      this.cache.set(ftlDat.toString(), p);
-      datFile = p;
+    const datFileUri = FtlDatFile.getDatUri(file);
+    if (!datFileUri) throw vscode.FileSystemError.FileNotFound(file);
+    let ftlDatFile = this.cache.get(datFileUri.toString());
+    if (!ftlDatFile) {
+      ftlDatFile = new DatFileParser(datFileUri).parse();
+      this.cache.set(datFileUri.toString(), ftlDatFile);
     }
-    return await datFile;
+    return await ftlDatFile;
   }
 }

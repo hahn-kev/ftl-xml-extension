@@ -2,8 +2,10 @@ import {Uri} from 'vscode';
 import {Directory} from './directory';
 
 export class FtlDatFile extends Directory {
+  public uri: Uri;
   constructor(workspaceFolder: Uri) {
     super('ftl.dat');
+    this.uri = workspaceFolder;
   }
 
   static relativeToDat(file: Uri): string {
@@ -12,7 +14,7 @@ export class FtlDatFile extends Directory {
     return parts.slice(indexOfDat + 1).join('/');
   }
 
-  static asDat(file: Uri): Uri | undefined {
+  static getDatUri(file: Uri): Uri | undefined {
     const parts = file.path.split('/');
     const indexOfDat = this.indexOfDat(parts);
     if (indexOfDat > 0) {

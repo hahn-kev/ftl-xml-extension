@@ -13,16 +13,19 @@ export class DatFileParser {
   /** Fixed byte count of PKG entries. */
   private static ENTRY_SIZE = 20;
 
-  /** Byte count to pre-allocate per innerPath in newly created dats. */
-  private static TYPICAL_PATH_LENGTH = 70;
-  private static readonly signature = [0x50, 0x4B, 0x47, 0x0A];// "PKG\n"
+  // "PKG\n"
+  private static readonly signature = [0x50, 0x4B, 0x47, 0x0A];
   private buffer!: Buffer;
   private offset = 0;
-  private datFile!: FtlDatFile;
+  private readonly datFile: FtlDatFile;
 
-  public async parse(workspaceFolder: Uri): Promise<FtlDatFile> {
+  constructor(workspaceFolder: Uri) {
     this.datFile = new FtlDatFile(workspaceFolder);
-    const uint8Array = await workspace.fs.readFile(workspaceFolder.with({scheme: 'file'}));
+  }
+
+
+  public async parse(): Promise<FtlDatFile> {
+    const uint8Array = await workspace.fs.readFile(this.datFile.uri.with({scheme: 'file'}));
     this.buffer = Buffer.from(uint8Array);
     const entries = this.readIndex();
     for (const entry of entries) {
@@ -35,14 +38,14 @@ export class DatFileParser {
     if (!entry) return;
     const parts = entry.innerPath.split('/');
     const fileName = parts[parts.length - 1];
-    const dir = this.getDir(parts);
+    const dir = this.ensurePathGetLastDir(parts);
     const file = new File(fileName);
     file.size = entry.dataSize;
     file.data = entry.data;
     dir.entries.set(fileName, file);
   }
 
-  getDir(parts: string[]): Directory {
+  ensurePathGetLastDir(parts: string[]): Directory {
     const fileName = parts[parts.length - 1];
     let dir: Directory = this.datFile;
     for (const part of parts) {
@@ -87,7 +90,7 @@ export class DatFileParser {
 
   private readFiles(entryCount: number) {
     const entryList = new Array<PkgEntry | undefined>(entryCount);
-    const pathOffset = entryCount * DatFileParser.ENTRY_SIZE + this.offset;
+    const startingPathOffset = entryCount * DatFileParser.ENTRY_SIZE + this.offset;
     for (let i = 0; i < entryCount; i++) {
       const entry = new PkgEntry();
       entry.innerPathHash = this.readUInt(4);
@@ -96,11 +99,11 @@ export class DatFileParser {
       // 0x00FFFFFF == 0000 0000:1111 1111 1111 1111 1111 1111 (8:24 bits).
       // 1 << 24    == 0000 0001:0000 0000 0000 0000 0000 0000
       const pathOffsetAndFlags = this.readUInt(4);
-      entry.innerPathOffset = (pathOffsetAndFlags & 0x00FFFFFF) + pathOffset;
+      entry.pathOffset = (pathOffsetAndFlags & 0x00FFFFFF) + startingPathOffset;
       entry.dataDeflated = ((pathOffsetAndFlags & DatFileParser.PKGF_DEFLATED) != 0);
 
-      const end = this.buffer.indexOf('\0', entry.innerPathOffset, 'ascii');
-      entry.innerPath = this.buffer.toString('ascii', entry.innerPathOffset, end);
+      const end = this.buffer.indexOf('\0', entry.pathOffset, 'ascii');
+      entry.innerPath = this.buffer.toString('ascii', entry.pathOffset, end);
 
       entry.dataOffset = this.readUInt(4);
       entry.dataSize = this.readUInt(4);
@@ -134,7 +137,7 @@ export class DatFileParser {
 
 class PkgEntry {
   /** Offset to read a null-terminated string from the dat's paths blob. */
-  public innerPathOffset = 0;
+  public pathOffset = 0;
 
   /** A forward slash delimited ASCII path, with no leading slash. */
   public innerPath!: string;
