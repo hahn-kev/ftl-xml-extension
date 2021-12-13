@@ -21,7 +21,7 @@
   ],
   "activationEvents": [
     "onLanguage:ftl-xml",
-    "ftl-xml.add-ftl-dat",
+    "onCommand:ftl-xml.add-ftl-dat",
     "onFileSystem:ftl-dat"
   ],
   "main": "./out/main",

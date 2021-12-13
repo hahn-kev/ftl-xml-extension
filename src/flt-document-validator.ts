@@ -22,11 +22,11 @@ export class FltDocumentValidator {
     console.timeEnd('validate file uris');
   }
 
-  validateFtlRoot(root: FtlRoot) {
+  public validateFtlRoot(root: FtlRoot) {
     this.validateFtlFiles(Array.from(root.files.values()));
   }
 
-  validateFtlFiles(files: FtlFile[]) {
+  private validateFtlFiles(files: FtlFile[]) {
     console.time('validate ftl files');
     for (const file of files) {
       this.validateFile(file);
@@ -34,7 +34,7 @@ export class FltDocumentValidator {
     console.timeEnd('validate ftl files');
   }
 
-  validateFile(file: FtlFile) {
+  public validateFile(file: FtlFile) {
     const diagnostics: Diagnostic[] = [];
     diagnostics.push(...file.diagnostics);
     for (const validator of this.validators) {
@@ -43,7 +43,7 @@ export class FltDocumentValidator {
     this.diagnosticCollection.set(file.uri, diagnostics);
   }
 
-  async validateDocument(document: TextDocument) {
+  public async validateDocument(document: TextDocument) {
     const ftlFiles = await this.parser.files;
     const file = ftlFiles.get(document.uri.toString());
     if (file) {

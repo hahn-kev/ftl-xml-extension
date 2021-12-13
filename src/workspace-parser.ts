@@ -24,11 +24,23 @@ export class WorkspaceParser {
   static readonly findPattern = '**/*.{xml,xml.append,ogg,wav,png}';
 
   private async findFiles(subFolder?: string): Promise<Uri[]> {
-    const prefix = subFolder ? `${subFolder}/` : '';
-    const files = await workspace.findFiles(prefix + WorkspaceParser.findPattern);
-    const datWorkspaces = workspace.workspaceFolders?.filter((f) => f.uri.scheme === FtlDatFs.scheme) ?? [];
-    const datFilesList = await Promise.all(datWorkspaces.map((datWorkspace) => this.listFiles(datWorkspace.uri)));
-    return files.concat(...datFilesList);
+    if (subFolder) {
+      const prefix = `${subFolder}/`;
+      return await workspace.findFiles(prefix + WorkspaceParser.findPattern);
+    }
+    if (!workspace.workspaceFolders) return [];
+
+    const files: Uri[] = [];
+    for (const folder of workspace.workspaceFolders) {
+      if (folder.uri.scheme === FtlDatFs.scheme) {
+        await this.ftlDatCache.tryAdd(folder.uri);
+        files.push(...await this.listFiles(folder.uri));
+      } else {
+        const pattern = new RelativePattern(folder, WorkspaceParser.findPattern);
+        files.push(...await workspace.findFiles(pattern));
+      }
+    }
+    return files;
   }
 
   private async listFiles(dir: Uri): Promise<Uri[]> {
