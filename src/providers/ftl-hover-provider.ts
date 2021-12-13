@@ -13,6 +13,8 @@ export class FtlHoverProvider implements HoverProvider {
     const htmlDocument = this.documentCache.getHtmlDocument(document);
     const hoverTextId = this.tryHoverTextId(htmlDocument, document, position);
     if (hoverTextId) return hoverTextId;
+    const hoverImg = this.tryHoverImagePath(htmlDocument, document, position);
+    if (hoverImg) return hoverImg;
     // the document from vscode will not accept range objects created inside
     // the html language service, so we must do this
     const textDocument = HtmlTextDocument.create(document.uri.toString(),
@@ -52,5 +54,9 @@ export class FtlHoverProvider implements HoverProvider {
       range: toRange(idStart, idEnd, document),
       contents: [textDef.text]
     };
+  }
+
+  tryHoverImagePath(htmlDocument: HTMLDocument, document: TextDocument, position: Position): Hover | undefined {
+    return undefined;
   }
 }
