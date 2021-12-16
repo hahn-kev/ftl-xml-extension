@@ -1,9 +1,9 @@
 import {Node} from 'vscode-html-languageservice';
 import {FtlFile, FtlFileValue} from '../models/ftl-file';
 import {Position, TextDocument} from 'vscode';
-import {NodeMap} from './ref-mapper';
 import {FtlValue} from '../models/ftl-value';
 import {FtlXmlParser, ParseContext} from '../parsers/ftl-xml-parser';
+import {NodeMap} from './node-map';
 
 export interface FtlRefParser extends FtlXmlParser, NodeMap {
   fileDataSelector: (file: FtlFile) => FtlFileValue<FtlValue>;

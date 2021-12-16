@@ -7,6 +7,7 @@ import {addToKey, firstWhere} from '../helpers';
 import {BlueprintListTypeAny} from '../data/ftl-data';
 import {BlueprintParser} from './blueprint-parser';
 import {LookupContext} from '../ref-mappers/lookup-provider';
+import {FtlRoot} from '../models/ftl-root';
 
 
 export class BlueprintMapper implements RefMapperBase {
@@ -61,10 +62,10 @@ export class BlueprintMapper implements RefMapperBase {
     return this.defs.has(name) || this.blueprintMappers.some((value) => value.isNameValid(name));
   }
 
-  updateData(files: FtlFile[]): void {
+  updateData(root: FtlRoot): void {
     this.refs.clear();
     this.defs.clear();
-    for (const file of files) {
+    for (const file of root.files.values()) {
       for (const blueprintList of file.blueprintList.defs) {
         this.defs.set(blueprintList.name, blueprintList);
       }
@@ -72,7 +73,7 @@ export class BlueprintMapper implements RefMapperBase {
     }
 
     for (const blueprintMapper of this.blueprintMappers) {
-      blueprintMapper.updateData(files);
+      blueprintMapper.updateData(root);
 
       // autocomplete values should include blueprint lists
       const blueprintLists = Array.from(this.defs.values());
@@ -83,7 +84,7 @@ export class BlueprintMapper implements RefMapperBase {
     }
 
     // we need to do this after the first iteration of files because we need the defs to be setup already
-    for (const file of files) {
+    for (const file of root.files.values()) {
       for (const {ref: listRef} of this.listRefs(file)) {
         if (this.defs.has(listRef.name)) {
           addToKey(this.refs, listRef.name, listRef);
@@ -94,10 +95,6 @@ export class BlueprintMapper implements RefMapperBase {
 
   * refMaps(file: FtlFile): IterableIterator<[string, FtlValue[], RefMapperBase]> {
     for (const mapper of this.blueprintMappers) {
-      if (!mapper.fileDataSelector) {
-        continue;
-      }
-
       for (const refKvp of mapper.fileDataSelector(file).refs) {
         yield [...refKvp, mapper];
       }
@@ -106,9 +103,6 @@ export class BlueprintMapper implements RefMapperBase {
 
   * listRefs(file: FtlFile): IterableIterator<{ ref: FtlValue, mapper: RefMapperBase }> {
     for (const mapper of this.blueprintMappers) {
-      if (!mapper.fileDataSelector) {
-        continue;
-      }
       for (const refs of mapper.fileDataSelector(file).refs.values()) {
         for (const ref of refs) {
           yield {ref, mapper};

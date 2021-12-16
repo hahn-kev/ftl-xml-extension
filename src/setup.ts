@@ -3,8 +3,8 @@ import {FltDocumentValidator} from './flt-document-validator';
 import {CodeActionKind, DocumentSelector, languages, window, workspace} from 'vscode';
 import {getLanguageService} from 'vscode-html-languageservice';
 import {DocumentCache} from './document-cache';
-import {mappers} from './ref-mappers/mappers';
-import {FtlDataProvider} from './providers/ftl-data-provider';
+import {Mappers} from './ref-mappers/mappers';
+import {DataReceiver, FtlDataProvider} from './providers/ftl-data-provider';
 import {FtlDefinitionProvider} from './providers/ftl-definition-provider';
 import {FtlReferenceProvider} from './providers/ftl-reference-provider';
 import {FtlHoverProvider} from './providers/ftl-hover-provider';
@@ -26,6 +26,7 @@ import {FtlDatCache} from './dat-fs-provider/ftl-dat-cache';
 import {pathMappers} from './ref-mappers/path-ref-mapper';
 import {VOID_ELEMENTS} from 'vscode-html-languageservice/lib/esm/languageFacts/fact';
 import {LookupProvider} from './ref-mappers/lookup-provider';
+import {Validator} from './validators/validator';
 
 
 export type disposable = { dispose(): unknown };
@@ -37,64 +38,67 @@ export function setup(registerProviders = false): Created {
   // in fact.js isVoidElement is called by the parser to see if the element is self closing
   VOID_ELEMENTS.length = 0;
 
+  const subs: disposable[] = [];
+
   const ftlLanguage = 'ftl-xml';
   const ftlXmlDoc: DocumentSelector = [{language: ftlLanguage, scheme: 'file'}, {
     language: ftlLanguage,
     scheme: FtlDatFs.scheme
   }];
-  const diagnosticCollection = languages.createDiagnosticCollection('ftl-xml');
-  const subs: disposable[] = [diagnosticCollection];
+
   const service = getLanguageService({useDefaultDataProvider: false});
   const documentCache = new DocumentCache(service);
-  const {mappers: mappersList, blueprintMapper} = mappers.setup(documentCache);
+
+  const mappers = new Mappers();
   const parsers: FtlXmlParser[] = [
-    ...mappersList.map((value) => value.parser),
+    ...mappers.list.map((value) => value.parser),
     new IncompleteTagParser(),
     new RequiredChildrenParser(),
     new AllowedChildrenParser()
   ];
-  const refProviders: LookupProvider[] = [...mappersList, ...pathMappers.mappers];
-  const ftlParser = new FtlParser(documentCache, parsers, pathMappers.mappers);
-  const ftlColor = new FtlColorProvider(ftlParser);
-  // kinda ugly, but the ftlParser depends on a list of parsers, and the color provider depends on the parser
-  // I should split them out, but I like the parsing and color providing in the same place
-  parsers.push(ftlColor);
-  const ftlDataProvider = new FtlDataProvider(ftlParser.onParsed, mappersList, pathMappers.mappers);
-  const ftlCodeAction = new FtlCodeActionProvider(documentCache);
-  service.setDataProviders(false, [ftlDataProvider]);
+  const lookupProviders: LookupProvider[] = [...mappers.list, ...pathMappers.mappers];
+  const dataReceivers: DataReceiver[] = [...mappers.list, ...pathMappers.mappers];
 
-  const ftlDefinitionProvider = new FtlDefinitionProvider(documentCache, refProviders);
-  const ftlDocumentValidator = new FltDocumentValidator(documentCache,
-      diagnosticCollection,
-      ftlParser,
-      [
-        new EventUsedValidator(mappers.eventsMapper, mappers.shipsMapper),
-        new BlueprintValidator(blueprintMapper),
-        new RefNameValidator(mappersList, blueprintMapper),
-        new SoundFileNameValidator(),
-        new ImgFileNameValidator()
-      ]
-  );
+  const diagnosticCollection = languages.createDiagnosticCollection('ftl-xml');
+  const validators: Validator[] = [
+    new EventUsedValidator(mappers.eventsMapper, mappers.shipsMapper),
+    new BlueprintValidator(mappers.blueprintMapper),
+    new RefNameValidator(mappers.list, mappers.blueprintMapper),
+    new SoundFileNameValidator(),
+    new ImgFileNameValidator()
+  ];
+  const ftlDocumentValidator = new FltDocumentValidator(documentCache, diagnosticCollection, validators);
+
+  const ftlParser = new FtlParser(documentCache, parsers, pathMappers.mappers);
   const ftlDatCache = new FtlDatCache();
   const workspaceParser = new WorkspaceParser(ftlParser, ftlDocumentValidator, ftlDatCache);
-  const ftlReferenceProvider = new FtlReferenceProvider(documentCache, refProviders);
-  const hoverProvider = new FtlHoverProvider(documentCache, service);
-  const completionItemProvider = new FtlCompletionProvider(documentCache, service, blueprintMapper);
+
+  // kinda ugly, but the ftlParser depends on a list of parsers, and the color provider depends on the parser
+  // I should split them out, but I like the parsing and color providing in the same place
+  const ftlColor = new FtlColorProvider(ftlParser);
+  parsers.push(ftlColor);
+
+  service.setDataProviders(false, [
+    new FtlDataProvider(ftlParser.onParsed, dataReceivers)
+  ]);
+
+  // providers
+  const ftlDefinitionProvider = new FtlDefinitionProvider(documentCache, lookupProviders);
+  const ftlReferenceProvider = new FtlReferenceProvider(documentCache, lookupProviders);
+  const ftlCodeActionProvider = new FtlCodeActionProvider(documentCache);
+  const hoverProvider = new FtlHoverProvider(documentCache, service, mappers);
+  const completionItemProvider = new FtlCompletionProvider(documentCache, service, mappers.blueprintMapper);
 
   subs.push(window.onDidChangeActiveTextEditor((e) => {
     if (e?.document.languageId === ftlLanguage) {
-      ftlDocumentValidator.validateDocument(e.document);
+      ftlDocumentValidator.validateDocument(e.document, ftlParser.root);
     }
   }));
   subs.push(workspace.onDidChangeTextDocument((e) => {
     if (e.document?.languageId == ftlLanguage && e.contentChanges.length > 0) {
       // todo look into partial document parsing, it's slow for animation files which are long
-      console.time('parse document');
       const file = ftlParser.parseDocument(e.document);
-      console.timeEnd('parse document');
-      console.time('validate file');
       ftlDocumentValidator.validateFile(file);
-      console.timeEnd('validate file');
     }
   }));
   subs.push(workspace.onDidChangeWorkspaceFolders(async (e) => {
@@ -114,7 +118,7 @@ export function setup(registerProviders = false): Created {
         languages.registerHoverProvider(ftlXmlDoc, hoverProvider),
         languages.registerDefinitionProvider(ftlXmlDoc, ftlDefinitionProvider),
         languages.registerReferenceProvider(ftlXmlDoc, ftlReferenceProvider),
-        languages.registerCodeActionsProvider(ftlXmlDoc, ftlCodeAction, {
+        languages.registerCodeActionsProvider(ftlXmlDoc, ftlCodeActionProvider, {
           providedCodeActionKinds: [
             CodeActionKind.QuickFix
           ]

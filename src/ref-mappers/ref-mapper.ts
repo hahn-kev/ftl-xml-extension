@@ -1,20 +1,17 @@
 import {FtlFile, FtlFileValue} from '../models/ftl-file';
 import {IValueSet, Node} from 'vscode-html-languageservice';
-import {Location, Position, Range, TextDocument} from 'vscode';
+import {Location, Position, TextDocument} from 'vscode';
 import {addToKey} from '../helpers';
 import {FtlValue} from '../models/ftl-value';
 import {FtlRefParser, RefParser} from './ref-parser';
 import {LookupContext, LookupProvider} from './lookup-provider';
+import {FtlRoot} from '../models/ftl-root';
 
-export type InvalidRef = { name: string, range: Range, typeName: string }
-
-export interface RefMapperBase extends LookupProvider{
-  updateData(files: FtlFile[]): void;
-
+export interface RefMapperBase extends LookupProvider {
+  updateData(root: FtlRoot): void;
 
   readonly typeName: string;
   readonly defaults?: readonly string[];
-  readonly nodeMap?: NodeMap;
   readonly autoCompleteValues?: IValueSet;
   readonly refs: Map<string, FtlValue[]>;
   readonly defs: Map<string, FtlValue>;
@@ -24,24 +21,10 @@ export interface RefMapperBase extends LookupProvider{
   isNameValid(name: string): boolean;
 }
 
-export interface NodeMap {
-  getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined;
-
-  getRefName(node: Node, document: TextDocument, position: Position): string | undefined;
-
-  getRefName(node: Node, document: TextDocument): string | string[] | undefined;
-
-  getRefName(node: Node, document: TextDocument): string | string[] | undefined;
-}
-
 export class RefMapper<T extends FtlValue> implements RefMapperBase {
   readonly refs = new Map<string, T[]>();
   readonly defs = new Map<string, T>();
   readonly fileDataSelector: (file: FtlFile) => FtlFileValue<FtlValue>;
-
-  public get nodeMap(): NodeMap {
-    return this.parser.nodeMap;
-  }
 
   constructor(public parser: RefParser<T>,
               public readonly autoCompleteValues: IValueSet,
@@ -51,19 +34,19 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
     this.fileDataSelector = this.parser.fileDataSelector;
   }
 
-  updateData(files: FtlFile[]) {
+  updateData(root: FtlRoot): void {
     this.refs.clear();
     this.defs.clear();
     this.autoCompleteValues.values.length = 0;
 
-    const names = new Set(files.flatMap((file) => this.parser.fileDataSelector(file).defs)
+    const names = new Set(Array.from(root.files.values()).flatMap((file) => this.parser.fileDataSelector(file).defs)
         .map((value) => value.name)
         .concat(this.defaults));
 
     this.autoCompleteValues.values
         .push(...Array.from(names.values()).map((name) => ({name})));
 
-    for (const file of files) {
+    for (const file of root.files.values()) {
       this.parser.fileDataSelector(file).refs.forEach((value, key) => addToKey(this.refs, key, value));
       for (const value of this.parser.fileDataSelector(file).defs) {
         this.defs.set(value.name, value);

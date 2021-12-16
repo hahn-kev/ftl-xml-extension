@@ -8,18 +8,7 @@ import {FtlRoot} from './models/ftl-root';
 export class FltDocumentValidator {
   constructor(private documentCache: DocumentCache,
               private diagnosticCollection: DiagnosticCollection,
-              private parser: FtlParser,
               private validators: Validator[]) {
-  }
-
-  async validateFiles(files: Uri[]) {
-    console.time('validate file uris');
-    const ftlFiles = await this.parser.files;
-    for (const fileUri of files) {
-      const ftlFile = ftlFiles.get(fileUri.toString());
-      if (ftlFile) this.validateFile(ftlFile);
-    }
-    console.timeEnd('validate file uris');
   }
 
   public validateFtlRoot(root: FtlRoot) {
@@ -43,8 +32,8 @@ export class FltDocumentValidator {
     this.diagnosticCollection.set(file.uri, diagnostics);
   }
 
-  public async validateDocument(document: TextDocument) {
-    const ftlFiles = await this.parser.files;
+  public async validateDocument(document: TextDocument, root: FtlRoot) {
+    const ftlFiles = root.files;
     const file = ftlFiles.get(document.uri.toString());
     if (file) {
       this.validateFile(file);

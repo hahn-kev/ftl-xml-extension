@@ -1,22 +1,24 @@
 import {Node} from 'vscode-html-languageservice';
 import {Position, TextDocument} from 'vscode';
 import {getAttrValueForTag, getNodeTextContent, hasAttr, normalizeAttributeName} from './helpers';
-import {NodeMap} from './ref-mappers/ref-mapper';
+import {NodeMap} from './ref-mappers/node-map';
 
 class EventsMap implements NodeMap {
   getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-    return this.getEventNameDef(node, document, position);
+    if ((node.tag != 'eventList' && node.tag != 'event')
+        || node.parent?.tag == 'sectorDescription'
+        || node.parent?.tag == 'loadEventList') {
+      return undefined;
+    }
+
+    if (hasAttr(node, 'name', document, position)) {
+      return normalizeAttributeName(node.attributes.name);
+    }
   }
 
   getRefName(node: Node, document: TextDocument, position: Position): string | undefined;
   getRefName(node: Node, document: TextDocument): string | string[] | undefined;
   getRefName(node: Node, document: TextDocument, position?: Position): string | string[] | undefined {
-    return position ? this.getEventRefName(node, document, position) : this.getEventRefName(node, document);
-  }
-
-  getEventRefName(node: Node, document: TextDocument, position: Position): string | undefined
-  getEventRefName(node: Node, document: TextDocument): string | string[] | undefined
-  getEventRefName(node: Node, document: TextDocument, position?: Position): string | string[] | undefined {
     if (node.tag == 'event' && hasAttr(node, 'load', document, position)) {
       return normalizeAttributeName(node.attributes.load);
     }
@@ -70,18 +72,6 @@ class EventsMap implements NodeMap {
         ?? getAttrValueForTag(node, 'escape', 'load', document, position)
         ?? getAttrValueForTag(node, 'gotaway', 'load', document, position)
         ?? getAttrValueForTag(node, 'quest', 'event', document, position);
-  }
-
-  getEventNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-    if ((node.tag != 'eventList' && node.tag != 'event')
-        || node.parent?.tag == 'sectorDescription'
-        || node.parent?.tag == 'loadEventList') {
-      return undefined;
-    }
-
-    if (hasAttr(node, 'name', document, position)) {
-      return normalizeAttributeName(node.attributes.name);
-    }
   }
 }
 

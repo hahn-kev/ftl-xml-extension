@@ -7,12 +7,14 @@ import {
 } from 'vscode-html-languageservice';
 import {FtlData} from '../data/ftl-data';
 import {Event} from 'vscode';
-import {RefMapperBase} from '../ref-mappers/ref-mapper';
 import {FtlRoot} from '../models/ftl-root';
-import {PathRefMapperBase} from '../ref-mappers/path-ref-mapper';
+
+export interface DataReceiver {
+  updateData(root: FtlRoot): void;
+}
 
 export class FtlDataProvider implements IHTMLDataProvider {
-  constructor(onParsed: Event<FtlRoot>, private mappers: RefMapperBase[], private pathRefMappers: PathRefMapperBase[]) {
+  constructor(onParsed: Event<FtlRoot>, private receivers: DataReceiver[]) {
     onParsed((e) => {
       console.time('update data');
       this.updateFtlData(e);
@@ -21,13 +23,8 @@ export class FtlDataProvider implements IHTMLDataProvider {
   }
 
   updateFtlData(root: FtlRoot) {
-    for (const pathRefMapper of this.pathRefMappers) {
-      pathRefMapper.updateData(root);
-    }
-
-    const ftlFiles = Array.from(root.files.values());
-    for (const mapper of this.mappers) {
-      mapper.updateData(ftlFiles);
+    for (const receiver of this.receivers) {
+      receiver.updateData(root);
     }
   }
 

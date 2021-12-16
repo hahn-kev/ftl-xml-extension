@@ -2,10 +2,10 @@ import {CancellationToken, Hover, HoverProvider, MarkdownString, Position, Provi
 import {DocumentCache} from '../document-cache';
 import {HTMLDocument, LanguageService, TextDocument as HtmlTextDocument} from 'vscode-html-languageservice';
 import {attrNameRange, convertDocumentation, convertRange, toRange} from '../helpers';
-import {mappers} from '../ref-mappers/mappers';
+import {Mappers} from '../ref-mappers/mappers';
 
 export class FtlHoverProvider implements HoverProvider {
-  constructor(private documentCache: DocumentCache, private service: LanguageService) {
+  constructor(private documentCache: DocumentCache, private service: LanguageService, private mappers: Mappers) {
 
   }
 
@@ -40,10 +40,10 @@ export class FtlHoverProvider implements HoverProvider {
 
   tryHoverTextId(htmlDocument: HTMLDocument, document: TextDocument, position: Position): Hover | undefined {
     const node = htmlDocument.findNodeAt(document.offsetAt(position));
-    const textIdName = mappers.textMapper.parser.getRefName(node, document, position);
+    const textIdName = this.mappers.textMapper.parser.getRefName(node, document, position);
     if (!textIdName) return;
 
-    const textDef = mappers.textMapper.defs.get(textIdName);
+    const textDef = this.mappers.textMapper.defs.get(textIdName);
     if (!textDef || !textDef.text) return;
 
     const nameRange = attrNameRange(node, document, position);

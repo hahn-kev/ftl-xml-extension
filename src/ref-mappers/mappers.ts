@@ -1,4 +1,4 @@
-import {NodeMap, RefMapper, RefMapperBase} from './ref-mapper';
+import {RefMapper, RefMapperBase} from './ref-mapper';
 import {FtlEvent} from '../models/ftl-event';
 import {Node} from 'vscode-html-languageservice';
 import {Position, TextDocument} from 'vscode';
@@ -28,7 +28,6 @@ import {FtlAutoblueprint} from '../models/ftl-autoblueprint';
 import {defaultAutoBlueprints} from '../data/default-ftl-data/default-auto-blueprints';
 import {FtlText} from '../models/ftl-text';
 import {BlueprintMapper} from '../blueprints/blueprint-mapper';
-import {DocumentCache} from '../document-cache';
 import {defaultWeaponBlueprints} from '../data/default-ftl-data/default-weapon-blueprints';
 import {FtlDrone} from '../models/ftl-drone';
 import {defaultDrones} from '../data/default-ftl-data/default-drones';
@@ -51,27 +50,29 @@ import {FtlWeaponAnimation} from '../models/ftl-weapon-animation';
 import {defaultWeaponAnimations} from '../data/default-ftl-data/default-weapon-animations';
 import {defaultImageLists} from '../data/default-ftl-data/default-image-lists';
 import {FtlImageList} from '../models/ftl-image-list';
+import {attrValueNodeMap, NodeMapImp} from './node-map';
 
-class Mappers {
-  readonly eventsMapper = new RefMapper(new RefParser((file) => file.event, FtlEvent, events),
+export class Mappers {
+  readonly eventsMapper = new RefMapper(
+      new RefParser((file) => file.event, FtlEvent, events),
       EventNamesValueSet,
       'Event',
-      defaultEvents);
+      defaultEvents
+  );
 
 
   readonly shipsMapper = new RefMapper(
       new RefParser(
           (file) => file.ship,
           FtlShip,
-          {
-            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-              return getAttrValueForTag(node, 'ship', 'name', document, position);
-            },
-            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-              if (node.tag == 'ship' && node.parent?.tag == 'shipOrder') return getNodeTextContent(node, document);
-              return getAttrValueForTag(node, 'ship', 'load', document, position);
-            }
-          }
+          new NodeMapImp(
+              ({node, document, position}) => {
+                return getAttrValueForTag(node, 'ship', 'name', document, position);
+              },
+              ({node, document, position}) => {
+                return getNodeTextContent(node, document, 'ship', 'shipOrder')
+                    ?? getAttrValueForTag(node, 'ship', 'load', document, position);
+              })
       ),
       ShipNames,
       'Ship',
@@ -81,18 +82,18 @@ class Mappers {
       new RefParser(
           (file) => file.weapon,
           FtlWeapon,
-          {
-            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-              return getAttrValueForTag(node, 'weaponBlueprint', 'name', document, position);
-            },
-            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-              const name = getAttrValueForTag(node, 'weapon', 'name', document, position);
-              if (name) return name;
-              if (node.tag == 'weaponBlueprint' && node.parent?.tag == 'droneBlueprint' && !node.attributes) {
-                return getNodeTextContent(node, document);
+          new NodeMapImp(
+              ({node, document, position}) => {
+                return getAttrValueForTag(node, 'weaponBlueprint', 'name', document, position);
+              },
+              ({node, document, position}) => {
+                const name = getAttrValueForTag(node, 'weapon', 'name', document, position);
+                if (name) return name;
+                if (node.tag == 'weaponBlueprint' && node.parent?.tag == 'droneBlueprint' && !node.attributes) {
+                  return getNodeTextContent(node, document);
+                }
               }
-            }
-          }
+          ),
       ),
       WeaponNames,
       'Weapon',
@@ -102,14 +103,7 @@ class Mappers {
       new RefParser(
           (file) => file.drone,
           FtlDrone,
-          {
-            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-              return getAttrValueForTag(node, 'droneBlueprint', 'name', document, position);
-            },
-            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-              return getAttrValueForTag(node, 'drone', 'name', document, position);
-            }
-          }
+          attrValueNodeMap([{tag: 'droneBlueprint', attr: 'name'}], [{tag: 'drone', attr: 'name'}])
       ),
       DroneNames,
       'Drone',
@@ -119,19 +113,12 @@ class Mappers {
       new RefParser(
           (file) => file.augment,
           FtlAugment,
-          {
-            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-              return getAttrValueForTag(node,
-                  'augBlueprint',
-                  'name',
-                  document,
-                  position);
-            },
-            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-              return getAttrValueForTag(node, 'augment', 'name', document, position)
-                  ?? getAttrValueForTag(node, 'aug', 'name', document, position);
-            }
-          }
+          attrValueNodeMap(
+              [{tag: 'augBlueprint', attr: 'name'}],
+              [
+                {tag: 'augment', attr: 'name'},
+                {tag: 'aug', attr: 'name'}
+              ])
       ),
       AugmentNames,
       'Augment',
@@ -141,20 +128,13 @@ class Mappers {
       new RefParser(
           (file) => file.crews,
           FtlCrew,
-          {
-            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-              return getAttrValueForTag(node,
-                  'crewBlueprint',
-                  'name',
-                  document,
-                  position);
-            },
-            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-              return getAttrValueForTag(node, 'crewMember', 'class', document, position)
-                  ?? getAttrValueForTag(node, 'crewMember', 'type', document, position)
-                  ?? getAttrValueForTag(node, 'removeCrew', 'class', document, position);
-            }
-          }
+          attrValueNodeMap(
+              [{tag: 'crewBlueprint', attr: 'name'}],
+              [
+                {tag: 'crewMember', attr: 'class'},
+                {tag: 'crewMember', attr: 'type'},
+                {tag: 'removeCrew', attr: 'class'}
+              ])
       ),
       CrewNames,
       'Crew',
@@ -164,20 +144,13 @@ class Mappers {
       new RefParser(
           (file) => file.system,
           FtlSystem,
-          {
-            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-              return getAttrValueForTag(node,
-                  'systemBlueprint',
-                  'name',
-                  document,
-                  position);
-            },
-            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-              return getAttrValueForTag(node, 'status', 'system', document, position)
-                  ?? getAttrValueForTag(node, 'upgrade', 'system', document, position)
-                  ?? getAttrValueForTag(node, 'damage', 'system', document, position);
-            }
-          }
+          attrValueNodeMap(
+              [{tag: 'systemBlueprint', attr: 'name'}],
+              [
+                {tag: 'status', attr: 'system'},
+                {tag: 'upgrade', attr: 'system'},
+                {tag: 'damage', attr: 'system'}
+              ])
       ),
       SystemNames,
       'System',
@@ -193,9 +166,8 @@ class Mappers {
               return getAttrValueForTag(node, 'shipBlueprint', 'name', document, position);
             },
             getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-              return getAttrValueForTag(node, 'ship', 'auto_blueprint', document, position) ?? getNodeTextContent(node,
-                  document,
-                  'bossShip');
+              return getAttrValueForTag(node, 'ship', 'auto_blueprint', document, position)
+                  ?? getNodeTextContent(node, document, 'bossShip');
             }
           }
       ),
@@ -240,7 +212,7 @@ class Mappers {
       new RefParser((file) => file.sounds,
           FtlSound,
           {
-            getNameDef: (node: Node, document: TextDocument, position?: Position): string | undefined => {
+            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
               return Sounds.isWaveNode(node, document) ? node.tag : undefined;
             },
             getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
@@ -311,53 +283,47 @@ class Mappers {
   readonly imageListMapper = new RefMapper(
       new RefParser((file) => file.imageLists,
           FtlImageList,
-          <NodeMap>{
-            getNameDef: (node: Node, document: TextDocument, position?: Position): string | undefined => {
-              return getAttrValueForTag(node, 'imageList', 'name', document, position);
-            },
-            getRefName(node: Node, document: TextDocument, position?: Position): string | string[] | undefined {
-              if (node.tag === 'img' && node.parent?.tag === 'event') {
-                const refs: string[] = [];
-                if (hasAttr(node, 'back', document, position)) {
-                  refs.push(normalizeAttributeName(node.attributes.back));
+          new NodeMapImp(
+              ({node, document, position}) => {
+                return getAttrValueForTag(node, 'imageList', 'name', document, position);
+              },
+              ({node, document, position}) => {
+                if (node.tag === 'img' && node.parent?.tag === 'event') {
+                  const refs: string[] = [];
+                  if (hasAttr(node, 'back', document, position)) {
+                    refs.push(normalizeAttributeName(node.attributes.back));
+                  }
+                  if (hasAttr(node, 'planet', document, position)) {
+                    refs.push(normalizeAttributeName(node.attributes.planet));
+                  }
+                  if (position) return refs[0];
+                  return refs;
                 }
-                if (hasAttr(node, 'planet', document, position)) {
-                  refs.push(normalizeAttributeName(node.attributes.planet));
-                }
-                if (position) return refs[0];
-                return refs;
-              }
-            }
-          }),
+              }),
+      ),
       ImageListNames,
       'Image List',
       defaultImageLists
   );
 
+  readonly blueprintMapper = new BlueprintMapper([
+    this.weaponsMapper,
+    this.autoBlueprintMapper,
+    this.dronesMapper,
+    this.augmentsMapper,
+    this.crewMapper,
+    this.systemMapper
+  ]);
 
-  public setup(documentCache: DocumentCache) {
-    const blueprintMappers: RefMapperBase[] = [
-      this.weaponsMapper,
-      this.autoBlueprintMapper,
-      this.dronesMapper,
-      this.augmentsMapper,
-      this.crewMapper,
-      this.systemMapper
-    ];
-    const blueprintMapper = new BlueprintMapper(blueprintMappers);
-    const mappers: RefMapperBase[] = [
-      this.eventsMapper,
-      this.shipsMapper,
-      this.textMapper,
-      this.soundWaveMapper,
-      this.animationMapper,
-      this.animationSheetMapper,
-      this.weaponAnimationMapper,
-      this.imageListMapper,
-      blueprintMapper
-    ];
-    return {blueprintMapper, mappers};
-  }
+  readonly list: RefMapperBase[] = [
+    this.eventsMapper,
+    this.shipsMapper,
+    this.textMapper,
+    this.soundWaveMapper,
+    this.animationMapper,
+    this.animationSheetMapper,
+    this.weaponAnimationMapper,
+    this.imageListMapper,
+    this.blueprintMapper
+  ];
 }
-
-export const mappers = new Mappers();
