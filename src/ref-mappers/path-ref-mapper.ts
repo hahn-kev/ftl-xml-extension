@@ -1,4 +1,3 @@
-import {RefProvider} from './ref-mapper';
 import {IValueSet, Node} from 'vscode-html-languageservice';
 import {Location, Position, Range, TextDocument, Uri} from 'vscode';
 import {FtlRoot} from '../models/ftl-root';
@@ -8,13 +7,14 @@ import {SoundFile} from '../models/sound-file';
 import {FtlCompletionProvider} from '../providers/ftl-completion-provider';
 import {ImgPathNames, MusicPaths, SoundWavePaths} from '../data/autocomplete-value-sets';
 import {FtlResourceFile} from '../models/ftl-resource-file';
+import {LookupContext, LookupProvider} from './lookup-provider';
 
 export enum FileHandled {
   handled,
   notHandled
 }
 
-export interface PathRefMapperBase extends RefProvider {
+export interface PathRefMapperBase extends LookupProvider {
   handleFile(file: Uri, fileName: string | undefined, root: FtlRoot): FileHandled;
 
   updateData(root: FtlRoot): void;
@@ -37,7 +37,7 @@ export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBa
     return FileHandled.handled;
   }
 
-  public lookupDef(node: Node, document: TextDocument, position: Position): Location | undefined {
+  public lookupDef({node, document, position}: LookupContext): Location | undefined {
     const offset = document.offsetAt(position);
     if ((node.tag == 'animSheet' || node.tag == 'img' || node.tag == 'chargeImage')
         && FtlCompletionProvider.shouldCompleteForNodeContents(node, offset)) {
@@ -50,7 +50,7 @@ export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBa
     return undefined;
   }
 
-  public lookupRefs(node: Node, document: TextDocument, position: Position): Location[] | undefined {
+  public lookupRefs({node, document, position}: LookupContext): Location[] | undefined {
     // todo implement
     const offset = document.offsetAt(position);
     return undefined;

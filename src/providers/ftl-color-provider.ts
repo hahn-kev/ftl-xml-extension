@@ -13,7 +13,7 @@ import {Node} from 'vscode-html-languageservice';
 import {FtlFile} from '../models/ftl-file';
 import {FtlColor} from '../models/ftl-color';
 import {normalizeAttributeName, toRange} from '../helpers';
-import {FtlXmlParser} from '../parsers/ftl-xml-parser';
+import {FtlXmlParser, ParseContext} from '../parsers/ftl-xml-parser';
 
 export class FtlColorProvider implements DocumentColorProvider, FtlXmlParser {
   constructor(private ftlParser: FtlParser) {
@@ -49,7 +49,7 @@ export class FtlColorProvider implements DocumentColorProvider, FtlXmlParser {
         });
   }
 
-  parseNode(node: Node, file: FtlFile, document: TextDocument): void {
+  parseNode({node, file, document}: ParseContext): void {
     if (node.tag !== 'color' || !node.attributes) return;
     file.colors.push(new FtlColor(
         toRange('<color '.length + node.start, node.end - '/>'.length, document),

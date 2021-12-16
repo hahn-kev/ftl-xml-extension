@@ -10,12 +10,12 @@ import {
   TextDocument
 } from 'vscode';
 import {DocumentCache} from '../document-cache';
-import {RefProvider} from '../ref-mappers/ref-mapper';
+import {LookupProvider} from '../ref-mappers/lookup-provider';
 
 export class FtlDefinitionProvider implements DefinitionProvider {
   constructor(
       private documentCache: DocumentCache,
-      private lookupDefProviders: RefProvider[]) {
+      private lookupDefProviders: LookupProvider[]) {
 
   }
 
@@ -27,7 +27,7 @@ export class FtlDefinitionProvider implements DefinitionProvider {
     const offset = document.offsetAt(position);
     const node = htmlDocument.findNodeBefore(offset);
     for (const lookupDefProvider of this.lookupDefProviders) {
-      const def = lookupDefProvider.lookupDef(node, document, position);
+      const def = lookupDefProvider.lookupDef({node, document, position});
       if (def) return def;
     }
   }

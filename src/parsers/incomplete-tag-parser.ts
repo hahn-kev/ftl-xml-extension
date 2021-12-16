@@ -1,4 +1,4 @@
-import {FtlXmlParser} from './ftl-xml-parser';
+import {FtlXmlParser, ParseContext} from './ftl-xml-parser';
 import {Node} from 'vscode-html-languageservice';
 import {FtlFile} from '../models/ftl-file';
 import {TextDocument} from 'vscode';
@@ -6,7 +6,7 @@ import {toRange} from '../helpers';
 import {DiagnosticBuilder} from '../diagnostic-builder';
 
 export class IncompleteTagParser implements FtlXmlParser {
-  parseNode(node: Node, file: FtlFile, document: TextDocument): void {
+  parseNode({node, file, document}: ParseContext): void {
     if (node.tag && this.isMissingEnd(node, document)) {
       const warningStart = node.endTagStart ?? node.start;
       // when the end and startTagEnd are the same then it's self closing

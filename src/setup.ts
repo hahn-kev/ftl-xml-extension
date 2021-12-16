@@ -24,8 +24,8 @@ import {ImgFileNameValidator} from './validators/img-file-name-validator';
 import {FtlDatFs} from './dat-fs-provider/ftl-dat-fs';
 import {FtlDatCache} from './dat-fs-provider/ftl-dat-cache';
 import {pathMappers} from './ref-mappers/path-ref-mapper';
-import {RefProvider} from './ref-mappers/ref-mapper';
 import {VOID_ELEMENTS} from 'vscode-html-languageservice/lib/esm/languageFacts/fact';
+import {LookupProvider} from './ref-mappers/lookup-provider';
 
 
 export type disposable = { dispose(): unknown };
@@ -53,7 +53,7 @@ export function setup(registerProviders = false): Created {
     new RequiredChildrenParser(),
     new AllowedChildrenParser()
   ];
-  const refProviders: RefProvider[] = [...mappersList, ...pathMappers.mappers];
+  const refProviders: LookupProvider[] = [...mappersList, ...pathMappers.mappers];
   const ftlParser = new FtlParser(documentCache, parsers, pathMappers.mappers);
   const ftlColor = new FtlColorProvider(ftlParser);
   // kinda ugly, but the ftlParser depends on a list of parsers, and the color provider depends on the parser

@@ -2,10 +2,11 @@ import {EventEmitter, ProgressLocation, TextDocument, Uri, window, workspace} fr
 import {Node} from 'vscode-html-languageservice';
 import {FtlFile} from './models/ftl-file';
 import {DocumentCache} from './document-cache';
-import {FtlXmlParser} from './parsers/ftl-xml-parser';
+import {FtlXmlParser, ParseContext} from './parsers/ftl-xml-parser';
 import {FtlRoot} from './models/ftl-root';
 import {getFileName} from './helpers';
 import {FileHandled, PathRefMapperBase} from './ref-mappers/path-ref-mapper';
+
 
 export class FtlParser {
   constructor(private cache: DocumentCache, private parsers: FtlXmlParser[], private pathMappers: PathRefMapperBase[]) {
@@ -84,8 +85,9 @@ export class FtlParser {
 
   private parseNodes(nodes: Node[], ftlFile: FtlFile, document: TextDocument) {
     for (const node of nodes) {
+      const context: ParseContext = {node, file: ftlFile, document};
       for (const parser of this.parsers) {
-        parser.parseNode(node, ftlFile, document);
+        parser.parseNode(context);
       }
       // this.visitNode(node, document);
 

@@ -1,4 +1,4 @@
-import {FtlXmlParser} from '../parsers/ftl-xml-parser';
+import {FtlXmlParser, ParseContext} from '../parsers/ftl-xml-parser';
 import {RefMapperBase} from '../ref-mappers/ref-mapper';
 import {Node} from 'vscode-html-languageservice';
 import {FtlFile, FtlFileValue} from '../models/ftl-file';
@@ -17,26 +17,26 @@ export class BlueprintParser implements FtlXmlParser {
   constructor(private blueprintMappers: RefMapperBase[]) {
   }
 
-  parseNode(node: Node, file: FtlFile, document: TextDocument): void {
-    const name = this.getBlueprintListName(node, document);
+  parseNode(context: ParseContext): void {
+    const name = this.getBlueprintListName(context.node, context.document);
     if (name) {
-      const ftlBlueprintList = new FtlBlueprintList(name, file, node, document, true);
-      ftlBlueprintList.childRefNames = node.children.filter((c) => c.tag == 'name')
-          .map((c) => this.getNameNodeText(c, document))
+      const ftlBlueprintList = new FtlBlueprintList(name, context.file, context.node, context.document, true);
+      ftlBlueprintList.childRefNames = context.node.children.filter((c) => c.tag == 'name')
+          .map((c) => this.getNameNodeText(c, context.document))
           .filter((t): t is string => !!t);
 
-      for (const child of node.children) {
-        const listChild = this.parseListChild(child, file, document);
+      for (const child of context.node.children) {
+        const listChild = this.parseListChild(child, context.file, context.document);
         if (listChild) ftlBlueprintList.children.push(listChild);
       }
 
-      file.blueprintList.defs.push(ftlBlueprintList);
-      addToKey(file.blueprintList.refs, name, ftlBlueprintList);
+      context.file.blueprintList.defs.push(ftlBlueprintList);
+      addToKey(context.file.blueprintList.refs, name, ftlBlueprintList);
       return;
     }
 
     for (const mapper of this.blueprintMappers) {
-      mapper.parser.parseNode(node, file, document);
+      mapper.parser.parseNode(context);
     }
   }
 

@@ -1,4 +1,4 @@
-import {FtlXmlParser} from './ftl-xml-parser';
+import {FtlXmlParser, ParseContext} from './ftl-xml-parser';
 import {FtlFile} from '../models/ftl-file';
 import {TextDocument} from 'vscode';
 import {Node} from 'vscode-html-languageservice';
@@ -10,7 +10,7 @@ export class RequiredChildrenParser implements FtlXmlParser {
       .filter((tag: XmlTag): tag is XmlTag & { requiredTags: string[] } => !!tag.requiredTags)
       .map((tag) => [tag.name, tag]));
 
-  parseNode(node: Node, file: FtlFile, document: TextDocument): void {
+  parseNode({node, file, document}: ParseContext): void {
     if (!node.tag) return;
     const xmlTag = this.requiredChildrenMap.get(node.tag);
     const requiredChildren = xmlTag?.requiredTagsByParent?.[node.parent?.tag ?? ''] ?? xmlTag?.requiredTags;

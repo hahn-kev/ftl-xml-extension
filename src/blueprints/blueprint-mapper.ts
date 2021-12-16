@@ -1,12 +1,12 @@
 import {RefMapperBase} from '../ref-mappers/ref-mapper';
-import {Node} from 'vscode-html-languageservice';
-import {Location, Position, TextDocument} from 'vscode';
+import {Location} from 'vscode';
 import {FtlFile, FtlFileValue} from '../models/ftl-file';
 import {FtlBlueprintList, FtlBlueprintValue} from '../models/ftl-blueprint-list';
 import {FtlValue} from '../models/ftl-value';
 import {addToKey, firstWhere} from '../helpers';
 import {BlueprintListTypeAny} from '../data/ftl-data';
 import {BlueprintParser} from './blueprint-parser';
+import {LookupContext} from '../ref-mappers/lookup-provider';
 
 
 export class BlueprintMapper implements RefMapperBase {
@@ -29,7 +29,7 @@ export class BlueprintMapper implements RefMapperBase {
 
   // todo not consistent with normal lookup, will not return a result
   // when lookup is done on the def itself
-  lookupDef(node: Node, document: TextDocument, position: Position): Location | undefined {
+  lookupDef({node, document, position}: LookupContext): Location | undefined {
     const ref = this.parser.getRefNameAndMapper(node, document, position);
     if (!ref) return;
     const refName = ref.name;
@@ -43,7 +43,7 @@ export class BlueprintMapper implements RefMapperBase {
   }
 
 
-  lookupRefs(node: Node, document: TextDocument, position: Position): Location[] | undefined {
+  lookupRefs({node, document, position}: LookupContext): Location[] | undefined {
     const refName = this.parser.getNameDef(node, document, position)
         ?? this.parser.getRefName(node, document, position);
     if (!refName) return;

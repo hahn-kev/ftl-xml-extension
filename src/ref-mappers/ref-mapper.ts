@@ -4,16 +4,11 @@ import {Location, Position, Range, TextDocument} from 'vscode';
 import {addToKey} from '../helpers';
 import {FtlValue} from '../models/ftl-value';
 import {FtlRefParser, RefParser} from './ref-parser';
+import {LookupContext, LookupProvider} from './lookup-provider';
 
 export type InvalidRef = { name: string, range: Range, typeName: string }
 
-export interface RefProvider {
-  lookupRefs(node: Node, document: TextDocument, position: Position): Location[] | undefined;
-
-  lookupDef(node: Node, document: TextDocument, position: Position): Location | undefined;
-}
-
-export interface RefMapperBase extends RefProvider{
+export interface RefMapperBase extends LookupProvider{
   updateData(files: FtlFile[]): void;
 
 
@@ -76,14 +71,14 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
     }
   }
 
-  lookupRefs(node: Node, document: TextDocument, position: Position): Location[] | undefined {
+  lookupRefs({node, document, position}: LookupContext): Location[] | undefined {
     const name = this.getRefName(node, document, position);
     if (!name) return;
     const values = this.refs.get(name) ?? this.altRefMapper?.refs.get(name);
     return values?.map((value: FtlValue) => value.toLocation());
   }
 
-  lookupDef(node: Node, document: TextDocument, position: Position): Location | undefined {
+  lookupDef({node, document, position}: LookupContext): Location | undefined {
     const name = this.getRefName(node, document, position);
     if (!name) return;
     const value = this.defs.get(name) ?? this.altRefMapper?.defs.get(name);

@@ -3,7 +3,7 @@ import {FtlFile, FtlFileValue} from '../models/ftl-file';
 import {Position, TextDocument} from 'vscode';
 import {NodeMap} from './ref-mapper';
 import {FtlValue} from '../models/ftl-value';
-import {FtlXmlParser} from '../parsers/ftl-xml-parser';
+import {FtlXmlParser, ParseContext} from '../parsers/ftl-xml-parser';
 
 export interface FtlRefParser extends FtlXmlParser, NodeMap {
   fileDataSelector: (file: FtlFile) => FtlFileValue<FtlValue>;
@@ -18,7 +18,7 @@ export class RefParser<T extends FtlValue = FtlValue> implements FtlRefParser {
               public readonly nodeMap: NodeMap) {
   }
 
-  parseNode(node: Node, file: FtlFile, document: TextDocument): void {
+  parseNode({node, file, document}: ParseContext): void {
     const nameDef = this.nodeMap.getNameDef(node, document);
     if (nameDef) {
       const fileValue = this.fileDataSelector(file);
