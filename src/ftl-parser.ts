@@ -1,15 +1,14 @@
-import {EventEmitter, FileType, ProgressLocation, TextDocument, Uri, window, workspace} from 'vscode';
+import {EventEmitter, ProgressLocation, TextDocument, Uri, window, workspace} from 'vscode';
 import {Node} from 'vscode-html-languageservice';
 import {FtlFile} from './models/ftl-file';
 import {DocumentCache} from './document-cache';
 import {FtlXmlParser} from './parsers/ftl-xml-parser';
 import {FtlRoot} from './models/ftl-root';
 import {getFileName} from './helpers';
-import {SoundFile} from './models/sound-file';
-import {FtlImg} from './models/ftl-img';
+import {FileHandled, PathRefMapperBase} from './ref-mappers/path-ref-mapper';
 
 export class FtlParser {
-  constructor(private cache: DocumentCache, private parsers: FtlXmlParser[]) {
+  constructor(private cache: DocumentCache, private parsers: FtlXmlParser[], private pathMappers: PathRefMapperBase[]) {
   }
 
   private _onParsedEmitter = new EventEmitter<FtlRoot>();
@@ -55,18 +54,10 @@ export class FtlParser {
 
   private async parseFile(file: Uri) {
     const fileName = getFileName(file);
-    if (this.isAudioFile(fileName)) {
-      const soundFile = new SoundFile(file);
-      if (soundFile.type === 'wave') {
-        this.root.soundWaveFiles.push(soundFile);
-      } else if (soundFile.type === 'music') {
-        this.root.musicFiles.push(soundFile);
+    for (const pathMapper of this.pathMappers) {
+      if (pathMapper.handleFile(file, fileName, this.root) == FileHandled.handled) {
+        return;
       }
-      return;
-    }
-    if (this.isImgFile(fileName)) {
-      this.root.imgFiles.push(new FtlImg(file));
-      return;
     }
     if (!fileName?.endsWith('.xml') && !fileName?.endsWith('.xml.append')) {
       return;
@@ -75,13 +66,6 @@ export class FtlParser {
     this._parseDocument(document);
   }
 
-  private isAudioFile(name: string | undefined): boolean {
-    return (name?.endsWith('.ogg') || name?.endsWith('.wav')) ?? false;
-  }
-
-  private isImgFile(name: string | undefined): boolean {
-    return name?.endsWith('.png') ?? false;
-  }
 
   public parseDocument(document: TextDocument) {
     const ftlFile = this._parseDocument(document);

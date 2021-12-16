@@ -1,33 +1,102 @@
-import {FtlValue} from '../models/ftl-value';
-import {RefMapperBase} from './ref-mapper';
-import {FtlFile, FtlFileValue} from '../models/ftl-file';
-import {FtlRefParser} from './ref-parser';
-import {Node} from 'vscode-html-languageservice';
-import {Location, Position, TextDocument} from 'vscode';
+import {RefProvider} from './ref-mapper';
+import {IValueSet, Node} from 'vscode-html-languageservice';
+import {Location, Position, Range, TextDocument, Uri} from 'vscode';
+import {FtlRoot} from '../models/ftl-root';
+import {getNodeTextContent} from '../helpers';
+import {FtlImg} from '../models/ftl-img';
+import {SoundFile} from '../models/sound-file';
+import {FtlCompletionProvider} from '../providers/ftl-completion-provider';
+import {ImgPathNames, MusicPaths, SoundWavePaths} from '../data/autocomplete-value-sets';
+import {FtlResourceFile} from '../models/ftl-resource-file';
 
-export class PathRefMapper<T extends FtlValue> implements RefMapperBase {
-  public readonly defs = new Map<string, FtlValue>();
-  public readonly refs = new Map<string, FtlValue[]>();
+export enum FileHandled {
+  handled,
+  notHandled
+}
 
+export interface PathRefMapperBase extends RefProvider {
+  handleFile(file: Uri, fileName: string | undefined, root: FtlRoot): FileHandled;
+
+  updateData(root: FtlRoot): void;
+}
+
+export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBase {
+  public root: FtlRoot = new FtlRoot();
 
   constructor(public readonly typeName: string,
-              public fileDataSelector: (file: FtlFile) => FtlFileValue<FtlValue>,
-              public readonly parser: FtlRefParser) {
+              public readonly autoCompleteValues: IValueSet,
+              private readonly matchingFile: (file: Uri, fileName: string | undefined) => boolean,
+              private readonly resourceBuilder: { new(file: Uri): T; },
+              private readonly selectRootFiles: (root: FtlRoot) => T[],
+              private readonly defaultFiles: string[] = []) {
   }
 
-  public isNameValid(name: string): boolean {
-    return false;
+  public handleFile(file: Uri, fileName: string | undefined, root: FtlRoot): FileHandled {
+    if (!this.matchingFile(file, fileName)) return FileHandled.notHandled;
+    this.selectRootFiles(root).push(new this.resourceBuilder(file));
+    return FileHandled.handled;
   }
 
   public lookupDef(node: Node, document: TextDocument, position: Position): Location | undefined {
+    const offset = document.offsetAt(position);
+    if ((node.tag == 'animSheet' || node.tag == 'img' || node.tag == 'chargeImage')
+        && FtlCompletionProvider.shouldCompleteForNodeContents(node, offset)) {
+      const imgPathName = getNodeTextContent(node, document);
+      if (!imgPathName) return;
+      const img = this.root.findMatchingImg(imgPathName);
+      if (!img) return;
+      return new Location(img.uri, new Range(0, 0, 0, 0));
+    }
     return undefined;
   }
 
   public lookupRefs(node: Node, document: TextDocument, position: Position): Location[] | undefined {
+    // todo implement
+    const offset = document.offsetAt(position);
     return undefined;
   }
 
-  public updateData(files: FtlFile[]): void {
-    // todo implement
+  public updateData(root: FtlRoot): void {
+    this.root = root;
+    this.autoCompleteValues.values.length = 0;
+    this.autoCompleteValues.values.push(...this.selectRootFiles(root)
+        .map((file) => file.modPath)
+        .concat(this.defaultFiles)
+        .map((modPath) => ({name: modPath}))
+    );
+    // todo update autocomplete value sets
   }
 }
+
+class PathRefMappers {
+  imageMapper = new PathRefMapper('Image',
+      ImgPathNames,
+      (file, fileName) => {
+        return fileName?.endsWith('.png') ?? false;
+      },
+      FtlImg,
+      (root) => root.imgFiles,
+  );
+
+  musicMapper = new PathRefMapper('Music', MusicPaths,
+      (file, fileName) => {
+        if (!(fileName?.endsWith('.ogg') && !fileName?.endsWith('.wav'))) return false;
+        const soundFile = new SoundFile(file);
+        return soundFile.type === 'music';
+      },
+      SoundFile,
+      (root) => root.musicFiles);
+
+  soundMapper = new PathRefMapper('Sound',
+      SoundWavePaths,
+      (file, fileName) => {
+        if (!(fileName?.endsWith('.ogg') && !fileName?.endsWith('.wav'))) return false;
+        const soundFile = new SoundFile(file);
+        return soundFile.type === 'wave';
+      },
+      SoundFile,
+      (root) => root.soundWaveFiles);
+  mappers: PathRefMapperBase[] = [this.imageMapper, this.soundMapper, this.musicMapper];
+}
+
+export const pathMappers = new PathRefMappers();

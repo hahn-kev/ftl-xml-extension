@@ -9,12 +9,10 @@ import {FtlData} from '../data/ftl-data';
 import {Event} from 'vscode';
 import {RefMapperBase} from '../ref-mappers/ref-mapper';
 import {FtlRoot} from '../models/ftl-root';
-import {ImgPathNames, MusicPaths, SoundWavePaths} from '../data/autocomplete-value-sets';
-import {defaultImgFiles} from '../data/default-ftl-data/default-img-files';
-import {defaultSoundFiles} from '../data/default-ftl-data/default-sound-files';
+import {PathRefMapperBase} from '../ref-mappers/path-ref-mapper';
 
 export class FtlDataProvider implements IHTMLDataProvider {
-  constructor(onParsed: Event<FtlRoot>, private mappers: RefMapperBase[]) {
+  constructor(onParsed: Event<FtlRoot>, private mappers: RefMapperBase[], private pathRefMappers: PathRefMapperBase[]) {
     onParsed((e) => {
       console.time('update data');
       this.updateFtlData(e);
@@ -23,21 +21,9 @@ export class FtlDataProvider implements IHTMLDataProvider {
   }
 
   updateFtlData(root: FtlRoot) {
-    SoundWavePaths.values.length = 0;
-    SoundWavePaths.values.push(...root.soundWaveFiles
-        .map((file) => file.modPath)
-        .concat(defaultSoundFiles)
-        .map((modPath) => ({name: modPath})));
-
-    MusicPaths.values.length = 0;
-    MusicPaths.values.push(...root.musicFiles.map((file) => ({name: file.modPath})));
-
-    ImgPathNames.values.length = 0;
-    ImgPathNames.values.push(
-        ...root.imgFiles.map((file) => file.modPath)
-            .concat(defaultImgFiles)
-            .map((modPath) => ({name: modPath}))
-    );
+    for (const pathRefMapper of this.pathRefMappers) {
+      pathRefMapper.updateData(root);
+    }
 
     const ftlFiles = Array.from(root.files.values());
     for (const mapper of this.mappers) {

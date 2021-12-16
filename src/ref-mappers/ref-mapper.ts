@@ -7,12 +7,15 @@ import {FtlRefParser, RefParser} from './ref-parser';
 
 export type InvalidRef = { name: string, range: Range, typeName: string }
 
-export interface RefMapperBase {
-  updateData(files: FtlFile[]): void;
-
+export interface RefProvider {
   lookupRefs(node: Node, document: TextDocument, position: Position): Location[] | undefined;
 
   lookupDef(node: Node, document: TextDocument, position: Position): Location | undefined;
+}
+
+export interface RefMapperBase extends RefProvider{
+  updateData(files: FtlFile[]): void;
+
 
   readonly typeName: string;
   readonly defaults?: readonly string[];

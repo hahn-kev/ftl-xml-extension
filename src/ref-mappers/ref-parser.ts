@@ -9,7 +9,7 @@ export interface FtlRefParser extends FtlXmlParser, NodeMap {
   fileDataSelector: (file: FtlFile) => FtlFileValue<FtlValue>;
 }
 
-type FtlValueConst<T> = { new(name: string, file: FtlFile, node: Node, document: TextDocument): T; }
+export type FtlValueConst<T> = { new(name: string, file: FtlFile, node: Node, document: TextDocument): T; }
     | { new(name: string, file: FtlFile, node: Node, document: TextDocument, isDef: boolean): T; };
 
 export class RefParser<T extends FtlValue = FtlValue> implements FtlRefParser {

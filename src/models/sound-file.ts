@@ -1,18 +1,17 @@
 import {Uri} from 'vscode';
+import {FtlResourceFile} from './ftl-resource-file';
 
-export class SoundFile {
+export class SoundFile extends FtlResourceFile {
   constructor(uri: Uri) {
-    this.uri = uri;
-    const pathArray = this.uri.path.split('/');
+    const pathArray = uri.path.split('/');
     const audioIndex = pathArray.lastIndexOf('audio');
     const typeIndex = audioIndex + 1;
-    this.modPath = pathArray.slice(typeIndex + 1).join('/');
+    super(uri, pathArray.slice(typeIndex + 1).join('/'));
+
     this.type = pathArray[typeIndex] === 'music' ? 'music' : 'wave';
   }
 
-  public uri: Uri;
-  public type: 'wave'|'music';
-  public modPath: string;
+  public type: 'wave' | 'music';
 
   public matches(path: string): boolean {
     // todo will match the full path, should only match starting with folder after 'waves' folder

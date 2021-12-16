@@ -8,10 +8,10 @@ import {
   TextDocument
 } from 'vscode';
 import {DocumentCache} from '../document-cache';
-import {RefMapperBase} from '../ref-mappers/ref-mapper';
+import {RefProvider} from '../ref-mappers/ref-mapper';
 
 export class FtlReferenceProvider implements ReferenceProvider {
-  constructor(private documentCache: DocumentCache, private mappers: RefMapperBase[]) {
+  constructor(private documentCache: DocumentCache, private refProviders: RefProvider[]) {
   }
 
   provideReferences(
@@ -22,8 +22,8 @@ export class FtlReferenceProvider implements ReferenceProvider {
     const htmlDocument = this.documentCache.getHtmlDocument(document);
     const offset = document.offsetAt(position);
     const node = htmlDocument.findNodeBefore(offset);
-    for (const mapper of this.mappers) {
-      const refs = mapper.lookupRefs(node, document, position);
+    for (const refProvider of this.refProviders) {
+      const refs = refProvider.lookupRefs(node, document, position);
       if (refs) return refs;
     }
   }

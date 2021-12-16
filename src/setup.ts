@@ -2,7 +2,6 @@ import {FtlParser} from './ftl-parser';
 import {FltDocumentValidator} from './flt-document-validator';
 import {CodeActionKind, DocumentSelector, languages, window, workspace} from 'vscode';
 import {getLanguageService} from 'vscode-html-languageservice';
-// import {VOID_ELEMENTS} from 'vscode-html-languageservice/lib/esm/languageFacts/fact';
 import {DocumentCache} from './document-cache';
 import {mappers} from './ref-mappers/mappers';
 import {FtlDataProvider} from './providers/ftl-data-provider';
@@ -24,6 +23,9 @@ import {SoundFileNameValidator} from './validators/sound-file-name-validator';
 import {ImgFileNameValidator} from './validators/img-file-name-validator';
 import {FtlDatFs} from './dat-fs-provider/ftl-dat-fs';
 import {FtlDatCache} from './dat-fs-provider/ftl-dat-cache';
+import {pathMappers} from './ref-mappers/path-ref-mapper';
+import {RefProvider} from './ref-mappers/ref-mapper';
+import {VOID_ELEMENTS} from 'vscode-html-languageservice/lib/esm/languageFacts/fact';
 
 
 export type disposable = { dispose(): unknown };
@@ -33,7 +35,7 @@ type Created = { workspaceParser: WorkspaceParser, subs: disposable[] };
 export function setup(registerProviders = false): Created {
   // hack to prevent img elements from getting marked as void and thus ending too soon
   // in fact.js isVoidElement is called by the parser to see if the element is self closing
-  // VOID_ELEMENTS.length = 0;
+  VOID_ELEMENTS.length = 0;
 
   const ftlLanguage = 'ftl-xml';
   const ftlXmlDoc: DocumentSelector = [{language: ftlLanguage, scheme: 'file'}, {
@@ -51,16 +53,17 @@ export function setup(registerProviders = false): Created {
     new RequiredChildrenParser(),
     new AllowedChildrenParser()
   ];
-  const ftlParser = new FtlParser(documentCache, parsers);
+  const refProviders: RefProvider[] = [...mappersList, ...pathMappers.mappers];
+  const ftlParser = new FtlParser(documentCache, parsers, pathMappers.mappers);
   const ftlColor = new FtlColorProvider(ftlParser);
   // kinda ugly, but the ftlParser depends on a list of parsers, and the color provider depends on the parser
   // I should split them out, but I like the parsing and color providing in the same place
   parsers.push(ftlColor);
-  const ftlDataProvider = new FtlDataProvider(ftlParser.onParsed, mappersList);
+  const ftlDataProvider = new FtlDataProvider(ftlParser.onParsed, mappersList, pathMappers.mappers);
   const ftlCodeAction = new FtlCodeActionProvider(documentCache);
   service.setDataProviders(false, [ftlDataProvider]);
 
-  const ftlDefinitionProvider = new FtlDefinitionProvider(documentCache, mappersList, ftlParser);
+  const ftlDefinitionProvider = new FtlDefinitionProvider(documentCache, refProviders);
   const ftlDocumentValidator = new FltDocumentValidator(documentCache,
       diagnosticCollection,
       ftlParser,
@@ -74,7 +77,7 @@ export function setup(registerProviders = false): Created {
   );
   const ftlDatCache = new FtlDatCache();
   const workspaceParser = new WorkspaceParser(ftlParser, ftlDocumentValidator, ftlDatCache);
-  const ftlReferenceProvider = new FtlReferenceProvider(documentCache, mappersList);
+  const ftlReferenceProvider = new FtlReferenceProvider(documentCache, refProviders);
   const hoverProvider = new FtlHoverProvider(documentCache, service);
   const completionItemProvider = new FtlCompletionProvider(documentCache, service, blueprintMapper);
 
