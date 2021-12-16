@@ -10,6 +10,6 @@ export class FtlImg extends FtlResourceFile {
 
 
   public matches(path: string): boolean {
-    return this.modPath.endsWith(path);
+    return this.modPath == path;
   }
 }

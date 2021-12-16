@@ -17,7 +17,7 @@ export class SoundFileNameValidator implements Validator {
 
   private hasMatchingFile(soundFiles: SoundFile[], soundFilePath: string) {
     for (const soundFile of soundFiles) {
-      if (soundFile.matches(soundFilePath)) {
+      if (soundFile.modPath == soundFilePath) {
         return true;
       }
     }

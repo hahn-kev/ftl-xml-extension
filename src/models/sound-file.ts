@@ -12,9 +12,4 @@ export class SoundFile extends FtlResourceFile {
   }
 
   public type: 'wave' | 'music';
-
-  public matches(path: string): boolean {
-    // todo will match the full path, should only match starting with folder after 'waves' folder
-    return this.modPath.endsWith(path);
-  }
 }
