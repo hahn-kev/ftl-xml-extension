@@ -53,6 +53,7 @@ export function activate(context: ExtensionContext) {
         const imageLists = ImageListNames.values.map((a) => a.name);
         const imgFiles = root.imgFiles.map((i) => i.modPath);
         const soundFiles = root.soundWaveFiles.map((i) => i.modPath);
+        const musicFiles = root.musicFiles.map((m) => m.modPath);
         const tmp = '';
       }
     });

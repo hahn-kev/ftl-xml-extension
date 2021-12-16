@@ -1,5 +1,5 @@
-import {IValueSet, Node} from 'vscode-html-languageservice';
-import {Location, Position, Range, TextDocument, Uri} from 'vscode';
+import {IValueSet} from 'vscode-html-languageservice';
+import {Location, Range, Uri} from 'vscode';
 import {FtlRoot} from '../models/ftl-root';
 import {getNodeTextContent} from '../helpers';
 import {FtlImg} from '../models/ftl-img';
@@ -8,6 +8,9 @@ import {FtlCompletionProvider} from '../providers/ftl-completion-provider';
 import {ImgPathNames, MusicPaths, SoundWavePaths} from '../data/autocomplete-value-sets';
 import {FtlResourceFile} from '../models/ftl-resource-file';
 import {LookupContext, LookupProvider} from './lookup-provider';
+import {defaultSoundFiles} from '../data/default-ftl-data/default-sound-files';
+import {defaultImgFiles} from '../data/default-ftl-data/default-img-files';
+import {defaultMusic} from '../data/default-ftl-data/default-music';
 
 export enum FileHandled {
   handled,
@@ -76,26 +79,30 @@ class PathRefMappers {
       },
       FtlImg,
       (root) => root.imgFiles,
+      defaultImgFiles,
   );
 
-  musicMapper = new PathRefMapper('Music', MusicPaths,
+  musicMapper = new PathRefMapper('Music',
+      MusicPaths,
       (file, fileName) => {
-        if (!(fileName?.endsWith('.ogg') && !fileName?.endsWith('.wav'))) return false;
+        if (!fileName?.endsWith('.ogg') && !fileName?.endsWith('.wav')) return false;
         const soundFile = new SoundFile(file);
         return soundFile.type === 'music';
       },
       SoundFile,
-      (root) => root.musicFiles);
+      (root) => root.musicFiles,
+      defaultMusic);
 
   soundMapper = new PathRefMapper('Sound',
       SoundWavePaths,
       (file, fileName) => {
-        if (!(fileName?.endsWith('.ogg') && !fileName?.endsWith('.wav'))) return false;
+        if (!fileName?.endsWith('.ogg') && !fileName?.endsWith('.wav')) return false;
         const soundFile = new SoundFile(file);
         return soundFile.type === 'wave';
       },
       SoundFile,
-      (root) => root.soundWaveFiles);
+      (root) => root.soundWaveFiles,
+      defaultSoundFiles);
   mappers: PathRefMapperBase[] = [this.imageMapper, this.soundMapper, this.musicMapper];
 }
 
