@@ -33,7 +33,7 @@ export class NodeMapImp implements NodeMap {
   public getRefName(node: Node, document: TextDocument, position: Position): string | undefined;
   public getRefName(node: Node, document: TextDocument): string | string[] | undefined;
   public getRefName(node: Node, document: TextDocument, position?: Position): string | undefined | string[] {
-    return undefined;
+    return this.refName({node, document, position});
   }
 }
 
