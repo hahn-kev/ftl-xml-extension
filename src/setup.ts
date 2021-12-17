@@ -27,6 +27,7 @@ import {pathMappers} from './ref-mappers/path-ref-mapper';
 import {VOID_ELEMENTS} from 'vscode-html-languageservice/lib/esm/languageFacts/fact';
 import {LookupProvider} from './ref-mappers/lookup-provider';
 import {Validator} from './validators/validator';
+import {AnimationValidator} from './validators/animation-validator';
 
 
 export type disposable = { dispose(): unknown };
@@ -65,7 +66,8 @@ export function setup(registerProviders = false): Created {
     new BlueprintValidator(mappers.blueprintMapper),
     new RefNameValidator(mappers.list, mappers.blueprintMapper),
     new SoundFileNameValidator(),
-    new ImgFileNameValidator()
+    new ImgFileNameValidator(),
+    new AnimationValidator(mappers)
   ];
   const ftlDocumentValidator = new FltDocumentValidator(documentCache, diagnosticCollection, validators);
 

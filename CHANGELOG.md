@@ -86,3 +86,6 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 - Add default sound files from base ftl
 - Add support for imageLists
 - implemented the ability to load the ftl.dat file directly
+
+## 0.4.2
+- Add animation validator to check the frames used vs defined

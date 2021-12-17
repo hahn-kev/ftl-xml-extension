@@ -61,6 +61,13 @@ export function getAttrValueForTag(
   }
 }
 
+export function getAttrValueAsInt(node: Node, attrName: string): number | undefined {
+  if (hasAttr(node, attrName)) {
+    const value = normalizeAttributeName(node.attributes[attrName]);
+    return value === '' ? undefined : parseInt(value);
+  }
+}
+
 export function hasAttr<T extends string>(
     node: Node,
     name: T,
