@@ -11,6 +11,7 @@ import {LookupContext, LookupProvider} from './lookup-provider';
 import {defaultSoundFiles} from '../data/default-ftl-data/default-sound-files';
 import {defaultImgFiles} from '../data/default-ftl-data/default-img-files';
 import {defaultMusic} from '../data/default-ftl-data/default-music';
+import {NodeMapContext} from './node-map';
 
 export enum FileHandled {
   handled,
@@ -40,15 +41,19 @@ export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBa
     return FileHandled.handled;
   }
 
-  public lookupDef({node, document, position}: LookupContext): Location | undefined {
-    const offset = document.offsetAt(position);
-    if ((node.tag == 'animSheet' || node.tag == 'img' || node.tag == 'chargeImage')
-        && FtlCompletionProvider.shouldCompleteForNodeContents(node, offset)) {
+  public lookupDef(context: LookupContext): Location | undefined {
+    const img = this.lookupImg(context);
+    if (!img) return;
+    return new Location(img.uri, new Range(0, 0, 0, 0));
+  }
+
+  lookupImg({node, document, position}: NodeMapContext): FtlImg | undefined {
+    if (node.tag == 'animSheet' || node.tag == 'img' || node.tag == 'chargeImage') {
+      if (position && !FtlCompletionProvider.shouldCompleteForNodeContents(node, document.offsetAt(position))) return;
+
       const imgPathName = getNodeTextContent(node, document);
       if (!imgPathName) return;
-      const img = this.root.findMatchingImg(imgPathName);
-      if (!img) return;
-      return new Location(img.uri, new Range(0, 0, 0, 0));
+      return this.root.findMatchingImg(imgPathName);
     }
     return undefined;
   }
@@ -71,7 +76,7 @@ export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBa
   }
 }
 
-class PathRefMappers {
+export class PathRefMappers {
   imageMapper = new PathRefMapper('Image',
       ImgPathNames,
       (file, fileName) => {
@@ -105,5 +110,3 @@ class PathRefMappers {
       defaultSoundFiles);
   mappers: PathRefMapperBase[] = [this.imageMapper, this.soundMapper, this.musicMapper];
 }
-
-export const pathMappers = new PathRefMappers();

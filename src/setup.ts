@@ -23,7 +23,7 @@ import {SoundFileNameValidator} from './validators/sound-file-name-validator';
 import {ImgFileNameValidator} from './validators/img-file-name-validator';
 import {FtlDatFs} from './dat-fs-provider/ftl-dat-fs';
 import {FtlDatCache} from './dat-fs-provider/ftl-dat-cache';
-import {pathMappers} from './ref-mappers/path-ref-mapper';
+import {PathRefMappers} from './ref-mappers/path-ref-mapper';
 import {VOID_ELEMENTS} from 'vscode-html-languageservice/lib/esm/languageFacts/fact';
 import {LookupProvider} from './ref-mappers/lookup-provider';
 import {Validator} from './validators/validator';
@@ -50,6 +50,7 @@ export function setup(registerProviders = false): Created {
   const service = getLanguageService({useDefaultDataProvider: false});
   const documentCache = new DocumentCache(service);
 
+  const pathMappers = new PathRefMappers();
   const mappers = new Mappers();
   const parsers: FtlXmlParser[] = [
     ...mappers.list.map((value) => value.parser),
@@ -88,7 +89,7 @@ export function setup(registerProviders = false): Created {
   const ftlDefinitionProvider = new FtlDefinitionProvider(documentCache, lookupProviders);
   const ftlReferenceProvider = new FtlReferenceProvider(documentCache, lookupProviders);
   const ftlCodeActionProvider = new FtlCodeActionProvider(documentCache);
-  const hoverProvider = new FtlHoverProvider(documentCache, service, mappers);
+  const hoverProvider = new FtlHoverProvider(documentCache, service, mappers, pathMappers);
   const completionItemProvider = new FtlCompletionProvider(documentCache, service, mappers.blueprintMapper);
 
   subs.push(window.onDidChangeActiveTextEditor((e) => {

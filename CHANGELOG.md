@@ -90,3 +90,4 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 ## 0.4.2
 - Add animation validator to check the frames used vs defined
 - fix bug where you couldn't add a folder to the workspace when an ftl.dat was opened already
+- allow hovering over an image path to see a preview of it

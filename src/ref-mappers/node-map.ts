@@ -12,7 +12,7 @@ export interface NodeMap {
   getRefName(node: Node, document: TextDocument): string | string[] | undefined;
 }
 
-interface NodeMapContext {
+export interface NodeMapContext {
   node: Node;
   document: TextDocument;
   /**

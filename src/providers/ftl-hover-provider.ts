@@ -3,9 +3,13 @@ import {DocumentCache} from '../document-cache';
 import {HTMLDocument, LanguageService, TextDocument as HtmlTextDocument} from 'vscode-html-languageservice';
 import {attrNameRange, convertDocumentation, convertRange, toRange} from '../helpers';
 import {Mappers} from '../ref-mappers/mappers';
+import {PathRefMappers} from '../ref-mappers/path-ref-mapper';
 
 export class FtlHoverProvider implements HoverProvider {
-  constructor(private documentCache: DocumentCache, private service: LanguageService, private mappers: Mappers) {
+  constructor(private documentCache: DocumentCache,
+              private service: LanguageService,
+              private mappers: Mappers,
+              private pathMappers: PathRefMappers) {
 
   }
 
@@ -50,13 +54,22 @@ export class FtlHoverProvider implements HoverProvider {
     if (!nameRange) return;
     const idStart = document.offsetAt(nameRange.end) + '="'.length;
     const idEnd = idStart + textIdName.length;
-    return {
-      range: toRange(idStart, idEnd, document),
-      contents: [textDef.text]
-    };
+    return new Hover(
+        [textDef.text],
+        toRange(idStart, idEnd, document)
+    );
   }
 
+
   tryHoverImagePath(htmlDocument: HTMLDocument, document: TextDocument, position: Position): Hover | undefined {
-    return undefined;
+    const node = htmlDocument.findNodeAt(document.offsetAt(position));
+    const img = this.pathMappers.imageMapper.lookupImg({node, document, position});
+    if (!img) return;
+    const mdString = new MarkdownString();
+    mdString.appendMarkdown(`![img](${img.uri.toString()})`);
+    return new Hover(
+        mdString,
+        toRange(node.startTagEnd ?? node.start, node.endTagStart ?? node.end, document)
+    );
   }
 }
