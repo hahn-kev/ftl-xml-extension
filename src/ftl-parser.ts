@@ -53,14 +53,28 @@ export class FtlParser {
     return this.root;
   }
 
-  private async parseFile(file: Uri) {
+  public async fileAdded(file: Uri) {
+    await this.parseFile(file);
+    this._onParsedEmitter.fire(this.root);
+  }
+
+  public async fileRemoved(file: Uri) {
+    await this.parseFile(file, true);
+    this._onParsedEmitter.fire(this.root);
+  }
+
+  private async parseFile(file: Uri, fileRemoved = false) {
     const fileName = getFileName(file);
     for (const pathMapper of this.pathMappers) {
-      if (pathMapper.handleFile(file, fileName, this.root) == FileHandled.handled) {
+      if (pathMapper.handleFile(file, fileName, this.root, fileRemoved) == FileHandled.handled) {
         return;
       }
     }
     if (!fileName?.endsWith('.xml') && !fileName?.endsWith('.xml.append')) {
+      return;
+    }
+    if (fileRemoved) {
+      this.root.files.delete(file.toString());
       return;
     }
     const document = await workspace.openTextDocument(file);

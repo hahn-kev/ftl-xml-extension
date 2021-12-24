@@ -91,6 +91,9 @@ export function setup(registerProviders = false): Created {
   const ftlCodeActionProvider = new FtlCodeActionProvider(documentCache);
   const hoverProvider = new FtlHoverProvider(documentCache, service, mappers, pathMappers);
   const completionItemProvider = new FtlCompletionProvider(documentCache, service, mappers.blueprintMapper);
+  const fsWatcher = workspace.createFileSystemWatcher(WorkspaceParser.findPattern, false, true, false);
+  fsWatcher.onDidCreate((e) => ftlParser.fileAdded(e));
+  fsWatcher.onDidDelete((e) => ftlParser.fileRemoved(e));
 
   subs.push(window.onDidChangeActiveTextEditor((e) => {
     if (e?.document.languageId === ftlLanguage) {

@@ -1,6 +1,6 @@
 ## Going to implement
+- show animation preview as gif
 - improve dat fs performance, don't read data into file until requested
-- auto add newly added png and audio files
 - add validation that event text is not whitespace, and not over 440 chars
 - format support
 - allow marking events that are unused as not an error, still show a hint about the issue so it can be undone.

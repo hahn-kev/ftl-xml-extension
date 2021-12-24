@@ -19,7 +19,7 @@ export enum FileHandled {
 }
 
 export interface PathRefMapperBase extends LookupProvider {
-  handleFile(file: Uri, fileName: string | undefined, root: FtlRoot): FileHandled;
+  handleFile(file: Uri, fileName: string | undefined, root: FtlRoot, fileRemoved: boolean): FileHandled;
 
   updateData(root: FtlRoot): void;
 }
@@ -35,9 +35,15 @@ export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBa
               private readonly defaultFiles: string[] = []) {
   }
 
-  public handleFile(file: Uri, fileName: string | undefined, root: FtlRoot): FileHandled {
+  public handleFile(file: Uri, fileName: string | undefined, root: FtlRoot, fileRemoved: boolean): FileHandled {
     if (!this.matchingFile(file, fileName)) return FileHandled.notHandled;
-    this.selectRootFiles(root).push(new this.resourceBuilder(file));
+    if (fileRemoved) {
+      const rootFiles = this.selectRootFiles(root);
+      const fileIndex = rootFiles.findIndex((resource) => resource.uri.toString() == file.toString());
+      if (fileIndex !== -1) rootFiles.splice(fileIndex, 1);
+    } else {
+      this.selectRootFiles(root).push(new this.resourceBuilder(file));
+    }
     return FileHandled.handled;
   }
 
