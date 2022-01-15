@@ -1,6 +1,6 @@
 import {FtlParser} from './ftl-parser';
 import {FltDocumentValidator} from './flt-document-validator';
-import {CodeActionKind, DocumentSelector, languages, window, workspace} from 'vscode';
+import {CodeActionKind, commands, DocumentSelector, languages, window, workspace} from 'vscode';
 import {getLanguageService} from 'vscode-html-languageservice';
 import {DocumentCache} from './document-cache';
 import {Mappers} from './ref-mappers/mappers';
@@ -28,6 +28,7 @@ import {VOID_ELEMENTS} from 'vscode-html-languageservice/lib/esm/languageFacts/f
 import {LookupProvider} from './ref-mappers/lookup-provider';
 import {Validator} from './validators/validator';
 import {AnimationValidator} from './validators/animation-validator';
+import {AnimationPreview} from './animation-preview/animation-preview';
 
 
 export type disposable = { dispose(): unknown };
@@ -130,6 +131,9 @@ export function setup(registerProviders = false): Created {
           ]
         }),
         languages.registerColorProvider(ftlXmlDoc, ftlColor),
+        commands.registerCommand('ftl-xml.show-animation', async (args) => {
+          await new AnimationPreview(mappers).open('explosion_small_ion_fire');
+        })
     );
   }
   return {

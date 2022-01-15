@@ -66,6 +66,10 @@
       {
         "command": "ftl-xml.add-ftl-dat",
         "title": "Open ftl.dat file"
+      },
+      {
+        "command": "ftl-xml.show-animation",
+        "title": "Show animation"
       }
     ],
     "menus": {
@@ -76,6 +80,9 @@
         },
         {
           "command": "ftl-xml.add-ftl-dat"
+        },
+        {
+          "command": "ftl-xml.show-animation"
         }
       ]
     }

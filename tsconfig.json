@@ -8,7 +8,9 @@
 		"sourceMap": true,
 		"strict": true,
 		"isolatedModules": true,
-		"esModuleInterop": true
+		"esModuleInterop": true,
+		"paths": {
+		}
 	},
 	"include": [
 		"src"

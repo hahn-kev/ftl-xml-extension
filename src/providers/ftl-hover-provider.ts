@@ -1,6 +1,14 @@
-import {CancellationToken, Hover, HoverProvider, MarkdownString, Position, TextDocument, workspace} from 'vscode';
+import {
+  CancellationToken,
+  Hover,
+  HoverProvider,
+  MarkdownString,
+  Position,
+  TextDocument,
+  workspace
+} from 'vscode';
 import {DocumentCache} from '../document-cache';
-import {HTMLDocument, LanguageService, TextDocument as HtmlTextDocument} from 'vscode-html-languageservice';
+import {HTMLDocument, LanguageService, Node, TextDocument as HtmlTextDocument} from 'vscode-html-languageservice';
 import {attrNameRange, convertDocumentation, convertRange, toRange} from '../helpers';
 import {Mappers} from '../ref-mappers/mappers';
 import {PathRefMappers} from '../ref-mappers/path-ref-mapper';
@@ -16,10 +24,12 @@ export class FtlHoverProvider implements HoverProvider {
 
   async provideHover(document: TextDocument, position: Position, token: CancellationToken): Promise<Hover | undefined> {
     const htmlDocument = this.documentCache.getHtmlDocument(document);
-    const hoverTextId = this.tryHoverTextId(htmlDocument, document, position);
+    const node = htmlDocument.findNodeAt(document.offsetAt(position));
+    const hoverTextId = this.tryHoverTextId(htmlDocument, document, position, node);
     if (hoverTextId) return hoverTextId;
-    const hoverImg = await this.tryHoverImagePath(htmlDocument, document, position);
+    const hoverImg = await this.tryHoverImagePath(htmlDocument, document, position, node);
     if (hoverImg) return hoverImg;
+
     // the document from vscode will not accept range objects created inside
     // the html language service, so we must do this
     const textDocument = HtmlTextDocument.create(document.uri.toString(),
@@ -43,8 +53,11 @@ export class FtlHoverProvider implements HoverProvider {
     };
   }
 
-  tryHoverTextId(htmlDocument: HTMLDocument, document: TextDocument, position: Position): Hover | undefined {
-    const node = htmlDocument.findNodeAt(document.offsetAt(position));
+  tryHoverTextId(
+      htmlDocument: HTMLDocument,
+      document: TextDocument,
+      position: Position,
+      node: Node): Hover | undefined {
     const textIdName = this.mappers.textMapper.parser.getRefName(node, document, position);
     if (!textIdName) return;
 
@@ -65,9 +78,8 @@ export class FtlHoverProvider implements HoverProvider {
   async tryHoverImagePath(
       htmlDocument: HTMLDocument,
       document: TextDocument,
-      position: Position
-  ): Promise<Hover | undefined> {
-    const node = htmlDocument.findNodeAt(document.offsetAt(position));
+      position: Position,
+      node: Node): Promise<Hover | undefined> {
     const img = this.pathMappers.imageMapper.lookupImg({node, document, position});
     if (!img) return;
     const mdString = new MarkdownString();

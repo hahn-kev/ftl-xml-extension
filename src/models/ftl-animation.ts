@@ -10,7 +10,7 @@ export class FtlAnimation extends FtlValue {
     if (isDef) {
       for (const child of node.children) {
         if (!this.sheetName) this.sheetName = getNodeTextContent(child, document, 'sheet');
-
+        if (child.tag == 'time') this.time = parseFloat(getNodeTextContent(child, document) ?? '0');
         if (child.tag == 'desc') {
           this.length = getAttrValueAsInt(child, 'length');
           this.x = getAttrValueAsInt(child, 'x');
@@ -22,6 +22,7 @@ export class FtlAnimation extends FtlValue {
   }
 
   sheetName?: string;
+  time?: number;
   length?: number;
   x?: number;
   y?: number;
