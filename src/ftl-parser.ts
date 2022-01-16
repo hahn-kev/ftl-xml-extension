@@ -19,7 +19,11 @@ export class FtlParser {
     return !!this._parsingPromise;
   }
 
-  public get files() {
+  public get files(): Promise<Map<string, FtlFile>> {
+    return this.awaitableParsing();
+  }
+
+  private async awaitableParsing() {
     if (this._parsingPromise) return this._parsingPromise.then((r) => r.files);
     return this.root.files;
   }

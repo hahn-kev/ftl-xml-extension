@@ -94,3 +94,4 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 
 ## 0.4.3
 - Auto parse files when added, including png and audio files
+- preview animations

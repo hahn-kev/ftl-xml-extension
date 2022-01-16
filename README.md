@@ -5,7 +5,11 @@ FTL XML is intended to improve the editing experience for any mod dev, please le
 ### Peek Definition/Reference
 ![Peek def](gifs/peek-def-example.webp)
 
+### Preview Animation
+![Preview Animation](gifs/preview-animation.webp)
+
 ## Features
+* Preview animations
 * Autocomplete, Go to definition and references supported for
   * events
   * ships

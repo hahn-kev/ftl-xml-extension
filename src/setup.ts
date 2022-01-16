@@ -98,7 +98,8 @@ export function setup(registerProviders = false): Created {
 
   subs.push(window.onDidChangeActiveTextEditor((e) => {
     if (e?.document.languageId === ftlLanguage) {
-      ftlDocumentValidator.validateDocument(e.document, ftlParser.root);
+      const file = ftlDocumentValidator.validateDocument(e.document, ftlParser.root);
+      AnimationPreview.updateMenuContext(file);
     }
   }));
   subs.push(workspace.onDidChangeTextDocument((e) => {
@@ -131,8 +132,8 @@ export function setup(registerProviders = false): Created {
           ]
         }),
         languages.registerColorProvider(ftlXmlDoc, ftlColor),
-        commands.registerCommand('ftl-xml.show-animation', async (args) => {
-          await new AnimationPreview(mappers).open('explosion_small_ion_fire');
+        commands.registerCommand('ftl-xml.show-animation', async (...args) => {
+          await new AnimationPreview(mappers, ftlParser, documentCache).openFromCommand(args);
         })
     );
   }

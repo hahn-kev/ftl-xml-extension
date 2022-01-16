@@ -1,6 +1,5 @@
 import {DocumentCache} from './document-cache';
-import {Diagnostic, DiagnosticCollection, TextDocument, Uri} from 'vscode';
-import {FtlParser} from './ftl-parser';
+import {Diagnostic, DiagnosticCollection, TextDocument} from 'vscode';
 import {FtlFile} from './models/ftl-file';
 import {Validator} from './validators/validator';
 import {FtlRoot} from './models/ftl-root';
@@ -32,11 +31,12 @@ export class FltDocumentValidator {
     this.diagnosticCollection.set(file.uri, diagnostics);
   }
 
-  public async validateDocument(document: TextDocument, root: FtlRoot) {
+  public validateDocument(document: TextDocument, root: FtlRoot) {
     const ftlFiles = root.files;
     const file = ftlFiles.get(document.uri.toString());
     if (file) {
       this.validateFile(file);
     }
+    return file;
   }
 }

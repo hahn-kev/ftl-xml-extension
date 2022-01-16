@@ -18,6 +18,7 @@ export class WorkspaceParser {
     const files = await this.findFiles(subFolder);
     const root = await this.xmlParser.parseFiles(files, true);
     this.validator.validateFtlRoot(root);
+
     return this.xmlParser.root;
   }
 

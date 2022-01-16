@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars,@typescript-eslint/no-unused-vars */
 // noinspection JSUnusedLocalSymbols
 
-import {commands, ExtensionContext, ExtensionMode} from 'vscode';
+import {commands, ExtensionContext, ExtensionMode, window} from 'vscode';
 import {
   AnimationNames, AnimationSheetNames,
   AugmentNames,
@@ -17,6 +17,7 @@ import {
 } from './data/autocomplete-value-sets';
 import {setup} from './setup';
 import {addFtlDat} from './dat-fs-provider/add-ftl-dat';
+import {AnimationPreview} from './animation-preview/animation-preview';
 
 
 // noinspection JSUnusedGlobalSymbols
@@ -35,6 +36,10 @@ export function activate(context: ExtensionContext) {
       }
     });
     workspaceParser.parseWorkspace().then((root) => {
+      // make sure that once parsing is done the animation preview context is updated
+      const document = window.activeTextEditor?.document;
+      AnimationPreview.updateMenuContext(root.files.get(document?.uri.toString() ?? ''));
+
       const wantToUpdateDefaults = context.extensionMode == ExtensionMode.Development;
       if (wantToUpdateDefaults) {
         const eventNames = EventNamesValueSet.values.map((e) => e.name);

@@ -1,18 +1,11 @@
-import {
-  CancellationToken,
-  Hover,
-  HoverProvider,
-  MarkdownString,
-  Position,
-  TextDocument,
-  workspace
-} from 'vscode';
+import {CancellationToken, Hover, HoverProvider, MarkdownString, Position, TextDocument, Uri, workspace} from 'vscode';
 import {DocumentCache} from '../document-cache';
-import {HTMLDocument, LanguageService, Node, TextDocument as HtmlTextDocument} from 'vscode-html-languageservice';
+import {LanguageService, TextDocument as HtmlTextDocument} from 'vscode-html-languageservice';
 import {attrNameRange, convertDocumentation, convertRange, toRange} from '../helpers';
 import {Mappers} from '../ref-mappers/mappers';
 import {PathRefMappers} from '../ref-mappers/path-ref-mapper';
 import {FtlDatFs} from '../dat-fs-provider/ftl-dat-fs';
+import {LookupContext} from '../ref-mappers/lookup-provider';
 
 export class FtlHoverProvider implements HoverProvider {
   constructor(private documentCache: DocumentCache,
@@ -25,10 +18,13 @@ export class FtlHoverProvider implements HoverProvider {
   async provideHover(document: TextDocument, position: Position, token: CancellationToken): Promise<Hover | undefined> {
     const htmlDocument = this.documentCache.getHtmlDocument(document);
     const node = htmlDocument.findNodeAt(document.offsetAt(position));
-    const hoverTextId = this.tryHoverTextId(htmlDocument, document, position, node);
+    const context: LookupContext = {node, document, position};
+    const hoverTextId = this.tryHoverTextId(context);
     if (hoverTextId) return hoverTextId;
-    const hoverImg = await this.tryHoverImagePath(htmlDocument, document, position, node);
+    const hoverImg = await this.tryHoverImagePath(context);
     if (hoverImg) return hoverImg;
+    const animHover = this.tryHoverAnimation(context);
+    if (animHover) return animHover;
 
     // the document from vscode will not accept range objects created inside
     // the html language service, so we must do this
@@ -53,11 +49,7 @@ export class FtlHoverProvider implements HoverProvider {
     };
   }
 
-  tryHoverTextId(
-      htmlDocument: HTMLDocument,
-      document: TextDocument,
-      position: Position,
-      node: Node): Hover | undefined {
+  tryHoverTextId({node, document, position}: LookupContext): Hover | undefined {
     const textIdName = this.mappers.textMapper.parser.getRefName(node, document, position);
     if (!textIdName) return;
 
@@ -74,12 +66,20 @@ export class FtlHoverProvider implements HoverProvider {
     );
   }
 
+  tryHoverAnimation({node, document, position}: LookupContext): Hover | undefined {
+    const name = this.mappers.animationMapper.parser.getNameDef(node, document, position)
+        ?? this.mappers.animationMapper.parser.getRefName(node, document, position);
+    if (!name) return;
 
-  async tryHoverImagePath(
-      htmlDocument: HTMLDocument,
-      document: TextDocument,
-      position: Position,
-      node: Node): Promise<Hover | undefined> {
+    const component = encodeURIComponent(JSON.stringify([name]));
+    const showPreviewCommand = Uri.parse(`command:ftl-xml.show-animation?${component}`);
+    const mdString = new MarkdownString(`[Click to Preview Animation](${showPreviewCommand})`);
+    mdString.isTrusted = true;
+    return new Hover(mdString);
+  }
+
+
+  async tryHoverImagePath({node, document, position}: LookupContext): Promise<Hover | undefined> {
     const img = this.pathMappers.imageMapper.lookupImg({node, document, position});
     if (!img) return;
     const mdString = new MarkdownString();
