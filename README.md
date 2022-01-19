@@ -15,6 +15,7 @@ FTL XML is intended to improve the editing experience for any mod dev, please le
   * ships
   * all blueprints
   * text
+  * animations
 * Warnings 
   * if trying to load an event that can't be found
   * if trying to load a ship that can't be found
@@ -24,6 +25,7 @@ FTL XML is intended to improve the editing experience for any mod dev, please le
   * when a blueprint list references itself
   * when a blueprint can not be found
   * when a blueprint of an invalid type is referenced
+  * when animations have configuration issues
 ### Snippets
   ![Snippets](gifs/snippet-example.webp)
 

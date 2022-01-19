@@ -1,0 +1,22 @@
+import {XmlTag} from './helpers';
+import {AnimationSheetNames, ImgPathNames} from '../autocomplete-value-sets';
+
+export const animationTags: XmlTag[] = [
+  {name: 'anim', attributes: [{name: 'name'}]},
+  {name: 'weaponAnim', attributes: [{name: 'name'}]},
+  {name: 'sheet', attributes: [], contentsValueSet: AnimationSheetNames.name},
+  {name: 'desc', attributes: [{name: 'length'}, {name: 'x'}, {name: 'y'}]},
+  {name: 'time', attributes: []},
+  {
+    name: 'animSheet',
+    attributes: [
+      {name: 'name'},
+      {name: 'w'},
+      {name: 'h'},
+      {name: 'fw'},
+      {name: 'fh'},
+    ],
+    contentsValueSet: ImgPathNames.name
+  },
+  {name: 'chargeImage', attributes: [], contentsValueSet: ImgPathNames.name},
+];

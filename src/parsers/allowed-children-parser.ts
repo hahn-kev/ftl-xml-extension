@@ -2,7 +2,8 @@ import {FtlXmlParser, ParseContext} from './ftl-xml-parser';
 import {Node} from 'vscode-html-languageservice';
 import {FtlFile} from '../models/ftl-file';
 import {TextDocument} from 'vscode';
-import {FtlData, XmlTag} from '../data/ftl-data';
+import {FtlData} from '../data/ftl-data';
+import {XmlTag} from '../data/xml-data/helpers';
 
 export class AllowedChildrenParser implements FtlXmlParser {
   allowedChildrenMap: Map<string, Set<string>> = new Map(FtlData.tags.map((tag: XmlTag) => [tag.name, new Set(tag.tags)]));

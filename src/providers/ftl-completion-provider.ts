@@ -18,9 +18,10 @@ import {
 import {convertDocumentation, convertRange, toRange, toTextDocumentHtml} from '../helpers';
 import {DocumentCache} from '../document-cache';
 import {BlueprintMapper} from '../blueprints/blueprint-mapper';
-import {FtlData, XmlTag} from '../data/ftl-data';
+import {FtlData} from '../data/ftl-data';
 import {ImgPathNames, ShipNames, SoundWavePaths} from '../data/autocomplete-value-sets';
 import {Sounds} from '../sounds';
+import {XmlTag} from '../data/xml-data/helpers';
 
 export class FtlCompletionProvider implements CompletionItemProvider {
   private completeContentMap: Map<string, IValueSet>;

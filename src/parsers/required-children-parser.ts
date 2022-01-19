@@ -1,13 +1,11 @@
 import {FtlXmlParser, ParseContext} from './ftl-xml-parser';
-import {FtlFile} from '../models/ftl-file';
-import {TextDocument} from 'vscode';
-import {Node} from 'vscode-html-languageservice';
-import {FtlData, XmlTag} from '../data/ftl-data';
+import {FtlData} from '../data/ftl-data';
 import {DiagnosticBuilder} from '../diagnostic-builder';
+import {XmlTag} from '../data/xml-data/helpers';
 
 export class RequiredChildrenParser implements FtlXmlParser {
   requiredChildrenMap: Map<string, XmlTag> = new Map(FtlData.tags
-      .filter((tag: XmlTag): tag is XmlTag & { requiredTags: string[] } => !!tag.requiredTags)
+      .filter((tag: XmlTag) => !!tag.requiredTags)
       .map((tag) => [tag.name, tag]));
 
   parseNode({node, file, document}: ParseContext): void {
