@@ -1,5 +1,5 @@
 import {suite, test} from 'mocha';
-import {FtlData, XmlTag} from '../../data/ftl-data';
+import {FtlData} from '../../data/ftl-data';
 import {expect} from 'chai';
 
 suite('FTL Data', () => {
@@ -13,12 +13,15 @@ suite('FTL Data', () => {
       }
       seenNames.add(tag.name);
     }
+    if (duplicates.length > 0) {
+      console.log('duplicate names: ', duplicates);
+    }
     expect(duplicates).to.be.empty;
   });
 
   function getAllReferencedValueSetNames(): string[] {
     const globalAttrValueSets = FtlData.globalAttributes?.map((attr) => attr.valueSet) ?? [];
-    const tagContentsValueSets = FtlData.tags.map((value: XmlTag) => value.contentsValueSet);
+    const tagContentsValueSets = FtlData.tags.map((value) => value.contentsValueSet);
     const tagAttrValueSets = FtlData.tags.flatMap((value) => value.attributes).map((attr) => attr.valueSet);
     return [
       globalAttrValueSets,

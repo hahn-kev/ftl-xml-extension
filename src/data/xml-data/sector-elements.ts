@@ -6,11 +6,6 @@ const sectorDescriptionTags: XmlTag[] = [
   {name: 'rarityList', attributes: []},
   {name: 'trackList', attributes: []},
   {name: 'nameList', attributes: []},
-  {
-    // hyperspace tag
-    name: 'removeFirstBeaconNebula',
-    attributes: []
-  }
 ];
 const hyperspaceSectorTags: XmlTag[] = [
   {
@@ -30,6 +25,11 @@ const hyperspaceSectorTags: XmlTag[] = [
       {name: 'nebulaEvent', valueSet: EventNamesValueSet.name}
     ]
   },
+  {
+    // hyperspace tag
+    name: 'removeFirstBeaconNebula',
+    attributes: []
+  }
 ];
 export const sectorTags: XmlTag[] = [
   ...sectorDescriptionTags,
@@ -47,6 +47,5 @@ export const sectorTags: XmlTag[] = [
     attributes: [{name: 'name'}],
     tags: hyperspaceSectorTags.map((t) => t.name)
   },
-  ...sectorDescriptionTags,
   ...hyperspaceSectorTags
 ];

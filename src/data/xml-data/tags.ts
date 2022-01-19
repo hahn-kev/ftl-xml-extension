@@ -52,6 +52,17 @@ export const allTags: XmlTag[] = [
     attributes: [{name: 'name', valueSet: DroneNames.name}]
   },
 
+  {
+    // child of weapon blueprint and anim
+    name: 'desc', attributes: [
+      // weapon attributes
+      {name: 'id', valueSet: TextIdNames.name},
+      // animation attributes
+      {name: 'length'}, {name: 'x'}, {name: 'y'}
+    ]
+  },
+
+
   // music tags
   {name: 'explore', attributes: [], contentsValueSet: MusicPaths.name},
   {name: 'combat', attributes: [], contentsValueSet: MusicPaths.name},

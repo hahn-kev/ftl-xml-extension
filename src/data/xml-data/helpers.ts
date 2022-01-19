@@ -7,7 +7,7 @@ export interface XmlTag extends ITagData {
   requiredTagsByParent?: { [key: string]: string[] };
 }
 
-export type XmlData = HTMLDataV1 & { tags: XmlTag[] };
+export type XmlData = Omit<HTMLDataV1, 'tags'> & { tags: XmlTag[] };
 
 
 export function boolAttr(name: string): IAttributeData {

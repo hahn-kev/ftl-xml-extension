@@ -5,7 +5,6 @@ export const animationTags: XmlTag[] = [
   {name: 'anim', attributes: [{name: 'name'}]},
   {name: 'weaponAnim', attributes: [{name: 'name'}]},
   {name: 'sheet', attributes: [], contentsValueSet: AnimationSheetNames.name},
-  {name: 'desc', attributes: [{name: 'length'}, {name: 'x'}, {name: 'y'}]},
   {name: 'time', attributes: []},
   {
     name: 'animSheet',

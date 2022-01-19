@@ -11,7 +11,6 @@ const weaponChildTags: XmlTag[] = [
   {name: 'type', attributes: []},
   {name: 'short', attributes: [{name: 'id', valueSet: TextIdNames.name}]},
   {name: 'locked', attributes: []},
-  {name: 'desc', attributes: [{name: 'id', valueSet: TextIdNames.name}]},
   {name: 'tooltip', attributes: [{name: 'id', valueSet: TextIdNames.name}]},
   {name: 'ion', attributes: []},
   {name: 'sysDamage', attributes: []},
