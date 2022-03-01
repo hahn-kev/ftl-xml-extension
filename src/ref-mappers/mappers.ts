@@ -200,6 +200,7 @@ export class Mappers {
                   ?? getAttrValueForTag(node, 'desc', 'id', document, position)
                   ?? getAttrValueForTag(node, 'tooltip', 'id', document, position)
                   ?? getAttrValueForTag(node, 'flavorType', 'id', document, position)
+                  ?? getAttrValueForTag(node, 'unlock', 'id', document, position)
                   ?? getNodeTextContent(node, document, 'tip');
             }
           }

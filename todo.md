@@ -1,6 +1,12 @@
 ## Going to implement
 - make sure projectile tag contents is a ref to an animation
 - support refs from hiddenAug element and removeItem
+- add missing refs for:
+    - shipBlueprint [unlock] id text
+    - ship blueprint elements: cloak, shield images
+    - element: crewCount [class]
+    - element: unlockShip body
+    - sector trackList track music
 - improve dat fs performance, don't read data into file until requested
 - add validation that event text is not whitespace, and not over 440 chars
 - format support

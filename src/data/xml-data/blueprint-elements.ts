@@ -1,9 +1,11 @@
 import {XmlTag} from './helpers';
 import {BlueprintListTypeAny} from '../ftl-data';
-import {AutoblueprintNames, TextIdNames} from '../autocomplete-value-sets';
+import {TextIdNames} from '../autocomplete-value-sets';
+import {shipBlueprintTags} from './ship-blueprint-elements';
 
 // drone and weapon blueprints are in weapon-elements.ts
 export const blueprintTags: XmlTag[] = [
+  ...shipBlueprintTags,
   {
     name: 'blueprintList',
     tags: ['name'],
@@ -12,11 +14,6 @@ export const blueprintTags: XmlTag[] = [
       {name: 'type', values: [{name: BlueprintListTypeAny}]}
     ]
   },
-  {
-    name: 'shipBlueprint',
-    attributes: [{name: 'name'}]
-  },
-  {name: 'bossShip', attributes: [], contentsValueSet: AutoblueprintNames.name},
   {
     name: 'crewBlueprint',
     attributes: [{name: 'name'}],
