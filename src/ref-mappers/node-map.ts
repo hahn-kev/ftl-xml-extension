@@ -1,6 +1,7 @@
-import {Node} from 'vscode-html-languageservice';
+import {IValueSet, Node} from 'vscode-html-languageservice';
 import {Position, TextDocument} from 'vscode';
-import {getAttrValueForTag} from '../helpers';
+import {getAttrValueForTag, getNodeTextContent} from '../helpers';
+import {FtlData} from '../data/ftl-data';
 
 export interface NodeMap {
   getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined;
@@ -53,4 +54,48 @@ export function attrValueNodeMap(defs: attrValueMapping[], refs: attrValueMappin
           if (result) return result;
         }
       });
+}
+
+type referenceDeclaration = { type: 'attr', tagName: string, attrName: string } | { type: 'contents', tagName: string };
+
+export function declarationBasedMapFunction(valueSet: IValueSet): (context: NodeMapContext) => string | undefined {
+  const refDeclarations = findValueSetReferences(valueSet);
+  return (context) => {
+    for (const refDeclaration of refDeclarations) {
+      let result: string | undefined;
+      switch (refDeclaration.type) {
+        case 'contents':
+          result = getNodeTextContent(context.node, context.document, refDeclaration.tagName);
+          break;
+        case 'attr':
+          result = getAttrValueForTag(context.node,
+              refDeclaration.tagName,
+              refDeclaration.attrName,
+              context.document,
+              context.position);
+          break;
+      }
+      if (result) return result;
+    }
+    return undefined;
+  };
+}
+
+function findValueSetReferences(valueSet: IValueSet): referenceDeclaration[] {
+  if (!FtlData.valueSets?.includes(valueSet)) {
+    throw new Error(`value set: ${valueSet.name} not included in FTL Data`);
+  }
+  const contentsRefs = FtlData.tags.map((tag) => tag.contentsValueSet == valueSet.name ? {
+    type: 'contents',
+    tagName: tag.name
+  } : undefined);
+  const attrRefs = FtlData.tags.flatMap((tag) => tag.attributes.map((attr) => attr.valueSet == valueSet.name ? {
+    type: 'attr',
+    tagName: tag.name,
+    attrName: attr.name
+  } : undefined));
+  return [
+    ...contentsRefs,
+    ...attrRefs
+  ].filter((rd): rd is referenceDeclaration => !!rd);
 }

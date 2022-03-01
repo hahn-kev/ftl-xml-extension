@@ -50,7 +50,7 @@ import {FtlWeaponAnimation} from '../models/ftl-weapon-animation';
 import {defaultWeaponAnimations} from '../data/default-ftl-data/default-weapon-animations';
 import {defaultImageLists} from '../data/default-ftl-data/default-image-lists';
 import {FtlImageList} from '../models/ftl-image-list';
-import {attrValueNodeMap, NodeMapImp} from './node-map';
+import {attrValueNodeMap, declarationBasedMapFunction, NodeMapImp} from './node-map';
 
 export class Mappers {
   readonly eventsMapper = new RefMapper(
@@ -179,31 +179,19 @@ export class Mappers {
       new RefParser(
           (file) => file.text,
           FtlText,
-          {
-            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-              if (node.tag == 'text' && hasAttr(node, 'name', document, position)) {
-                // filter out language files
-                if (getFileName(document)?.startsWith('text-')) {
-                  return undefined;
+          new NodeMapImp(
+              ({node, document, position}) => {
+                if (node.tag == 'text' && hasAttr(node, 'name', document, position)) {
+                  // filter out language files
+                  if (getFileName(document)?.startsWith('text-')) {
+                    return undefined;
+                  }
+                  return normalizeAttributeName(node.attributes.name);
                 }
-                return normalizeAttributeName(node.attributes.name);
-              }
 
-              return getAttrValueForTag(node, 'textList', 'name', document, position);
-            },
-            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-              return getAttrValueForTag(node, 'text', 'load', document, position)
-                  ?? getAttrValueForTag(node, 'text', 'name', document, position)
-                  ?? getAttrValueForTag(node, 'text', 'id', document, position)
-                  ?? getAttrValueForTag(node, 'title', 'id', document, position)
-                  ?? getAttrValueForTag(node, 'short', 'id', document, position)
-                  ?? getAttrValueForTag(node, 'desc', 'id', document, position)
-                  ?? getAttrValueForTag(node, 'tooltip', 'id', document, position)
-                  ?? getAttrValueForTag(node, 'flavorType', 'id', document, position)
-                  ?? getAttrValueForTag(node, 'unlock', 'id', document, position)
-                  ?? getNodeTextContent(node, document, 'tip');
-            }
-          }
+                return getAttrValueForTag(node, 'textList', 'name', document, position);
+              },
+              declarationBasedMapFunction(TextIdNames)),
       ),
       TextIdNames,
       'Text',

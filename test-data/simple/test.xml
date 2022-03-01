@@ -68,4 +68,16 @@
     <blueprintList name="list-3">
         <name>list-1</name>
     </blueprintList>
+
+    <text name="sample-text">I love my wife</text>
+
+    <unlock id="sample-text"/>
+    <text id="sample-text"/>
+    <text load="sample-text"/>
+    <title id="sample-text"/>
+    <short id="sample-text"/>
+    <desc id="sample-text"/>
+    <tooltip id="sample-text"/>
+    <flavorType id="sample-text"/>
+    <tip>sample-text</tip>
 </FTL>
