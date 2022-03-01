@@ -2,7 +2,7 @@ import {FtlXmlParser, ParseContext} from './ftl-xml-parser';
 import {Node} from 'vscode-html-languageservice';
 import {FtlFile} from '../models/ftl-file';
 import {TextDocument} from 'vscode';
-import {toRange} from '../helpers';
+import {getText, toRange} from '../helpers';
 import {DiagnosticBuilder} from '../diagnostic-builder';
 
 export class IncompleteTagParser implements FtlXmlParser {
@@ -20,6 +20,6 @@ export class IncompleteTagParser implements FtlXmlParser {
   }
 
   isMissingEnd(node: Node, document: TextDocument) {
-    return document.getText(toRange(node.end - 1, node.end, document)) !== '>';
+    return getText(node.end - 1, node.end, document) !== '>';
   }
 }

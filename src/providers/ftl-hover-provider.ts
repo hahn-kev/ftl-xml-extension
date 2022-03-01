@@ -64,7 +64,7 @@ export class FtlHoverProvider implements HoverProvider {
     } else {
       const nameRange = attrNameRange(node, document, position);
       if (!nameRange) return;
-      idStart = document.offsetAt(nameRange.end) + '="'.length;
+      idStart = nameRange.endOffset + '="'.length;
       idEnd = idStart + textIdName.length;
     }
 

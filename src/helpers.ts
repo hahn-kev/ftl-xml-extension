@@ -30,11 +30,17 @@ export function getNodeTextContent(
   if (node.startTagEnd === undefined || node.endTagStart === undefined) return undefined;
   if (typeof whenTagName === 'string' && node.tag !== whenTagName) return undefined;
   if (typeof whenParentTagName === 'string' && node.parent?.tag !== whenParentTagName) return undefined;
-  return document.getText(toRange(node.startTagEnd, node.endTagStart, document));
+  return getText(node.startTagEnd, node.endTagStart, document);
 }
 
 export function toRange(start: number, end: number, document: TextDocument) {
   return new Range(document.positionAt(start), document.positionAt(end));
+}
+
+export function getText(start: number, end: number, document: TextDocument) {
+  const documentText = document.getText();
+  const subStrResult = documentText.substring(start, end);
+  return subStrResult;
 }
 
 export function convertRange(range: HtmlRange): Range {
@@ -67,7 +73,7 @@ export function getAttrValueAsInt(node: Node, attrName: string): number | undefi
     return value === '' ? undefined : parseInt(value);
   }
 }
-
+type OffsetRange = {startOffset: number, endOffset: number};
 export function hasAttr<T extends string>(
     node: Node,
     name: T,
@@ -82,28 +88,18 @@ export function hasAttr<T extends string>(
 }
 
 export function isInAttrValue(node: Node, document: TextDocument, attrName: string, position: Position): boolean {
-  const startPosition = document.positionAt(node.start);
-  const textRange = new Range(
-      startPosition,
-      document.positionAt(node.startTagEnd ?? node.end)
-  );
-  const text = document.getText(textRange);
+  const text = getText(node.start, node.startTagEnd ?? node.end, document);
   const nameRange = attrNameRange(node, document, position);
   if (!nameRange) return false;
-  const attrStart = document.offsetAt(nameRange.start) - node.start;
-  const attrEnd = document.offsetAt(nameRange.end) - node.start;
+  const attrStart = nameRange.startOffset - node.start;
+  const attrEnd = nameRange.endOffset - node.start;
 
   const foundAttrName = text.substring(attrStart, attrEnd);
   return foundAttrName === attrName;
 }
 
-export function attrNameRange(node: Node, document: TextDocument, position: Position): Range | undefined {
-  const startPosition = document.positionAt(node.start);
-  const textRange = new Range(
-      startPosition,
-      document.positionAt(node.startTagEnd ?? node.end)
-  );
-  const text = document.getText(textRange);
+export function attrNameRange(node: Node, document: TextDocument, position: Position): OffsetRange | undefined {
+  const text = getText(node.start, node.startTagEnd ?? node.end, document);
   const positionOffset = document.offsetAt(position);
 
   if (positionOffset < node.start || (node.startTagEnd ?? node.end) < positionOffset) return;
@@ -125,7 +121,7 @@ export function attrNameRange(node: Node, document: TextDocument, position: Posi
     }
   }
   if (attrEnd === undefined || attrStart === undefined) return;
-  return toRange(node.start + attrStart, node.start + attrEnd, document);
+  return {startOffset: node.start + attrStart, endOffset: node.start + attrEnd};
 }
 
 export function firstWhere<T, R>(list: T[], map: (value: T) => R) {
@@ -156,5 +152,5 @@ export function addToKey<T, Key>(map: Map<Key, T[]>, key: Key, value: T | T[]) {
 export function getFileName(uri: Uri | TextDocument | string): string | undefined {
   if (typeof uri === 'object' && 'uri' in uri) uri = uri.uri;
   if (typeof uri !== 'string') uri = uri.path;
-  return uri.split('/').pop();
+  return uri.substr(uri.lastIndexOf('/')+1);
 }
