@@ -55,11 +55,19 @@ export class FtlHoverProvider implements HoverProvider {
 
     const textDef = this.mappers.textMapper.defs.get(textIdName);
     if (!textDef || !textDef.text) return;
+    let idStart: number;
+    let idEnd: number;
+    // this tag has the id as the contents
+    if (node.tag === 'tip') {
+      idStart = node.startTagEnd ?? node.start;
+      idEnd = node.endTagStart ?? node.end;
+    } else {
+      const nameRange = attrNameRange(node, document, position);
+      if (!nameRange) return;
+      idStart = document.offsetAt(nameRange.end) + '="'.length;
+      idEnd = idStart + textIdName.length;
+    }
 
-    const nameRange = attrNameRange(node, document, position);
-    if (!nameRange) return;
-    const idStart = document.offsetAt(nameRange.end) + '="'.length;
-    const idEnd = idStart + textIdName.length;
     return new Hover(
         [textDef.text],
         toRange(idStart, idEnd, document)
