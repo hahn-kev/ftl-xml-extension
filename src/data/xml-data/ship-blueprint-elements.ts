@@ -1,10 +1,14 @@
 import {XmlTag} from './helpers';
-import {AutoblueprintNames, TextIdNames} from '../autocomplete-value-sets';
+import {AutoblueprintNames, CrewNames, TextIdNames} from '../autocomplete-value-sets';
 
 const shipBlueprintChildren: XmlTag[] = [
   {
     name: 'unlock',
     attributes: [{name: 'id', valueSet: TextIdNames.name}]
+  },
+  {
+    name: 'crewCount',
+    attributes: [{name: 'amount'}, {name: 'max'}, {name: 'class', valueSet: CrewNames.name}]
   },
   {
     name: 'shieldImage',

@@ -71,6 +71,7 @@
 
     <text name="sample-text">I love my wife</text>
 
+    <!-- text ids -->
     <unlock id="sample-text"/>
     <text id="sample-text"/>
     <text load="sample-text"/>
@@ -81,6 +82,7 @@
     <flavorType id="sample-text"/>
     <tip>sample-text</tip>
 
+    <!-- sound wave ids -->
     <sound>solarFlare</sound>
     <playSound>solarFlare</playSound>
     <powerSound>solarFlare</powerSound>
@@ -90,4 +92,10 @@
     <repairSound>solarFlare</repairSound>
     <timerSound>solarFlare</timerSound>
 
+    <!-- crew -->
+    <crewBlueprint name="kevin"></crewBlueprint>
+    <crewMember class="kevin"/>
+    <crewMember type="kevin"/>
+    <removeCrew class="kevin"/>
+    <crewCount class="kevin"/>
 </FTL>

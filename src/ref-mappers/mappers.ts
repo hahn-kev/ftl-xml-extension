@@ -133,7 +133,8 @@ export class Mappers {
               [
                 {tag: 'crewMember', attr: 'class'},
                 {tag: 'crewMember', attr: 'type'},
-                {tag: 'removeCrew', attr: 'class'}
+                {tag: 'removeCrew', attr: 'class'},
+                {tag: 'crewCount', attr: 'class'},
               ])
       ),
       CrewNames,
