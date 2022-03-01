@@ -44,9 +44,7 @@ export class FtlParser {
       title: 'Parsing FTL files',
       location: ProgressLocation.Window
     }, async () => {
-      for (const file of files) {
-        await this.parseFile(file);
-      }
+      await this._parseFiles(files);
       return this.root;
     });
     await this._parsingPromise;
@@ -65,6 +63,26 @@ export class FtlParser {
   public async fileRemoved(file: Uri) {
     await this.parseFile(file, true);
     this._onParsedEmitter.fire(this.root);
+  }
+
+  private async _parseFiles(files: Uri[]) {
+    files = [...files];
+    // attempts to improve performance, seems to have worked
+    const workerCount = 24;
+    // this function will parse files in a loop until the files list is exhausted
+    // this way we don't get stuck waiting for a single file to read so we're always parsing
+    const parseUntilFinished = async (): Promise<void> => {
+      let file: Uri | undefined;
+      while (file = files.pop()) {
+        await this.parseFile(file);
+      }
+    };
+
+    const promises: Promise<void>[] = [];
+    for (let i = 0; i < workerCount; i++) {
+      promises.push(parseUntilFinished());
+    }
+    await Promise.all(promises);
   }
 
   private async parseFile(file: Uri, fileRemoved = false) {
