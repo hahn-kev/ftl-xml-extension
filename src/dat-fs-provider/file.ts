@@ -1,11 +1,11 @@
-import vscode from 'vscode';
+import {FilePermission, FileStat, FileType} from 'vscode';
 
-export class File implements vscode.FileStat {
-  type: vscode.FileType.File = vscode.FileType.File;
+export class File implements FileStat {
+  type: FileType.File = FileType.File;
   ctime: number;
   mtime: number;
   size: number;
-  permissions = vscode.FilePermission.Readonly;
+  permissions = FilePermission.Readonly;
 
   name: string;
   data?: Uint8Array;

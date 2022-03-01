@@ -24,8 +24,8 @@
     "onCommand:ftl-xml.add-ftl-dat",
     "onFileSystem:ftl-dat"
   ],
-  "main": "./out/main",
-  "browser": "./out/main.js",
+  "main": "./out/ftl-main",
+  "browser": "./out/ftl-main.js",
   "capabilities": {
     "virtualWorkspaces": true
   },
@@ -90,7 +90,7 @@
   },
   "scripts": {
     "compile": "npm run esbuild-base -- --sourcemap",
-    "esbuild-base": "esbuild ./src/main.ts --bundle --tree-shaking=true --outfile=out/main.js --external:vscode --format=cjs",
+    "esbuild-base": "esbuild ./src/main.ts --bundle --tree-shaking=true --outfile=out/ftl-main.js --external:vscode --format=cjs",
     "watch": "npm run esbuild-base -- --sourcemap --watch",
     "pretest": "tsc -p ./test.tsconfig.json && npm run compile",
     "test": "node ./out-test/test/runTest.js",

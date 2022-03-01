@@ -1,4 +1,4 @@
-import vscode, {Uri} from 'vscode';
+import {FileSystemError, Uri} from 'vscode';
 import {FtlDatFile} from './ftl-dat-file';
 import {DatFileParser} from './dat-file-parser';
 
@@ -14,7 +14,7 @@ export class FtlDatCache {
 
   async getDatFile(file: Uri): Promise<FtlDatFile> {
     const datFileUri = FtlDatFile.getDatUri(file);
-    if (!datFileUri) throw vscode.FileSystemError.FileNotFound(file);
+    if (!datFileUri) throw FileSystemError.FileNotFound(file);
     let ftlDatFile = this.cache.get(datFileUri.toString());
     if (!ftlDatFile) {
       ftlDatFile = new DatFileParser(datFileUri).parse();

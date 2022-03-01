@@ -1,8 +1,8 @@
-import vscode from 'vscode';
+import {FileStat, FileType} from 'vscode';
 import {File} from './file';
 
-export class Directory implements vscode.FileStat {
-  type: vscode.FileType.Directory = vscode.FileType.Directory;
+export class Directory implements FileStat {
+  type: FileType.Directory = FileType.Directory;
   ctime: number;
   mtime: number;
   size: number;
