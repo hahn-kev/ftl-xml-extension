@@ -35,10 +35,11 @@
 
     <shipBlueprint name="ship-blueprint-1"/>
     <shipBlueprint name="ship-blueprint-2"/>
-    <weaponBlueprint name="weapon-1"/>
 
+    <!-- weapons -->
+    <weaponBlueprint name="weapon-1"/>
+    <weaponList load="weapon-1"/>
     <weapon name="weapon-list-1"/>
-    
         <!-- should be ftl-invalid-ref-name -->
     <weapon name="weapon-4"/>
     <weapon name="weapon-1"/>

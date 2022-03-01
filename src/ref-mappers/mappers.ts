@@ -87,7 +87,8 @@ export class Mappers {
                 return getAttrValueForTag(node, 'weaponBlueprint', 'name', document, position);
               },
               ({node, document, position}) => {
-                const name = getAttrValueForTag(node, 'weapon', 'name', document, position);
+                const name = getAttrValueForTag(node, 'weapon', 'name', document, position)
+                    ?? getAttrValueForTag(node, 'weaponList', 'load', document, position);
                 if (name) return name;
                 if (node.tag == 'weaponBlueprint' && node.parent?.tag == 'droneBlueprint' && !node.attributes) {
                   return getNodeTextContent(node, document);
