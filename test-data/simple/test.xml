@@ -80,4 +80,14 @@
     <tooltip id="sample-text"/>
     <flavorType id="sample-text"/>
     <tip>sample-text</tip>
+
+    <sound>solarFlare</sound>
+    <playSound>solarFlare</playSound>
+    <powerSound>solarFlare</powerSound>
+    <shootingSound>solarFlare</shootingSound>
+    <deathSound>solarFlare</deathSound>
+    <finishSound>solarFlare</finishSound>
+    <repairSound>solarFlare</repairSound>
+    <timerSound>solarFlare</timerSound>
+
 </FTL>

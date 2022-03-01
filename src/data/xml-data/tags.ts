@@ -1,11 +1,19 @@
 import {XmlTag} from './helpers';
 import {eventTags} from './event-elements';
-import {DroneNames, ImageListNames, MusicPaths, SystemNames, TextIdNames} from '../autocomplete-value-sets';
+import {
+  DroneNames,
+  ImageListNames,
+  MusicPaths,
+  SoundWaveNames,
+  SystemNames,
+  TextIdNames
+} from '../autocomplete-value-sets';
 import {shipTags} from './ship-elements';
 import {blueprintTags} from './blueprint-elements';
 import {weaponTags} from './weapon-elements';
 import {animationTags} from './animation-elements';
 import {sectorTags} from './sector-elements';
+import {raceTags} from './race-elements';
 
 export const allTags: XmlTag[] = [
   ...eventTags,
@@ -14,6 +22,7 @@ export const allTags: XmlTag[] = [
   ...weaponTags,
   ...animationTags,
   ...sectorTags,
+  ...raceTags,
   {
     name: 'text',
     attributes: [
@@ -62,6 +71,8 @@ export const allTags: XmlTag[] = [
     ]
   },
 
+  // time sounds for events in hyperspace? not event specific
+  {name: 'timerSound', attributes: [], contentsValueSet: SoundWaveNames.name},
 
   // music tags
   {name: 'explore', attributes: [], contentsValueSet: MusicPaths.name},

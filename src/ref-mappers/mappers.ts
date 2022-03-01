@@ -200,20 +200,12 @@ export class Mappers {
   readonly soundWaveMapper = new RefMapper(
       new RefParser((file) => file.sounds,
           FtlSound,
-          {
-            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-              return Sounds.isWaveNode(node, document) ? node.tag : undefined;
-            },
-            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-              return getNodeTextContent(node, document, 'sound')
-                  ?? getNodeTextContent(node, document, 'powerSound')
-                  ?? getNodeTextContent(node, document, 'shootingSound')
-                  ?? getNodeTextContent(node, document, 'deathSound')
-                  ?? getNodeTextContent(node, document, 'finishSound')
-                  ?? getNodeTextContent(node, document, 'repairSound')
-                  ?? getNodeTextContent(node, document, 'timerSound');
-            }
-          }),
+          new NodeMapImp(
+              ({document, node, position}) => {
+                return Sounds.isWaveNode(node, document) ? node.tag : undefined;
+              },
+              declarationBasedMapFunction(SoundWaveNames),
+          )),
       SoundWaveNames,
       'Wave',
       defaultSoundWaves
