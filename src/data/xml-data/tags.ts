@@ -1,6 +1,7 @@
-import {XmlTag} from './helpers';
+import {boolAttr, XmlTag} from './helpers';
 import {eventTags} from './event-elements';
 import {
+  AugmentNames,
   DroneNames,
   ImageListNames,
   MusicPaths,
@@ -68,6 +69,21 @@ export const allTags: XmlTag[] = [
       {name: 'id', valueSet: TextIdNames.name},
       // animation attributes
       {name: 'length'}, {name: 'x'}, {name: 'y'}
+    ]
+  },
+
+  // aug is used in hyperspace.xml and for ship blueprints
+  {name: 'aug', attributes: [{name: 'name', valueSet: AugmentNames.name}], tags: ['function']},
+
+  //  weird one, not sure if this is correct currently but everything seems to indicate that the function
+  //  name should be treated as an aug blueprint also
+  {
+    name: 'function',
+    attributes: [
+      {name: 'name', valueSet: AugmentNames.name},
+      {name: 'value'},
+      boolAttr('useForReqs'),
+      boolAttr('warning')
     ]
   },
 

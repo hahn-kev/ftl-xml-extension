@@ -28,7 +28,7 @@ export const shipBlueprintTags: XmlTag[] = [
   {
     name: 'shipBlueprint',
     attributes: [{name: 'name'}],
-    tags: shipBlueprintChildren.map((s) => s.name)
+    tags: shipBlueprintChildren.map((s) => s.name).concat(['aug'])
   },
   ...shipBlueprintChildren,
   {name: 'bossShip', attributes: [], contentsValueSet: AutoblueprintNames.name},

@@ -114,12 +114,12 @@ export class Mappers {
       new RefParser(
           (file) => file.augment,
           FtlAugment,
-          attrValueNodeMap(
-              [{tag: 'augBlueprint', attr: 'name'}],
-              [
-                {tag: 'augment', attr: 'name'},
-                {tag: 'aug', attr: 'name'}
-              ])
+          new NodeMapImp((context) => getAttrValueForTag(context.node,
+              'augBlueprint',
+              'name',
+              context.document,
+              context.position),
+          declarationBasedMapFunction(AugmentNames)),
       ),
       AugmentNames,
       'Augment',

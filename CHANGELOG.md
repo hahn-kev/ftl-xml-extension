@@ -6,6 +6,7 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 - shipBlueprint [unlock] id text supported
 - add crewCount [class] auto complete
 - add weaponList [load] auto complete
+- support hiddenAug and aug refs
 
 ## 0.4.3
 - Auto parse files when added, including png and audio files
