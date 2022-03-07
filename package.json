@@ -100,7 +100,7 @@
   },
   "dependencies": {
     "path-browserify": "^1.0.1",
-    "vscode-html-languageservice": "^4.1.1"
+    "vscode-html-languageservice": "^4.2.2"
   },
   "devDependencies": {
     "@types/chai": "^4.2.22",

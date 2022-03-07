@@ -49,7 +49,7 @@ export class FtlCompletionProvider implements CompletionItemProvider {
     const items = this.tryCompleteCustom(document, htmlDocument, position);
     if (items) return items;
 
-    const completionItems = this.languageService.doComplete(serviceDocument, position, htmlDocument);
+    const completionItems = this.languageService.doComplete(serviceDocument, position, htmlDocument, {attributeDefaultValue: 'doublequotes'});
     return this.convertCompletionItems(completionItems.items);
   }
 
