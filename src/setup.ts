@@ -29,6 +29,8 @@ import {LookupProvider} from './ref-mappers/lookup-provider';
 import {Validator} from './validators/validator';
 import {AnimationValidator} from './validators/animation-validator';
 import {AnimationPreview} from './animation-preview/animation-preview';
+import {CustomEventFilesParser} from './parsers/custom-event-files-parser';
+import {IsReferencedUpdater} from './data-receivers/is-referenced-updater';
 
 
 export type disposable = { dispose(): unknown };
@@ -57,10 +59,11 @@ export function setup(registerProviders = false): Created {
     ...mappers.list.map((value) => value.parser),
     new IncompleteTagParser(),
     new RequiredChildrenParser(),
-    new AllowedChildrenParser()
+    new AllowedChildrenParser(),
+    new CustomEventFilesParser()
   ];
   const lookupProviders: LookupProvider[] = [...mappers.list, ...pathMappers.mappers];
-  const dataReceivers: DataReceiver[] = [...mappers.list, ...pathMappers.mappers];
+  const dataReceivers: DataReceiver[] = [...mappers.list, ...pathMappers.mappers, new IsReferencedUpdater()];
 
   const diagnosticCollection = languages.createDiagnosticCollection('ftl-xml');
   const validators: Validator[] = [

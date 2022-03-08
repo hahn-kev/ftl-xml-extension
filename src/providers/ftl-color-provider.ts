@@ -35,7 +35,6 @@ export class FtlColorProvider implements DocumentColorProvider, FtlXmlParser {
   async provideDocumentColors(
       document: TextDocument,
       token: CancellationToken): Promise<ColorInformation[] | undefined> {
-    console.log('provide document colors');
     const files = await this.ftlParser.files;
     const ftlFile = files.get(document.uri.toString());
     if (!ftlFile) return;

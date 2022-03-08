@@ -2,6 +2,10 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
+## 0.5.1
+- show a warning on a file if it's not referenced
+- hide all warnings and errors on files not referenced
+
 ## 0.5.0
 - **Major performance improvement 4x faster in Multiverse, down from 20+ seconds to 5**🥳
 - shipBlueprint [unlock] id text supported

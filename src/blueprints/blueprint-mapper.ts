@@ -65,7 +65,7 @@ export class BlueprintMapper implements RefMapperBase {
   updateData(root: FtlRoot): void {
     this.refs.clear();
     this.defs.clear();
-    for (const file of root.files.values()) {
+    for (const file of root.xmlFiles.values()) {
       for (const blueprintList of file.blueprintList.defs) {
         this.defs.set(blueprintList.name, blueprintList);
       }
@@ -84,7 +84,7 @@ export class BlueprintMapper implements RefMapperBase {
     }
 
     // we need to do this after the first iteration of files because we need the defs to be setup already
-    for (const file of root.files.values()) {
+    for (const file of root.xmlFiles.values()) {
       for (const {ref: listRef} of this.listRefs(file)) {
         if (this.defs.has(listRef.name)) {
           addToKey(this.refs, listRef.name, listRef);

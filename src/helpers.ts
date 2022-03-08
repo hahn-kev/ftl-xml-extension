@@ -149,8 +149,8 @@ export function addToKey<T, Key>(map: Map<Key, T[]>, key: Key, value: T | T[]) {
   if (shouldSet) map.set(key, arr);
 }
 
-export function getFileName(uri: Uri | TextDocument | string): string | undefined {
+export function getFileName(uri: Uri | TextDocument | string): string {
   if (typeof uri === 'object' && 'uri' in uri) uri = uri.uri;
   if (typeof uri !== 'string') uri = uri.path;
-  return uri.substr(uri.lastIndexOf('/')+1);
+  return uri.substr(uri.lastIndexOf('/') + 1);
 }

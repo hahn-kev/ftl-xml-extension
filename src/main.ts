@@ -38,7 +38,7 @@ export function activate(context: ExtensionContext) {
     workspaceParser.parseWorkspace().then((root) => {
       // make sure that once parsing is done the animation preview context is updated
       const document = window.activeTextEditor?.document;
-      AnimationPreview.updateMenuContext(root.files.get(document?.uri.toString() ?? ''));
+      AnimationPreview.updateMenuContext(root.xmlFiles.get(document?.uri.toString() ?? ''));
 
       const wantToUpdateDefaults = context.extensionMode == ExtensionMode.Development;
       if (wantToUpdateDefaults) {

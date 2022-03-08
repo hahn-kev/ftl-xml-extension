@@ -1,5 +1,5 @@
 import {FtlEvent} from './ftl-event';
-import {Diagnostic, Uri} from 'vscode';
+import {Diagnostic, Range, TextDocument, Uri} from 'vscode';
 import {FtlShip} from './ftl-ship';
 import {FtlAutoblueprint} from './ftl-autoblueprint';
 import {FtlText} from './ftl-text';
@@ -27,8 +27,12 @@ export class FtlFile {
   imageLists = new FtlFileValue<FtlImageList>();
   animationSheets = new FtlFileValue<FtlAnimationSheet>();
   diagnostics: Diagnostic[] = [];
+  uri: Uri;
+  firstLineRange: Range;
 
-  constructor(public uri: Uri, public root: FtlRoot) {
+  constructor(document: TextDocument, public root: FtlRoot) {
+    this.uri = document.uri;
+    this.firstLineRange = document.lineAt(0).range;
   }
 
   event = new FtlFileValue<FtlEvent>();
@@ -42,6 +46,7 @@ export class FtlFile {
   system = new FtlFileValue<FtlSystem>();
   blueprintList = new FtlFileValue<FtlBlueprintList, FtlValue>();
   colors: FtlColor[] = [];
+  isReferenced = true;
 }
 
 export class FtlFileValue<TDef extends FtlValue, TRef extends FtlValue = TDef> {

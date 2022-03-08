@@ -19,6 +19,7 @@ export enum FtlErrorCode {
   sheetDimensionNotWholeNumber = 'ftl-sheet-dimension-not-whole-number',
   animationInvalidDescription = 'ftl-animation-invalid-description',
   animationTooLong = 'ftl-animation-too-long',
+  fileNotUsed = 'ftl-file-not-referenced'
 }
 
 export class DiagnosticBuilder {
@@ -137,5 +138,12 @@ export class DiagnosticBuilder {
         `the animation length of ${animation.length}${offset} is too long for sheet '${animation.sheetName}' with a max frames of ${maxFrames}`,
         DiagnosticSeverity.Warning,
         FtlErrorCode.animationTooLong);
+  }
+
+  static fileNotReferenced(firstLine: Range) {
+    return this.diag(firstLine,
+        `this file is not referenced anywhere`,
+        DiagnosticSeverity.Warning,
+        FtlErrorCode.fileNotUsed);
   }
 }

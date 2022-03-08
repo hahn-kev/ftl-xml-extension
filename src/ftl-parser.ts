@@ -6,6 +6,7 @@ import {FtlXmlParser, ParseContext} from './parsers/ftl-xml-parser';
 import {FtlRoot} from './models/ftl-root';
 import {getFileName} from './helpers';
 import {FileHandled, PathRefMapperBase} from './ref-mappers/path-ref-mapper';
+import {HyperspaceFile} from './models/hyperspace-file';
 
 
 export class FtlParser {
@@ -24,8 +25,8 @@ export class FtlParser {
   }
 
   private async awaitableParsing() {
-    if (this._parsingPromise) return this._parsingPromise.then((r) => r.files);
-    return this.root.files;
+    if (this._parsingPromise) return this._parsingPromise.then((r) => r.xmlFiles);
+    return this.root.xmlFiles;
   }
 
   public get onParsed() {
@@ -67,6 +68,7 @@ export class FtlParser {
 
   private async _parseFiles(files: Uri[]) {
     files = [...files];
+
     // attempts to improve performance, seems to have worked
     const workerCount = 24;
     // this function will parse files in a loop until the files list is exhausted
@@ -95,25 +97,45 @@ export class FtlParser {
     if (!fileName?.endsWith('.xml') && !fileName?.endsWith('.xml.append')) {
       return;
     }
+    const isHyperspaceFile = FtlParser.isHyperspaceFile(file);
     if (fileRemoved) {
-      this.root.files.delete(file.toString());
+      this.root.xmlFiles.delete(file.toString());
+      if (isHyperspaceFile) this.root.hyperspaceFile = undefined;
       return;
     }
     const document = await workspace.openTextDocument(file);
-    this._parseDocument(document);
+    if (isHyperspaceFile) {
+      this.parseHyperspaceDocument(document);
+      return;
+    }
+    const ftlFile = this._parseDocument(document);
+    this.root.xmlFiles.set(ftlFile.uri.toString(), ftlFile);
   }
 
+  private static isHyperspaceFile(file: Uri) {
+    return file.path.endsWith('hyperspace.xml');
+  }
+
+  private parseHyperspaceDocument(document: TextDocument) {
+    const ftlFile = new HyperspaceFile(document, this.root);
+    const htmlDocument = this.cache.getHtmlDocument(document);
+    this.parseNodes(htmlDocument.roots, ftlFile, document);
+    this.root.xmlFiles.set(ftlFile.uri.toString(), ftlFile);
+    this.root.hyperspaceFile = ftlFile;
+    return ftlFile;
+  }
 
   public parseDocument(document: TextDocument) {
-    const ftlFile = this._parseDocument(document);
+    const ftlFile = FtlParser.isHyperspaceFile(document.uri)
+        ? this.parseHyperspaceDocument(document)
+        : this._parseDocument(document);
+    this.root.xmlFiles.set(ftlFile.uri.toString(), ftlFile);
     this._onParsedEmitter.fire(this.root);
     return ftlFile;
   }
 
   private _parseDocument(document: TextDocument) {
-    const ftlFile: FtlFile = new FtlFile(document.uri, this.root);
-    this.root.files.set(ftlFile.uri.toString(), ftlFile);
-
+    const ftlFile = new FtlFile(document, this.root);
     const htmlDocument = this.cache.getHtmlDocument(document);
     this.parseNodes(htmlDocument.roots, ftlFile, document);
     return ftlFile;

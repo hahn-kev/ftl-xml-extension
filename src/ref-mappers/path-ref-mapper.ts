@@ -12,16 +12,15 @@ import {defaultSoundFiles} from '../data/default-ftl-data/default-sound-files';
 import {defaultImgFiles} from '../data/default-ftl-data/default-img-files';
 import {defaultMusic} from '../data/default-ftl-data/default-music';
 import {NodeMapContext} from './node-map';
+import {DataReceiver} from '../providers/ftl-data-provider';
 
 export enum FileHandled {
   handled,
   notHandled
 }
 
-export interface PathRefMapperBase extends LookupProvider {
+export interface PathRefMapperBase extends LookupProvider, DataReceiver {
   handleFile(file: Uri, fileName: string | undefined, root: FtlRoot, fileRemoved: boolean): FileHandled;
-
-  updateData(root: FtlRoot): void;
 }
 
 export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBase {

@@ -6,9 +6,9 @@ import {FtlValue} from '../models/ftl-value';
 import {FtlRefParser, RefParser} from './ref-parser';
 import {LookupContext, LookupProvider} from './lookup-provider';
 import {FtlRoot} from '../models/ftl-root';
+import {DataReceiver} from '../providers/ftl-data-provider';
 
-export interface RefMapperBase extends LookupProvider {
-  updateData(root: FtlRoot): void;
+export interface RefMapperBase extends LookupProvider, DataReceiver {
 
   readonly typeName: string;
   readonly defaults?: readonly string[];
@@ -39,14 +39,14 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
     this.defs.clear();
     this.autoCompleteValues.values.length = 0;
 
-    const names = new Set(Array.from(root.files.values()).flatMap((file) => this.parser.fileDataSelector(file).defs)
+    const names = new Set(Array.from(root.xmlFiles.values()).flatMap((file) => this.parser.fileDataSelector(file).defs)
         .map((value) => value.name)
         .concat(this.defaults));
 
     this.autoCompleteValues.values
         .push(...Array.from(names.values()).map((name) => ({name})));
 
-    for (const file of root.files.values()) {
+    for (const file of root.xmlFiles.values()) {
       this.parser.fileDataSelector(file).refs.forEach((value, key) => addToKey(this.refs, key, value));
       for (const value of this.parser.fileDataSelector(file).defs) {
         this.defs.set(value.name, value);
