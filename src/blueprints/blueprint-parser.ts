@@ -18,15 +18,17 @@ export class BlueprintParser implements FtlXmlParser {
   }
 
   parseNode(context: ParseContext): void {
+    // skip list child as it's handled when the blueprintList is passed in
+    if (this.isListChild(context.node)) return;
     const name = this.getBlueprintListName(context.node, context.document);
     if (name) {
       const ftlBlueprintList = new FtlBlueprintList(name, context.file, context.node, context.document, true);
       ftlBlueprintList.childRefNames = context.node.children.filter((c) => c.tag == 'name')
-          .map((c) => this.getNameNodeText(c, context.document))
+          .map((c) => this.getBlueprintRef(c, context.document))
           .filter((t): t is string => !!t);
 
       for (const child of context.node.children) {
-        const listChild = this.parseListChild(child, context.file, context.document);
+        const listChild = this.parseBlueprintRef(child, context.file, context.document);
         if (listChild) ftlBlueprintList.children.push(listChild);
       }
 
@@ -35,21 +37,26 @@ export class BlueprintParser implements FtlXmlParser {
       return;
     }
 
+    if (this.parseBlueprintRef(context.node, context.file, context.document)) return;
+
     for (const mapper of this.blueprintMappers) {
       mapper.parser.parseNode(context);
     }
   }
 
-  parseListChild(node: Node, file: FtlFile, document: TextDocument) {
-    const refName = this.getNameNodeText(node, document);
+  parseBlueprintRef(node: Node, file: FtlFile, document: TextDocument) {
+    const refName = this.getBlueprintRef(node, document);
     if (!refName) return;
     const ftlBlueprintValue = new FtlBlueprintValue(refName, file, node, document, false);
     addToKey(file.blueprintList.refs, refName, ftlBlueprintValue);
     return ftlBlueprintValue;
   }
 
-  getNameNodeText(node: Node, document: TextDocument) {
-    if (!this.isListChild(node)) return;
+  /*
+   * will return refs for a list child, or for a choice[req]
+   */
+  getBlueprintRef(node: Node, document: TextDocument, position?: Position) {
+    if (!this.isListChild(node)) return getAttrValueForTag(node, 'choice', 'req', document, position);
     const name = getNodeTextContent(node, document);
     if (name?.startsWith('HIDDEN ')) {
       return name?.substring('HIDDEN '.length);
@@ -90,7 +97,7 @@ export class BlueprintParser implements FtlXmlParser {
       node: Node,
       document: TextDocument,
       position?: Position): RefContext | RefContext[] | undefined {
-    const refName = this.getNameNodeText(node, document);
+    const refName = this.getBlueprintRef(node, document, position);
     if (refName && !position) return [{name: refName}];
     if (refName) return {name: refName};
     for (const blueprintMapper of this.blueprintMappers) {

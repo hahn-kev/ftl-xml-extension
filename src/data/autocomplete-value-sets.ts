@@ -80,3 +80,12 @@ export const ImageListNames: IValueSet = {
   name: 'image-list-names',
   values: [{name: 'loading...'}]
 };
+
+export const VariableNames: IValueSet = {
+  name: 'variable-names',
+  values: [{name: 'loading...'}]
+};
+export const CustomReqNames: IValueSet = {
+  name: 'custom-req-names',
+  values: [{name: 'loading...'}]
+};

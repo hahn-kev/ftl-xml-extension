@@ -9,6 +9,7 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 - added new event refs: eventAlias, deathEvent revisitEvent queueEvent renameBeacon
 - added new image list refs: win[creditsBackground] and changeBackground
 - added new crew refs: transformRace
+- added support for variables, custom reqs, and choice[req] reference support and checks
 
 ## 0.5.0
 - **Major performance improvement 4x faster in Multiverse, down from 20+ seconds to 5**🥳

@@ -10,6 +10,7 @@ import {
   AugmentNames,
   AutoblueprintNames,
   CrewNames,
+  CustomReqNames,
   DroneNames,
   EventNamesValueSet,
   ImageListNames,
@@ -17,6 +18,7 @@ import {
   SoundWaveNames,
   SystemNames,
   TextIdNames,
+  VariableNames,
   WeaponAnimationNames,
   WeaponNames
 } from '../data/autocomplete-value-sets';
@@ -51,6 +53,8 @@ import {defaultWeaponAnimations} from '../data/default-ftl-data/default-weapon-a
 import {defaultImageLists} from '../data/default-ftl-data/default-image-lists';
 import {FtlImageList} from '../models/ftl-image-list';
 import {declarationBasedMapFunction, NodeMapImp, staticValueNodeMap} from './node-map';
+import {FtlVariable} from '../models/ftl-variable';
+import {FtlReq} from '../models/ftl-req';
 
 export class Mappers {
   readonly eventsMapper = new RefMapper(
@@ -114,12 +118,13 @@ export class Mappers {
       new RefParser(
           (file) => file.augment,
           FtlAugment,
-          new NodeMapImp((context) => getAttrValueForTag(context.node,
-              'augBlueprint',
-              'name',
-              context.document,
-              context.position),
-          declarationBasedMapFunction(AugmentNames)),
+          new NodeMapImp(
+              (context) => getAttrValueForTag(context.node,
+                  'augBlueprint',
+                  'name',
+                  context.document,
+                  context.position),
+              declarationBasedMapFunction(AugmentNames)),
       ),
       AugmentNames,
       'Augment',
@@ -178,6 +183,28 @@ export class Mappers {
       AutoblueprintNames,
       'Auto Blueprint',
       defaultAutoBlueprints);
+  variableNodeMapFunction = declarationBasedMapFunction(VariableNames);
+  readonly variableMapper = new RefMapper(
+      new RefParser((file) => file.variables, FtlVariable, new NodeMapImp(
+          (context) => {
+            const name = this.variableNodeMapFunction(context);
+            return (name && getFileName(context.document) == 'hyperspace.xml') ? name : undefined;
+          },
+          this.variableNodeMapFunction,
+      )),
+      VariableNames,
+      'Variable'
+  );
+  readonly reqMapper = new RefMapper(
+      new RefParser((file) => file.reqs, FtlReq, new NodeMapImp(
+          (context) => {
+            return getAttrValueForTag(context.node, 'req', 'name', context.document, context.position);
+          },
+          () => undefined,
+      )),
+      CustomReqNames,
+      'Requirement'
+  );
 
   readonly textMapper = new RefMapper(
       new RefParser(
@@ -299,7 +326,9 @@ export class Mappers {
     this.dronesMapper,
     this.augmentsMapper,
     this.crewMapper,
-    this.systemMapper
+    this.systemMapper,
+    this.variableMapper,
+    this.reqMapper
   ]);
 
   readonly list: RefMapperBase[] = [

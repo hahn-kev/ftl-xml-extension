@@ -100,7 +100,7 @@ export function isInAttrValue(node: Node, document: TextDocument, attrName: stri
 
 export function attrNameRange(node: Node, document: TextDocument, position: Position): OffsetRange | undefined {
   const text = getText(node.start, node.startTagEnd ?? node.end, document);
-  const positionOffset = document.offsetAt(position);
+  const positionOffset = document.offsetAt(position) - 1;
 
   if (positionOffset < node.start || (node.startTagEnd ?? node.end) < positionOffset) return;
   const cursorOffsetInText = positionOffset - node.start;

@@ -18,6 +18,8 @@ import {FtlAnimation} from './ftl-animation';
 import {FtlWeaponAnimation} from './ftl-weapon-animation';
 import {FtlAnimationSheet} from './ftl-animation-sheet';
 import {FtlImageList} from './ftl-image-list';
+import {FtlVariable} from './ftl-variable';
+import {FtlReq} from './ftl-req';
 
 
 export class FtlFile {
@@ -45,6 +47,8 @@ export class FtlFile {
   crews = new FtlFileValue<FtlCrew>();
   system = new FtlFileValue<FtlSystem>();
   blueprintList = new FtlFileValue<FtlBlueprintList, FtlValue>();
+  variables = new FtlFileValue<FtlVariable>();
+  reqs = new FtlFileValue<FtlReq>();
   colors: FtlColor[] = [];
   isReferenced = true;
 }

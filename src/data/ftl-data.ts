@@ -3,7 +3,7 @@ import {
   AnimationSheetNames,
   AugmentNames,
   AutoblueprintNames,
-  CrewNames,
+  CrewNames, CustomReqNames,
   DroneNames,
   EventNamesValueSet,
   ImageListNames,
@@ -13,7 +13,7 @@ import {
   SoundWaveNames,
   SoundWavePaths,
   SystemNames,
-  TextIdNames,
+  TextIdNames, VariableNames,
   WeaponAnimationNames,
   WeaponNames
 } from './autocomplete-value-sets';
@@ -63,6 +63,8 @@ export const FtlData: XmlData = {
     AnimationSheetNames,
     WeaponAnimationNames,
     ImgPathNames,
-    ImageListNames
+    ImageListNames,
+    VariableNames,
+    CustomReqNames
   ]
 };

@@ -15,7 +15,7 @@ import {
   LanguageService,
   Node
 } from 'vscode-html-languageservice';
-import {convertDocumentation, convertRange, toRange, toTextDocumentHtml} from '../helpers';
+import {convertDocumentation, convertRange, isInAttrValue, toRange, toTextDocumentHtml} from '../helpers';
 import {DocumentCache} from '../document-cache';
 import {BlueprintMapper} from '../blueprints/blueprint-mapper';
 import {FtlData} from '../data/ftl-data';
@@ -94,6 +94,9 @@ export class FtlCompletionProvider implements CompletionItemProvider {
       } else {
         return this.valueSetToCompletionItems(mapper.autoCompleteValues, range);
       }
+    }
+    if (isInAttrValue(node, document, 'req', position)) {
+      return this.blueprintMapper.getAllBlueprintNames().map((name) => ({label: name, kind: CompletionItemKind.Unit}));
     }
   }
 

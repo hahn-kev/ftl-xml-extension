@@ -7,7 +7,8 @@ import {
   MusicPaths,
   SoundWaveNames,
   SystemNames,
-  TextIdNames
+  TextIdNames,
+  VariableNames
 } from '../autocomplete-value-sets';
 import {shipTags} from './ship-elements';
 import {blueprintTags} from './blueprint-elements';
@@ -93,4 +94,8 @@ export const allTags: XmlTag[] = [
   // music tags
   {name: 'explore', attributes: [], contentsValueSet: MusicPaths.name},
   {name: 'combat', attributes: [], contentsValueSet: MusicPaths.name},
+
+  {name: 'variable', attributes: [{name: 'name', valueSet: VariableNames.name}, {name: 'val'}, {name: 'op'}]},
+  {name: 'metaVariable', attributes: [{name: 'name', valueSet: VariableNames.name}, {name: 'val'}, {name: 'op'}]},
+  {name: 'req', attributes: [{name: 'name'}, {name: 'type', values: [{name: 'any'}, {name: 'all'}, {name: 'sum'}]}]}
 ];
