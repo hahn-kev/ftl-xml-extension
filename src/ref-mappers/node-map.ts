@@ -38,25 +38,39 @@ export class NodeMapImp implements NodeMap {
   }
 }
 
-type attrValueMapping = { tag: string, attr: string };
+type staticValueMapping = { tag: string, attr: string } | {tag: string, parentTag?: string, type: 'contents'};
 
-export function attrValueNodeMap(defs: attrValueMapping[], refs: attrValueMapping[]): NodeMap {
+export function staticValueNodeMap(defs: staticValueMapping[], refs: staticValueMapping[]): NodeMap {
+  function getResult(context: NodeMapContext, def: staticValueMapping): string|undefined {
+    if ('type' in def && def.type === 'contents') {
+      return getNodeTextContent(context.node, context.document, def.tag, def.parentTag);
+    } else if ('attr' in def) {
+      return getAttrValueForTag(context.node, def.tag, def.attr, context.document, context.position);
+    }
+  }
   return new NodeMapImp(
       (context) => {
         for (const def of defs) {
-          const result = getAttrValueForTag(context.node, def.tag, def.attr, context.document, context.position);
+          const result = getResult(context, def);
           if (result) return result;
         }
       },
       (context) => {
+        const results: string[] = [];
         for (const ref of refs) {
-          const result = getAttrValueForTag(context.node, ref.tag, ref.attr, context.document, context.position);
-          if (result) return result;
+          const result = getResult(context, ref);
+          if (!result) continue;
+          if (context.position) {
+            return result;
+          } else {
+            results.push(result);
+          }
         }
+        return results;
       });
 }
 
-type referenceDeclaration = { type: 'attr', tagName: string, attrName: string } | { type: 'contents', tagName: string };
+type referenceDeclaration = { type: 'attr', tag: string, attr: string } | { type: 'contents', tag: string };
 
 export function declarationBasedMapFunction(valueSet: IValueSet): (context: NodeMapContext) => string | undefined {
   const refDeclarations = findValueSetReferences(valueSet);
@@ -65,12 +79,12 @@ export function declarationBasedMapFunction(valueSet: IValueSet): (context: Node
       let result: string | undefined;
       switch (refDeclaration.type) {
         case 'contents':
-          result = getNodeTextContent(context.node, context.document, refDeclaration.tagName);
+          result = getNodeTextContent(context.node, context.document, refDeclaration.tag);
           break;
         case 'attr':
           result = getAttrValueForTag(context.node,
-              refDeclaration.tagName,
-              refDeclaration.attrName,
+              refDeclaration.tag,
+              refDeclaration.attr,
               context.document,
               context.position);
           break;
@@ -87,12 +101,12 @@ function findValueSetReferences(valueSet: IValueSet): referenceDeclaration[] {
   }
   const contentsRefs = FtlData.tags.map((tag) => tag.contentsValueSet == valueSet.name ? {
     type: 'contents',
-    tagName: tag.name
+    tag: tag.name
   } : undefined);
   const attrRefs = FtlData.tags.flatMap((tag) => tag.attributes.map((attr) => attr.valueSet == valueSet.name ? {
     type: 'attr',
-    tagName: tag.name,
-    attrName: attr.name
+    tag: tag.name,
+    attr: attr.name
   } : undefined));
   return [
     ...contentsRefs,

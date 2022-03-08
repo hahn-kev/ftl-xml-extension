@@ -5,6 +5,10 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 ## 0.5.1
 - show a warning on a file if it's not referenced
 - hide all warnings and errors on files not referenced
+- add a bunch of documentation for event elements uinqiue to hyperspace
+- added new event refs: eventAlias, deathEvent revisitEvent queueEvent renameBeacon
+- added new image list refs: win[creditsBackground] and changeBackground
+- added new crew refs: transformRace
 
 ## 0.5.0
 - **Major performance improvement 4x faster in Multiverse, down from 20+ seconds to 5**🥳

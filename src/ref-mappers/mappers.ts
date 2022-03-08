@@ -50,7 +50,7 @@ import {FtlWeaponAnimation} from '../models/ftl-weapon-animation';
 import {defaultWeaponAnimations} from '../data/default-ftl-data/default-weapon-animations';
 import {defaultImageLists} from '../data/default-ftl-data/default-image-lists';
 import {FtlImageList} from '../models/ftl-image-list';
-import {attrValueNodeMap, declarationBasedMapFunction, NodeMapImp} from './node-map';
+import {declarationBasedMapFunction, NodeMapImp, staticValueNodeMap} from './node-map';
 
 export class Mappers {
   readonly eventsMapper = new RefMapper(
@@ -104,7 +104,7 @@ export class Mappers {
       new RefParser(
           (file) => file.drone,
           FtlDrone,
-          attrValueNodeMap([{tag: 'droneBlueprint', attr: 'name'}], [{tag: 'drone', attr: 'name'}])
+          staticValueNodeMap([{tag: 'droneBlueprint', attr: 'name'}], [{tag: 'drone', attr: 'name'}])
       ),
       DroneNames,
       'Drone',
@@ -129,13 +129,15 @@ export class Mappers {
       new RefParser(
           (file) => file.crews,
           FtlCrew,
-          attrValueNodeMap(
+          staticValueNodeMap(
               [{tag: 'crewBlueprint', attr: 'name'}],
               [
                 {tag: 'crewMember', attr: 'class'},
                 {tag: 'crewMember', attr: 'type'},
                 {tag: 'removeCrew', attr: 'class'},
                 {tag: 'crewCount', attr: 'class'},
+                {tag: 'transformRace', attr: 'class'},
+                {tag: 'transformRace', type: 'contents'}
               ])
       ),
       CrewNames,
@@ -146,7 +148,7 @@ export class Mappers {
       new RefParser(
           (file) => file.system,
           FtlSystem,
-          attrValueNodeMap(
+          staticValueNodeMap(
               [{tag: 'systemBlueprint', attr: 'name'}],
               [
                 {tag: 'status', attr: 'system'},
@@ -282,6 +284,8 @@ export class Mappers {
                   if (position) return refs[0];
                   return refs;
                 }
+                return getNodeTextContent(node, document, 'changeBackground')
+                    ?? getAttrValueForTag(node, 'win', 'creditsBackground', document, position);
               }),
       ),
       ImageListNames,

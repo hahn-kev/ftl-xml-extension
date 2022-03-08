@@ -39,24 +39,25 @@ class EventsMap implements NodeMap {
     }
 
     if (node.tag == 'rebelBeacon') {
-      // todo support multi return
+      const refs: string[] = [];
       if (hasAttr(node, 'event', document, position)) {
-        return normalizeAttributeName(node.attributes.event);
+        refs.push(normalizeAttributeName(node.attributes.event));
       }
       if (hasAttr(node, 'nebulaEvent', document, position)) {
-        return normalizeAttributeName(node.attributes.nebulaEvent);
+        refs.push(normalizeAttributeName(node.attributes.nebulaEvent));
       }
+      if (position) return refs[0];
+      return refs;
     }
-
-    if (node.tag == 'triggeredEvent') {
-      return getAttrValueForTag(node, 'triggeredEvent', 'event', document, position);
-    }
-
-    if (node.tag == 'loadEvent') {
-      return getNodeTextContent(node, document);
-    }
-    if (node.tag == 'loadEventList') {
-      return getAttrValueForTag(node, 'loadEventList', 'default', document, position);
+    if (node.tag == 'eventAlias') {
+      const refs: string[] = [];
+      if (hasAttr(node, 'name', document, position)) {
+        refs.push(normalizeAttributeName(node.attributes.name));
+      }
+      const contents = getNodeTextContent(node, document, 'eventAlias');
+      if (contents) refs.push(contents);
+      if (position) return refs[0];
+      return refs;
     }
 
     if (node.tag == 'event' && (node.parent?.tag == 'sectorDescription' || node.parent?.tag == 'loadEventList')
@@ -64,8 +65,15 @@ class EventsMap implements NodeMap {
       return normalizeAttributeName(node.attributes.name);
     }
     return getNodeTextContent(node, document, 'startEvent')
+        ?? getNodeTextContent(node, document, 'loadEvent')
         ?? getNodeTextContent(node, document, 'nebulaEvent')
         ?? getNodeTextContent(node, document, 'jumpEvent')
+        ?? getNodeTextContent(node, document, 'deathEvent')
+        ?? getNodeTextContent(node, document, 'revisitEvent')
+        ?? getNodeTextContent(node, document, 'queueEvent')
+        ?? getNodeTextContent(node, document, 'renameBeacon')
+        ?? getAttrValueForTag(node, 'triggeredEvent', 'event', document, position)
+        ?? getAttrValueForTag(node, 'loadEventList', 'default', document, position)
         ?? getAttrValueForTag(node, 'destroyed', 'load', document, position)
         ?? getAttrValueForTag(node, 'deadCrew', 'load', document, position)
         ?? getAttrValueForTag(node, 'surrender', 'load', document, position)
