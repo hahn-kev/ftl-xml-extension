@@ -72,7 +72,7 @@ export class FtlParser {
     // attempts to improve performance, seems to have worked
     const workerCount = 24;
     // this function will parse files in a loop until the files list is exhausted
-    // this way we don't get stuck waiting for a single file to read so we're always parsing
+    // this way we don't get stuck waiting for a single file to read, so we're always parsing
     const parseUntilFinished = async (): Promise<void> => {
       let file: Uri | undefined;
       while (file = files.pop()) {
@@ -97,45 +97,30 @@ export class FtlParser {
     if (!fileName?.endsWith('.xml') && !fileName?.endsWith('.xml.append')) {
       return;
     }
-    const isHyperspaceFile = FtlParser.isHyperspaceFile(file);
     if (fileRemoved) {
       this.root.xmlFiles.delete(file.toString());
-      if (isHyperspaceFile) this.root.hyperspaceFile = undefined;
       return;
     }
     const document = await workspace.openTextDocument(file);
-    if (isHyperspaceFile) {
-      this.parseHyperspaceDocument(document);
-      return;
-    }
     const ftlFile = this._parseDocument(document);
     this.root.xmlFiles.set(ftlFile.uri.toString(), ftlFile);
   }
 
   private static isHyperspaceFile(file: Uri) {
-    return file.path.endsWith('hyperspace.xml');
-  }
-
-  private parseHyperspaceDocument(document: TextDocument) {
-    const ftlFile = new HyperspaceFile(document, this.root);
-    const htmlDocument = this.cache.getHtmlDocument(document);
-    this.parseNodes(htmlDocument.roots, ftlFile, document);
-    this.root.xmlFiles.set(ftlFile.uri.toString(), ftlFile);
-    this.root.hyperspaceFile = ftlFile;
-    return ftlFile;
+    return file.path.endsWith('hyperspace.xml') || file.path.endsWith('hyperspace.xml.append');
   }
 
   public parseDocument(document: TextDocument) {
-    const ftlFile = FtlParser.isHyperspaceFile(document.uri)
-        ? this.parseHyperspaceDocument(document)
-        : this._parseDocument(document);
+    const ftlFile = this._parseDocument(document);
     this.root.xmlFiles.set(ftlFile.uri.toString(), ftlFile);
     this._onParsedEmitter.fire(this.root);
     return ftlFile;
   }
 
   private _parseDocument(document: TextDocument) {
-    const ftlFile = new FtlFile(document, this.root);
+    const ftlFile = FtlParser.isHyperspaceFile(document.uri)
+        ? new HyperspaceFile(document, this.root)
+        : new FtlFile(document, this.root);
     const htmlDocument = this.cache.getHtmlDocument(document);
     this.parseNodes(htmlDocument.roots, ftlFile, document);
     return ftlFile;

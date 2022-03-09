@@ -2,6 +2,10 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
+## 0.5.2
+- Add support for hyperspace.xml.append files
+- Support append event files getting included as references
+
 ## 0.5.1
 - show a warning on a file if it's not referenced
 - hide all warnings and errors on files not referenced

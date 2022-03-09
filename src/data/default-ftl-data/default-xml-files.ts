@@ -49,5 +49,8 @@ export const defaultXmlFiles: readonly string[] = [
   'text_tooltips.xml',
   'text_tutorial.xml',
   'tutorial.xml',
+
+  'hyperspace.xml', // included for simplicity
+  'metadata.xml'
 ];
 export const defaultXmlFilesAndAppends = defaultXmlFiles.flatMap((name) => [name, name + '.append']);

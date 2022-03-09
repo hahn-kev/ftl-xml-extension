@@ -4,13 +4,15 @@ import {defaultXmlFilesAndAppends} from '../data/default-ftl-data/default-xml-fi
 import {getFileName} from '../helpers';
 import {FtlFile} from '../models/ftl-file';
 import {defaultShipLayouts} from '../data/default-ftl-data/default-ship-layouts';
+import {HyperspaceFile} from '../models/hyperspace-file';
 
 export class IsReferencedUpdater implements DataReceiver {
   public updateData(root: FtlRoot): void {
+    const hyperspaceFiles = root.hyperspaceFiles;
     const emptySet = new Set<string>();
     // first pass to determine which files to use to include as auto blueprints
     for (const file of root.xmlFiles.values()) {
-      file.isReferenced = this.isReferenced(file, emptySet);
+      file.isReferenced = this.isReferenced(file, emptySet, hyperspaceFiles);
     }
     // now that we know which files are referenced we can use them to determine which layout files are referenced
     const shipLayouts = new Set(Array.from(root.xmlFiles.values())
@@ -21,20 +23,21 @@ export class IsReferencedUpdater implements DataReceiver {
     for (const file of root.xmlFiles.values()) {
       // skip already referenced files, we're just trying to catch ship layout files
       if (file.isReferenced) continue;
-      file.isReferenced = this.isReferenced(file, shipLayouts);
+      file.isReferenced = this.isReferenced(file, shipLayouts, hyperspaceFiles);
     }
   }
 
-  isReferenced(file: FtlFile, shipLayouts: Set<string>) {
+  isReferenced(file: FtlFile, shipLayouts: Set<string>, hyperspaceFiles: HyperspaceFile[]) {
     const fileName = getFileName(file.uri);
-    if (fileName == 'hyperspace.xml') return true;
     if (defaultXmlFilesAndAppends.includes(fileName)) return true;
-    const nameAsShipLayout = fileName.substring(0, fileName.length - '.xml'.length);
+    const trimEndBy = fileName.endsWith('.xml.append') ? '.xml.append'.length : '.xml'.length;
+    const nameAsShipLayout = fileName.substring(0, fileName.length - trimEndBy);
     if (shipLayouts.has(nameAsShipLayout)) return true;
-    if (file.root.hyperspaceFile) {
+
+    if (hyperspaceFiles.length > 0) {
       // covert file name like this: 'events_store.xml' into 'store'
-      const customEventRefName = fileName.substring('events_'.length, fileName.length - '.xml'.length);
-      return file.root.hyperspaceFile.customEventFiles.has(customEventRefName);
+      const customEventRefName = fileName.substring('events_'.length, fileName.length - trimEndBy);
+      return hyperspaceFiles.some((hyperspaceFile) => hyperspaceFile.customEventFiles.has(customEventRefName));
     }
     return false;
   }

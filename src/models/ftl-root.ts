@@ -9,7 +9,9 @@ export class FtlRoot {
   }
 
   xmlFiles: Map<string, FtlFile>;
-  hyperspaceFile?: HyperspaceFile;
+  get hyperspaceFiles(): HyperspaceFile[] {
+    return Array.from(this.xmlFiles.values()).filter((file): file is HyperspaceFile => file instanceof HyperspaceFile);
+  }
   soundWaveFiles: SoundFile[] = [];
   musicFiles: SoundFile[] = [];
   imgFiles: FtlImg[] = [];
