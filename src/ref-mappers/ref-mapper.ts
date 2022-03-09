@@ -1,5 +1,5 @@
 import {FtlFile, FtlFileValue} from '../models/ftl-file';
-import {IValueSet, Node} from 'vscode-html-languageservice';
+import {IValueData, IValueSet, Node} from 'vscode-html-languageservice';
 import {Location, Position, TextDocument} from 'vscode';
 import {addToKey} from '../helpers';
 import {FtlValue} from '../models/ftl-value';
@@ -11,7 +11,7 @@ import {DataReceiver} from '../providers/ftl-data-provider';
 export interface RefMapperBase extends LookupProvider, DataReceiver {
 
   readonly typeName: string;
-  readonly defaults?: readonly string[];
+  readonly baseGameDefaults?: readonly string[];
   readonly autoCompleteValues?: IValueSet;
   readonly refs: Map<string, FtlValue[]>;
   readonly defs: Map<string, FtlValue>;
@@ -29,7 +29,7 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
   constructor(public parser: RefParser<T>,
               public readonly autoCompleteValues: IValueSet,
               public readonly typeName: string,
-              public defaults: readonly string[] = [],
+              public baseGameDefaults: readonly string[] = [],
               private altRefMapper?: RefMapperBase) {
     this.fileDataSelector = this.parser.fileDataSelector;
   }
@@ -38,13 +38,8 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
     this.refs.clear();
     this.defs.clear();
     this.autoCompleteValues.values.length = 0;
-
-    const names = new Set(Array.from(root.xmlFiles.values()).flatMap((file) => this.parser.fileDataSelector(file).defs)
-        .map((value) => value.name)
-        .concat(this.defaults));
-
     this.autoCompleteValues.values
-        .push(...Array.from(names.values()).map((name) => ({name})));
+        .push(...this.convertDefsAndDefaultsToAutoCompleteList(root));
 
     for (const file of root.xmlFiles.values()) {
       this.parser.fileDataSelector(file).refs.forEach((value, key) => addToKey(this.refs, key, value));
@@ -52,6 +47,31 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
         this.defs.set(value.name, value);
       }
     }
+  }
+
+  convertDefsAndDefaultsToAutoCompleteList(root: FtlRoot) {
+    const seenNames = new Set<string>();
+    const autoCompleteValueList: IValueData[] = [];
+    for (const file of root.xmlFiles.values()) {
+      for (const def of this.parser.fileDataSelector(file).defs) {
+        if (seenNames.has(def.name)) continue;
+        autoCompleteValueList.push(RefMapper.convertValueToAutocompleteValue(def));
+        seenNames.add(def.name);
+      }
+    }
+    for (const name of this.baseGameDefaults) {
+      if (seenNames.has(name)) continue;
+      autoCompleteValueList.push({name});
+      seenNames.add(name);
+    }
+    return autoCompleteValueList;
+  }
+
+  static convertValueToAutocompleteValue(value: FtlValue): IValueData {
+    if (value.autocompleteDescription) {
+      return {name: value.name, description: value.autocompleteDescription};
+    }
+    return {name: value.name};
   }
 
   lookupRefs({node, document, position}: LookupContext): Location[] | undefined {
@@ -76,7 +96,7 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
 
   isNameValid(name: string) {
     return this.defs.has(name)
-        || this.defaults.includes(name)
+        || this.baseGameDefaults.includes(name)
         || (this.altRefMapper?.isNameValid(name) ?? false);
   }
 }

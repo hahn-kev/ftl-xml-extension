@@ -166,7 +166,7 @@ export class BlueprintMapper implements RefMapperBase {
       return this.getListTypeFromBlueprint(list);
     }
     const mapper = this.doMapper(false, (mapper) => {
-      return (mapper.defs.has(name) || mapper.defaults?.includes(name)) ? mapper : undefined;
+      return (mapper.defs.has(name) || mapper.baseGameDefaults?.includes(name)) ? mapper : undefined;
     });
     return mapper?.typeName ?? 'Unknown';
   }

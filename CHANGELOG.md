@@ -2,6 +2,9 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
+## 0.5.3
+- Show event text and weapon name in autocomplete
+
 ## 0.5.2
 - Add support for hyperspace.xml.append files
 - Support append event files getting included as references

@@ -27,6 +27,8 @@ export abstract class FtlValue {
   public positionEnd: Position;
   public range: Range;
 
+  public autocompleteDescription?: string;
+
   toLocation() {
     return new Location(this.file.uri, this.range);
   }

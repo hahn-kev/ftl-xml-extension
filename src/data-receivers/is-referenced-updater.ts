@@ -28,7 +28,7 @@ export class IsReferencedUpdater implements DataReceiver {
   }
 
   isReferenced(file: FtlFile, shipLayouts: Set<string>, hyperspaceFiles: HyperspaceFile[]) {
-    const fileName = getFileName(file.uri);
+    const fileName = file.fileName;
     if (defaultXmlFilesAndAppends.includes(fileName)) return true;
     const trimEndBy = fileName.endsWith('.xml.append') ? '.xml.append'.length : '.xml'.length;
     const nameAsShipLayout = fileName.substring(0, fileName.length - trimEndBy);

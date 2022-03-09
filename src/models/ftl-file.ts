@@ -10,7 +10,7 @@ import {FtlValue} from './ftl-value';
 import {FtlAugment} from './ftlAugment';
 import {FtlCrew} from './ftl-crew';
 import {FtlSystem} from './ftl-system';
-import {addToKey} from '../helpers';
+import {addToKey, getFileName} from '../helpers';
 import {FtlSound} from './ftl-sound';
 import {FtlColor} from './ftl-color';
 import {FtlRoot} from './ftl-root';
@@ -30,10 +30,12 @@ export class FtlFile {
   animationSheets = new FtlFileValue<FtlAnimationSheet>();
   diagnostics: Diagnostic[] = [];
   uri: Uri;
+  fileName: string;
   firstLineRange: Range;
 
   constructor(document: TextDocument, public root: FtlRoot) {
     this.uri = document.uri;
+    this.fileName = getFileName(this.uri);
     this.firstLineRange = document.lineAt(0).range;
   }
 
