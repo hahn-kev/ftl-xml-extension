@@ -4,6 +4,7 @@ import {FtlFile} from '../models/ftl-file';
 import {FtlEvent} from '../models/ftl-event';
 import {RefMapper} from '../ref-mappers/ref-mapper';
 import {DiagnosticBuilder} from '../diagnostic-builder';
+import {findRecursiveLoop} from '../helpers';
 
 export class EventLoopValidator implements Validator {
   constructor(private eventMapper: RefMapper<FtlEvent>) {
@@ -22,20 +23,11 @@ export class EventLoopValidator implements Validator {
       const namesInLoop = this.findEventLoop(event.name, event.unsafeEventRefs);
       if (namesInLoop) return DiagnosticBuilder.eventHasRefLoop(event.range, event.name, namesInLoop);
     } catch (e) {
-      throw new Error('error finding loop in ' + event.name);
+      throw new Error(`Finding loop in '${event.name}' caused by: ${e}`);
     }
   }
 
   private findEventLoop(topEventName: string, unsafeChildren: Set<string>): string[] | undefined {
-    for (const childName of unsafeChildren) {
-      if (childName == topEventName) return [];
-      const event = this.eventMapper.defs.get(childName);
-      if (!event || !event.unsafeEventRefs) continue;
-      const result = this.findEventLoop(topEventName, event.unsafeEventRefs);
-      if (result) {
-        result.unshift(childName);
-        return result;
-      }
-    }
+    return findRecursiveLoop(topEventName, unsafeChildren, (name) => this.eventMapper.defs.get(name)?.unsafeEventRefs);
   }
 }

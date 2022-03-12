@@ -145,3 +145,19 @@ export function shouldCompleteForNodeContents(
 
   return startTagEnd <= offset && endTagStart >= offset;
 }
+
+export function findRecursiveLoop(startingName: string, children:Iterable<string>, lookupChildren: (name: string) => Iterable<string>|undefined, seenNames = new Set<string>()): string[] | undefined {
+  for (const childName of children) {
+    if (childName == startingName) return [];
+    // we're in a loop, but it doesn't include the starting name, so we're going to bail out before we crash
+    if (seenNames.has(childName)) return undefined;
+    seenNames.add(childName);
+    const childChildren = lookupChildren(childName);
+    if (!childChildren) continue;
+    const result = findRecursiveLoop(startingName, childChildren, lookupChildren, seenNames);
+    if (result) {
+      result.unshift(childName);
+      return result;
+    }
+  }
+}

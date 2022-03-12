@@ -3,7 +3,7 @@ import {Location} from 'vscode-html-languageservice';
 import {FtlFile, FtlFileValue} from '../models/ftl-file';
 import {FtlBlueprintList, FtlBlueprintValue} from '../models/ftl-blueprint-list';
 import {FtlValue} from '../models/ftl-value';
-import {addToKey, firstWhere} from '../helpers';
+import {addToKey, findRecursiveLoop, firstWhere} from '../helpers';
 import {BlueprintListTypeAny} from '../data/ftl-data';
 import {BlueprintParser} from './blueprint-parser';
 import {LookupContext} from '../ref-mappers/lookup-provider';
@@ -112,16 +112,7 @@ export class BlueprintMapper implements RefMapperBase {
   }
 
   findRefLoop(listName: string, children: string[]): string[] | undefined {
-    for (const childName of children) {
-      if (childName == listName) return [];
-      const blueprintList = this.defs.get(childName);
-      if (!blueprintList) continue;
-      const result = this.findRefLoop(listName, blueprintList.childRefNames);
-      if (result) {
-        result.unshift(childName);
-        return result;
-      }
-    }
+    return findRecursiveLoop(listName, children, (name) => this.defs.get(name)?.childRefNames);
   }
 
   getListTypeInfoFromBlueprint(blueprintList: FtlBlueprintList): { map: Map<string, FtlBlueprintValue[]>, listTypeName: string } {

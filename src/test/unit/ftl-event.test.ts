@@ -2,6 +2,8 @@ import {suite, test} from 'mocha';
 import {testSetup} from './test-setup';
 import {TextDocument as HtmlTextDocument} from 'vscode-html-languageservice';
 import {expect} from 'chai';
+import {EventLoopValidator} from '../../validators/event-loop-validator';
+import {FtlDiagnostic} from '../../models/ftl-diagnostic';
 
 suite('Ftl Events', () => {
   test('should parse all event references', () => {
@@ -117,5 +119,51 @@ suite('Ftl Events', () => {
     expect(file.event.defs).length(1);
     const eventDef = file.event.defs[0];
     expect(eventDef.unsafeEventRefs).to.be.undefined;
+  });
+  test('should find an event loop', () => {
+    const services = testSetup();
+    const document = HtmlTextDocument.create('test://test/test.xml',
+        'ftl-xml',
+        1,
+        `
+
+<event name="event_1">
+    <event load="event_2"/>
+</event>
+<event name="event_2">
+    <event load="event_3"/>
+</event>
+<event name="event_3">
+    <event load="event_1"/>
+</event>
+`);
+    const file = services.parser.parseDocument(document);
+    const validator = new EventLoopValidator(services.mappers.eventsMapper);
+    const diagnostics: FtlDiagnostic[] = [];
+    validator.validateFile(file, diagnostics);
+    expect(diagnostics).to.have.length(3);
+  });
+
+  test('should not crash', () => {
+    const services = testSetup();
+    const document = HtmlTextDocument.create('test://test/test.xml',
+        'ftl-xml',
+        1,
+        `
+<event name="event_entrance">
+    <event load="event_1"/>
+</event>
+<event name="event_1">
+    <event load="event_2"/>
+</event>
+<event name="event_2">
+    <event load="event_1"/>
+</event>
+`);
+    const file = services.parser.parseDocument(document);
+    const validator = new EventLoopValidator(services.mappers.eventsMapper);
+    const diagnostics: FtlDiagnostic[] = [];
+    validator.validateFile(file, diagnostics);
+    expect(diagnostics).to.have.length(2);
   });
 });
