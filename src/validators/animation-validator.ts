@@ -1,6 +1,6 @@
 import {Validator} from './validator';
 import {FtlFile} from '../models/ftl-file';
-import {Diagnostic} from 'vscode';
+import {FtlDiagnostic} from '../models/ftl-diagnostic';
 import {Mappers} from '../ref-mappers/mappers';
 import {RefMapper} from '../ref-mappers/ref-mapper';
 import {FtlAnimationSheet} from '../models/ftl-animation-sheet';
@@ -14,7 +14,7 @@ export class AnimationValidator implements Validator {
     this.animationSheetMapper = mappers.animationSheetMapper;
   }
 
-  public validateFile(file: FtlFile, diagnostics: Diagnostic[]): void {
+  public validateFile(file: FtlFile, diagnostics: FtlDiagnostic[]): void {
     for (const sheet of file.animationSheets.defs) {
       if (!this.isSheetValid(sheet)) {
         diagnostics.push(DiagnosticBuilder.sheetMissingDimensions(sheet));
@@ -47,7 +47,7 @@ export class AnimationValidator implements Validator {
         && sheet.frameHeight !== undefined;
   }
 
-  private validateAnimation(animation: FtlAnimation, diagnostics: Diagnostic[]) {
+  private validateAnimation(animation: FtlAnimation, diagnostics: FtlDiagnostic[]) {
     if (!animation.sheetName) {
       diagnostics.push(DiagnosticBuilder.sheetNameMissing(animation));
       return;

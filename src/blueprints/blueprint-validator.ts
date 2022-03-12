@@ -1,6 +1,6 @@
 import {Validator} from '../validators/validator';
 import {FtlFile} from '../models/ftl-file';
-import {Diagnostic} from 'vscode';
+import {FtlDiagnostic} from '../models/ftl-diagnostic';
 import {DiagnosticBuilder} from '../diagnostic-builder';
 import {BlueprintMapper} from './blueprint-mapper';
 import {BlueprintListTypeAny} from '../data/ftl-data';
@@ -10,19 +10,19 @@ export class BlueprintValidator implements Validator {
   constructor(private mapper: BlueprintMapper) {
   }
 
-  validateFile(file: FtlFile, diagnostics: Diagnostic[]): void {
+  validateFile(file: FtlFile, diagnostics: FtlDiagnostic[]): void {
     this.validateLists(file, diagnostics);
     this.validateRefTypes(file, diagnostics);
     this.validateRefNames(file, diagnostics);
   }
 
-  validateLists(file: FtlFile, diagnostics: Diagnostic[]) {
+  validateLists(file: FtlFile, diagnostics: FtlDiagnostic[]) {
     for (const def of file.blueprintList.defs) {
       this.validateList(def, diagnostics);
     }
   }
 
-  validateList(blueprintList: FtlBlueprintList, diagnostics: Diagnostic[]) {
+  validateList(blueprintList: FtlBlueprintList, diagnostics: FtlDiagnostic[]) {
     const listName = blueprintList.name;
     const namesInLoop = this.mapper.findRefLoop(listName, blueprintList.childRefNames);
     if (namesInLoop) {
@@ -34,7 +34,7 @@ export class BlueprintValidator implements Validator {
 
   static ignoreListNames = ['DLC_ITEMS', 'DEMO_LOCKED_ITEMS'];
 
-  validateListType(blueprintList: FtlBlueprintList, diagnostics: Diagnostic[]) {
+  validateListType(blueprintList: FtlBlueprintList, diagnostics: FtlDiagnostic[]) {
     const listName = blueprintList.name;
     if (!listName || BlueprintValidator.ignoreListNames.includes(listName)) return;
 
@@ -52,7 +52,7 @@ export class BlueprintValidator implements Validator {
     }
   }
 
-  validateRefTypes(file: FtlFile, diagnostics: Diagnostic[]) {
+  validateRefTypes(file: FtlFile, diagnostics: FtlDiagnostic[]) {
     for (const {ref, mapper} of this.mapper.listRefs(file)) {
       // fixes case for RANDOM which is valid for multiple names
       if (mapper.isNameValid(ref.name)) continue;
@@ -65,7 +65,7 @@ export class BlueprintValidator implements Validator {
     }
   }
 
-  validateRefNames(file: FtlFile, diagnostics: Diagnostic[]): void {
+  validateRefNames(file: FtlFile, diagnostics: FtlDiagnostic[]): void {
     for (const [refName, refs, blueprintMapper] of this.mapper.refMaps(file)) {
       if (this.mapper.isNameValid(refName)) continue;
       for (const ref of refs) {

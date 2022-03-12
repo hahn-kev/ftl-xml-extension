@@ -1,9 +1,10 @@
 import {FtlFile} from './ftl-file';
-import {Node} from 'vscode-html-languageservice';
-import {Location, Position, Range, TextDocument} from 'vscode';
+import {Location, Node} from 'vscode-html-languageservice';
+import {FtlTextDocument} from './ftl-text-document';
+import {Position, Range} from 'vscode-languageserver-textdocument';
 
 export abstract class FtlValue {
-  constructor(name: string, file: FtlFile, node: Node, document: TextDocument, private isDef: boolean) {
+  constructor(name: string, file: FtlFile, node: Node, document: FtlTextDocument, private isDef: boolean) {
     this.file = file;
     this.name = name;
     this.startOffset = node.start;
@@ -12,8 +13,10 @@ export abstract class FtlValue {
     this.endTagStartOffset = node.endTagStart;
     this.positionStart = document.positionAt(node.start);
     this.positionEnd = document.positionAt(node.end);
-    this.range = new Range(this.positionStart,
-        document.positionAt(node.children.length > 0 ? node.startTagEnd ?? node.end : node.end));
+    this.range = {
+      start: this.positionStart,
+      end: document.positionAt(node.children.length > 0 ? node.startTagEnd ?? node.end : node.end)
+    };
   }
 
   public abstract readonly kind: string;
@@ -30,6 +33,6 @@ export abstract class FtlValue {
   public autocompleteDescription?: string;
 
   toLocation() {
-    return new Location(this.file.uri, this.range);
+    return Location.create(this.file.uri, this.range);
   }
 }

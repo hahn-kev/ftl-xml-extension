@@ -1,17 +1,17 @@
 import {Validator} from './validator';
 import {FtlFile} from '../models/ftl-file';
-import {Diagnostic} from 'vscode';
 import {RefMapper} from '../ref-mappers/ref-mapper';
 import {FtlEvent} from '../models/ftl-event';
 import {FtlShip} from '../models/ftl-ship';
 import {DiagnosticBuilder} from '../diagnostic-builder';
+import {FtlDiagnostic} from '../models/ftl-diagnostic';
 
 export class EventUsedValidator implements Validator {
   constructor(private eventRefMapper: RefMapper<FtlEvent>, private shipMapper: RefMapper<FtlShip>) {
 
   }
 
-  validateFile(file: FtlFile, diagnostics: Diagnostic[]) {
+  validateFile(file: FtlFile, diagnostics: FtlDiagnostic[]) {
     const unusedEvents = file.event.defs.filter((event) => !this.isEventUsed(event));
 
     if (unusedEvents.length > 0) {

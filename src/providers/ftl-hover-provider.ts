@@ -1,11 +1,12 @@
 import {CancellationToken, Hover, HoverProvider, MarkdownString, Position, TextDocument, Uri, workspace} from 'vscode';
 import {DocumentCache} from '../document-cache';
 import {LanguageService, TextDocument as HtmlTextDocument} from 'vscode-html-languageservice';
-import {attrNameRange, convertDocumentation, convertRange, toRange} from '../helpers';
+import {attrNameRange, toRange} from '../helpers';
 import {Mappers} from '../ref-mappers/mappers';
 import {PathRefMappers} from '../ref-mappers/path-ref-mapper';
 import {FtlDatFs} from '../dat-fs-provider/ftl-dat-fs';
 import {LookupContext} from '../ref-mappers/lookup-provider';
+import {VscodeConverter} from '../vscode-converter';
 
 export class FtlHoverProvider implements HoverProvider {
   constructor(private documentCache: DocumentCache,
@@ -40,11 +41,11 @@ export class FtlHoverProvider implements HoverProvider {
     if (!hover || !hover.range || hover.contents === '') return;
     let documentation: string | MarkdownString | undefined;
     if (typeof hover.contents === 'object' && 'kind' in hover.contents) {
-      documentation = convertDocumentation(hover.contents);
+      documentation = VscodeConverter.toDocumentation(hover.contents);
     }
     if (!documentation) return;
     return {
-      range: convertRange(hover.range),
+      range: VscodeConverter.toVscodeRange(hover.range),
       contents: [documentation]
     };
   }
@@ -70,7 +71,7 @@ export class FtlHoverProvider implements HoverProvider {
 
     return new Hover(
         [textDef.text],
-        toRange(idStart, idEnd, document)
+        VscodeConverter.toVscodeRange(toRange(idStart, idEnd, document))
     );
   }
 
@@ -106,7 +107,7 @@ export class FtlHoverProvider implements HoverProvider {
     mdString.appendMarkdown(`![img](${imageUrl})`);
     return new Hover(
         mdString,
-        toRange(node.startTagEnd ?? node.start, node.endTagStart ?? node.end, document)
+        VscodeConverter.toVscodeRange(toRange(node.startTagEnd ?? node.start, node.endTagStart ?? node.end, document))
     );
   }
 }

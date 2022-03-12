@@ -1,11 +1,12 @@
 import {FtlValue} from './ftl-value';
 import {FtlFile} from './ftl-file';
 import {Node} from 'vscode-html-languageservice';
-import {Range, TextDocument} from 'vscode';
 import {getAttrValueAsInt, getNodeTextContent, toRange} from '../helpers';
+import {FtlTextDocument} from './ftl-text-document';
+import {Range} from 'vscode-languageserver-textdocument';
 
 export class FtlAnimation extends FtlValue {
-  constructor(name: string, file: FtlFile, node: Node, document: TextDocument, isDef: boolean) {
+  constructor(name: string, file: FtlFile, node: Node, document: FtlTextDocument, isDef: boolean) {
     super(name, file, node, document, isDef);
     if (isDef) {
       for (const child of node.children) {

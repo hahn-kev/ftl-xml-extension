@@ -1,11 +1,13 @@
-import {FilePermission, FileStat, FileType} from 'vscode';
+import {FileStat, FileType} from 'vscode-html-languageservice';
+
 
 export class File implements FileStat {
   type: FileType.File = FileType.File;
   ctime: number;
   mtime: number;
   size: number;
-  permissions = FilePermission.Readonly;
+  // 1 means readonly
+  permissions = 1;
 
   name: string;
   data?: Uint8Array;

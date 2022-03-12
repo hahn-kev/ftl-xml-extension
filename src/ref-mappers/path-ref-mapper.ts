@@ -1,10 +1,8 @@
-import {IValueSet} from 'vscode-html-languageservice';
-import {Location, Range, Uri} from 'vscode';
+import {IValueSet, Location} from 'vscode-html-languageservice';
 import {FtlRoot} from '../models/ftl-root';
-import {getNodeTextContent} from '../helpers';
+import {getNodeTextContent, shouldCompleteForNodeContents} from '../helpers';
 import {FtlImg} from '../models/ftl-img';
 import {SoundFile} from '../models/sound-file';
-import {FtlCompletionProvider} from '../providers/ftl-completion-provider';
 import {ImgPathNames, MusicPaths, SoundWavePaths} from '../data/autocomplete-value-sets';
 import {FtlResourceFile} from '../models/ftl-resource-file';
 import {LookupContext, LookupProvider} from './lookup-provider';
@@ -13,6 +11,7 @@ import {defaultImgFiles} from '../data/default-ftl-data/default-img-files';
 import {defaultMusic} from '../data/default-ftl-data/default-music';
 import {NodeMapContext} from './node-map';
 import {DataReceiver} from '../providers/ftl-data-provider';
+import {URI} from 'vscode-uri';
 
 export enum FileHandled {
   handled,
@@ -20,7 +19,7 @@ export enum FileHandled {
 }
 
 export interface PathRefMapperBase extends LookupProvider, DataReceiver {
-  handleFile(file: Uri, fileName: string | undefined, root: FtlRoot, fileRemoved: boolean): FileHandled;
+  handleFile(file: URI, fileName: string | undefined, root: FtlRoot, fileRemoved: boolean): FileHandled;
 }
 
 export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBase {
@@ -28,13 +27,13 @@ export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBa
 
   constructor(public readonly typeName: string,
               public readonly autoCompleteValues: IValueSet,
-              private readonly matchingFile: (file: Uri, fileName: string | undefined) => boolean,
-              private readonly resourceBuilder: { new(file: Uri): T; },
+              private readonly matchingFile: (file: URI, fileName: string | undefined) => boolean,
+              private readonly resourceBuilder: { new(file: URI): T; },
               private readonly selectRootFiles: (root: FtlRoot) => T[],
               private readonly defaultFiles: string[] = []) {
   }
 
-  public handleFile(file: Uri, fileName: string | undefined, root: FtlRoot, fileRemoved: boolean): FileHandled {
+  public handleFile(file: URI, fileName: string | undefined, root: FtlRoot, fileRemoved: boolean): FileHandled {
     if (!this.matchingFile(file, fileName)) return FileHandled.notHandled;
     if (fileRemoved) {
       const rootFiles = this.selectRootFiles(root);
@@ -49,12 +48,12 @@ export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBa
   public lookupDef(context: LookupContext): Location | undefined {
     const img = this.lookupImg(context);
     if (!img) return;
-    return new Location(img.uri, new Range(0, 0, 0, 0));
+    return {uri: img.uri.toString(), range: {start: {line: 0, character: 0}, end: {line: 0, character: 0}}};
   }
 
   lookupImg({node, document, position}: NodeMapContext): FtlImg | undefined {
     if (node.tag == 'animSheet' || node.tag == 'img' || node.tag == 'chargeImage') {
-      if (position && !FtlCompletionProvider.shouldCompleteForNodeContents(node, document.offsetAt(position))) return;
+      if (position && !shouldCompleteForNodeContents(node, document.offsetAt(position))) return;
 
       const imgPathName = getNodeTextContent(node, document);
       if (!imgPathName) return;

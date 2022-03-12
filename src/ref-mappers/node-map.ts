@@ -1,21 +1,22 @@
 import {IValueSet, Node} from 'vscode-html-languageservice';
-import {Position, TextDocument} from 'vscode';
 import {getAttrValueForTag, getNodeTextContent} from '../helpers';
 import {FtlData} from '../data/ftl-data';
+import {FtlTextDocument} from '../models/ftl-text-document';
+import {Position} from 'vscode-languageserver-textdocument';
 
 export interface NodeMap {
-  getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined;
+  getNameDef(node: Node, document: FtlTextDocument, position?: Position): string | undefined;
 
-  getRefName(node: Node, document: TextDocument, position: Position): string | undefined;
+  getRefName(node: Node, document: FtlTextDocument, position: Position): string | undefined;
 
-  getRefName(node: Node, document: TextDocument): string | string[] | undefined;
+  getRefName(node: Node, document: FtlTextDocument): string | string[] | undefined;
 
-  getRefName(node: Node, document: TextDocument): string | string[] | undefined;
+  getRefName(node: Node, document: FtlTextDocument): string | string[] | undefined;
 }
 
 export interface NodeMapContext {
   node: Node;
-  document: TextDocument;
+  document: FtlTextDocument;
   /**
    * it's expected that if position is defined that only one ref is returned
    */
@@ -27,13 +28,13 @@ export class NodeMapImp implements NodeMap {
               private refName: (context: NodeMapContext) => string | string[] | undefined) {
   }
 
-  public getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
+  public getNameDef(node: Node, document: FtlTextDocument, position?: Position): string | undefined {
     return this.nameDef({node, document, position});
   }
 
-  public getRefName(node: Node, document: TextDocument, position: Position): string | undefined;
-  public getRefName(node: Node, document: TextDocument): string | string[] | undefined;
-  public getRefName(node: Node, document: TextDocument, position?: Position): string | undefined | string[] {
+  public getRefName(node: Node, document: FtlTextDocument, position: Position): string | undefined;
+  public getRefName(node: Node, document: FtlTextDocument): string | string[] | undefined;
+  public getRefName(node: Node, document: FtlTextDocument, position?: Position): string | undefined | string[] {
     return this.refName({node, document, position});
   }
 }

@@ -97,5 +97,7 @@ export const allTags: XmlTag[] = [
 
   {name: 'variable', attributes: [{name: 'name', valueSet: VariableNames.name}, {name: 'val'}, {name: 'op'}]},
   {name: 'metaVariable', attributes: [{name: 'name', valueSet: VariableNames.name}, {name: 'val'}, {name: 'op'}]},
-  {name: 'req', attributes: [{name: 'name'}, {name: 'type', values: [{name: 'any'}, {name: 'all'}, {name: 'sum'}]}]}
+  {name: 'req', attributes: [{name: 'name'}, {name: 'type', values: [{name: 'any'}, {name: 'all'}, {name: 'sum'}]}]},
+
+  {name: 'eventFile', attributes: []}
 ];

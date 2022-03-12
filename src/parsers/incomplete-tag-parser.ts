@@ -1,7 +1,6 @@
 import {FtlXmlParser, ParseContext} from './ftl-xml-parser';
 import {Node} from 'vscode-html-languageservice';
-import {FtlFile} from '../models/ftl-file';
-import {TextDocument} from 'vscode';
+import {FtlTextDocument} from '../models/ftl-text-document';
 import {getText, toRange} from '../helpers';
 import {DiagnosticBuilder} from '../diagnostic-builder';
 
@@ -19,7 +18,7 @@ export class IncompleteTagParser implements FtlXmlParser {
     }
   }
 
-  isMissingEnd(node: Node, document: TextDocument) {
+  isMissingEnd(node: Node, document: FtlTextDocument) {
     return getText(node.end - 1, node.end, document) !== '>';
   }
 }

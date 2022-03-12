@@ -1,6 +1,6 @@
 import {Validator} from './validator';
 import {FtlFile} from '../models/ftl-file';
-import {Diagnostic} from 'vscode';
+import {FtlDiagnostic} from '../models/ftl-diagnostic';
 import {RefMapperBase} from '../ref-mappers/ref-mapper';
 import {DiagnosticBuilder} from '../diagnostic-builder';
 import {BlueprintMapper} from '../blueprints/blueprint-mapper';
@@ -9,7 +9,7 @@ export class RefNameValidator implements Validator {
   constructor(private mappers: RefMapperBase[], private blueprintMapper: BlueprintMapper) {
   }
 
-  validateFile(file: FtlFile, diagnostics: Diagnostic[]): void {
+  validateFile(file: FtlFile, diagnostics: FtlDiagnostic[]): void {
     for (const mapper of this.mappers) {
       // skip here since it's handled in blueprint-validator
       if (mapper === this.blueprintMapper) continue;

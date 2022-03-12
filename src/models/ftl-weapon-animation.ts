@@ -1,13 +1,14 @@
 import {FtlFile} from './ftl-file';
 import {Node} from 'vscode-html-languageservice';
-import {Range, TextDocument} from 'vscode';
 import {getNodeTextContent, toRange} from '../helpers';
 import {FtlAnimation} from './ftl-animation';
+import {FtlTextDocument} from './ftl-text-document';
+import {Range} from 'vscode-languageserver-textdocument';
 
 export class FtlWeaponAnimation extends FtlAnimation {
-  constructor(name: string, file: FtlFile, node: Node, document: TextDocument, isDef: boolean) {
+  constructor(name: string, file: FtlFile, node: Node, document: FtlTextDocument, isDef: boolean) {
     super(name, file, node, document, isDef);
-    this.chargeImageRange = new Range(NaN, NaN, NaN, NaN);
+    this.chargeImageRange = {end: {character: NaN, line: NaN}, start: {character: NaN, line: NaN}};
     if (isDef) {
       const chargeNode = node.children.find((c) => c.tag === 'chargeImage');
       if (chargeNode) {

@@ -1,20 +1,20 @@
-import {Uri} from 'vscode';
+import {URI} from 'vscode-uri';
 import {Directory} from './directory';
 
 export class FtlDatFile extends Directory {
-  public uri: Uri;
-  constructor(workspaceFolder: Uri) {
+  public uri: URI;
+  constructor(workspaceFolder: URI) {
     super('ftl.dat');
     this.uri = workspaceFolder;
   }
 
-  static relativeToDat(file: Uri): string {
+  static relativeToDat(file: URI): string {
     const parts = file.path.split('/');
     const indexOfDat = this.indexOfDat(parts);
     return parts.slice(indexOfDat + 1).join('/');
   }
 
-  static getDatUri(file: Uri): Uri | undefined {
+  static getDatUri(file: URI): URI | undefined {
     const parts = file.path.split('/');
     const indexOfDat = this.indexOfDat(parts);
     if (indexOfDat > 0) {

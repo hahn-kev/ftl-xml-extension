@@ -9,11 +9,10 @@ import {
   TextEdit
 } from 'vscode';
 import {FtlParser} from '../ftl-parser';
-import {Node} from 'vscode-html-languageservice';
-import {FtlFile} from '../models/ftl-file';
 import {FtlColor} from '../models/ftl-color';
 import {normalizeAttributeName, toRange} from '../helpers';
 import {FtlXmlParser, ParseContext} from '../parsers/ftl-xml-parser';
+import {VscodeConverter} from '../vscode-converter';
 
 export class FtlColorProvider implements DocumentColorProvider, FtlXmlParser {
   constructor(private ftlParser: FtlParser) {
@@ -40,7 +39,7 @@ export class FtlColorProvider implements DocumentColorProvider, FtlXmlParser {
     if (!ftlFile) return;
     return ftlFile.colors.filter((c): c is ({ r: number; g: number; b: number } & FtlColor) => c.isValid())
         .map((ftlColor) => {
-          return new ColorInformation(ftlColor.range,
+          return new ColorInformation(VscodeConverter.toVscodeRange(ftlColor.range),
               new Color(this.toPercentColor(ftlColor.r),
                   this.toPercentColor(ftlColor.g),
                   this.toPercentColor(ftlColor.b),

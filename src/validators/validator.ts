@@ -1,6 +1,6 @@
 import {FtlFile} from '../models/ftl-file';
-import {Diagnostic} from 'vscode';
+import {FtlDiagnostic} from '../models/ftl-diagnostic';
 
 export interface Validator {
-  validateFile(file: FtlFile, diagnostics: Diagnostic[]): void;
+  validateFile(file: FtlFile, diagnostics: FtlDiagnostic[]): void;
 }

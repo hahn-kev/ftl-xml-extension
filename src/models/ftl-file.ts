@@ -1,5 +1,4 @@
 import {FtlEvent} from './ftl-event';
-import {Diagnostic, Range, TextDocument, Uri} from 'vscode';
 import {FtlShip} from './ftl-ship';
 import {FtlAutoblueprint} from './ftl-autoblueprint';
 import {FtlText} from './ftl-text';
@@ -20,6 +19,9 @@ import {FtlAnimationSheet} from './ftl-animation-sheet';
 import {FtlImageList} from './ftl-image-list';
 import {FtlVariable} from './ftl-variable';
 import {FtlReq} from './ftl-req';
+import {FtlTextDocument} from './ftl-text-document';
+import {FtlDiagnostic} from './ftl-diagnostic';
+import {Range} from 'vscode-languageserver-textdocument';
 
 
 export class FtlFile {
@@ -28,15 +30,18 @@ export class FtlFile {
   weaponAnimations = new FtlFileValue<FtlWeaponAnimation>();
   imageLists = new FtlFileValue<FtlImageList>();
   animationSheets = new FtlFileValue<FtlAnimationSheet>();
-  diagnostics: Diagnostic[] = [];
-  uri: Uri;
+  diagnostics: FtlDiagnostic[] = [];
+  uri: string;
   fileName: string;
   firstLineRange: Range;
 
-  constructor(document: TextDocument, public root: FtlRoot) {
-    this.uri = document.uri;
+  constructor(document: FtlTextDocument, public root: FtlRoot) {
+    this.uri = document.uri.toString();
     this.fileName = getFileName(this.uri);
-    this.firstLineRange = document.lineAt(0).range;
+    const docText = document.getText();
+    let newLineIndex = docText.indexOf('\r\n');
+    if (newLineIndex == -1) newLineIndex = docText.indexOf('\n');
+    this.firstLineRange = {start: {line: 0, character: 0}, end: {line: 0, character: newLineIndex}};
   }
 
   event = new FtlFileValue<FtlEvent>();

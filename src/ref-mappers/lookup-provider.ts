@@ -1,9 +1,10 @@
-import {Node} from 'vscode-html-languageservice';
-import {Location, Position, TextDocument} from 'vscode';
+import {Location, Node} from 'vscode-html-languageservice';
+import {FtlTextDocument} from '../models/ftl-text-document';
+import {Position} from 'vscode-languageserver-textdocument';
 
 export interface LookupContext {
   node: Node;
-  document: TextDocument;
+  document: FtlTextDocument;
   position: Position;
 }
 

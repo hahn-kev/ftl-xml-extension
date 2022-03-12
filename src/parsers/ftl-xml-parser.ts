@@ -1,10 +1,10 @@
 import {Node} from 'vscode-html-languageservice';
 import {FtlFile} from '../models/ftl-file';
-import {TextDocument} from 'vscode';
+import {FtlTextDocument} from '../models/ftl-text-document';
 
 export interface ParseContext {
   node: Node;
-  document: TextDocument;
+  document: FtlTextDocument;
   file: FtlFile;
 }
 export interface FtlXmlParser {

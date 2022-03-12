@@ -1,5 +1,5 @@
 import {RefMapperBase} from '../ref-mappers/ref-mapper';
-import {Location} from 'vscode';
+import {Location} from 'vscode-html-languageservice';
 import {FtlFile, FtlFileValue} from '../models/ftl-file';
 import {FtlBlueprintList, FtlBlueprintValue} from '../models/ftl-blueprint-list';
 import {FtlValue} from '../models/ftl-value';
@@ -78,7 +78,7 @@ export class BlueprintMapper implements RefMapperBase {
       // autocomplete values should include blueprint lists
       const blueprintLists = Array.from(this.defs.values());
       const blueprintListNames = blueprintLists
-          .filter((blueprintList) => !blueprintList.isAnyType && this.getListTypeFromBlueprint(blueprintList) == blueprintMapper.typeName)
+          .filter((bList) => !bList.isAnyType && this.getListTypeFromBlueprint(bList) == blueprintMapper.typeName)
           .map((blueprintList) => blueprintList.name);
       blueprintMapper.autoCompleteValues?.values.push(...blueprintListNames.map((name) => ({name})));
     }

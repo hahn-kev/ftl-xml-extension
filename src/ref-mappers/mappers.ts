@@ -1,7 +1,6 @@
 import {RefMapper, RefMapperBase} from './ref-mapper';
 import {FtlEvent} from '../models/ftl-event';
 import {Node} from 'vscode-html-languageservice';
-import {Position, TextDocument} from 'vscode';
 import {events} from '../events';
 import {getAttrValueForTag, getFileName, getNodeTextContent, hasAttr, normalizeAttributeName} from '../helpers';
 import {
@@ -55,6 +54,8 @@ import {FtlImageList} from '../models/ftl-image-list';
 import {declarationBasedMapFunction, NodeMapImp, staticValueNodeMap} from './node-map';
 import {FtlVariable} from '../models/ftl-variable';
 import {FtlReq} from '../models/ftl-req';
+import {FtlTextDocument} from '../models/ftl-text-document';
+import {Position} from 'vscode-languageserver-textdocument';
 
 export class Mappers {
   readonly eventsMapper = new RefMapper(
@@ -171,10 +172,10 @@ export class Mappers {
           (file) => file.autoBlueprint,
           FtlAutoblueprint,
           {
-            getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
+            getNameDef(node: Node, document: FtlTextDocument, position?: Position): string | undefined {
               return getAttrValueForTag(node, 'shipBlueprint', 'name', document, position);
             },
-            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
+            getRefName(node: Node, document: FtlTextDocument, position?: Position): string | undefined {
               return getAttrValueForTag(node, 'ship', 'auto_blueprint', document, position)
                   ?? getNodeTextContent(node, document, 'bossShip');
             }
@@ -245,15 +246,10 @@ export class Mappers {
   readonly animationMapper = new RefMapper(
       new RefParser((file) => file.animations,
           FtlAnimation,
-          {
-            getNameDef: (node: Node, document: TextDocument, position?: Position): string | undefined => {
-              return getAttrValueForTag(node, 'anim', 'name', document, position);
-            },
-            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-              return getNodeTextContent(node, document, 'image')
-                  ?? getNodeTextContent(node, document, 'explosion', 'weaponBlueprint');
-            }
-          }),
+          staticValueNodeMap(
+              [{tag: 'anim', attr: 'name'}],
+              [{tag: 'image', type: 'contents'}, {tag: 'explosion', parentTag: 'weaponBlueprint', type: 'contents'}])
+      ),
       AnimationNames,
       'Animation',
       defaultAnimations
@@ -262,14 +258,7 @@ export class Mappers {
   readonly animationSheetMapper = new RefMapper(
       new RefParser((file) => file.animationSheets,
           FtlAnimationSheet,
-          {
-            getNameDef: (node: Node, document: TextDocument, position?: Position): string | undefined => {
-              return getAttrValueForTag(node, 'animSheet', 'name', document, position);
-            },
-            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-              return getNodeTextContent(node, document, 'sheet');
-            }
-          }),
+          staticValueNodeMap([{tag: 'animSheet', attr: 'name'}], [{tag: 'sheet', type: 'contents'}])),
       AnimationSheetNames,
       'Animation Sheet',
       defaultAnimationSheets
@@ -278,14 +267,7 @@ export class Mappers {
   readonly weaponAnimationMapper = new RefMapper(
       new RefParser((file) => file.weaponAnimations,
           FtlWeaponAnimation,
-          {
-            getNameDef: (node: Node, document: TextDocument, position?: Position): string | undefined => {
-              return getAttrValueForTag(node, 'weaponAnim', 'name', document, position);
-            },
-            getRefName(node: Node, document: TextDocument, position?: Position): string | undefined {
-              return getNodeTextContent(node, document, 'weaponArt');
-            }
-          }),
+          staticValueNodeMap([{tag: 'weaponAnim', attr: 'name'}], [{tag: 'weaponArt', type: 'contents'}])),
       WeaponAnimationNames,
       'Weapon Animation',
       defaultWeaponAnimations,

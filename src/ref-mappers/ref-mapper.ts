@@ -1,12 +1,13 @@
 import {FtlFile, FtlFileValue} from '../models/ftl-file';
-import {IValueData, IValueSet, Node} from 'vscode-html-languageservice';
-import {Location, Position, TextDocument} from 'vscode';
+import {IValueData, IValueSet, Location, Node} from 'vscode-html-languageservice';
 import {addToKey} from '../helpers';
 import {FtlValue} from '../models/ftl-value';
 import {FtlRefParser, RefParser} from './ref-parser';
 import {LookupContext, LookupProvider} from './lookup-provider';
 import {FtlRoot} from '../models/ftl-root';
 import {DataReceiver} from '../providers/ftl-data-provider';
+import {FtlTextDocument} from '../models/ftl-text-document';
+import {Position} from 'vscode-languageserver-textdocument';
 
 export interface RefMapperBase extends LookupProvider, DataReceiver {
 
@@ -88,7 +89,7 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
     if (value) return value.toLocation();
   }
 
-  getRefName(node: Node, document: TextDocument, position: Position) {
+  getRefName(node: Node, document: FtlTextDocument, position: Position) {
     return this.parser.nodeMap.getNameDef(node, document, position)
         ?? this.parser.nodeMap.getRefName(node, document, position);
   }

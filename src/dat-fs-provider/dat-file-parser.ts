@@ -1,8 +1,10 @@
-import {FileType, Uri, workspace} from 'vscode';
 import {File} from './file';
 import {FtlDatFile} from './ftl-dat-file';
 import {Directory} from './directory';
+import {URI} from 'vscode-uri';
+import {FileType} from 'vscode-html-languageservice';
 
+export type FileReader = (uri: URI) => Thenable<Uint8Array>;
 export class DatFileParser {
   /** Bitmask flag for "deflate" compression. */
   private static PKGF_DEFLATED = 1 << 24;
@@ -19,13 +21,13 @@ export class DatFileParser {
   private offset = 0;
   private readonly datFile: FtlDatFile;
 
-  constructor(workspaceFolder: Uri) {
+  constructor(workspaceFolder: URI, private fileReader: FileReader) {
     this.datFile = new FtlDatFile(workspaceFolder);
   }
 
 
   public async parse(): Promise<FtlDatFile> {
-    const uint8Array = await workspace.fs.readFile(this.datFile.uri.with({scheme: 'file'}));
+    const uint8Array = await this.fileReader(this.datFile.uri.with({scheme: 'file'}));
     this.buffer = Buffer.from(uint8Array);
     const entries = this.readIndex();
     for (const entry of entries) {

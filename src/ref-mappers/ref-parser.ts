@@ -1,16 +1,17 @@
 import {Node} from 'vscode-html-languageservice';
 import {FtlFile, FtlFileValue} from '../models/ftl-file';
-import {Position, TextDocument} from 'vscode';
 import {FtlValue} from '../models/ftl-value';
 import {FtlXmlParser, ParseContext} from '../parsers/ftl-xml-parser';
 import {NodeMap} from './node-map';
+import {FtlTextDocument} from '../models/ftl-text-document';
+import {Position} from 'vscode-languageserver-textdocument';
 
 export interface FtlRefParser extends FtlXmlParser, NodeMap {
   fileDataSelector: (file: FtlFile) => FtlFileValue<FtlValue>;
 }
 
-export type FtlValueConst<T> = { new(name: string, file: FtlFile, node: Node, document: TextDocument): T; }
-    | { new(name: string, file: FtlFile, node: Node, document: TextDocument, isDef: boolean): T; };
+export type FtlValueConst<T> = { new(name: string, file: FtlFile, node: Node, document: FtlTextDocument): T; }
+    | { new(name: string, file: FtlFile, node: Node, document: FtlTextDocument, isDef: boolean): T; };
 
 export class RefParser<T extends FtlValue = FtlValue> implements FtlRefParser {
   constructor(public fileDataSelector: (file: FtlFile) => FtlFileValue<T>,
@@ -40,13 +41,13 @@ export class RefParser<T extends FtlValue = FtlValue> implements FtlRefParser {
     }
   }
 
-  getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
+  getNameDef(node: Node, document: FtlTextDocument, position?: Position): string | undefined {
     return this.nodeMap.getNameDef(node, document, position);
   }
 
-  getRefName(node: Node, document: TextDocument, position: Position): string | undefined;
-  getRefName(node: Node, document: TextDocument): string | string[] | undefined;
-  getRefName(node: Node, document: TextDocument, position?: Position): string | string[] | undefined {
+  getRefName(node: Node, document: FtlTextDocument, position: Position): string | undefined;
+  getRefName(node: Node, document: FtlTextDocument): string | string[] | undefined;
+  getRefName(node: Node, document: FtlTextDocument, position?: Position): string | string[] | undefined {
     if (position) {
       return this.nodeMap.getRefName(node, document, position);
     }

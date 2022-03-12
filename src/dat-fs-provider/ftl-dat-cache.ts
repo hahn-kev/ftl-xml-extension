@@ -1,23 +1,27 @@
-import {FileSystemError, Uri} from 'vscode';
+import {URI} from 'vscode-uri';
 import {FtlDatFile} from './ftl-dat-file';
-import {DatFileParser} from './dat-file-parser';
+import {DatFileParser, FileReader} from './dat-file-parser';
 
 export class FtlDatCache {
   cache = new Map<string, Promise<FtlDatFile>>();
 
-  async tryAdd(datFileUri: Uri) {
+
+  constructor(private fileReader: FileReader) {
+  }
+
+  async tryAdd(datFileUri: URI) {
     if (this.cache.has(datFileUri.toString())) {
       return;
     }
-    this.cache.set(datFileUri.toString(), new DatFileParser(datFileUri).parse());
+    this.cache.set(datFileUri.toString(), new DatFileParser(datFileUri, this.fileReader).parse());
   }
 
-  async getDatFile(file: Uri): Promise<FtlDatFile> {
+  async getDatFile(file: URI): Promise<FtlDatFile> {
     const datFileUri = FtlDatFile.getDatUri(file);
-    if (!datFileUri) throw FileSystemError.FileNotFound(file);
+    if (!datFileUri) throw new Error(file.toString());
     let ftlDatFile = this.cache.get(datFileUri.toString());
     if (!ftlDatFile) {
-      ftlDatFile = new DatFileParser(datFileUri).parse();
+      ftlDatFile = new DatFileParser(datFileUri, this.fileReader).parse();
       this.cache.set(datFileUri.toString(), ftlDatFile);
     }
     return await ftlDatFile;

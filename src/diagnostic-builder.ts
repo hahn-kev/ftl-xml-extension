@@ -1,9 +1,12 @@
-import {Diagnostic, DiagnosticSeverity, Range, TextDocument} from 'vscode';
-import {Node} from 'vscode-html-languageservice';
+import {Diagnostic, Node} from 'vscode-html-languageservice';
 import {toRange} from './helpers';
 import {BlueprintListTypeAny} from './data/ftl-data';
 import {FtlAnimation} from './models/ftl-animation';
 import {FtlAnimationSheet} from './models/ftl-animation-sheet';
+import {Range} from 'vscode-languageserver-textdocument';
+import {FtlTextDocument} from './models/ftl-text-document';
+import {FtlDiagnostic, FtlDiagnosticSeverity} from './models/ftl-diagnostic';
+import {DiagnosticSeverity} from 'vscode-languageserver-types';
 
 export enum FtlErrorCode {
   listTypeMismatch = 'ftl-listTypeMismatch',
@@ -23,10 +26,12 @@ export enum FtlErrorCode {
 }
 
 export class DiagnosticBuilder {
-  private static diag(range: Range, message: string, severity: DiagnosticSeverity, code: FtlErrorCode) {
-    const diagnostic = new Diagnostic(range, message, severity);
-    diagnostic.code = code;
-    return diagnostic;
+  private static diag(
+      range: Range,
+      message: string,
+      severity: FtlDiagnosticSeverity,
+      code: FtlErrorCode): FtlDiagnostic {
+    return Diagnostic.create(range, message, severity as DiagnosticSeverity, code);
   }
 
   static listTypeMisMatch(
@@ -75,7 +80,7 @@ export class DiagnosticBuilder {
         FtlErrorCode.invalidRefName);
   }
 
-  static childTagNotAllowed(parent: Node, child: Node, document: TextDocument) {
+  static childTagNotAllowed(parent: Node, child: Node, document: FtlTextDocument) {
     return this.diag(
         toRange(child.start, child.startTagEnd ?? child.end, document),
         `Tag: ${child.tag} is not allowed in a ${parent.tag}`,
@@ -84,7 +89,7 @@ export class DiagnosticBuilder {
     );
   }
 
-  static missingRequiredChild(node: Node, requiredName: string, document: TextDocument) {
+  static missingRequiredChild(node: Node, requiredName: string, document: FtlTextDocument) {
     return this.diag(toRange(node.start, node.startTagEnd ?? node.end, document),
         `Tag: ${node.tag} is missing the required child: ${requiredName}`,
         DiagnosticSeverity.Warning, FtlErrorCode.missingRequiredChild

@@ -1,4 +1,4 @@
-import {FileStat, FileType} from 'vscode';
+import {FileStat, FileType} from 'vscode-html-languageservice';
 import {File} from './file';
 
 export class Directory implements FileStat {

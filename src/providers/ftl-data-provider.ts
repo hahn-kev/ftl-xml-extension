@@ -6,26 +6,26 @@ import {
   newHTMLDataProvider
 } from 'vscode-html-languageservice';
 import {FtlData} from '../data/ftl-data';
-import {Event} from 'vscode';
 import {FtlRoot} from '../models/ftl-root';
 
 export interface DataReceiver {
   updateData(root: FtlRoot): void;
 }
 
-export class FtlDataProvider implements IHTMLDataProvider {
-  constructor(onParsed: Event<FtlRoot>, private receivers: DataReceiver[]) {
-    onParsed((e) => {
-      console.time('update data');
-      this.updateFtlData(e);
-      console.timeEnd('update data');
-    });
+export interface IFtlDataProvider {
+  updateFtlData(root: FtlRoot): void;
+}
+
+export class FtlDataProvider implements IHTMLDataProvider, IFtlDataProvider {
+  constructor(private receivers: DataReceiver[]) {
   }
 
-  updateFtlData(root: FtlRoot) {
+  public updateFtlData(root: FtlRoot) {
+    console.time('update data');
     for (const receiver of this.receivers) {
       receiver.updateData(root);
     }
+    console.timeEnd('update data');
   }
 
   htmlDataProvider = newHTMLDataProvider('ftl-data', FtlData);

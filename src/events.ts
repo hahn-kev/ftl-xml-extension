@@ -5,13 +5,8 @@ import {NodeMap} from './ref-mappers/node-map';
 
 class EventsMap implements NodeMap {
   getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
-    if ((node.tag != 'eventList' && node.tag != 'event')
-        || node.parent?.tag == 'sectorDescription'
-        || node.parent?.tag == 'loadEventList') {
-      return undefined;
-    }
-
-    if (hasAttr(node, 'name', document, position)) {
+    if (node.parent?.tag == 'sectorDescription' || node.parent?.tag == 'loadEventList') return;
+    if ((node.tag == 'eventList' || node.tag == 'event') && hasAttr(node, 'name', document, position)) {
       return normalizeAttributeName(node.attributes.name);
     }
   }

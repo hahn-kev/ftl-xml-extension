@@ -15,13 +15,14 @@ import {
   LanguageService,
   Node
 } from 'vscode-html-languageservice';
-import {convertDocumentation, convertRange, isInAttrValue, toRange, toTextDocumentHtml} from '../helpers';
+import {isInAttrValue, shouldCompleteForNodeContents, toRange} from '../helpers';
 import {DocumentCache} from '../document-cache';
 import {BlueprintMapper} from '../blueprints/blueprint-mapper';
 import {FtlData} from '../data/ftl-data';
 import {ImgPathNames, ShipNames, SoundWavePaths} from '../data/autocomplete-value-sets';
 import {Sounds} from '../sounds';
 import {XmlTag} from '../data/xml-data/helpers';
+import {VscodeConverter} from '../vscode-converter';
 
 export class FtlCompletionProvider implements CompletionItemProvider {
   private completeContentMap: Map<string, IValueSet>;
@@ -43,13 +44,18 @@ export class FtlCompletionProvider implements CompletionItemProvider {
   public async provideCompletionItems(
       document: TextDocument, position: Position, token: CancellationToken):
       Promise<CompletionItem[]> {
-    const serviceDocument = toTextDocumentHtml(document);
+    const serviceDocument = VscodeConverter.toTextDocumentHtml(document);
     const htmlDocument = this.documentCache.getHtmlDocument(serviceDocument);
 
     const items = this.tryCompleteCustom(document, htmlDocument, position);
     if (items) return items;
 
-    const completionItems = this.languageService.doComplete(serviceDocument, position, htmlDocument, {attributeDefaultValue: 'doublequotes'});
+    const completionItems = this.languageService.doComplete(
+        serviceDocument,
+        position,
+        htmlDocument,
+        {attributeDefaultValue: 'doublequotes'}
+    );
     return this.convertCompletionItems(completionItems.items);
   }
 
@@ -57,12 +63,12 @@ export class FtlCompletionProvider implements CompletionItemProvider {
     return items.filter((value) => value.label !== 'data-').map((item) => {
       const {documentation, textEdit, additionalTextEdits, ...rest} = item;
       const result: CompletionItem = {...rest};
-      result.documentation = convertDocumentation(documentation);
+      result.documentation = VscodeConverter.toDocumentation(documentation);
 
       if (textEdit) {
         result.insertText = new SnippetString(textEdit.newText);
         if ('range' in textEdit) {
-          result.range = convertRange(textEdit.range);
+          result.range = VscodeConverter.toVscodeRange(textEdit.range);
         }
       }
       return result;
@@ -80,8 +86,8 @@ export class FtlCompletionProvider implements CompletionItemProvider {
 
     if (node.parent
         && this.blueprintMapper.parser.isListChild(node)
-        && FtlCompletionProvider.shouldCompleteForNodeContents(node, offset)) {
-      const range = toRange(node.startTagEnd, node.endTagStart, document);
+        && shouldCompleteForNodeContents(node, offset)) {
+      const range = VscodeConverter.toVscodeRange(toRange(node.startTagEnd, node.endTagStart, document));
       const blueprintListNode = node.parent;
       const listName = this.blueprintMapper.parser.getNameDef(blueprintListNode, document);
       if (!listName) return;
@@ -101,8 +107,8 @@ export class FtlCompletionProvider implements CompletionItemProvider {
   }
 
   private tryCompleteNodeContents(node: Node, document: TextDocument, offset: number): CompletionItem[] | undefined {
-    if (!node.tag || !FtlCompletionProvider.shouldCompleteForNodeContents(node, offset)) return;
-    const range = toRange(node.startTagEnd, node.endTagStart, document);
+    if (!node.tag || !shouldCompleteForNodeContents(node, offset)) return;
+    const range = VscodeConverter.toVscodeRange(toRange(node.startTagEnd, node.endTagStart, document));
 
     if (Sounds.isWaveNode(node, document)) {
       return this.valueSetToCompletionItems(SoundWavePaths, range);
@@ -116,23 +122,13 @@ export class FtlCompletionProvider implements CompletionItemProvider {
 
   private valueSetToCompletionItems(valueSet: IValueSet, range: Range): CompletionItem[] {
     return valueSet.values.map((value) => {
-      const strDes: string | undefined = typeof value.description === 'string' ? value.description : value.description?.value;
+      const strDes = typeof value.description === 'string' ? value.description : value.description?.value;
       return {
         label: {label: value.name, description: strDes},
         kind: CompletionItemKind.Unit,
-        documentation: convertDocumentation(value.description),
+        documentation: VscodeConverter.toDocumentation(value.description),
         range: range
       };
     });
-  }
-
-  public static shouldCompleteForNodeContents(
-      node: Node,
-      offset: number): node is Node & { startTagEnd: number, endTagStart: number } {
-    if (typeof node.startTagEnd === 'undefined' || typeof node.endTagStart === 'undefined') return false;
-    const startTagEnd = node.startTagEnd;
-    const endTagStart = node.endTagStart;
-
-    return startTagEnd <= offset && endTagStart >= offset;
   }
 }

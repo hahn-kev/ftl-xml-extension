@@ -1,4 +1,4 @@
-import {Range} from 'vscode';
+import {Range} from 'vscode-languageserver-textdocument';
 
 export class FtlColor {
   constructor(range: Range, r?: number, g?: number, b?: number, a?: number) {

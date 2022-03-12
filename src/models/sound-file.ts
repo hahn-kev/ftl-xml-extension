@@ -1,8 +1,8 @@
-import {Uri} from 'vscode';
+import {URI} from 'vscode-uri';
 import {FtlResourceFile} from './ftl-resource-file';
 
 export class SoundFile extends FtlResourceFile {
-  constructor(uri: Uri) {
+  constructor(uri: URI) {
     const pathArray = uri.path.split('/');
     const audioIndex = pathArray.lastIndexOf('audio');
     const typeIndex = audioIndex + 1;

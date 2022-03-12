@@ -1,6 +1,6 @@
 import {FtlParser} from './ftl-parser';
 import {FltDocumentValidator} from './flt-document-validator';
-import {FileType, RelativePattern, Uri, workspace, WorkspaceFolder} from 'vscode';
+import {FileType, ProgressLocation, RelativePattern, Uri, window, workspace, WorkspaceFolder} from 'vscode';
 import {FtlDatFs} from './dat-fs-provider/ftl-dat-fs';
 import {FtlDatCache} from './dat-fs-provider/ftl-dat-cache';
 
@@ -14,12 +14,20 @@ export class WorkspaceParser {
               private ftlDatCache: FtlDatCache) {
   }
 
-  async parseWorkspace(subFolder?: string) {
-    const files = await this.findFiles(subFolder);
-    const root = await this.xmlParser.parseFiles(files, true);
+  public async parseWorkspace(subFolder?: string) {
+    const root = await this.execInParsing(async () => {
+      const files = await this.findFiles(subFolder);
+      return await this.xmlParser.parseFiles(files, true);
+    });
     this.validator.validateFtlRoot(root);
-
     return this.xmlParser.root;
+  }
+
+  private async execInParsing<T>(exec: () => Promise<T>): Promise<T> {
+    return window.withProgress({
+      title: 'Parsing FTL files',
+      location: ProgressLocation.Window
+    }, exec);
   }
 
   public static readonly findPattern = '**/*.{xml,xml.append,ogg,wav,png}';
@@ -58,19 +66,22 @@ export class WorkspaceParser {
     return files;
   }
 
-  async workspaceFoldersAdded(folders: readonly WorkspaceFolder[]) {
-    for (const folder of folders) {
-      let files: Uri[];
-      if (folder.uri.scheme === FtlDatFs.scheme) {
-        await this.ftlDatCache.tryAdd(folder.uri);
-        files = await this.listFiles(folder.uri);
-      } else {
-        const pattern = new RelativePattern(folder, WorkspaceParser.findPattern);
-        files = await workspace.findFiles(pattern);
-      }
+  public async workspaceFoldersAdded(folders: readonly WorkspaceFolder[]) {
+    await this.execInParsing(async () => {
+      for (const folder of folders) {
+        let files: Uri[];
+        if (folder.uri.scheme === FtlDatFs.scheme) {
+          await this.ftlDatCache.tryAdd(folder.uri);
+          files = await this.listFiles(folder.uri);
+        } else {
+          const pattern = new RelativePattern(folder, WorkspaceParser.findPattern);
+          files = await workspace.findFiles(pattern);
+        }
 
-      await this.xmlParser.parseFiles(files, false);
-    }
+        await this.xmlParser.parseFiles(files, false);
+      }
+    });
+
     this.validator.validateFtlRoot(this.xmlParser.root);
   }
 }

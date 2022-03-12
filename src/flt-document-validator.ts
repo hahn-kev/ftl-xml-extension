@@ -1,9 +1,11 @@
 import {DocumentCache} from './document-cache';
-import {Diagnostic, DiagnosticCollection, TextDocument} from 'vscode';
+import {DiagnosticCollection, TextDocument, Uri} from 'vscode';
 import {FtlFile} from './models/ftl-file';
 import {Validator} from './validators/validator';
 import {FtlRoot} from './models/ftl-root';
 import {DiagnosticBuilder} from './diagnostic-builder';
+import {FtlDiagnostic} from './models/ftl-diagnostic';
+import {VscodeConverter} from './vscode-converter';
 
 export class FltDocumentValidator {
   constructor(private documentCache: DocumentCache,
@@ -24,7 +26,7 @@ export class FltDocumentValidator {
   }
 
   public validateFile(file: FtlFile) {
-    const diagnostics: Diagnostic[] = [];
+    const diagnostics: FtlDiagnostic[] = [];
     if (file.isReferenced) {
       diagnostics.push(...file.diagnostics);
       for (const validator of this.validators) {
@@ -34,7 +36,10 @@ export class FltDocumentValidator {
       diagnostics.push(DiagnosticBuilder.fileNotReferenced(file.firstLineRange));
     }
 
-    this.diagnosticCollection.set(file.uri, diagnostics);
+    this.diagnosticCollection.set(
+        Uri.parse(file.uri),
+        diagnostics.map((diag) => VscodeConverter.toVscodeDiagnostic(diag))
+    );
   }
 
   public validateDocument(document: TextDocument, root: FtlRoot) {

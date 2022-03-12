@@ -1,11 +1,11 @@
-import {Uri} from 'vscode';
+import {URI} from 'vscode-uri';
 
 export class FtlResourceFile {
-  constructor(uri: Uri, modPath: string) {
+  constructor(uri: URI, modPath: string) {
     this.uri = uri;
     this.modPath = modPath;
   }
 
-  public uri: Uri;
+  public uri: URI;
   public modPath: string;
 }

@@ -3,14 +3,13 @@ import {
   Definition,
   DefinitionLink,
   DefinitionProvider,
-  Location,
   Position,
   ProviderResult,
-  Range,
   TextDocument
 } from 'vscode';
 import {DocumentCache} from '../document-cache';
 import {LookupProvider} from '../ref-mappers/lookup-provider';
+import {VscodeConverter} from '../vscode-converter';
 
 export class FtlDefinitionProvider implements DefinitionProvider {
   constructor(
@@ -28,7 +27,7 @@ export class FtlDefinitionProvider implements DefinitionProvider {
     const node = htmlDocument.findNodeBefore(offset);
     for (const lookupDefProvider of this.lookupDefProviders) {
       const def = lookupDefProvider.lookupDef({node, document, position});
-      if (def) return def;
+      if (def) return VscodeConverter.toVscodeLocation(def);
     }
   }
 }
