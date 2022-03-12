@@ -8,5 +8,5 @@ export interface ParseContext {
   file: FtlFile;
 }
 export interface FtlXmlParser {
-  parseNode(context: ParseContext): void;
+  parseNode(context: ParseContext): void | FtlXmlParser;
 }

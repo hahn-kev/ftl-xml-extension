@@ -1,19 +1,21 @@
 import {Node} from 'vscode-html-languageservice';
-import {Position, TextDocument} from 'vscode';
 import {getAttrValueForTag, getNodeTextContent, hasAttr, normalizeAttributeName} from './helpers';
 import {NodeMap} from './ref-mappers/node-map';
+import {Position} from 'vscode-languageserver-textdocument';
+import {FtlTextDocument} from './models/ftl-text-document';
+import {ParseContext} from './parsers/ftl-xml-parser';
 
 class EventsMap implements NodeMap {
-  getNameDef(node: Node, document: TextDocument, position?: Position): string | undefined {
+  getNameDef(node: Node, document: FtlTextDocument, position?: Position): string | undefined {
     if (node.parent?.tag == 'sectorDescription' || node.parent?.tag == 'loadEventList') return;
     if ((node.tag == 'eventList' || node.tag == 'event') && hasAttr(node, 'name', document, position)) {
       return normalizeAttributeName(node.attributes.name);
     }
   }
 
-  getRefName(node: Node, document: TextDocument, position: Position): string | undefined;
-  getRefName(node: Node, document: TextDocument): string | string[] | undefined;
-  getRefName(node: Node, document: TextDocument, position?: Position): string | string[] | undefined {
+  getRefName(node: Node, document: FtlTextDocument, position: Position): string | undefined;
+  getRefName(node: Node, document: FtlTextDocument): string | string[] | undefined;
+  getRefName(node: Node, document: FtlTextDocument, position?: Position): string | string[] | undefined {
     if (node.tag == 'event' && hasAttr(node, 'load', document, position)) {
       return normalizeAttributeName(node.attributes.load);
     }
@@ -75,6 +77,10 @@ class EventsMap implements NodeMap {
         ?? getAttrValueForTag(node, 'escape', 'load', document, position)
         ?? getAttrValueForTag(node, 'gotaway', 'load', document, position)
         ?? getAttrValueForTag(node, 'quest', 'event', document, position);
+  }
+
+  isRecursionUnsafeEventRef(context: ParseContext) {
+    return context.node.tag == 'event' && hasAttr(context.node, 'load', context.document);
   }
 }
 

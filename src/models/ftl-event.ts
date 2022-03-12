@@ -18,5 +18,8 @@ export class FtlEvent extends FtlValue {
     }
   }
 
-  loadedEvents?: string[];
+  /**
+   * references that risk crashing the game with a recursive loop
+   */
+  unsafeEventRefs?: Set<string>;
 }

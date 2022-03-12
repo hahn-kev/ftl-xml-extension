@@ -19,26 +19,34 @@ export class RefParser<T extends FtlValue = FtlValue> implements FtlRefParser {
               public readonly nodeMap: NodeMap) {
   }
 
-  parseNode({node, file, document}: ParseContext): void {
-    const nameDef = this.nodeMap.getNameDef(node, document);
+  parseNode(context: ParseContext): void {
+    const nameDef = this.getNameDef(context.node, context.document);
     if (nameDef) {
-      const fileValue = this.fileDataSelector(file);
-      // eslint-disable-next-line new-cap
-      const ftlEvent = new this.newFromNode(nameDef, file, node, document, true);
-      fileValue.defs.push(ftlEvent);
-      fileValue.addRef(nameDef, ftlEvent);
-    } else {
-      let nameRefs = this.nodeMap.getRefName(node, document);
-
-      if (nameRefs) {
-        const fileValue = this.fileDataSelector(file);
-        if (typeof nameRefs === 'string') nameRefs = [nameRefs];
-        for (const nameRef of nameRefs) {
-          // eslint-disable-next-line new-cap
-          fileValue.addRef(nameRef, new this.newFromNode(nameRef, file, node, document, false));
-        }
-      }
+      this.handleDefinition(context, nameDef);
+      return;
     }
+    const nameRefs = this.getRefName(context.node, context.document);
+    if (nameRefs) {
+      this.handleReference(context, nameRefs);
+    }
+  }
+
+  protected handleReference(context: ParseContext, nameRefs: string | string[]) {
+    const fileValue = this.fileDataSelector(context.file);
+    if (typeof nameRefs === 'string') nameRefs = [nameRefs];
+    for (const nameRef of nameRefs) {
+      // eslint-disable-next-line new-cap
+      fileValue.addRef(nameRef, new this.newFromNode(nameRef, context.file, context.node, context.document, false));
+    }
+  }
+
+  protected handleDefinition(context: ParseContext, name: string): T {
+    const fileValue = this.fileDataSelector(context.file);
+    // eslint-disable-next-line new-cap
+    const ftlValue = new this.newFromNode(name, context.file, context.node, context.document, true);
+    fileValue.defs.push(ftlValue);
+    fileValue.addRef(name, ftlValue);
+    return ftlValue;
   }
 
   getNameDef(node: Node, document: FtlTextDocument, position?: Position): string | undefined {

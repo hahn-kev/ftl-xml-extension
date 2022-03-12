@@ -56,10 +56,11 @@ import {FtlVariable} from '../models/ftl-variable';
 import {FtlReq} from '../models/ftl-req';
 import {FtlTextDocument} from '../models/ftl-text-document';
 import {Position} from 'vscode-languageserver-textdocument';
+import {EventRefParser} from './event-ref-parser';
 
 export class Mappers {
   readonly eventsMapper = new RefMapper(
-      new RefParser((file) => file.event, FtlEvent, events),
+      new EventRefParser((file) => file.event, FtlEvent, events),
       EventNamesValueSet,
       'Event',
       defaultEvents

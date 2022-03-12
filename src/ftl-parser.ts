@@ -106,7 +106,7 @@ export class FtlParser {
     this.root.xmlFiles.set(ftlFile.uri.toString(), ftlFile);
   }
 
-  private static isHyperspaceFile(file: URI|string) {
+  private static isHyperspaceFile(file: URI | string) {
     if (URI.isUri(file)) file = file.path;
     return file.endsWith('hyperspace.xml') || file.endsWith('hyperspace.xml.append');
   }
@@ -127,15 +127,25 @@ export class FtlParser {
     return ftlFile;
   }
 
-  private parseNodes(nodes: Node[], ftlFile: FtlFile, document: FtlTextDocument) {
+  private parseNodes(
+      nodes: Node[],
+      ftlFile: FtlFile,
+      document: FtlTextDocument,
+      childParsers?: FtlXmlParser[]) {
     for (const node of nodes) {
       const context: ParseContext = {node, file: ftlFile, document};
+      const newChildParsers: FtlXmlParser[] = childParsers ? [...childParsers] : [];
       for (const parser of this.parsers) {
+        const childParser = parser.parseNode(context);
+        if (childParser) newChildParsers.push(childParser);
+      }
+
+      // note, for now child parsers can't add more child parsers
+      for (const parser of newChildParsers) {
         parser.parseNode(context);
       }
       // this.visitNode(node, document);
-
-      this.parseNodes(node.children, ftlFile, document);
+      this.parseNodes(node.children, ftlFile, document, newChildParsers);
     }
   }
 
