@@ -71,14 +71,12 @@ export class Mappers {
       new RefParser(
           (file) => file.ship,
           FtlShip,
-          new NodeMapImp(
-              ({node, document, position}) => {
-                return getAttrValueForTag(node, 'ship', 'name', document, position);
-              },
-              ({node, document, position}) => {
-                return getNodeTextContent(node, document, 'ship', 'shipOrder')
-                    ?? getAttrValueForTag(node, 'ship', 'load', document, position);
-              })
+          staticValueNodeMap([{tag: 'ship', attr: 'name'}],
+              [
+                {tag: 'ship', attr: 'load'},
+                {tag: 'ship', parentTag: 'shipOrder', type: 'contents'}
+              ]
+          )
       ),
       ShipNames,
       'Ship',
@@ -88,19 +86,13 @@ export class Mappers {
       new RefParser(
           (file) => file.weapon,
           FtlWeapon,
-          new NodeMapImp(
-              ({node, document, position}) => {
-                return getAttrValueForTag(node, 'weaponBlueprint', 'name', document, position);
-              },
-              ({node, document, position}) => {
-                const name = getAttrValueForTag(node, 'weapon', 'name', document, position)
-                    ?? getAttrValueForTag(node, 'weaponList', 'load', document, position);
-                if (name) return name;
-                if (node.tag == 'weaponBlueprint' && node.parent?.tag == 'droneBlueprint' && !node.attributes) {
-                  return getNodeTextContent(node, document);
-                }
-              }
-          ),
+          staticValueNodeMap([{tag: 'weaponBlueprint', attr: 'name'}],
+              [
+                {tag: 'weapon', attr: 'name'},
+                {tag: 'weaponList', attr: 'load'},
+                {tag: 'weaponBlueprint', parentTag: 'droneBlueprint', type: 'contents'}
+              ]
+          )
       ),
       WeaponNames,
       'Weapon',
@@ -278,25 +270,12 @@ export class Mappers {
   readonly imageListMapper = new RefMapper(
       new RefParser((file) => file.imageLists,
           FtlImageList,
-          new NodeMapImp(
-              ({node, document, position}) => {
-                return getAttrValueForTag(node, 'imageList', 'name', document, position);
-              },
-              ({node, document, position}) => {
-                if (node.tag === 'img' && node.parent?.tag === 'event') {
-                  const refs: string[] = [];
-                  if (hasAttr(node, 'back', document, position)) {
-                    refs.push(normalizeAttributeName(node.attributes.back));
-                  }
-                  if (hasAttr(node, 'planet', document, position)) {
-                    refs.push(normalizeAttributeName(node.attributes.planet));
-                  }
-                  if (position) return refs[0];
-                  return refs;
-                }
-                return getNodeTextContent(node, document, 'changeBackground')
-                    ?? getAttrValueForTag(node, 'win', 'creditsBackground', document, position);
-              }),
+          staticValueNodeMap([{tag: 'imageList', attr: 'name'}], [
+            {tag: 'img', parentTag: 'event', attr: 'back'},
+            {tag: 'img', parentTag: 'event', attr: 'planet'},
+            {tag: 'changeBackground', type: 'contents'},
+            {tag: 'win', attr: 'creditsBackground'}
+          ]),
       ),
       ImageListNames,
       'Image List',

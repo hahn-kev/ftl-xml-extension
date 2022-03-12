@@ -23,9 +23,12 @@ export interface NodeMapContext {
   position?: Position;
 }
 
+type getRefName = ((context: { node: Node, document: FtlTextDocument }) => string | string[] | undefined)
+    & ((context: { node: Node, document: FtlTextDocument, position: Position }) => string | undefined)
+
 export class NodeMapImp implements NodeMap {
   constructor(private nameDef: (context: NodeMapContext) => string | undefined,
-              private refName: (context: NodeMapContext) => string | string[] | undefined) {
+              private refName: getRefName) {
   }
 
   public getNameDef(node: Node, document: FtlTextDocument, position?: Position): string | undefined {
@@ -35,16 +38,18 @@ export class NodeMapImp implements NodeMap {
   public getRefName(node: Node, document: FtlTextDocument, position: Position): string | undefined;
   public getRefName(node: Node, document: FtlTextDocument): string | string[] | undefined;
   public getRefName(node: Node, document: FtlTextDocument, position?: Position): string | undefined | string[] {
-    return this.refName({node, document, position});
+    if (position) return this.refName({node, document, position});
+    return this.refName({node, document});
   }
 }
 
-type staticValueMapping = { tag: string, attr: string } | {tag: string, parentTag?: string, type: 'contents'};
+type staticValueMapping = { tag: string, attr: string, parentTag?: string} | {tag: string, parentTag?: string, type: 'contents'};
 
 export function staticValueNodeMap(defs: staticValueMapping[], refs: staticValueMapping[]): NodeMap {
   function getResult(context: NodeMapContext, def: staticValueMapping): string|undefined {
+    if (def.parentTag && context.node.parent?.tag !== def.parentTag) return undefined;
     if ('type' in def && def.type === 'contents') {
-      return getNodeTextContent(context.node, context.document, def.tag, def.parentTag);
+      return getNodeTextContent(context.node, context.document, def.tag);
     } else if ('attr' in def) {
       return getAttrValueForTag(context.node, def.tag, def.attr, context.document, context.position);
     }
@@ -56,19 +61,19 @@ export function staticValueNodeMap(defs: staticValueMapping[], refs: staticValue
           if (result) return result;
         }
       },
-      (context) => {
+      ((context) => {
         const results: string[] = [];
         for (const ref of refs) {
           const result = getResult(context, ref);
           if (!result) continue;
-          if (context.position) {
+          if ('position' in context) {
             return result;
           } else {
             results.push(result);
           }
         }
-        return results;
-      });
+        return 'position' in context ? undefined : results;
+      }) as getRefName);
 }
 
 type referenceDeclaration = { type: 'attr', tag: string, attr: string } | { type: 'contents', tag: string };
