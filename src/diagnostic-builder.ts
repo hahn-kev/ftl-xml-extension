@@ -6,7 +6,7 @@ import {FtlAnimationSheet} from './models/ftl-animation-sheet';
 import {Range} from 'vscode-languageserver-textdocument';
 import {FtlTextDocument} from './models/ftl-text-document';
 import {FtlDiagnostic, FtlDiagnosticSeverity} from './models/ftl-diagnostic';
-import {DiagnosticSeverity} from 'vscode-languageserver-types';
+import type {DiagnosticSeverity} from 'vscode-languageserver-types';
 
 export enum FtlErrorCode {
   listTypeMismatch = 'ftl-listTypeMismatch',
@@ -40,14 +40,14 @@ export class DiagnosticBuilder {
       listTypeName: string,
       range: Range) {
     const message = `Blueprint '${blueprintName}' is an '${type}' does not match type the list '${listTypeName}'`;
-    return this.diag(range, message, DiagnosticSeverity.Warning, FtlErrorCode.listTypeMismatch);
+    return this.diag(range, message, FtlDiagnosticSeverity.Warning, FtlErrorCode.listTypeMismatch);
   }
 
   static listHasRefLoop(range: Range, listName: string, namesInLoop: string[]) {
     return this.diag(
         range,
         `Blueprint List: ${listName} is self referencing, path: ${namesInLoop.join(' -> ')}`,
-        DiagnosticSeverity.Error,
+        FtlDiagnosticSeverity.Error,
         FtlErrorCode.refLoop
     );
   }
@@ -62,21 +62,21 @@ export class DiagnosticBuilder {
     }
     return this.diag(range,
         `${refType} can't reference a ${defType}, which is the type of blueprint: '${refName}'`,
-        DiagnosticSeverity.Warning,
+        FtlDiagnosticSeverity.Warning,
         FtlErrorCode.refTypeInvalid);
   }
 
   static refUnused(type: 'Ship' | 'Event', name: string, range: Range) {
     return this.diag(range,
         `${type}: ${name} is not used anywhere, is this a bug?`,
-        DiagnosticSeverity.Information,
+        FtlDiagnosticSeverity.Information,
         FtlErrorCode.unusedRef);
   }
 
   static invalidRefName(name: string, range: Range, typeName: string) {
     return this.diag(range,
         `Invalid ${typeName} name: '${name}'`,
-        DiagnosticSeverity.Warning,
+        FtlDiagnosticSeverity.Warning,
         FtlErrorCode.invalidRefName);
   }
 
@@ -84,7 +84,7 @@ export class DiagnosticBuilder {
     return this.diag(
         toRange(child.start, child.startTagEnd ?? child.end, document),
         `Tag: ${child.tag} is not allowed in a ${parent.tag}`,
-        DiagnosticSeverity.Warning,
+        FtlDiagnosticSeverity.Warning,
         FtlErrorCode.childNotAllowed
     );
   }
@@ -92,14 +92,14 @@ export class DiagnosticBuilder {
   static missingRequiredChild(node: Node, requiredName: string, document: FtlTextDocument) {
     return this.diag(toRange(node.start, node.startTagEnd ?? node.end, document),
         `Tag: ${node.tag} is missing the required child: ${requiredName}`,
-        DiagnosticSeverity.Warning, FtlErrorCode.missingRequiredChild
+        FtlDiagnosticSeverity.Warning, FtlErrorCode.missingRequiredChild
     );
   }
 
   static tagNotClosed(range: Range, tagName: string) {
     return this.diag(range,
         `Tag '${tagName}' is not properly closed`,
-        DiagnosticSeverity.Error,
+        FtlDiagnosticSeverity.Error,
         FtlErrorCode.tagNotClosed);
   }
 
@@ -107,13 +107,13 @@ export class DiagnosticBuilder {
     return this.diag(
         animation.range,
         `animation is missing sheet reference`,
-        DiagnosticSeverity.Warning, FtlErrorCode.sheetRefMissing);
+        FtlDiagnosticSeverity.Warning, FtlErrorCode.sheetRefMissing);
   }
 
   static sheetMissingDimensions(sheet: FtlAnimationSheet) {
     return this.diag(sheet.range,
         `sheet is missing one of 'w, h, fw, fh' attributes`,
-        DiagnosticSeverity.Error,
+        FtlDiagnosticSeverity.Error,
         FtlErrorCode.sheetMissingDimensions);
   }
 
@@ -125,14 +125,14 @@ export class DiagnosticBuilder {
         : `${sheet.height}/${sheet.frameHeight} = ${(sheet.height ?? 0.0) / (sheet.frameHeight ?? 1.0)}`;
     return this.diag(sheet.range,
         `sheet ${direction} does not divide into a whole number of frames, ${detail}`,
-        DiagnosticSeverity.Warning, FtlErrorCode.sheetDimensionNotWholeNumber);
+        FtlDiagnosticSeverity.Warning, FtlErrorCode.sheetDimensionNotWholeNumber);
   }
 
   static animationDescriptionInvalid(animation: FtlAnimation) {
     return this.diag(
         animation.descRange ?? animation.range,
         `animation desc is missing one of 'length, x, y' attributes`,
-        DiagnosticSeverity.Error,
+        FtlDiagnosticSeverity.Error,
         FtlErrorCode.animationInvalidDescription
     );
   }
@@ -141,14 +141,23 @@ export class DiagnosticBuilder {
     const offset = animation.x === 0 ? '' : ' with offset of ' + animation.x;
     return this.diag(animation.descRange ?? animation.range,
         `the animation length of ${animation.length}${offset} is too long for sheet '${animation.sheetName}' with a max frames of ${maxFrames}`,
-        DiagnosticSeverity.Warning,
+        FtlDiagnosticSeverity.Warning,
         FtlErrorCode.animationTooLong);
   }
 
   static fileNotReferenced(firstLine: Range) {
     return this.diag(firstLine,
         `this file is not referenced anywhere`,
-        DiagnosticSeverity.Warning,
+        FtlDiagnosticSeverity.Warning,
         FtlErrorCode.fileNotUsed);
+  }
+
+  static eventHasRefLoop(range: Range, eventName: string, namesInLoop: string[]) {
+    return this.diag(
+        range,
+        `Event: ${eventName} is self referencing, path: ${namesInLoop.join(' -> ')}`,
+        FtlDiagnosticSeverity.Error,
+        FtlErrorCode.refLoop
+    );
   }
 }

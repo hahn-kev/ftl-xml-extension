@@ -18,11 +18,14 @@ export class FltDocumentValidator {
   }
 
   private validateFtlFiles(files: FtlFile[]) {
-    console.time('validate ftl files');
-    for (const file of files) {
-      this.validateFile(file);
+    try {
+      console.time('validate ftl files');
+      for (const file of files) {
+        this.validateFile(file);
+      }
+    } finally {
+      console.timeEnd('validate ftl files');
     }
-    console.timeEnd('validate ftl files');
   }
 
   public validateFile(file: FtlFile) {

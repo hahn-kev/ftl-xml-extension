@@ -25,6 +25,16 @@
         <badTag/
     </eventList>
 
+    <event name="event_loop_1">
+        <event load="event_loop_2"/>
+    </event>
+    <event name="event_loop_2">
+        <event load="event_loop_3"/>
+    </event>
+    <event name="event_loop_3">
+        <event load="event_loop_1"/>
+    </event>
+
     <!-- should have ftl-refTypeInvalid because it's type is 'any' -->
     <ship name="ship-1" auto_blueprint="bp-list-1"/>
     <ship name="ship-2" auto_blueprint="ship-blueprint-1"/>

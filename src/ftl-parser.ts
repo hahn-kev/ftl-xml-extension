@@ -46,12 +46,14 @@ export class FtlParser {
     if (this.isParsing) return this._parsingPromise as Thenable<FtlRoot>;
     if (reset) this.root.clear();
 
-    console.time('parse files');
-    this._parsingPromise = this._parseFiles(files).then(() => this.root);
-    await this._parsingPromise;
-    this._parsingPromise = undefined;
-
-    console.timeEnd('parse files');
+    try {
+      console.time('parse files');
+      this._parsingPromise = this._parseFiles(files).then(() => this.root);
+      await this._parsingPromise;
+      this._parsingPromise = undefined;
+    } finally {
+      console.timeEnd('parse files');
+    }
     this.dataUpdated(this.root);
     return this.root;
   }

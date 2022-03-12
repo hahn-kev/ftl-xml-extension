@@ -61,7 +61,7 @@ suite('Ftl Events', () => {
     expect(refs).length(28);
   });
 
-  test('should show child event references', () => {
+  test('should show unsafe child event references', () => {
     const services = testSetup();
     const document = HtmlTextDocument.create('test://test/test.xml',
         'ftl-xml',
@@ -101,5 +101,21 @@ suite('Ftl Events', () => {
     expect(file.event.defs).length(1);
     const eventDef = file.event.defs[0];
     expect(eventDef.unsafeEventRefs).to.have.all.keys('event_ref_1', 'event_ref_2', 'event_ref_3');
+  });
+  test('should not include vent lists as an unsafe child ref', () => {
+    const services = testSetup();
+    const document = HtmlTextDocument.create('test://test/test.xml',
+        'ftl-xml',
+        1,
+        `
+<eventList name="event_def">
+      <event load="event_ref_1"/>
+      <event load="event_ref_2"/>
+</eventList>
+`);
+    const file = services.parser.parseDocument(document);
+    expect(file.event.defs).length(1);
+    const eventDef = file.event.defs[0];
+    expect(eventDef.unsafeEventRefs).to.be.undefined;
   });
 });

@@ -20,6 +20,7 @@ import {AnimationValidator} from './validators/animation-validator';
 import {FileOpener, FtlParser} from './ftl-parser';
 import {FtlDatCache} from './dat-fs-provider/ftl-dat-cache';
 import {FileReader} from './dat-fs-provider/dat-file-parser';
+import {EventLoopValidator} from './validators/event-loop-validator';
 
 export interface FtlServices {
   parser: FtlParser;
@@ -56,7 +57,8 @@ export function setupCore(fileOpener: FileOpener, fileReader: FileReader): FtlSe
     new RefNameValidator(mappers.list, mappers.blueprintMapper),
     new SoundFileNameValidator(),
     new ImgFileNameValidator(),
-    new AnimationValidator(mappers)
+    new AnimationValidator(mappers),
+    new EventLoopValidator(mappers.eventsMapper)
   ];
   const ftlDataProvider = new FtlDataProvider(dataReceivers);
   const ftlParser = new FtlParser(

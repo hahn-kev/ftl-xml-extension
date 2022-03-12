@@ -80,7 +80,9 @@ class EventsMap implements NodeMap {
   }
 
   isRecursionUnsafeEventRef(context: ParseContext) {
-    return context.node.tag == 'event' && hasAttr(context.node, 'load', context.document);
+    return context.node.tag == 'event'
+        && context.node.parent?.tag !== 'eventList'
+        && hasAttr(context.node, 'load', context.document);
   }
 }
 

@@ -2,6 +2,9 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
+## 0.5.4
+- Show error if there's an event loop which would cause FTL to crash
+
 ## 0.5.3
 - Show event text and weapon name in autocomplete
 

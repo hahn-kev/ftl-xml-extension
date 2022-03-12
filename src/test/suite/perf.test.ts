@@ -8,9 +8,12 @@ suite('Performance', () => {
     const {workspaceParser} = setup();
     console.log('begin parsing ' + folderName);
     const startTime = performance.now();
-    console.time('parse ' + folderName);
-    await workspaceParser.parseWorkspace(folderName);
-    console.timeEnd('parse ' + folderName);
+    try {
+      console.time('parse ' + folderName);
+      await workspaceParser.parseWorkspace(folderName);
+    } finally {
+      console.timeEnd('parse ' + folderName);
+    }
     const endTime = performance.now();
     return endTime - startTime;
   }
