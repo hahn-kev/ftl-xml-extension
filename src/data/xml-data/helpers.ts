@@ -10,6 +10,6 @@ export interface XmlTag extends ITagData {
 export type XmlData = Omit<HTMLDataV1, 'tags'> & { tags: XmlTag[] };
 
 
-export function boolAttr(name: string): IAttributeData {
-  return {name: name, valueSet: 'bool'};
+export function boolAttr(name: string, description?: string): IAttributeData {
+  return {name: name, valueSet: 'bool', description};
 }
