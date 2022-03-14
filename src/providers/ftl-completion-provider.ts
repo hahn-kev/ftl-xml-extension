@@ -16,7 +16,7 @@ import {
   LanguageService,
   Node
 } from 'vscode-html-languageservice';
-import {isInAttrValue, shouldCompleteForNodeContents, toRange} from '../helpers';
+import {isInAttrValue, normalizeTagName, shouldCompleteForNodeContents, toRange} from '../helpers';
 import {DocumentCache} from '../document-cache';
 import {BlueprintMapper} from '../blueprints/blueprint-mapper';
 import {FtlData} from '../data/ftl-data';
@@ -116,9 +116,12 @@ export class FtlCompletionProvider implements CompletionItemProvider {
     if (Sounds.isWaveNode(node, document)) {
       return this.valueSetToCompletionItems(SoundWavePaths, range);
     }
-    // todo support mod tags
-    let valueSet = this.completeContentMap.get(node.tag);
-    if (!valueSet && node.parent?.tag) valueSet = this.completeContentMap.get(`${node.parent.tag}>${node.tag}`);
+
+    const tagName = normalizeTagName(node.tag);
+    let valueSet = this.completeContentMap.get(tagName);
+    if (!valueSet && node.parent?.tag) {
+      valueSet = this.completeContentMap.get(`${normalizeTagName(node.parent.tag)}>${tagName}`);
+    }
     if (!valueSet) return;
 
     return this.valueSetToCompletionItems(valueSet, range);

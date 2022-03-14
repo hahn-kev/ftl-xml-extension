@@ -8,7 +8,7 @@ import {
   getNodeTextContent,
   hasAttr,
   nodeTagEq,
-  normalizeAttributeName
+  normalizeAttributeName, normalizeTagName
 } from '../helpers';
 import {
   AnimationNames,
@@ -234,8 +234,7 @@ export class Mappers {
           FtlSound,
           new NodeMapImp(
               ({document, node, position}) => {
-                // todo support mod tags
-                return Sounds.isWaveNode(node, document) ? node.tag : undefined;
+                return Sounds.isWaveNode(node, document) ? normalizeTagName(node.tag) : undefined;
               },
               declarationBasedMapFunction(SoundWaveNames),
           )),
