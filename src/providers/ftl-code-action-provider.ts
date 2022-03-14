@@ -15,7 +15,7 @@ import {DocumentCache} from '../document-cache';
 import {FtlErrorCode} from '../diagnostic-builder';
 import {Node} from 'vscode-html-languageservice';
 import {BlueprintListTypeAny} from '../data/ftl-data';
-import {nodeTagEq} from '../helpers';
+import {nodeTagEq, transformModFindNode} from '../helpers';
 
 export class FtlCodeActionProvider implements CodeActionProvider {
   constructor(private documentCache: DocumentCache) {
@@ -38,6 +38,9 @@ export class FtlCodeActionProvider implements CodeActionProvider {
     if (!invalidTypeDiagnostic) return;
     const htmlDocument = this.documentCache.getHtmlDocument(document);
     let node: Node | undefined = htmlDocument.findNodeBefore(document.offsetAt(range.start));
+    const findNode = transformModFindNode(node);
+    if (findNode) node = findNode;
+
     if (nodeTagEq(node, 'name')) {
       node = node.parent;
     }

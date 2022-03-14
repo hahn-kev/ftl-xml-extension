@@ -1,7 +1,7 @@
 import {CancellationToken, Hover, HoverProvider, MarkdownString, Position, TextDocument, Uri, workspace} from 'vscode';
 import {DocumentCache} from '../document-cache';
-import {LanguageService, TextDocument as HtmlTextDocument} from 'vscode-html-languageservice';
-import {attrNameRange, nodeTagEq, toRange} from '../helpers';
+import {HTMLDocument, LanguageService, Node, TextDocument as HtmlTextDocument} from 'vscode-html-languageservice';
+import {attrNameRange, nodeTagEq, toRange, transformModFindNode} from '../helpers';
 import {Mappers} from '../ref-mappers/mappers';
 import {PathRefMappers} from '../ref-mappers/path-ref-mapper';
 import {FtlDatFs} from '../dat-fs-provider/ftl-dat-fs';
@@ -17,8 +17,17 @@ export class FtlHoverProvider implements HoverProvider {
   }
 
   async provideHover(document: TextDocument, position: Position, token: CancellationToken): Promise<Hover | undefined> {
-    const htmlDocument = this.documentCache.getHtmlDocument(document);
-    const node = htmlDocument.findNodeAt(document.offsetAt(position));
+    let htmlDocument = this.documentCache.getHtmlDocument(document);
+
+    let node: Node;
+    const originalNode = node = htmlDocument.findNodeAt(document.offsetAt(position));
+    const findNode = transformModFindNode(node);
+    let isModNode = false;
+    if (findNode) {
+      node = findNode;
+      isModNode = true;
+    }
+
     const context: LookupContext = {node, document, position};
     const hoverTextId = this.tryHoverTextId(context);
     if (hoverTextId) return hoverTextId;
@@ -34,6 +43,10 @@ export class FtlHoverProvider implements HoverProvider {
         document.version,
         document.getText());
 
+    if (isModNode) {
+      htmlDocument = this.patchTransformedFindNodeIntoHtml(node, originalNode, htmlDocument);
+    }
+
     const hover = this.service.doHover(textDocument,
         position,
         htmlDocument,
@@ -48,6 +61,43 @@ export class FtlHoverProvider implements HoverProvider {
       range: VscodeConverter.toVscodeRange(hover.range),
       contents: [documentation]
     };
+  }
+
+  patchTransformedFindNodeIntoHtml(transformedNode: Node, originalNode: Node, currentDoc: HTMLDocument): HTMLDocument {
+    function parentList(n: Node): Node[] {
+      const parent = n.parent;
+      if (parent) {
+        const result = parentList(parent);
+        result.push(parent);
+        return result;
+      }
+      return [];
+    }
+
+    const roots = [...currentDoc.roots];
+    const list = parentList(originalNode);
+    let previous: Node | undefined = undefined;
+
+    for (const node of list) {
+      const newNode: Node = {
+        ...node,
+        parent: previous,
+        attributes: {...node.attributes},
+        children: [...node.children]
+      };
+      if (previous) {
+        previous.children[previous.children.indexOf(node)] = newNode;
+      }
+      if (roots.includes(node)) {
+        roots[roots.indexOf(node)] = newNode;
+      }
+      previous = newNode;
+    }
+    if (previous) {
+      previous.children[previous.children.indexOf(originalNode)] = transformedNode;
+    }
+
+    return {...currentDoc, roots};
   }
 
   tryHoverTextId({node, document, position}: LookupContext): Hover | undefined {
