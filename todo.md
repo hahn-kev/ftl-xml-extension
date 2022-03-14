@@ -1,7 +1,7 @@
 ## Going to implement
 - make sure projectile tag contents is a ref to an animation
 - support refs from removeItem
-- support mod: elements
+- narrow range for attribute refs
 - add missing refs for:
     - ship blueprint elements: cloak, shield images
     - element: unlockShip body

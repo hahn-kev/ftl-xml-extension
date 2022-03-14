@@ -10,6 +10,7 @@ FTL XML is intended to improve the editing experience for any mod dev, please le
 
 ## Features
 * Preview animations
+* Slipstream tags, `<mod:findName>` and `<mod-append:*>` along with some minor documentation about using them
 * Autocomplete, Go to definition and references supported for
   * events
   * ships

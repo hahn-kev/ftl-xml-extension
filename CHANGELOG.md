@@ -2,6 +2,9 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
+## 0.6.0
+- Add support and documentaion for slipstream mod elements like `<mod:findName>` and `<mod-append:*>`
+
 ## 0.5.4
 - Show error if there's an event loop which would cause FTL to crash
 
