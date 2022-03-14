@@ -13,7 +13,7 @@ export function nodeTagEq(node: Node | undefined, tag: string, tag2?: string) {
   return nodeTagName === tag || (nodeTagName === tag2);
 }
 
-function normalizeTagName(nodeTagName: string): string {
+export function normalizeTagName(nodeTagName: string): string {
   if (nodeTagName.startsWith('mod-append:')) return nodeTagName.substring('mod-append:'.length);
   if (nodeTagName.startsWith('mod-overwrite:')) return nodeTagName.substring('mod-overwrite:'.length);
   return nodeTagName;

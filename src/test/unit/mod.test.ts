@@ -30,15 +30,19 @@ suite('Mod tags', () => {
   test('tag <mod-append:event> should be recorded as an event definition', () => {
     expectToDefineEvent(`<mod-append:event name="test">`, 'test');
   });
+
   test('tag <mod-overwrite:event> should be recorded as an event definition', () => {
     expectToDefineEvent(`<mod-overwrite:event name="test">`, 'test');
   });
+
   test('tag <mod-append:event> should be recorded as an event reference', () => {
     expectedToReferenceEvent(`<event name="test"> <mod-append:event load="test"/>`, 'test');
   });
+
   test('tag <mod:findName> should be recorded as an event reference', () => {
     expectedToReferenceEvent(`<event name="test"> <mod:findName type="event" name="test"/>`, 'test');
   });
+
   test('tag <mod:findLike type="event"> should be recorded as an event reference', () => {
     expectedToReferenceEvent(`
         <event name="test"> 
@@ -47,18 +51,22 @@ suite('Mod tags', () => {
         </mod:findLike>
 `, 'test');
   });
+
   test('tag <mod:findLike type="loadEvent"> should be recorded as an event reference', () => {
     expectedToReferenceEvent(`
         <event name="test"> 
         <mod:findLike type="loadEvent">test</mod:findLike>
 `, 'test');
   });
-  test('tag <mod:findWithChildLike type="sectorDescription"> <mod:selector> should be recorded as an event reference', () => {
-    expectedToReferenceEvent(`
+
+  test('tag <mod:findWithChildLike type="sectorDescription"> <mod:selector> should be recorded as an event reference',
+      () => {
+        expectedToReferenceEvent(`
         <event name="test"> 
         <mod:findWithChildLike type="sectorDescription" child-type="event"><mod:selector name="test"/></mod:findWithChildLike>
 `, 'test');
-  });
+      });
+
   test('tag <mod:setAttributes event="test"/> should be recorded as an event reference', () => {
     expectedToReferenceEvent(`
         <event name="test"> 
@@ -67,6 +75,7 @@ suite('Mod tags', () => {
         </mod:findName>
 `, 'test');
   });
+
   test('tag <mod:setValue> should be recorded as an event reference', () => {
     expectedToReferenceEvent(`
         <event name="test"> 
@@ -75,6 +84,7 @@ suite('Mod tags', () => {
         </mod:findLike>
 `, 'test');
   });
+
   test('tag <mod:setValue> should be recorded as an event reference when it is a new element', () => {
     expectedToReferenceEvent(`
         <event name="test">

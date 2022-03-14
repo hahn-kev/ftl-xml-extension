@@ -11,6 +11,7 @@ import {
 import {
   CompletionItem as HtmlCompletionItem,
   HTMLDocument,
+  IValueData,
   IValueSet,
   LanguageService,
   Node
@@ -81,7 +82,9 @@ export class FtlCompletionProvider implements CompletionItemProvider {
       position: Position): CompletionItem[] | undefined {
     const offset = document.offsetAt(position);
     const node = htmlDocument.findNodeBefore(offset);
-    const results = this.tryCompleteNodeContents(node, document, offset);
+    let results = this.tryCompleteNodeContents(node, document, offset);
+    if (results) return results;
+    results = this.tryCompleteModAppend(node, document, offset);
     if (results) return results;
 
     if (node.parent
@@ -121,8 +124,19 @@ export class FtlCompletionProvider implements CompletionItemProvider {
     return this.valueSetToCompletionItems(valueSet, range);
   }
 
+  private tryCompleteModAppend(node: Node, document: TextDocument, offset: number): CompletionItem[] | undefined {
+    if (node.tag != 'mod-append:' && node.tag != 'mod-overwrite:') return;
+    if (node.start + node.tag.length != (offset - 1)) return;
+    const range = VscodeConverter.toVscodeRange(toRange(offset, offset, document));
+    return this.valueDataToCompletionItems(FtlData.tags, range);
+  }
+
   private valueSetToCompletionItems(valueSet: IValueSet, range: Range): CompletionItem[] {
-    return valueSet.values.map((value) => {
+    return this.valueDataToCompletionItems(valueSet.values, range);
+  }
+
+  private valueDataToCompletionItems(valueData: IValueData[], range: Range): CompletionItem[] {
+    return valueData.map((value) => {
       const strDes = typeof value.description === 'string' ? value.description : value.description?.value;
       return {
         label: {label: value.name, description: strDes},

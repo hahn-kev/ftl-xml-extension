@@ -7,6 +7,7 @@ import {
 } from 'vscode-html-languageservice';
 import {FtlData} from '../data/ftl-data';
 import {FtlRoot} from '../models/ftl-root';
+import {normalizeTagName} from '../helpers';
 
 export interface DataReceiver {
   updateData(root: FtlRoot): void;
@@ -43,10 +44,10 @@ export class FtlDataProvider implements IHTMLDataProvider, IFtlDataProvider {
   }
 
   provideAttributes(tag: string): IAttributeData[] {
-    return this.htmlDataProvider.provideAttributes(tag);
+    return this.htmlDataProvider.provideAttributes(normalizeTagName(tag));
   }
 
   provideValues(tag: string, attribute: string): IValueData[] {
-    return this.htmlDataProvider.provideValues(tag, attribute);
+    return this.htmlDataProvider.provideValues(normalizeTagName(tag), attribute);
   }
 }

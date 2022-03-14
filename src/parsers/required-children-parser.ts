@@ -8,15 +8,17 @@ export class RequiredChildrenParser implements FtlXmlParser {
       .filter((tag: XmlTag) => !!tag.requiredTags)
       .map((tag) => [tag.name, tag]));
 
-  parseNode({node, file, document}: ParseContext): void {
-    if (!node.tag) return;
-    const xmlTag = this.requiredChildrenMap.get(node.tag);
-    const requiredChildren = xmlTag?.requiredTagsByParent?.[node.parent?.tag ?? ''] ?? xmlTag?.requiredTags;
+  parseNode(context: ParseContext): void {
+    if (!context.node.tag || context.isModNode) return;
+    const xmlTag = this.requiredChildrenMap.get(context.node.tag);
+    const requiredChildren = xmlTag?.requiredTagsByParent?.[context.node.parent?.tag ?? ''] ?? xmlTag?.requiredTags;
     if (requiredChildren === undefined || requiredChildren.length < 1) return;
 
-    const childNames = new Set(node.children.map((c) => c.tag).filter((t: string | undefined): t is string => !!t));
+    const childNames = new Set(context.node.children
+        .map((c) => c.tag)
+        .filter((t: string | undefined): t is string => !!t));
     const errors = requiredChildren.filter((requiredTagName) => !childNames.has(requiredTagName))
-        .map((requiredTagName) => DiagnosticBuilder.missingRequiredChild(node, requiredTagName, document));
-    file.diagnostics.push(...errors);
+        .map((requiredTagName) => DiagnosticBuilder.missingRequiredChild(context.node, requiredTagName, context.document));
+    context.file.diagnostics.push(...errors);
   }
 }
