@@ -1,16 +1,12 @@
 import {expect} from 'chai';
 import {suite, test} from 'mocha';
-import {TextDocument as HtmlTextDocument} from 'vscode-html-languageservice';
 import {FtlEvent} from '../../models/ftl-event';
-import {testSetup} from './test-setup';
+import {TestHelpers} from './test-helpers';
 
 suite('Ftl Parser', () => {
   test('should parse some events', () => {
-    const services = testSetup();
-    const document = HtmlTextDocument.create('test://test/test.xml',
-        'ftl-xml',
-        1,
-        `<event name="my_event"/> <event load="my_event"/>"`);
+    const services = TestHelpers.testSetup();
+    const document = TestHelpers.testTextDocument(`<event name="my_event"/> <event load="my_event"/>"`);
 
     const file = services.parser.parseDocument(document);
     expect(file.fileName).to.eq('test.xml');

@@ -1,16 +1,13 @@
 import {suite, test} from 'mocha';
-import {testSetup} from './test-setup';
-import {TextDocument as HtmlTextDocument} from 'vscode-html-languageservice';
+import {TestHelpers} from './test-helpers';
 import {expect} from 'chai';
 import {EventLoopValidator} from '../../validators/event-loop-validator';
 import {FtlDiagnostic} from '../../models/ftl-diagnostic';
 
 suite('Ftl Events', () => {
   test('should parse all event references', () => {
-    const services = testSetup();
-    const document = HtmlTextDocument.create('test://test/test.xml',
-        'ftl-xml',
-        1,
+    const services = TestHelpers.testSetup();
+    const document = TestHelpers.testTextDocument(
         `
 <!--definition-->
 <event name="my_event"/> 
@@ -64,10 +61,8 @@ suite('Ftl Events', () => {
   });
 
   test('should show unsafe child event references', () => {
-    const services = testSetup();
-    const document = HtmlTextDocument.create('test://test/test.xml',
-        'ftl-xml',
-        1,
+    const services = TestHelpers.testSetup();
+    const document = TestHelpers.testTextDocument(
         `
 <event name="event_def">
     <choice>
@@ -105,10 +100,8 @@ suite('Ftl Events', () => {
     expect(eventDef.unsafeEventRefs).to.have.all.keys('event_ref_1', 'event_ref_2', 'event_ref_3');
   });
   test('should not include vent lists as an unsafe child ref', () => {
-    const services = testSetup();
-    const document = HtmlTextDocument.create('test://test/test.xml',
-        'ftl-xml',
-        1,
+    const services = TestHelpers.testSetup();
+    const document = TestHelpers.testTextDocument(
         `
 <eventList name="event_def">
       <event load="event_ref_1"/>
@@ -121,12 +114,9 @@ suite('Ftl Events', () => {
     expect(eventDef.unsafeEventRefs).to.be.undefined;
   });
   test('should find an event loop', () => {
-    const services = testSetup();
-    const document = HtmlTextDocument.create('test://test/test.xml',
-        'ftl-xml',
-        1,
+    const services = TestHelpers.testSetup();
+    const document = TestHelpers.testTextDocument(
         `
-
 <event name="event_1">
     <event load="event_2"/>
 </event>
@@ -145,10 +135,8 @@ suite('Ftl Events', () => {
   });
 
   test('should not crash', () => {
-    const services = testSetup();
-    const document = HtmlTextDocument.create('test://test/test.xml',
-        'ftl-xml',
-        1,
+    const services = TestHelpers.testSetup();
+    const document = TestHelpers.testTextDocument(
         `
 <event name="event_entrance">
     <event load="event_1"/>
