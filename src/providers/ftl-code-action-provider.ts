@@ -15,6 +15,7 @@ import {DocumentCache} from '../document-cache';
 import {FtlErrorCode} from '../diagnostic-builder';
 import {Node} from 'vscode-html-languageservice';
 import {BlueprintListTypeAny} from '../data/ftl-data';
+import {nodeTagEq} from '../helpers';
 
 export class FtlCodeActionProvider implements CodeActionProvider {
   constructor(private documentCache: DocumentCache) {
@@ -37,10 +38,10 @@ export class FtlCodeActionProvider implements CodeActionProvider {
     if (!invalidTypeDiagnostic) return;
     const htmlDocument = this.documentCache.getHtmlDocument(document);
     let node: Node | undefined = htmlDocument.findNodeBefore(document.offsetAt(range.start));
-    if (node.tag == 'name') {
+    if (nodeTagEq(node, 'name')) {
       node = node.parent;
     }
-    if (node?.tag != 'blueprintList') return;
+    if (!nodeTagEq(node, 'blueprintList')) return;
     const action = new CodeAction(`Change type of blueprint list to 'any'`, CodeActionKind.QuickFix);
     action.diagnostics = [invalidTypeDiagnostic];
     action.edit = new WorkspaceEdit();

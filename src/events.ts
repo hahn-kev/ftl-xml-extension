@@ -1,5 +1,5 @@
 import {Node} from 'vscode-html-languageservice';
-import {getAttrValueForTag, getNodeTextContent, hasAttr, normalizeAttributeName} from './helpers';
+import {getAttrValueForTag, getNodeTextContent, hasAttr, nodeTagEq, normalizeAttributeName} from './helpers';
 import {NodeMap} from './ref-mappers/node-map';
 import {Position} from 'vscode-languageserver-textdocument';
 import {FtlTextDocument} from './models/ftl-text-document';
@@ -7,8 +7,8 @@ import {ParseContext} from './parsers/ftl-xml-parser';
 
 class EventsMap implements NodeMap {
   getNameDef(node: Node, document: FtlTextDocument, position?: Position): string | undefined {
-    if (node.parent?.tag == 'sectorDescription' || node.parent?.tag == 'loadEventList') return;
-    if ((node.tag == 'eventList' || node.tag == 'event') && hasAttr(node, 'name', document, position)) {
+    if (nodeTagEq(node.parent, 'sectorDescription', 'loadEventList')) return;
+    if (nodeTagEq(node, 'eventList', 'event') && hasAttr(node, 'name', document, position)) {
       return normalizeAttributeName(node.attributes.name);
     }
   }
@@ -16,11 +16,11 @@ class EventsMap implements NodeMap {
   getRefName(node: Node, document: FtlTextDocument, position: Position): string | undefined;
   getRefName(node: Node, document: FtlTextDocument): string | string[] | undefined;
   getRefName(node: Node, document: FtlTextDocument, position?: Position): string | string[] | undefined {
-    if (node.tag == 'event' && hasAttr(node, 'load', document, position)) {
+    if (nodeTagEq(node, 'event') && hasAttr(node, 'load', document, position)) {
       return normalizeAttributeName(node.attributes.load);
     }
 
-    if (node.tag == 'exitBeacon') {
+    if (nodeTagEq(node, 'exitBeacon')) {
       const refs: string[] = [];
       if (hasAttr(node, 'event', document, position)) {
         refs.push(normalizeAttributeName(node.attributes.event));
@@ -35,7 +35,7 @@ class EventsMap implements NodeMap {
       return refs;
     }
 
-    if (node.tag == 'rebelBeacon') {
+    if (nodeTagEq(node, 'rebelBeacon')) {
       const refs: string[] = [];
       if (hasAttr(node, 'event', document, position)) {
         refs.push(normalizeAttributeName(node.attributes.event));
@@ -46,7 +46,7 @@ class EventsMap implements NodeMap {
       if (position) return refs[0];
       return refs;
     }
-    if (node.tag == 'eventAlias') {
+    if (nodeTagEq(node, 'eventAlias')) {
       const refs: string[] = [];
       if (hasAttr(node, 'name', document, position)) {
         refs.push(normalizeAttributeName(node.attributes.name));
@@ -57,7 +57,8 @@ class EventsMap implements NodeMap {
       return refs;
     }
 
-    if (node.tag == 'event' && (node.parent?.tag == 'sectorDescription' || node.parent?.tag == 'loadEventList')
+    if (nodeTagEq(node, 'event')
+        && nodeTagEq(node.parent, 'sectorDescription', 'loadEventList')
         && hasAttr(node, 'name', document, position)) {
       return normalizeAttributeName(node.attributes.name);
     }
@@ -80,8 +81,8 @@ class EventsMap implements NodeMap {
   }
 
   isRecursionUnsafeEventRef(context: ParseContext) {
-    return context.node.tag == 'event'
-        && context.node.parent?.tag !== 'eventList'
+    return nodeTagEq(context.node, 'event')
+        && !nodeTagEq(context.node.parent, 'eventList')
         && hasAttr(context.node, 'load', context.document);
   }
 }

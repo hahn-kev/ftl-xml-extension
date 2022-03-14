@@ -1,5 +1,5 @@
 import {IValueSet, Node} from 'vscode-html-languageservice';
-import {getAttrValueForTag, getNodeTextContent} from '../helpers';
+import {getAttrValueForTag, getNodeTextContent, nodeTagEq} from '../helpers';
 import {FtlData} from '../data/ftl-data';
 import {FtlTextDocument} from '../models/ftl-text-document';
 import {Position} from 'vscode-languageserver-textdocument';
@@ -47,7 +47,7 @@ type staticValueMapping = { tag: string, attr: string, parentTag?: string} | {ta
 
 export function staticValueNodeMap(defs: staticValueMapping[], refs: staticValueMapping[]): NodeMap {
   function getResult(context: NodeMapContext, def: staticValueMapping): string|undefined {
-    if (def.parentTag && context.node.parent?.tag !== def.parentTag) return undefined;
+    if (def.parentTag && !nodeTagEq(context.node.parent, def.parentTag)) return undefined;
     if ('type' in def && def.type === 'contents') {
       return getNodeTextContent(context.node, context.document, def.tag);
     } else if ('attr' in def) {

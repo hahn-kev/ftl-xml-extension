@@ -1,7 +1,7 @@
 import {CancellationToken, Hover, HoverProvider, MarkdownString, Position, TextDocument, Uri, workspace} from 'vscode';
 import {DocumentCache} from '../document-cache';
 import {LanguageService, TextDocument as HtmlTextDocument} from 'vscode-html-languageservice';
-import {attrNameRange, toRange} from '../helpers';
+import {attrNameRange, nodeTagEq, toRange} from '../helpers';
 import {Mappers} from '../ref-mappers/mappers';
 import {PathRefMappers} from '../ref-mappers/path-ref-mapper';
 import {FtlDatFs} from '../dat-fs-provider/ftl-dat-fs';
@@ -59,7 +59,7 @@ export class FtlHoverProvider implements HoverProvider {
     let idStart: number;
     let idEnd: number;
     // this tag has the id as the contents
-    if (node.tag === 'tip') {
+    if (nodeTagEq(node, 'tip')) {
       idStart = node.startTagEnd ?? node.start;
       idEnd = node.endTagStart ?? node.end;
     } else {

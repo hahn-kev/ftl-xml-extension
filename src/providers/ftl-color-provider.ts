@@ -10,7 +10,7 @@ import {
 } from 'vscode';
 import {FtlParser} from '../ftl-parser';
 import {FtlColor} from '../models/ftl-color';
-import {normalizeAttributeName, toRange} from '../helpers';
+import {nodeTagEq, normalizeAttributeName, toRange} from '../helpers';
 import {FtlXmlParser, ParseContext} from '../parsers/ftl-xml-parser';
 import {VscodeConverter} from '../vscode-converter';
 
@@ -48,7 +48,7 @@ export class FtlColorProvider implements DocumentColorProvider, FtlXmlParser {
   }
 
   parseNode({node, file, document}: ParseContext): void {
-    if (node.tag !== 'color' || !node.attributes) return;
+    if (!nodeTagEq(node, 'color') || !node.attributes) return;
     file.colors.push(new FtlColor(
         toRange('<color '.length + node.start, node.end - '/>'.length, document),
         this.parseAttrIntSafe(node.attributes.r),

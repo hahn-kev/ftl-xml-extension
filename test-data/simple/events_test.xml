@@ -24,7 +24,9 @@
         <!-- should show error because of missing closing tag -->
         <badTag/
     </eventList>
-
+    <event name="event_start">
+        <event load="event_loop_1"/>
+    </event>
     <event name="event_loop_1">
         <event load="event_loop_2"/>
     </event>

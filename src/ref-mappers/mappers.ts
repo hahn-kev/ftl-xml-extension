@@ -2,7 +2,14 @@ import {RefMapper, RefMapperBase} from './ref-mapper';
 import {FtlEvent} from '../models/ftl-event';
 import {Node} from 'vscode-html-languageservice';
 import {events} from '../events';
-import {getAttrValueForTag, getFileName, getNodeTextContent, hasAttr, normalizeAttributeName} from '../helpers';
+import {
+  getAttrValueForTag,
+  getFileName,
+  getNodeTextContent,
+  hasAttr,
+  nodeTagEq,
+  normalizeAttributeName
+} from '../helpers';
 import {
   AnimationNames,
   AnimationSheetNames,
@@ -206,7 +213,7 @@ export class Mappers {
           FtlText,
           new NodeMapImp(
               ({node, document, position}) => {
-                if (node.tag == 'text' && hasAttr(node, 'name', document, position)) {
+                if (nodeTagEq(node, 'text') && hasAttr(node, 'name', document, position)) {
                   // filter out language files
                   if (getFileName(document)?.startsWith('text-')) {
                     return undefined;
@@ -227,6 +234,7 @@ export class Mappers {
           FtlSound,
           new NodeMapImp(
               ({document, node, position}) => {
+                // todo support mod tags
                 return Sounds.isWaveNode(node, document) ? node.tag : undefined;
               },
               declarationBasedMapFunction(SoundWaveNames),

@@ -2,9 +2,15 @@ import {Node} from 'vscode-html-languageservice';
 import {FtlTextDocument, FtlUri} from './models/ftl-text-document';
 import {Position, Range} from 'vscode-languageserver-textdocument';
 
+export function nodeTagEq(node: Node | undefined, tag: string): node is Node
+export function nodeTagEq(node: Node | undefined, tag: string, tag2: string): node is Node
+export function nodeTagEq(node: Node | undefined, tag: string, tag2?: string) {
+  return node?.tag === tag || (node?.tag === tag2 && tag2 !== undefined);
+}
+
 export function hasAncestor(node: Node, name: string, includeSelf: boolean): boolean {
   if (!node.tag) return false;
-  if (includeSelf && node.tag == name) return true;
+  if (includeSelf && nodeTagEq(node, name)) return true;
   if (!node.parent) return false;
   return hasAncestor(node.parent, name, true);
 }
@@ -15,8 +21,8 @@ export function getNodeTextContent(
     whenTagName?: string,
     whenParentTagName?: string) {
   if (node.startTagEnd === undefined || node.endTagStart === undefined) return undefined;
-  if (typeof whenTagName === 'string' && node.tag !== whenTagName) return undefined;
-  if (typeof whenParentTagName === 'string' && node.parent?.tag !== whenParentTagName) return undefined;
+  if (typeof whenTagName === 'string' && !nodeTagEq(node, whenTagName)) return undefined;
+  if (typeof whenParentTagName === 'string' && !nodeTagEq(node.parent, whenParentTagName)) return undefined;
   return getText(node.startTagEnd, node.endTagStart, document);
 }
 
@@ -43,7 +49,7 @@ export function getAttrValueForTag(
     attrName: string,
     document?: FtlTextDocument,
     atPosition?: Position): string | undefined {
-  if (node.tag == tagName && hasAttr(node, attrName, document, atPosition)) {
+  if (nodeTagEq(node, tagName) && hasAttr(node, attrName, document, atPosition)) {
     return normalizeAttributeName(node.attributes[attrName]);
   }
 }

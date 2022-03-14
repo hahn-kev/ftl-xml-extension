@@ -1,6 +1,6 @@
 import {IValueSet, Location} from 'vscode-html-languageservice';
 import {FtlRoot} from '../models/ftl-root';
-import {getNodeTextContent, shouldCompleteForNodeContents} from '../helpers';
+import {getNodeTextContent, nodeTagEq, shouldCompleteForNodeContents} from '../helpers';
 import {FtlImg} from '../models/ftl-img';
 import {SoundFile} from '../models/sound-file';
 import {ImgPathNames, MusicPaths, SoundWavePaths} from '../data/autocomplete-value-sets';
@@ -52,7 +52,7 @@ export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBa
   }
 
   lookupImg({node, document, position}: NodeMapContext): FtlImg | undefined {
-    if (node.tag == 'animSheet' || node.tag == 'img' || node.tag == 'chargeImage') {
+    if (nodeTagEq(node, 'animSheet') || nodeTagEq(node, 'img') || nodeTagEq(node, 'chargeImage')) {
       if (position && !shouldCompleteForNodeContents(node, document.offsetAt(position))) return;
 
       const imgPathName = getNodeTextContent(node, document);

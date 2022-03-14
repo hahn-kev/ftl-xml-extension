@@ -113,6 +113,7 @@ export class FtlCompletionProvider implements CompletionItemProvider {
     if (Sounds.isWaveNode(node, document)) {
       return this.valueSetToCompletionItems(SoundWavePaths, range);
     }
+    // todo support mod tags
     let valueSet = this.completeContentMap.get(node.tag);
     if (!valueSet && node.parent?.tag) valueSet = this.completeContentMap.get(`${node.parent.tag}>${node.tag}`);
     if (!valueSet) return;

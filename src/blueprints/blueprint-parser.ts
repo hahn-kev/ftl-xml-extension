@@ -3,7 +3,7 @@ import {RefMapperBase} from '../ref-mappers/ref-mapper';
 import {Node} from 'vscode-html-languageservice';
 import {FtlFile, FtlFileValue} from '../models/ftl-file';
 import {FtlBlueprintList, FtlBlueprintValue} from '../models/ftl-blueprint-list';
-import {addToKey, getAttrValueForTag, getNodeTextContent} from '../helpers';
+import {addToKey, getAttrValueForTag, getNodeTextContent, nodeTagEq} from '../helpers';
 import {FtlValue} from '../models/ftl-value';
 import {FtlTextDocument} from '../models/ftl-text-document';
 import {Position} from 'vscode-languageserver-textdocument';
@@ -24,7 +24,7 @@ export class BlueprintParser implements FtlXmlParser {
     const name = this.getBlueprintListName(context.node, context.document);
     if (name) {
       const ftlBlueprintList = new FtlBlueprintList(name, context.file, context.node, context.document, true);
-      ftlBlueprintList.childRefNames = context.node.children.filter((c) => c.tag == 'name')
+      ftlBlueprintList.childRefNames = context.node.children.filter((c) => nodeTagEq(c, 'name'))
           .map((c) => this.getBlueprintRef(c, context.document))
           .filter((t): t is string => !!t);
 
@@ -66,7 +66,7 @@ export class BlueprintParser implements FtlXmlParser {
   }
 
   isListChild(node: Node) {
-    return node.tag == 'name' && node.parent?.tag == 'blueprintList';
+    return nodeTagEq(node, 'name') && nodeTagEq(node.parent, 'blueprintList');
   }
 
   getBlueprintListName(node: Node, document: FtlTextDocument, position?: Position) {

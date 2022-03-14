@@ -1,7 +1,7 @@
 import {FtlValue} from './ftl-value';
 import {FtlFile} from './ftl-file';
 import {Node} from 'vscode-html-languageservice';
-import {getAttrValueAsInt, getNodeTextContent, toRange} from '../helpers';
+import {getAttrValueAsInt, getNodeTextContent, nodeTagEq, toRange} from '../helpers';
 import {FtlTextDocument} from './ftl-text-document';
 import {Range} from 'vscode-languageserver-textdocument';
 
@@ -11,8 +11,8 @@ export class FtlAnimation extends FtlValue {
     if (isDef) {
       for (const child of node.children) {
         if (!this.sheetName) this.sheetName = getNodeTextContent(child, document, 'sheet');
-        if (child.tag == 'time') this.time = parseFloat(getNodeTextContent(child, document) ?? '0');
-        if (child.tag == 'desc') {
+        if (nodeTagEq(child, 'time')) this.time = parseFloat(getNodeTextContent(child, document) ?? '0');
+        if (nodeTagEq(child, 'desc')) {
           this.length = getAttrValueAsInt(child, 'length');
           this.x = getAttrValueAsInt(child, 'x');
           this.y = getAttrValueAsInt(child, 'y');
