@@ -10,6 +10,7 @@ import {
 import {DocumentCache} from '../document-cache';
 import {LookupProvider} from '../ref-mappers/lookup-provider';
 import {VscodeConverter} from '../vscode-converter';
+import {transformModFindNode} from '../helpers';
 
 export class FtlReferenceProvider implements ReferenceProvider {
   constructor(private documentCache: DocumentCache, private refProviders: LookupProvider[]) {
@@ -22,7 +23,10 @@ export class FtlReferenceProvider implements ReferenceProvider {
       token: CancellationToken): ProviderResult<Location[]> {
     const htmlDocument = this.documentCache.getHtmlDocument(document);
     const offset = document.offsetAt(position);
-    const node = htmlDocument.findNodeBefore(offset);
+    let node = htmlDocument.findNodeBefore(offset);
+    const findNode = transformModFindNode(node);
+    if (findNode) node = findNode;
+
     for (const refProvider of this.refProviders) {
       const refs = refProvider.lookupRefs({node, document, position});
       if (refs) return refs.map((ref) => VscodeConverter.toVscodeLocation(ref));
