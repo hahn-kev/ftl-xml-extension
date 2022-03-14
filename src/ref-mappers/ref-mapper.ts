@@ -43,6 +43,7 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
         .push(...this.convertDefsAndDefaultsToAutoCompleteList(root));
 
     for (const file of root.xmlFiles.values()) {
+      if (!file.isReferenced) continue;
       this.parser.fileDataSelector(file).refs.forEach((value, key) => addToKey(this.refs, key, value));
       for (const value of this.parser.fileDataSelector(file).defs) {
         this.defs.set(value.name, value);

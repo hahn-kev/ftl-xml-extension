@@ -4,6 +4,9 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 
 ## 0.6.0
 - Add support and documentaion for slipstream mod elements like `<mod:findName>` and `<mod-append:*>`
+- removed required children error until we can improve it
+- fixed event loop error if an event was defined twice, once in an unreferenced file
+- prevent unreferenced files from showing up in find references
 
 ## 0.5.4
 - Show error if there's an event loop which would cause FTL to crash

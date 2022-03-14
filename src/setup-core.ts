@@ -44,12 +44,16 @@ export function setupCore(fileOpener: FileOpener, fileReader: FileReader): FtlSe
   const parsers: FtlXmlParser[] = [
     ...mappers.list.map((value) => value.parser),
     new IncompleteTagParser(),
-    new RequiredChildrenParser(),
+    // new RequiredChildrenParser(),
     new AllowedChildrenParser(),
     new CustomEventFilesParser()
   ];
   const lookupProviders: LookupProvider[] = [...mappers.list, ...pathMappers.mappers];
-  const dataReceivers: DataReceiver[] = [...mappers.list, ...pathMappers.mappers, new IsReferencedUpdater()];
+  const dataReceivers: DataReceiver[] = [
+    new IsReferencedUpdater(),
+    ...mappers.list,
+    ...pathMappers.mappers,
+  ];
 
   const validators: Validator[] = [
     new EventUsedValidator(mappers.eventsMapper, mappers.shipsMapper),
