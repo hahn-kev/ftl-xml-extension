@@ -8,8 +8,9 @@ export class EventRefParser extends RefParser<FtlEvent> {
     const nameDef = this.getNameDef(context.node, context.document);
     if (nameDef) {
       const event = this.handleDefinition(context, nameDef);
-      return new EventUnsafeChildrenRefParser(event);
+      return context.isModNode ? undefined : new EventUnsafeChildrenRefParser(event);
     }
+
     const nameRefs = this.getRefName(context.node, context.document);
     if (nameRefs) {
       this.handleReference(context, nameRefs);

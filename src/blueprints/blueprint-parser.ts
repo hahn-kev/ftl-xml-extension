@@ -23,7 +23,7 @@ export class BlueprintParser implements FtlXmlParser {
     if (this.isListChild(context.node)) return;
     const name = this.getBlueprintListName(context.node, context.document);
     if (name) {
-      const ftlBlueprintList = new FtlBlueprintList(name, context.file, context.node, context.document, true);
+      const ftlBlueprintList = new FtlBlueprintList(name, context.file, context.node, context.document, !context.isModNode);
       ftlBlueprintList.childRefNames = context.node.children.filter((c) => nodeTagEq(c, 'name'))
           .map((c) => this.getBlueprintRef(c, context.document))
           .filter((t): t is string => !!t);
@@ -33,7 +33,7 @@ export class BlueprintParser implements FtlXmlParser {
         if (listChild) ftlBlueprintList.children.push(listChild);
       }
 
-      context.file.blueprintList.defs.push(ftlBlueprintList);
+      if (!context.isModNode) context.file.blueprintList.defs.push(ftlBlueprintList);
       addToKey(context.file.blueprintList.refs, name, ftlBlueprintList);
       return;
     }

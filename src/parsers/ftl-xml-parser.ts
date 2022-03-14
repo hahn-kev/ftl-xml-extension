@@ -4,6 +4,7 @@ import {FtlTextDocument} from '../models/ftl-text-document';
 
 export interface ParseContext {
   node: Node;
+  isModNode: boolean;
   document: FtlTextDocument;
   file: FtlFile;
 }

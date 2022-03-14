@@ -2,10 +2,72 @@ import {Node} from 'vscode-html-languageservice';
 import {FtlTextDocument, FtlUri} from './models/ftl-text-document';
 import {Position, Range} from 'vscode-languageserver-textdocument';
 
+export function nodeTagEq(node: Node, tag: string): boolean
+export function nodeTagEq(node: Node, tag: string, tag2: string): boolean
 export function nodeTagEq(node: Node | undefined, tag: string): node is Node
 export function nodeTagEq(node: Node | undefined, tag: string, tag2: string): node is Node
 export function nodeTagEq(node: Node | undefined, tag: string, tag2?: string) {
-  return node?.tag === tag || (node?.tag === tag2 && tag2 !== undefined);
+  let nodeTagName = node?.tag;
+  if (!nodeTagName) return false;
+  nodeTagName = normalizeTagName(nodeTagName);
+  return nodeTagName === tag || (nodeTagName === tag2);
+}
+
+function normalizeTagName(nodeTagName: string): string {
+  if (nodeTagName.startsWith('mod-append:')) return nodeTagName.substring('mod-append:'.length);
+  if (nodeTagName.startsWith('mod-overwrite:')) return nodeTagName.substring('mod-overwrite:'.length);
+  return nodeTagName;
+}
+
+export function transformModFindNode(node: Node): Node | undefined {
+  if (node.tag == 'mod:findName' && hasAttr(node, 'type') && hasAttr(node, 'name')) {
+    return handleModCommands({
+      ...node,
+      tag: normalizeAttributeName(node.attributes.type),
+      attributes: {name: node.attributes.name}
+    });
+  }
+  if (node.tag == 'mod:findLike' && hasAttr(node, 'type')) {
+    const selectorNode = node.children.find((c) => c.tag == 'mod:selector');
+    return handleModCommands({
+      ...node,
+      tag: normalizeAttributeName(node.attributes.type),
+      attributes: selectorNode?.attributes
+    });
+  }
+  if (node.tag == 'mod:findWithChildLike' && hasAttr(node, 'type') && hasAttr(node, 'child-type')) {
+    const childType = node.attributes['child-type'];
+    const children = [...node.children];
+    const selectorNode = node.children.find((c) => c.tag == 'mod:selector');
+
+    const newNode = {...node, tag: normalizeAttributeName(node.attributes.type), children};
+    if (selectorNode) {
+      children.push({...selectorNode, tag: normalizeAttributeName(childType), parent: newNode});
+    }
+    return handleModCommands(newNode);
+  }
+}
+
+function handleModCommands(newNode: Node): Node {
+  const childrenToAdd: Node[] = [];
+  const childrenToRemove: Set<Node> = new Set<Node>();
+  for (const child of newNode.children) {
+    if (child.tag == 'mod:setAttributes' && child.attributes && newNode.attributes) {
+      Object.assign(newNode.attributes, child.attributes);
+    }
+    if (child.tag == 'mod:setValue') {
+      childrenToRemove.add(child);
+      if (child.children.length > 0) {
+        childrenToAdd.push(...child.children.map((cc) => ({...cc, parent: newNode})));
+      } else {
+        newNode.startTagEnd = child.startTagEnd;
+        newNode.endTagStart = child.endTagStart;
+      }
+    }
+  }
+  newNode.children.push(...childrenToAdd);
+  newNode.children = newNode.children.filter((c) => !childrenToRemove.has(c));
+  return newNode;
 }
 
 export function hasAncestor(node: Node, name: string, includeSelf: boolean): boolean {
@@ -60,7 +122,9 @@ export function getAttrValueAsInt(node: Node, attrName: string): number | undefi
     return value === '' ? undefined : parseInt(value);
   }
 }
-type OffsetRange = {startOffset: number, endOffset: number};
+
+type OffsetRange = { startOffset: number, endOffset: number };
+
 export function hasAttr<T extends string>(
     node: Node,
     name: T,
@@ -152,7 +216,11 @@ export function shouldCompleteForNodeContents(
   return startTagEnd <= offset && endTagStart >= offset;
 }
 
-export function findRecursiveLoop(startingName: string, children:Iterable<string>, lookupChildren: (name: string) => Iterable<string>|undefined, seenNames = new Set<string>()): string[] | undefined {
+export function findRecursiveLoop(
+    startingName: string,
+    children: Iterable<string>,
+    lookupChildren: (name: string) => Iterable<string> | undefined,
+    seenNames = new Set<string>()): string[] | undefined {
   for (const childName of children) {
     if (childName == startingName) return [];
     // we're in a loop, but it doesn't include the starting name, so we're going to bail out before we crash

@@ -25,6 +25,7 @@ export class RefParser<T extends FtlValue = FtlValue> implements FtlRefParser {
       this.handleDefinition(context, nameDef);
       return;
     }
+
     const nameRefs = this.getRefName(context.node, context.document);
     if (nameRefs) {
       this.handleReference(context, nameRefs);
@@ -43,8 +44,8 @@ export class RefParser<T extends FtlValue = FtlValue> implements FtlRefParser {
   protected handleDefinition(context: ParseContext, name: string): T {
     const fileValue = this.fileDataSelector(context.file);
     // eslint-disable-next-line new-cap
-    const ftlValue = new this.newFromNode(name, context.file, context.node, context.document, true);
-    fileValue.defs.push(ftlValue);
+    const ftlValue = new this.newFromNode(name, context.file, context.node, context.document, !context.isModNode);
+    if (!context.isModNode) fileValue.defs.push(ftlValue);
     fileValue.addRef(name, ftlValue);
     return ftlValue;
   }

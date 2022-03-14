@@ -3,7 +3,7 @@ import {FtlFile} from './models/ftl-file';
 import {DocumentCache} from './document-cache';
 import {FtlXmlParser, ParseContext} from './parsers/ftl-xml-parser';
 import {FtlRoot} from './models/ftl-root';
-import {getFileName} from './helpers';
+import {getFileName, transformModFindNode} from './helpers';
 import {FileHandled, PathRefMapperBase} from './ref-mappers/path-ref-mapper';
 import {HyperspaceFile} from './models/hyperspace-file';
 import {URI} from 'vscode-uri';
@@ -135,7 +135,12 @@ export class FtlParser {
       document: FtlTextDocument,
       childParsers?: FtlXmlParser[]) {
     for (const node of nodes) {
-      const context: ParseContext = {node, file: ftlFile, document};
+      const context: ParseContext = {node, file: ftlFile, document, isModNode: false};
+      const findNode = transformModFindNode(node);
+      if (findNode) {
+        context.node = findNode;
+        context.isModNode = true;
+      }
       const newChildParsers: FtlXmlParser[] = childParsers ? [...childParsers] : [];
       for (const parser of this.parsers) {
         const childParser = parser.parseNode(context);
@@ -147,7 +152,7 @@ export class FtlParser {
         parser.parseNode(context);
       }
       // this.visitNode(node, document);
-      this.parseNodes(node.children, ftlFile, document, newChildParsers);
+      this.parseNodes(context.node.children, ftlFile, document, newChildParsers);
     }
   }
 

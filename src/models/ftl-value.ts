@@ -4,7 +4,7 @@ import {FtlTextDocument} from './ftl-text-document';
 import {Position, Range} from 'vscode-languageserver-textdocument';
 
 export abstract class FtlValue {
-  constructor(name: string, file: FtlFile, node: Node, document: FtlTextDocument, private isDef: boolean) {
+  constructor(name: string, file: FtlFile, node: Node, document: FtlTextDocument, public isDef: boolean) {
     this.file = file;
     this.name = name;
     this.startOffset = node.start;
