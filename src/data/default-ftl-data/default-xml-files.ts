@@ -1,4 +1,4 @@
-export const defaultXmlFiles: readonly string[] = [
+export const defaultXmlFiles: string[] = [
   'achievements.xml',
   'animations.xml',
   'autoBlueprints.xml',
