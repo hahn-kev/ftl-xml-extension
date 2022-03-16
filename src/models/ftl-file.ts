@@ -30,6 +30,7 @@ export class FtlFile {
   weaponAnimations = new FtlFileValue<FtlWeaponAnimation>();
   imageLists = new FtlFileValue<FtlImageList>();
   animationSheets = new FtlFileValue<FtlAnimationSheet>();
+  shipIcons = new FtlFileValue();
   diagnostics: FtlDiagnostic[] = [];
   uri: string;
   fileName: string;

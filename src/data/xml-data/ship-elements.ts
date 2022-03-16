@@ -33,7 +33,7 @@ export const shipChildTags: XmlTag[] = [
 ];
 export const shipTagNames = [...shipChildTags.map((t) => t.name), 'crewMember'];
 
-export const shipTags = [
+export const shipTags: XmlTag[] = [
   {
     name: 'ship',
     tags: shipTagNames,
@@ -50,5 +50,7 @@ export const shipTags = [
       boolAttr('hostile')
     ]
   },
+  {name: 'shipIcons', attributes: []},
+  {name: 'shipIcon', attributes: []},
   ...shipChildTags
 ];

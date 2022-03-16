@@ -139,7 +139,7 @@ export class FtlHoverProvider implements HoverProvider {
 
 
   async tryHoverImagePath({node, document, position}: LookupContext): Promise<Hover | undefined> {
-    const img = this.pathMappers.imageMapper.lookupImg({node, document, position});
+    const img = this.pathMappers.imageMapper.lookupFile({node, document, position});
     if (!img) return;
     const mdString = new MarkdownString();
     let imageUrl: string;

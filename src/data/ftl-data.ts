@@ -8,7 +8,7 @@ import {
   EventNamesValueSet,
   ImageListNames,
   ImgPathNames,
-  MusicPaths,
+  MusicPaths, ShipIconFileNames, ShipIconNames,
   ShipNames,
   SoundWaveNames,
   SoundWavePaths,
@@ -65,6 +65,8 @@ export const FtlData: XmlData = {
     ImgPathNames,
     ImageListNames,
     VariableNames,
-    CustomReqNames
+    CustomReqNames,
+    ShipIconNames,
+    ShipIconFileNames,
   ]
 };

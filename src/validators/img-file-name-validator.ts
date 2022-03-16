@@ -2,33 +2,45 @@ import {Validator} from './validator';
 import {FtlFile} from '../models/ftl-file';
 import {DiagnosticBuilder} from '../diagnostic-builder';
 import {defaultImgFiles} from '../data/default-ftl-data/default-img-files';
-import {FtlRoot} from '../models/ftl-root';
 import {FtlDiagnostic} from '../models/ftl-diagnostic';
 import {Range} from 'vscode-languageserver-textdocument';
+import {FtlResourceFile} from '../models/ftl-resource-file';
 
 export class ImgFileNameValidator implements Validator {
   defaultImgFilesSet = new Set(defaultImgFiles);
 
   validateFile(file: FtlFile, diagnostics: FtlDiagnostic[]): void {
     diagnostics.push(
-        ...this.validateDefs(file.root, file.animationSheets.defs, (v) => ({path: v.sheetFilePath, range: v.range})),
-        ...this.validateDefs(file.root,
+        ...this.validateDefs(file.root.imgFiles,
+            file.animationSheets.defs,
+            (v) => ({modPath: v.sheetFilePath, range: v.range}),
+            'Image File'),
+        ...this.validateDefs(file.root.imgFiles,
             file.weaponAnimations.defs,
-            (v) => ({path: v.chargeImagePath, range: v.chargeImageRange})),
-        ...this.validateDefs(file.root,
+            (v) => ({modPath: v.chargeImagePath, range: v.chargeImageRange}),
+            'Image File'),
+        ...this.validateDefs(file.root.imgFiles,
             file.imageLists.defs.flatMap((list) => list.imgList),
-            (v) => ({path: v.path, range: v.range}))
+            (v) => ({modPath: v.path, range: v.range}),
+            'Image File')
+    );
+    diagnostics.push(
+        ...this.validateDefs(file.root.shipIconFiles,
+            file.shipIcons.defs,
+            (v) => ({modPath: v.name, range: v.range}),
+            'Ship Icon')
     );
   }
 
-  validateDefs<T>(
-      root: FtlRoot,
+  validateDefs<T, T_FILES extends FtlResourceFile>(
+      files: T_FILES[],
       defs: T[],
-      selectInfo: (v: T) => ({ path: string | undefined, range: Range })): FtlDiagnostic[] {
+      selectInfo: (v: T) => ({ modPath: string | undefined, range: Range }),
+      typeName: string): FtlDiagnostic[] {
     return defs.map((value) => {
-      const {path, range} = selectInfo(value);
-      if (!path || this.defaultImgFilesSet.has(path) || root.findMatchingImg(path)) return;
-      return DiagnosticBuilder.invalidRefName(path, range, 'Image File');
+      const {modPath, range} = selectInfo(value);
+      if (!modPath || this.defaultImgFilesSet.has(modPath) || files.some((file) => file.modPath == modPath)) return;
+      return DiagnosticBuilder.invalidRefName(modPath, range, typeName);
     }).filter((d): d is FtlDiagnostic => !!d);
   }
 }

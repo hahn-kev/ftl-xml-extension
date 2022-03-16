@@ -89,3 +89,13 @@ export const CustomReqNames: IValueSet = {
   name: 'custom-req-names',
   values: [{name: 'loading...'}]
 };
+
+export const ShipIconNames: IValueSet = {
+  name: 'ship-icon-names',
+  values: [{name: 'loading...'}]
+};
+
+export const ShipIconFileNames: IValueSet = {
+  name: 'ship-icon-file-names',
+  values: [{name: 'loading...'}]
+};

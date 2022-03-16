@@ -8,7 +8,9 @@ import {
   getNodeTextContent,
   hasAttr,
   nodeTagEq,
-  normalizeAttributeName, normalizeTagName
+  normalizeAttributeName,
+  normalizeTagName,
+  shouldCompleteForNodeContents
 } from '../helpers';
 import {
   AnimationNames,
@@ -20,6 +22,7 @@ import {
   DroneNames,
   EventNamesValueSet,
   ImageListNames,
+  ShipIconNames,
   ShipNames,
   SoundWaveNames,
   SystemNames,
@@ -64,6 +67,7 @@ import {FtlReq} from '../models/ftl-req';
 import {FtlTextDocument} from '../models/ftl-text-document';
 import {Position} from 'vscode-languageserver-textdocument';
 import {EventRefParser} from './event-ref-parser';
+import {FtlGenericValue} from '../models/ftl-value';
 
 export class Mappers {
   readonly eventsMapper = new RefMapper(
@@ -233,8 +237,10 @@ export class Mappers {
       new RefParser((file) => file.sounds,
           FtlSound,
           new NodeMapImp(
-              ({document, node, position}) => {
-                return Sounds.isWaveNode(node, document) ? normalizeTagName(node.tag) : undefined;
+              (c) => {
+                if (!Sounds.isWaveNode(c.node, c.document)
+                    || (c.position && shouldCompleteForNodeContents(c.node, c.document.offsetAt(c.position)))) return;
+                return normalizeTagName(c.node.tag);
               },
               declarationBasedMapFunction(SoundWaveNames),
           )),
@@ -289,6 +295,23 @@ export class Mappers {
       defaultImageLists
   );
 
+  static readonly shipIconNodeMap = new NodeMapImp(
+      (context) => {
+        if (!nodeTagEq(context.node.parent?.parent, 'shipIcons')) return undefined;
+        return getNodeTextContent(context.node, context.document, 'name', 'shipIcon');
+      },
+      (context) => {
+        if (!nodeTagEq(context.node.parent?.parent, 'customShip')) return undefined;
+        return getNodeTextContent(context.node, context.document, 'shipIcon', 'shipIcons');
+      });
+  readonly shipIconMapper = new RefMapper(
+      new RefParser((file) => file.shipIcons,
+          FtlGenericValue,
+          Mappers.shipIconNodeMap,
+      ),
+      ShipIconNames,
+      'Ship Icon');
+
   readonly blueprintMapper = new BlueprintMapper([
     this.weaponsMapper,
     this.autoBlueprintMapper,
@@ -309,6 +332,7 @@ export class Mappers {
     this.animationSheetMapper,
     this.weaponAnimationMapper,
     this.imageListMapper,
+    this.shipIconMapper,
     this.blueprintMapper
   ];
 }

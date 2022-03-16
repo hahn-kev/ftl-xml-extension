@@ -20,7 +20,13 @@ import {isInAttrValue, normalizeTagName, shouldCompleteForNodeContents, toRange}
 import {DocumentCache} from '../document-cache';
 import {BlueprintMapper} from '../blueprints/blueprint-mapper';
 import {FtlData} from '../data/ftl-data';
-import {ImgPathNames, ShipNames, SoundWavePaths} from '../data/autocomplete-value-sets';
+import {
+  ImgPathNames,
+  ShipIconFileNames,
+  ShipIconNames,
+  ShipNames,
+  SoundWavePaths
+} from '../data/autocomplete-value-sets';
 import {Sounds} from '../sounds';
 import {XmlTag} from '../data/xml-data/helpers';
 import {VscodeConverter} from '../vscode-converter';
@@ -39,6 +45,8 @@ export class FtlCompletionProvider implements CompletionItemProvider {
     // support custom maps, only complete when parent>child
     this.completeContentMap.set('shipOrder>ship', ShipNames);
     this.completeContentMap.set('imageList>img', ImgPathNames);
+    this.completeContentMap.set('shipIcons>shipIcon', ShipIconNames);
+    this.completeContentMap.set('shipIcon>name', ShipIconFileNames);
   }
 
 

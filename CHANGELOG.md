@@ -2,6 +2,9 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
+## 0.6.1 pending
+- Add support for <shipIcon>
+
 ## 0.6.0
 - Add support and documentaion for slipstream mod elements like `<mod:findName>` and `<mod-append:*>`
 - removed required children error until we can improve it

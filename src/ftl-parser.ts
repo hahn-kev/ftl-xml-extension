@@ -4,7 +4,7 @@ import {DocumentCache} from './document-cache';
 import {FtlXmlParser, ParseContext} from './parsers/ftl-xml-parser';
 import {FtlRoot} from './models/ftl-root';
 import {getFileName, transformModFindNode} from './helpers';
-import {FileHandled, PathRefMapperBase} from './ref-mappers/path-ref-mapper';
+import {PathRefMapperBase} from './ref-mappers/path-ref-mapper';
 import {HyperspaceFile} from './models/hyperspace-file';
 import {URI} from 'vscode-uri';
 import {FtlTextDocument} from './models/ftl-text-document';
@@ -92,11 +92,9 @@ export class FtlParser {
   private async parseFile(file: URI, fileRemoved = false) {
     const fileName = getFileName(file);
     for (const pathMapper of this.pathMappers) {
-      if (pathMapper.handleFile(file, fileName, this.root, fileRemoved) == FileHandled.handled) {
-        return;
-      }
+      pathMapper.handleFile(file, fileName, this.root, fileRemoved);
     }
-    if (!fileName?.endsWith('.xml') && !fileName?.endsWith('.xml.append')) {
+    if (!fileName.endsWith('.xml') && !fileName.endsWith('.xml.append')) {
       return;
     }
     if (fileRemoved) {

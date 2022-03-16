@@ -2,7 +2,7 @@ import {
   CancellationToken,
   Definition,
   DefinitionLink,
-  DefinitionProvider,
+  DefinitionProvider, Location,
   Position,
   ProviderResult,
   TextDocument
@@ -28,10 +28,11 @@ export class FtlDefinitionProvider implements DefinitionProvider {
     let node = htmlDocument.findNodeBefore(offset);
     const findNode = transformModFindNode(node);
     if (findNode) node = findNode;
-
+    let defs: undefined | Location[] = undefined;
     for (const lookupDefProvider of this.lookupDefProviders) {
       const def = lookupDefProvider.lookupDef({node, document, position});
-      if (def) return VscodeConverter.toVscodeLocation(def);
+      if (def) (defs ?? (defs = [])).push(VscodeConverter.toVscodeLocation(def));
     }
+    return defs;
   }
 }

@@ -36,3 +36,7 @@ export abstract class FtlValue {
     return Location.create(this.file.uri, this.range);
   }
 }
+
+export class FtlGenericValue extends FtlValue {
+  readonly kind = 'Generic';
+}
