@@ -27,7 +27,10 @@
   "main": "./out/ftl-main",
   "browser": "./out/ftl-main.js",
   "capabilities": {
-    "virtualWorkspaces": true
+    "virtualWorkspaces": true,
+    "untrustedWorkspaces": {
+      "supported": true
+    }
   },
   "contributes": {
     "languages": [
@@ -41,8 +44,7 @@
           ".xml",
           ".xml.append"
         ],
-        "configuration": "./language-configuration.json",
-        "firstLine": "^<FTL>"
+        "configuration": "./language-configuration.json"
       }
     ],
     "grammars": [

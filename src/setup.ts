@@ -11,6 +11,7 @@ import {FtlDatFs} from './dat-fs-provider/ftl-dat-fs';
 import {AnimationPreview} from './animation-preview/animation-preview';
 import {FtlServices, setupCore} from './setup-core';
 import {VOID_ELEMENTS} from 'vscode-html-languageservice/lib/esm/languageFacts/fact';
+import {FtlFoldingProvider} from './providers/ftl-folding-provider';
 
 
 export type disposable = { dispose(): unknown };
@@ -79,12 +80,12 @@ export function setupVscodeProviders(services: FtlServices): Created {
           await workspaceParser.workspaceFoldersAdded(e.added);
         }
       }),
-
       workspace.registerFileSystemProvider(FtlDatFs.scheme, ftlDatFS, {isCaseSensitive: true, isReadonly: true}),
       languages.registerCompletionItemProvider(ftlXmlDoc, completionItemProvider, '<', '"'),
       languages.registerHoverProvider(ftlXmlDoc, hoverProvider),
       languages.registerDefinitionProvider(ftlXmlDoc, ftlDefinitionProvider),
       languages.registerReferenceProvider(ftlXmlDoc, ftlReferenceProvider),
+      languages.registerFoldingRangeProvider(ftlXmlDoc, new FtlFoldingProvider(services.htmlService)),
       languages.registerCodeActionsProvider(ftlXmlDoc, ftlCodeActionProvider, {
         providedCodeActionKinds: [
           CodeActionKind.QuickFix
