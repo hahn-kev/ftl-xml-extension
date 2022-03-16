@@ -5,6 +5,7 @@ import {FtlFile} from '../models/ftl-file';
 import {DocumentCache} from '../document-cache';
 
 export class AnimationPreview {
+  static readonly OpenPreviewCommand = 'ftl-xml.show-animation';
   constructor(private mappers: Mappers, private ftlParser: FtlParser, private cache: DocumentCache) {
   }
 

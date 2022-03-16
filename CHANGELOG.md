@@ -2,8 +2,9 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
-## 0.6.1 pending
+## 0.6.1
 - Add support for <shipIcon>
+- Add support for references and animation preview button to show inline
 
 ## 0.6.0
 - Add support and documentaion for slipstream mod elements like `<mod:findName>` and `<mod-append:*>`

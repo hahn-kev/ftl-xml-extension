@@ -4,6 +4,7 @@ import {FtlFile, FtlFileValue} from '../models/ftl-file';
 import {FtlValue} from '../models/ftl-value';
 import {VscodeConverter} from '../vscode-converter';
 import {Mappers} from '../ref-mappers/mappers';
+import {AnimationPreview} from '../animation-preview/animation-preview';
 
 export class FtlCodeLensProvider implements CodeLensProvider {
   constructor(private parser: FtlParser, private mappers: Mappers) {
@@ -15,6 +16,23 @@ export class FtlCodeLensProvider implements CodeLensProvider {
     if (token.isCancellationRequested) return;
     const file = files.get(document.uri.toString());
     if (!file) return;
+
+    const lenses = [
+      ...this.referenceLenses(file, document.uri),
+      ...this.animationPreviewLenses(file)
+    ];
+
+    return lenses;
+  }
+
+  private* animationPreviewLenses(file: FtlFile) {
+    for (const def of file.animations.defs) {
+      yield new CodeLens(VscodeConverter.toVscodeRange(def.range),
+          {title: 'Preview Animation', command: AnimationPreview.OpenPreviewCommand, arguments: [def.name]});
+    }
+  }
+
+  private referenceLenses(file: FtlFile, uri: Uri) {
     const fileValues: FtlFileValue<FtlValue>[] = [
       file.event,
       file.ship,
@@ -33,7 +51,7 @@ export class FtlCodeLensProvider implements CodeLensProvider {
       for (const def of fileValue.defs) {
         const refs = mapper.refs.get(def.name)?.filter(r => r !== def);
         if (!refs || refs.length == 0) continue;
-        lenses.push(this.defToCodeLense(def, document.uri, refs));
+        lenses.push(this.defToCodeLense(def, uri, refs));
       }
     }
     return lenses;

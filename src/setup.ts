@@ -94,7 +94,7 @@ export function setupVscodeProviders(services: FtlServices): Created {
         ]
       }),
       languages.registerColorProvider(ftlXmlDoc, ftlColor),
-      commands.registerCommand('ftl-xml.show-animation', async (...args) => {
+      commands.registerCommand(AnimationPreview.OpenPreviewCommand, async (...args) => {
         await new AnimationPreview(services.mappers, services.parser, services.documentCache).openFromCommand(args);
       })
     ]

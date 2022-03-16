@@ -7,6 +7,7 @@ import {PathRefMappers} from '../ref-mappers/path-ref-mapper';
 import {FtlDatFs} from '../dat-fs-provider/ftl-dat-fs';
 import {LookupContext} from '../ref-mappers/lookup-provider';
 import {VscodeConverter} from '../vscode-converter';
+import {AnimationPreview} from '../animation-preview/animation-preview';
 
 export class FtlHoverProvider implements HoverProvider {
   constructor(private documentCache: DocumentCache,
@@ -131,7 +132,7 @@ export class FtlHoverProvider implements HoverProvider {
     if (!name) return;
 
     const component = encodeURIComponent(JSON.stringify([name]));
-    const showPreviewCommand = Uri.parse(`command:ftl-xml.show-animation?${component}`);
+    const showPreviewCommand = Uri.parse(`command:${AnimationPreview.OpenPreviewCommand}?${component}`);
     const mdString = new MarkdownString(`[Click to Preview Animation](${showPreviewCommand})`);
     mdString.isTrusted = true;
     return new Hover(mdString);
