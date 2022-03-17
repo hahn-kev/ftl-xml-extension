@@ -1,5 +1,6 @@
 ## Going to implement
 - make sure projectile tag contents is a ref to an animation
+- look into removing generic text complete from ftl files
 - support refs from removeItem
 - enable required children again once we can fix weapon issues
 - narrow range for attribute refs

@@ -48,13 +48,18 @@ export class BlueprintMapper implements RefMapperBase {
     const refName = this.parser.getNameDef(node, document, position)
         ?? this.parser.getRefName(node, document, position);
     if (!refName) return;
+    const results = this.getRefsByName(refName);
+
+    return results.map((value) => value.toLocation());
+  }
+
+  getRefsByName(refName: string) : FtlValue[] {
     const results = [...this.refs.get(refName) ?? []];
     for (const mapper of this.blueprintMappers) {
       const mapperResults = mapper.refs.get(refName);
       if (mapperResults) results.push(...mapperResults);
     }
-
-    return results.map((value) => value.toLocation());
+    return results;
   }
 
 
@@ -66,6 +71,7 @@ export class BlueprintMapper implements RefMapperBase {
     this.refs.clear();
     this.defs.clear();
     for (const file of root.xmlFiles.values()) {
+      if (!file.isReferenced) continue;
       for (const blueprintList of file.blueprintList.defs) {
         this.defs.set(blueprintList.name, blueprintList);
       }
@@ -85,6 +91,7 @@ export class BlueprintMapper implements RefMapperBase {
 
     // we need to do this after the first iteration of files because we need the defs to be setup already
     for (const file of root.xmlFiles.values()) {
+      if (!file.isReferenced) continue;
       for (const {ref: listRef} of this.listRefs(file)) {
         if (this.defs.has(listRef.name)) {
           addToKey(this.refs, listRef.name, listRef);

@@ -311,8 +311,7 @@ export class Mappers {
       ),
       ShipIconNames,
       'Ship Icon');
-
-  readonly blueprintMapper = new BlueprintMapper([
+  readonly blueprintMappers = [
     this.weaponsMapper,
     this.autoBlueprintMapper,
     this.dronesMapper,
@@ -321,7 +320,8 @@ export class Mappers {
     this.systemMapper,
     this.variableMapper,
     this.reqMapper
-  ]);
+  ];
+  readonly blueprintMapper = new BlueprintMapper(this.blueprintMappers);
 
   readonly list: RefMapperBase[] = [
     this.eventsMapper,

@@ -5,6 +5,7 @@ import {FtlValue} from '../models/ftl-value';
 import {VscodeConverter} from '../vscode-converter';
 import {Mappers} from '../ref-mappers/mappers';
 import {AnimationPreview} from '../animation-preview/animation-preview';
+import {RefMapperBase} from '../ref-mappers/ref-mapper';
 
 export class FtlCodeLensProvider implements CodeLensProvider {
   constructor(private parser: FtlParser, private mappers: Mappers) {
@@ -49,16 +50,27 @@ export class FtlCodeLensProvider implements CodeLensProvider {
       const mapper = this.determineMapper(file, fileValue);
       if (!mapper) continue;
       for (const def of fileValue.defs) {
-        const refs = mapper.refs.get(def.name)?.filter(r => r !== def);
+        const refs = this.findRefs(def, mapper);
         if (!refs || refs.length == 0) continue;
         lenses.push(this.defToCodeLense(def, uri, refs));
       }
     }
+
     return lenses;
   }
 
+  private findRefs(def: FtlValue, mapper: RefMapperBase): FtlValue[] {
+    const refs = (this.mappers.blueprintMapper == mapper)
+        ? this.mappers.blueprintMapper.getRefsByName(def.name)
+        : mapper.refs.get(def.name);
+    return refs?.filter(r => r !== def) ?? [];
+  }
+
   private determineMapper(file: FtlFile, fileValue: FtlFileValue<FtlValue>) {
-    return this.mappers.list.find(m => m.parser.fileDataSelector(file) === fileValue);
+    const mapper = this.mappers.list.find(m => m.parser.fileDataSelector(file) === fileValue);
+    if (mapper) return mapper;
+    const isBlueprintMapper = this.mappers.blueprintMappers.some(m => m.parser.fileDataSelector(file) === fileValue);
+    return isBlueprintMapper ? this.mappers.blueprintMapper : undefined;
   }
 
   private defToCodeLense(def: FtlValue, uri: Uri, refs: FtlValue[]) {

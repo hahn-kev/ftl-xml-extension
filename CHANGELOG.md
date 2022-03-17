@@ -2,6 +2,9 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
+## 0.6.2
+- fix issue with inline references for blueprints
+
 ## 0.6.1
 - Add support for <shipIcon>
 - Add support for references and animation preview button to show inline
