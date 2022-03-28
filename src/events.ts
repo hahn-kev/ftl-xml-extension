@@ -1,9 +1,9 @@
 import {Node} from 'vscode-html-languageservice';
 import {getAttrValueForTag, getNodeTextContent, hasAttr, nodeTagEq, normalizeAttributeName} from './helpers';
-import {NodeMap} from './ref-mappers/node-map';
 import {Position} from 'vscode-languageserver-textdocument';
 import {FtlTextDocument} from './models/ftl-text-document';
 import {ParseContext} from './parsers/ftl-xml-parser';
+import {NodeMap} from './ref-mappers/node-mapping/node-map';
 
 class EventsMap implements NodeMap {
   getNameDef(node: Node, document: FtlTextDocument, position?: Position): string | undefined {

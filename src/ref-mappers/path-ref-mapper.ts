@@ -9,12 +9,12 @@ import {LookupContext, LookupProvider} from './lookup-provider';
 import {defaultSoundFiles} from '../data/default-ftl-data/default-sound-files';
 import {defaultImgFiles} from '../data/default-ftl-data/default-img-files';
 import {defaultMusic} from '../data/default-ftl-data/default-music';
-import {NodeMapContext} from './node-map';
 import {DataReceiver} from '../providers/ftl-data-provider';
 import {URI} from 'vscode-uri';
 import {Mappers} from './mappers';
 import {Sounds} from '../sounds';
 import {FtlShipIcon} from '../models/ftl-ship-icon';
+import {NodeMapContext} from './node-mapping/node-map-context';
 
 export enum FileHandled {
   handled,

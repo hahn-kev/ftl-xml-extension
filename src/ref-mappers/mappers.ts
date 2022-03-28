@@ -61,11 +61,14 @@ import {FtlWeaponAnimation} from '../models/ftl-weapon-animation';
 import {defaultWeaponAnimations} from '../data/default-ftl-data/default-weapon-animations';
 import {defaultImageLists} from '../data/default-ftl-data/default-image-lists';
 import {FtlImageList} from '../models/ftl-image-list';
-import {declarationBasedMapFunction, NodeMapContext, NodeMapImp, staticValueNodeMap} from './node-map';
 import {FtlVariable} from '../models/ftl-variable';
 import {FtlReq} from '../models/ftl-req';
 import {EventRefParser} from './event-ref-parser';
 import {FtlGenericValue} from '../models/ftl-value';
+import {NodeMapContext} from './node-mapping/node-map-context';
+import {staticValueNodeMap} from './node-mapping/static-node-map';
+import {NodeMapImp} from './node-mapping/node-map';
+import {declarationBasedMapFunction} from './node-mapping/declaration-node-map';
 
 export class Mappers {
   readonly eventsMapper = new RefMapper(
