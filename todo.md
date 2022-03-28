@@ -1,9 +1,10 @@
 ## Going to implement
+- narrow range for attribute refs
 - make sure projectile tag contents is a ref to an animation
 - look into removing generic text complete from ftl files
 - support refs from removeItem
 - enable required children again once we can fix weapon issues
-- narrow range for attribute refs
+- make sure unlock custom ship only shows player ships (defined in hyper space under ships>ship) instead of all blueprints
 - add missing refs for:
     - ship blueprint elements: cloak, shield images
     - sector trackList track music
