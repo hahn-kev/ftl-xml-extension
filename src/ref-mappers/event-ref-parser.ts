@@ -5,7 +5,7 @@ import {EventUnsafeChildrenRefParser} from '../parsers/event-unsafe-children-ref
 
 export class EventRefParser extends RefParser<FtlEvent> {
   public override parseNode(context: ParseContext) {
-    const nameDef = this.getNameDef(context.node, context.document);
+    const nameDef = this.getNameDef(context);
     if (nameDef) {
       const event = this.handleDefinition(context, nameDef);
       return context.isModNode ? undefined : new EventUnsafeChildrenRefParser(event);

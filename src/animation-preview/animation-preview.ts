@@ -28,9 +28,12 @@ export class AnimationPreview {
     if (!editor) return;
     const htmlDocument = this.cache.getHtmlDocument(editor.document);
     const node = htmlDocument.findNodeAt(editor.document.offsetAt(editor.selection.active));
-    const animationName = this.mappers.animationMapper.parser.getNameDef(node,
-        editor.document,
-        editor.selection.active);
+
+    const animationName = this.mappers.animationMapper.parser.getNameDef({
+      node,
+      document: editor.document,
+      position: editor.selection.active
+    });
     if (!animationName) return;
     await this.open(animationName);
   }

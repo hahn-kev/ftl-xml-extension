@@ -4,12 +4,14 @@ import {Position} from 'vscode-languageserver-textdocument';
 import {FtlTextDocument} from './models/ftl-text-document';
 import {ParseContext} from './parsers/ftl-xml-parser';
 import {NodeMap} from './ref-mappers/node-mapping/node-map';
+import {NodeMapContext} from './ref-mappers/node-mapping/node-map-context';
 
 class EventsMap implements NodeMap {
-  getNameDef(node: Node, document: FtlTextDocument, position?: Position): string | undefined {
-    if (nodeTagEq(node.parent, 'sectorDescription', 'loadEventList')) return;
-    if (nodeTagEq(node, 'eventList', 'event') && hasAttr(node, 'name', document, position)) {
-      return normalizeAttributeName(node.attributes.name);
+  getNameDef(context: NodeMapContext): string | undefined {
+    if (nodeTagEq(context.node.parent, 'sectorDescription', 'loadEventList')) return;
+    if (nodeTagEq(context.node, 'eventList', 'event')
+        && hasAttr(context.node, 'name', context.document, context.position)) {
+      return normalizeAttributeName(context.node.attributes.name);
     }
   }
 

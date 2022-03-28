@@ -5,6 +5,7 @@ import {FtlXmlParser, ParseContext} from '../parsers/ftl-xml-parser';
 import {FtlTextDocument} from '../models/ftl-text-document';
 import {Position} from 'vscode-languageserver-textdocument';
 import {NodeMap} from './node-mapping/node-map';
+import {NodeMapContext} from './node-mapping/node-map-context';
 
 export interface FtlRefParser extends FtlXmlParser, NodeMap {
   fileDataSelector: (file: FtlFile) => FtlFileValue<FtlValue>;
@@ -20,7 +21,7 @@ export class RefParser<T extends FtlValue = FtlValue> implements FtlRefParser {
   }
 
   parseNode(context: ParseContext): void {
-    const nameDef = this.getNameDef(context.node, context.document);
+    const nameDef = this.getNameDef(context);
     if (nameDef) {
       this.handleDefinition(context, nameDef);
       return;
@@ -50,8 +51,8 @@ export class RefParser<T extends FtlValue = FtlValue> implements FtlRefParser {
     return ftlValue;
   }
 
-  getNameDef(node: Node, document: FtlTextDocument, position?: Position): string | undefined {
-    return this.nodeMap.getNameDef(node, document, position);
+  getNameDef(context: NodeMapContext): string | undefined {
+    return this.nodeMap.getNameDef(context);
   }
 
   getRefName(node: Node, document: FtlTextDocument, position: Position): string | undefined;

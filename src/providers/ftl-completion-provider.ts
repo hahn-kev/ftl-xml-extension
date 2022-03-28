@@ -21,8 +21,8 @@ import {DocumentCache} from '../document-cache';
 import {BlueprintMapper} from '../blueprints/blueprint-mapper';
 import {FtlData} from '../data/ftl-data';
 import {
-  ShipBlueprintNames,
   ImgPathNames,
+  ShipBlueprintNames,
   ShipIconFileNames,
   ShipIconNames,
   ShipNames,
@@ -102,7 +102,7 @@ export class FtlCompletionProvider implements CompletionItemProvider {
         && shouldCompleteForNodeContents(node, offset)) {
       const range = VscodeConverter.toVscodeRange(toRange(node.startTagEnd, node.endTagStart, document));
       const blueprintListNode = node.parent;
-      const listName = this.blueprintMapper.parser.getNameDef(blueprintListNode, document);
+      const listName = this.blueprintMapper.parser.getNameDef({node: blueprintListNode, document});
       if (!listName) return;
       const typeName = this.blueprintMapper.getRefType(listName);
       const mapper = this.blueprintMapper.getMapperForTypeName(typeName);

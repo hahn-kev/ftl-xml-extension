@@ -4,7 +4,7 @@ import {Position} from 'vscode-languageserver-textdocument';
 import {NodeMapContext} from './node-map-context';
 
 export interface NodeMap {
-  getNameDef(node: Node, document: FtlTextDocument, position?: Position): string | undefined;
+  getNameDef(context: NodeMapContext): string | undefined;
 
   getRefName(node: Node, document: FtlTextDocument, position: Position): string | undefined;
 
@@ -21,8 +21,8 @@ export class NodeMapImp implements NodeMap {
               private refName: getRefName) {
   }
 
-  public getNameDef(node: Node, document: FtlTextDocument, position?: Position): string | undefined {
-    return this.nameDef({node, document, position});
+  public getNameDef(context: NodeMapContext): string | undefined {
+    return this.nameDef(context);
   }
 
   public getRefName(node: Node, document: FtlTextDocument, position: Position): string | undefined;

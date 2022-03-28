@@ -1,4 +1,4 @@
-import {FtlXmlParser, ParseContext} from '../parsers/ftl-xml-parser';
+import {ParseContext} from '../parsers/ftl-xml-parser';
 import {RefMapperBase} from '../ref-mappers/ref-mapper';
 import {Node} from 'vscode-html-languageservice';
 import {FtlFile, FtlFileValue} from '../models/ftl-file';
@@ -7,10 +7,12 @@ import {addToKey, getAttrValueForTag, getNodeTextContent, nodeTagEq} from '../he
 import {FtlValue} from '../models/ftl-value';
 import {FtlTextDocument} from '../models/ftl-text-document';
 import {Position} from 'vscode-languageserver-textdocument';
+import {NodeMapContext} from '../ref-mappers/node-mapping/node-map-context';
+import {FtlRefParser} from '../ref-mappers/ref-parser';
 
 type RefContext = { name: string, mapper?: RefMapperBase };
 
-export class BlueprintParser implements FtlXmlParser {
+export class BlueprintParser implements FtlRefParser {
   fileDataSelector(file: FtlFile): FtlFileValue<FtlBlueprintList, FtlValue> {
     return file.blueprintList;
   }
@@ -21,7 +23,7 @@ export class BlueprintParser implements FtlXmlParser {
   parseNode(context: ParseContext): void {
     // skip list child as it's handled when the blueprintList is passed in
     if (this.isListChild(context.node)) return;
-    const name = this.getBlueprintListName(context.node, context.document);
+    const name = this.getBlueprintListName(context);
     if (name) {
       const ftlBlueprintList = new FtlBlueprintList(name, context.file, context.node, context.document, !context.isModNode);
       ftlBlueprintList.childRefNames = context.node.children.filter((c) => nodeTagEq(c, 'name'))
@@ -69,15 +71,15 @@ export class BlueprintParser implements FtlXmlParser {
     return nodeTagEq(node, 'name') && nodeTagEq(node.parent, 'blueprintList');
   }
 
-  getBlueprintListName(node: Node, document: FtlTextDocument, position?: Position) {
+  getBlueprintListName({node, document, position}: NodeMapContext) {
     return getAttrValueForTag(node, 'blueprintList', 'name', document, position);
   }
 
-  getNameDef(node: Node, document: FtlTextDocument, position?: Position): string | undefined {
-    let name = this.getBlueprintListName(node, document, position);
+  getNameDef(context: NodeMapContext): string | undefined {
+    let name = this.getBlueprintListName(context);
     if (name) return name;
     for (const mapper of this.blueprintMappers) {
-      name = mapper.parser.getNameDef(node, document, position);
+      name = mapper.parser.getNameDef(context);
       if (name) return name;
     }
   }

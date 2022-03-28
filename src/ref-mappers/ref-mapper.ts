@@ -76,23 +76,23 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
     return {name: value.name};
   }
 
-  lookupRefs({node, document, position}: LookupContext): Location[] | undefined {
-    const name = this.getRefName(node, document, position);
+  lookupRefs(context: LookupContext): Location[] | undefined {
+    const name = this.getRefName(context);
     if (!name) return;
     const values = this.refs.get(name) ?? this.altRefMapper?.refs.get(name);
     return values?.map((value: FtlValue) => value.toLocation());
   }
 
-  lookupDef({node, document, position}: LookupContext): Location | undefined {
-    const name = this.getRefName(node, document, position);
+  lookupDef(context: LookupContext): Location | undefined {
+    const name = this.getRefName(context);
     if (!name) return;
     const value = this.defs.get(name) ?? this.altRefMapper?.defs.get(name);
     if (value) return value.toLocation();
   }
 
-  getRefName(node: Node, document: FtlTextDocument, position: Position) {
-    return this.parser.nodeMap.getNameDef(node, document, position)
-        ?? this.parser.nodeMap.getRefName(node, document, position);
+  getRefName(context: LookupContext) {
+    return this.parser.nodeMap.getNameDef(context)
+        ?? this.parser.nodeMap.getRefName(context.node, context.document, context.position);
   }
 
 

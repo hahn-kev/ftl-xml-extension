@@ -126,9 +126,9 @@ export class FtlHoverProvider implements HoverProvider {
     );
   }
 
-  tryHoverAnimation({node, document, position}: LookupContext): Hover | undefined {
-    const name = this.mappers.animationMapper.parser.getNameDef(node, document, position)
-        ?? this.mappers.animationMapper.parser.getRefName(node, document, position);
+  tryHoverAnimation(context: LookupContext): Hover | undefined {
+    const name = this.mappers.animationMapper.parser.getNameDef(context)
+        ?? this.mappers.animationMapper.parser.getRefName(context.node, context.document, context.position);
     if (!name) return;
 
     const component = encodeURIComponent(JSON.stringify([name]));

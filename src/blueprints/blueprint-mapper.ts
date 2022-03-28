@@ -44,9 +44,9 @@ export class BlueprintMapper implements RefMapperBase {
   }
 
 
-  lookupRefs({node, document, position}: LookupContext): Location[] | undefined {
-    const refName = this.parser.getNameDef(node, document, position)
-        ?? this.parser.getRefName(node, document, position);
+  lookupRefs(context: LookupContext): Location[] | undefined {
+    const refName = this.parser.getNameDef(context)
+        ?? this.parser.getRefName(context.node, context.document, context.position);
     if (!refName) return;
     const results = this.getRefsByName(refName);
 

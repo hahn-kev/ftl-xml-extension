@@ -102,7 +102,7 @@ export class PathRefMappers {
       FtlShipIcon,
       (root) => root.shipIconFiles,
       [],
-      (c) => Mappers.shipIconNodeMap.getNameDef(c.node, c.document, c.position),
+      (c) => Mappers.shipIconNodeMap.getNameDef(c),
       (refName, files) => files.find((f) => f.modPath == refName)
   );
 

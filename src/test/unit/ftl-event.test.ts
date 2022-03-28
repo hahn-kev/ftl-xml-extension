@@ -3,6 +3,7 @@ import {TestHelpers} from './test-helpers';
 import {expect} from 'chai';
 import {EventLoopValidator} from '../../validators/event-loop-validator';
 import {FtlDiagnostic} from '../../models/ftl-diagnostic';
+import {Range} from 'vscode-html-languageservice';
 
 suite('Ftl Events', () => {
   test('should parse all event references', () => {
@@ -113,6 +114,20 @@ suite('Ftl Events', () => {
     const eventDef = file.event.defs[0];
     expect(eventDef.unsafeEventRefs).to.be.undefined;
   });
+
+  test('should specify a range for the definition', () => {
+    const services = TestHelpers.testSetup();
+    const document = TestHelpers.testTextDocument(
+        `
+<event name="my_event"/> 
+<event load="my_event"/> 
+`);
+    const file = services.parser.parseDocument(document);
+    expect(file.event.defs).to.have.length(1);
+    const eventDef = file.event.defs[0];
+    expect(eventDef.range).to.deep.eq({start: {line: 1, character: 14}, end: {line: 1, character: 22}});
+  });
+
   test('should find an event loop', () => {
     const services = TestHelpers.testSetup();
     const document = TestHelpers.testTextDocument(
@@ -134,7 +149,7 @@ suite('Ftl Events', () => {
     expect(diagnostics).to.have.length(3);
   });
 
-  test('should not crash', () => {
+  test('should not crash when there is an event loop referenced by an event not in it', () => {
     const services = TestHelpers.testSetup();
     const document = TestHelpers.testTextDocument(
         `
