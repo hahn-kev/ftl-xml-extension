@@ -88,6 +88,12 @@
           "when": "editorLangId == ftl-xml"
         }
       ]
+    },
+    "configurationDefaults": {
+      "[ftl-xml]": {
+        "editor.wordBasedSuggestions": false,
+        "editor.quickSuggestions": true
+      }
     }
   },
   "scripts": {
