@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import {
   AugmentNames,
-  AutoblueprintNames,
+  ShipBlueprintNames,
   CrewNames,
   EventNamesValueSet,
   ImageListNames,
@@ -76,8 +76,8 @@ const hyperspaceEventChildren: XmlTag[] = [
   {name: 'clearCustomFleet', attributes: [], description: `Removes a custom fleet if one is present.`},
   {
     name: 'unlockCustomShip',
-    attributes: [boolAttr('silent'), {name: 'shipReq', valueSet: AutoblueprintNames.name}],
-    contentsValueSet: AutoblueprintNames.name,
+    attributes: [boolAttr('silent'), {name: 'shipReq', valueSet: ShipBlueprintNames.name}],
+    contentsValueSet: ShipBlueprintNames.name,
     description: `Alias for unlockShip - If silent is true, the unlock is silent. If shipReq is specified, the unlock only occurs if the player is currently playing as that ship. This alias must be used in events.xml files.`
   },
   {name: 'achievement', attributes: [boolAttr('silent')], description: `Unlocks custom global achievement.`},
@@ -347,7 +347,7 @@ const eventChildTags: XmlTag[] = [
   },
   {
     name: 'unlockShip',
-    attributes: [boolAttr('silent'), {name: 'shipReq', valueSet: AutoblueprintNames.name}],
+    attributes: [boolAttr('silent'), {name: 'shipReq', valueSet: ShipBlueprintNames.name}],
     description: `Unlocks the ship PLAYER_SHIP_ID. If silent is true, the unlock is silent. If shipReq is specified, the unlock only occurs if the player is currently playing as that ship. Use alias unlockCustomShip in events.xml files.`
   },
   {name: 'item_modify', attributes: [], tags: ['item']},

@@ -1,6 +1,6 @@
 import {FtlEvent} from './ftl-event';
 import {FtlShip} from './ftl-ship';
-import {FtlAutoblueprint} from './ftl-autoblueprint';
+import {FtlShipBlueprint} from './ftl-ship-blueprint';
 import {FtlText} from './ftl-text';
 import {FtlWeapon} from './ftl-weapon';
 import {FtlBlueprintList} from './ftl-blueprint-list';
@@ -47,7 +47,7 @@ export class FtlFile {
 
   event = new FtlFileValue<FtlEvent>();
   ship = new FtlFileValue<FtlShip>();
-  autoBlueprint = new FtlFileValue<FtlAutoblueprint>();
+  shipBlueprint = new FtlFileValue<FtlShipBlueprint>();
   text = new FtlFileValue<FtlText>();
   weapon = new FtlFileValue<FtlWeapon>();
   drone = new FtlFileValue<FtlDrone>();

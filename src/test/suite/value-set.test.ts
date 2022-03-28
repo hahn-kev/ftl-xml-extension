@@ -4,7 +4,7 @@ import {before, suite, test} from 'mocha';
 import {setup} from '../../setup';
 import {
   AugmentNames,
-  AutoblueprintNames,
+  ShipBlueprintNames,
   CrewNames,
   DroneNames,
   EventNamesValueSet,
@@ -15,7 +15,7 @@ import {
 } from '../../data/autocomplete-value-sets';
 import {defaultEvents} from '../../data/default-ftl-data/default-events';
 import {defaultShips} from '../../data/default-ftl-data/default-ships';
-import {defaultAutoBlueprints} from '../../data/default-ftl-data/default-auto-blueprints';
+import {defaultShipBlueprints} from '../../data/default-ftl-data/default-ship-blueprints';
 import {defaultWeaponBlueprints} from '../../data/default-ftl-data/default-weapon-blueprints';
 import {defaultDrones} from '../../data/default-ftl-data/default-drones';
 import {defaultCrew} from '../../data/default-ftl-data/default-crew';
@@ -43,7 +43,7 @@ suite('Value Set', () => {
   });
 
   test('auto blueprints value set', () => {
-    expect(AutoblueprintNames.values.length).to.gt(defaultAutoBlueprints.length + 100);
+    expect(ShipBlueprintNames.values.length).to.gt(defaultShipBlueprints.length + 100);
   });
 
   test('weapons value set', () => {

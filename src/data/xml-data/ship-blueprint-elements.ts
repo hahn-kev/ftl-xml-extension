@@ -1,5 +1,5 @@
 import {XmlTag} from './helpers';
-import {AutoblueprintNames, CrewNames, TextIdNames, WeaponNames} from '../autocomplete-value-sets';
+import {ShipBlueprintNames, CrewNames, TextIdNames, WeaponNames} from '../autocomplete-value-sets';
 
 const shipBlueprintChildren: XmlTag[] = [
   {
@@ -32,8 +32,8 @@ export const shipBlueprintTags: XmlTag[] = [
   },
   ...shipBlueprintChildren,
   // custom hyperspace tags
-  {name: 'bossShip', attributes: [], contentsValueSet: AutoblueprintNames.name},
-  {name: 'customShip', attributes: [{name: 'name', valueSet: AutoblueprintNames.name}]},
-  {name: 'shipReq', attributes: [], contentsValueSet: AutoblueprintNames.name},
-  {name: 'victory', attributes: [], contentsValueSet: AutoblueprintNames.name},
+  {name: 'bossShip', attributes: [], contentsValueSet: ShipBlueprintNames.name},
+  {name: 'customShip', attributes: [{name: 'name', valueSet: ShipBlueprintNames.name}]},
+  {name: 'shipReq', attributes: [], contentsValueSet: ShipBlueprintNames.name},
+  {name: 'victory', attributes: [], contentsValueSet: ShipBlueprintNames.name},
 ];

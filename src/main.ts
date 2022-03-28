@@ -5,7 +5,7 @@ import {commands, ExtensionContext, ExtensionMode, window} from 'vscode';
 import {
   AnimationNames, AnimationSheetNames,
   AugmentNames,
-  AutoblueprintNames,
+  ShipBlueprintNames,
   CrewNames,
   DroneNames,
   EventNamesValueSet, ImageListNames,
@@ -45,7 +45,7 @@ export function activate(context: ExtensionContext) {
         const eventNames = EventNamesValueSet.values.map((e) => e.name);
         const shipNames = ShipNames.values.map((v) => v.name);
         const textNames = TextIdNames.values.map((t) => t.name);
-        const autoBlueprints = AutoblueprintNames.values.map((b) => b.name);
+        const shipBlueprints = ShipBlueprintNames.values.map((b) => b.name);
         const weapons = WeaponNames.values.map((w) => w.name);
         const drones = DroneNames.values.map((d) => d.name);
         const augs = AugmentNames.values.map((a) => a.name);

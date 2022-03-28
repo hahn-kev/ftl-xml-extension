@@ -37,7 +37,7 @@ export class FtlCodeLensProvider implements CodeLensProvider {
     const fileValues: FtlFileValue<FtlValue>[] = [
       file.event,
       file.ship,
-      file.autoBlueprint,
+      file.shipBlueprint,
       file.weapon,
       file.drone,
       file.animations,

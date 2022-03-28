@@ -4,8 +4,8 @@ import {Node} from 'vscode-html-languageservice';
 import {FtlTextDocument} from './ftl-text-document';
 import {getAttrValueForTag} from '../helpers';
 
-export class FtlAutoblueprint extends FtlValue {
-  readonly kind = 'Auto Blueprint';
+export class FtlShipBlueprint extends FtlValue {
+  readonly kind = 'Ship Blueprint';
 
   constructor(name: string, file: FtlFile, node: Node, document: FtlTextDocument, isDef: boolean) {
     super(name, file, node, document, isDef);

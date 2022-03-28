@@ -17,7 +17,7 @@ export class IsReferencedUpdater implements DataReceiver {
     // now that we know which files are referenced we can use them to determine which layout files are referenced
     const shipLayouts = new Set(Array.from(root.xmlFiles.values())
         .filter((file) => file.isReferenced)
-        .flatMap((file) => file.autoBlueprint.defs.map((ship) => ship.layout))
+        .flatMap((file) => file.shipBlueprint.defs.map((ship) => ship.layout))
         .filter((layout): layout is string => !!layout)
         .concat(defaultShipLayouts));
     for (const file of root.xmlFiles.values()) {

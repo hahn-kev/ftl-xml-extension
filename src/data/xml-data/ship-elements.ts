@@ -1,6 +1,6 @@
 import {boolAttr, XmlTag} from './helpers';
 import {eventChildTagNames} from './event-elements';
-import {AutoblueprintNames, EventNamesValueSet, ShipNames} from '../autocomplete-value-sets';
+import {ShipBlueprintNames, EventNamesValueSet, ShipNames} from '../autocomplete-value-sets';
 
 export const shipChildTags: XmlTag[] = [
   {name: 'weaponOverride', attributes: [], tags: ['name']},
@@ -44,7 +44,7 @@ export const shipTags: XmlTag[] = [
       },
       {
         name: 'auto_blueprint',
-        valueSet: AutoblueprintNames.name
+        valueSet: ShipBlueprintNames.name
       },
       {name: 'name'},
       boolAttr('hostile'),

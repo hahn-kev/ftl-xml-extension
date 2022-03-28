@@ -21,7 +21,7 @@ import {DocumentCache} from '../document-cache';
 import {BlueprintMapper} from '../blueprints/blueprint-mapper';
 import {FtlData} from '../data/ftl-data';
 import {
-  AutoblueprintNames,
+  ShipBlueprintNames,
   ImgPathNames,
   ShipIconFileNames,
   ShipIconNames,
@@ -48,7 +48,7 @@ export class FtlCompletionProvider implements CompletionItemProvider {
     this.completeContentMap.set('imageList>img', ImgPathNames);
     this.completeContentMap.set('shipIcons>shipIcon', ShipIconNames);
     this.completeContentMap.set('shipIcon>name', ShipIconFileNames);
-    this.completeContentMap.set('otherUnlocks>ship', AutoblueprintNames);
+    this.completeContentMap.set('otherUnlocks>ship', ShipBlueprintNames);
   }
 
 

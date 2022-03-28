@@ -16,7 +16,7 @@ import {
   AnimationNames,
   AnimationSheetNames,
   AugmentNames,
-  AutoblueprintNames,
+  ShipBlueprintNames,
   CrewNames,
   CustomReqNames,
   DroneNames,
@@ -35,8 +35,8 @@ import {defaultEvents} from '../data/default-ftl-data/default-events';
 import {FtlShip} from '../models/ftl-ship';
 import {defaultShips} from '../data/default-ftl-data/default-ships';
 import {FtlWeapon} from '../models/ftl-weapon';
-import {FtlAutoblueprint} from '../models/ftl-autoblueprint';
-import {defaultAutoBlueprints} from '../data/default-ftl-data/default-auto-blueprints';
+import {FtlShipBlueprint} from '../models/ftl-ship-blueprint';
+import {defaultShipBlueprints} from '../data/default-ftl-data/default-ship-blueprints';
 import {FtlText} from '../models/ftl-text';
 import {BlueprintMapper} from '../blueprints/blueprint-mapper';
 import {defaultWeaponBlueprints} from '../data/default-ftl-data/default-weapon-blueprints';
@@ -169,10 +169,10 @@ export class Mappers {
       defaultSystems);
 
 
-  readonly autoBlueprintMapper = new RefMapper(
+  readonly shipBlueprintMapper = new RefMapper(
       new RefParser(
-          (file) => file.autoBlueprint,
-          FtlAutoblueprint,
+          (file) => file.shipBlueprint,
+          FtlShipBlueprint,
           new NodeMapImp(
               ({document, node, position}) => {
                 return getAttrValueForTag(node, 'shipBlueprint', 'name', document, position);
@@ -205,9 +205,9 @@ export class Mappers {
                     ?? getNodeTextContent(node, document, 'unlockCustomShip');
               }) as any)
       ),
-      AutoblueprintNames,
-      'Auto Blueprint',
-      defaultAutoBlueprints);
+      ShipBlueprintNames,
+      'Ship Blueprint',
+      defaultShipBlueprints);
   variableNodeMapFunction = declarationBasedMapFunction(VariableNames);
   readonly variableMapper = new RefMapper(
       new RefParser((file) => file.variables, FtlVariable, new NodeMapImp(
@@ -333,7 +333,7 @@ export class Mappers {
       'Ship Icon');
   readonly blueprintMappers = [
     this.weaponsMapper,
-    this.autoBlueprintMapper,
+    this.shipBlueprintMapper,
     this.dronesMapper,
     this.augmentsMapper,
     this.crewMapper,

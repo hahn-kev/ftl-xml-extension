@@ -6,7 +6,6 @@
 - narrow range for attribute refs
 - add missing refs for:
     - ship blueprint elements: cloak, shield images
-    - element: unlockShip body
     - sector trackList track music
     
 - improve dat fs performance, don't read data into file until requested

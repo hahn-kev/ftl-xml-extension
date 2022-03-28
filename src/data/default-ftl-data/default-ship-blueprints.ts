@@ -1,4 +1,4 @@
-export const defaultAutoBlueprints = [
+export const defaultShipBlueprints = [
   'BOSS_1_EASY',
   'BOSS_2_EASY',
   'BOSS_3_EASY',

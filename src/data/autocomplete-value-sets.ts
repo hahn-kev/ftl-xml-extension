@@ -10,7 +10,7 @@ export const ShipNames: IValueSet = {
   values: [{name: 'loading...'}]
 };
 
-export const AutoblueprintNames: IValueSet = {
+export const ShipBlueprintNames: IValueSet = {
   name: 'blueprint-names',
   values: [{name: 'loading...'}]
 };
