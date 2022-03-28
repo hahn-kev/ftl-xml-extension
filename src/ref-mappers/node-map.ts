@@ -42,12 +42,26 @@ export class NodeMapImp implements NodeMap {
     return this.refName({node, document});
   }
 }
+interface staticMappingBase {
+  tag: string;
+  parentTag?: string;
+  match?: (context: NodeMapContext) => boolean;
+}
 
-type staticValueMapping = { tag: string, attr: string, parentTag?: string} | {tag: string, parentTag?: string, type: 'contents'};
+interface staticTagAttrMapping extends staticMappingBase {
+  attr: string;
+}
+
+interface staticTagContentMapping extends staticMappingBase {
+  type: 'contents'
+}
+
+type staticValueMapping = staticTagAttrMapping | staticTagContentMapping;
 
 export function staticValueNodeMap(defs: staticValueMapping[], refs: staticValueMapping[]): NodeMap {
   function getResult(context: NodeMapContext, def: staticValueMapping): string|undefined {
     if (def.parentTag && !nodeTagEq(context.node.parent, def.parentTag)) return undefined;
+    if (def.match && !def.match(context)) return undefined;
     if ('type' in def && def.type === 'contents') {
       return getNodeTextContent(context.node, context.document, def.tag);
     } else if ('attr' in def) {

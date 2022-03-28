@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 import {
   AugmentNames,
+  AutoblueprintNames,
   CrewNames,
   EventNamesValueSet,
   ImageListNames,
@@ -73,8 +74,13 @@ const hyperspaceEventChildren: XmlTag[] = [
     description: `Adds a custom fleet. If right is true, fleet comes from the right, otherwise it comes from the left. If firing is true, the fleet's bigShip will be drawn and be the source of the ASB. If autoDarkening is true, the tint will be automatically adjusted by layer.`
   },
   {name: 'clearCustomFleet', attributes: [], description: `Removes a custom fleet if one is present.`},
-  {name: 'unlockCustomShip', attributes: [boolAttr('silent'), {name: 'shipReq'}], description: `Alias for unlockShip - If silent is true, the unlock is silent. If shipReq is specified, the unlock only occurs if the player is currently playing as that ship. This alias must be used in events.xml files.`},
-  {name: 'achievement', attributes:[boolAttr('silent')], description: `Unlocks custom global achievement.`},
+  {
+    name: 'unlockCustomShip',
+    attributes: [boolAttr('silent'), {name: 'shipReq', valueSet: AutoblueprintNames.name}],
+    contentsValueSet: AutoblueprintNames.name,
+    description: `Alias for unlockShip - If silent is true, the unlock is silent. If shipReq is specified, the unlock only occurs if the player is currently playing as that ship. This alias must be used in events.xml files.`
+  },
+  {name: 'achievement', attributes: [boolAttr('silent')], description: `Unlocks custom global achievement.`},
   {name: 'preventQuest', attributes: [], description: `Quest events will be prevented from overwriting this event.`},
   {name: 'preventFleet', attributes: [], description: `Prevents the rebel fleet from overtaking this beacon whatsoever.`},
   {name: 'remove', attributes: [{name: 'name'}]},
@@ -341,7 +347,7 @@ const eventChildTags: XmlTag[] = [
   },
   {
     name: 'unlockShip',
-    attributes: [boolAttr('silent'), {name: 'shipReq'}],
+    attributes: [boolAttr('silent'), {name: 'shipReq', valueSet: AutoblueprintNames.name}],
     description: `Unlocks the ship PLAYER_SHIP_ID. If silent is true, the unlock is silent. If shipReq is specified, the unlock only occurs if the player is currently playing as that ship. Use alias unlockCustomShip in events.xml files.`
   },
   {name: 'item_modify', attributes: [], tags: ['item']},

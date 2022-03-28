@@ -31,5 +31,9 @@ export const shipBlueprintTags: XmlTag[] = [
     tags: shipBlueprintChildren.map((s) => s.name).concat(['aug'])
   },
   ...shipBlueprintChildren,
+  // custom hyperspace tags
   {name: 'bossShip', attributes: [], contentsValueSet: AutoblueprintNames.name},
+  {name: 'customShip', attributes: [{name: 'name', valueSet: AutoblueprintNames.name}]},
+  {name: 'shipReq', attributes: [], contentsValueSet: AutoblueprintNames.name},
+  {name: 'victory', attributes: [], contentsValueSet: AutoblueprintNames.name},
 ];

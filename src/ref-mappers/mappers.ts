@@ -1,12 +1,12 @@
 import {RefMapper, RefMapperBase} from './ref-mapper';
 import {FtlEvent} from '../models/ftl-event';
-import {Node} from 'vscode-html-languageservice';
 import {events} from '../events';
 import {
   getAttrValueForTag,
   getFileName,
   getNodeTextContent,
   hasAttr,
+  isInAttrValue,
   nodeTagEq,
   normalizeAttributeName,
   normalizeTagName,
@@ -61,11 +61,9 @@ import {FtlWeaponAnimation} from '../models/ftl-weapon-animation';
 import {defaultWeaponAnimations} from '../data/default-ftl-data/default-weapon-animations';
 import {defaultImageLists} from '../data/default-ftl-data/default-image-lists';
 import {FtlImageList} from '../models/ftl-image-list';
-import {declarationBasedMapFunction, NodeMapImp, staticValueNodeMap} from './node-map';
+import {declarationBasedMapFunction, NodeMapContext, NodeMapImp, staticValueNodeMap} from './node-map';
 import {FtlVariable} from '../models/ftl-variable';
 import {FtlReq} from '../models/ftl-req';
-import {FtlTextDocument} from '../models/ftl-text-document';
-import {Position} from 'vscode-languageserver-textdocument';
 import {EventRefParser} from './event-ref-parser';
 import {FtlGenericValue} from '../models/ftl-value';
 
@@ -175,15 +173,37 @@ export class Mappers {
       new RefParser(
           (file) => file.autoBlueprint,
           FtlAutoblueprint,
-          {
-            getNameDef(node: Node, document: FtlTextDocument, position?: Position): string | undefined {
-              return getAttrValueForTag(node, 'shipBlueprint', 'name', document, position);
-            },
-            getRefName(node: Node, document: FtlTextDocument, position?: Position): string | undefined {
-              return getAttrValueForTag(node, 'ship', 'auto_blueprint', document, position)
-                  ?? getNodeTextContent(node, document, 'bossShip');
-            }
-          }
+          new NodeMapImp(
+              ({document, node, position}) => {
+                return getAttrValueForTag(node, 'shipBlueprint', 'name', document, position);
+              },
+              (({document, node, position}: NodeMapContext) => {
+                if (nodeTagEq(node.parent, 'ships') && nodeTagEq(node, 'ship')) {
+                  const shipName = getAttrValueForTag(node, 'ship', 'name');
+                  if (!shipName) return undefined;
+                  if (position && isInAttrValue(node, document, 'name', position)) return shipName;
+                  const results: string[] = [];
+                  const shipNameB = shipName + '_2';
+                  const shipNameC = shipName + '_3';
+                  const hasB = getAttrValueForTag(node, 'ship', 'b', document, position) == 'true';
+                  if (hasB) results.push(shipNameB);
+                  const hasC = getAttrValueForTag(node, 'ship', 'c', document, position) == 'true';
+                  if (hasC) results.push(shipNameC);
+                  // if position is defined then there should be 1 or no results
+                  if (position) return results[0];
+                  results.unshift(shipName);
+                  return results;
+                }
+                return getAttrValueForTag(node, 'ship', 'auto_blueprint', document, position)
+                    ?? getAttrValueForTag(node, 'customShip', 'name', document, position)
+                    ?? getAttrValueForTag(node, 'unlockShip', 'shipReq', document, position)
+                    ?? getAttrValueForTag(node, 'unlockCustomShip', 'shipReq', document, position)
+                    ?? getNodeTextContent(node, document, 'bossShip')
+                    ?? getNodeTextContent(node, document, 'shipReq')
+                    ?? getNodeTextContent(node, document, 'ship', 'otherUnlocks')
+                    ?? getNodeTextContent(node, document, 'victory')
+                    ?? getNodeTextContent(node, document, 'unlockCustomShip');
+              }) as any)
       ),
       AutoblueprintNames,
       'Auto Blueprint',

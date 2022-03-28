@@ -47,7 +47,9 @@ export const shipTags: XmlTag[] = [
         valueSet: AutoblueprintNames.name
       },
       {name: 'name'},
-      boolAttr('hostile')
+      boolAttr('hostile'),
+      boolAttr('b'),
+      boolAttr('c'),
     ]
   },
   {name: 'shipIcons', attributes: []},

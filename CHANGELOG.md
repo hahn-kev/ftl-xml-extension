@@ -2,6 +2,9 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
+## 0.6.3 pending
+- Add more ship blueprint references, fix some other missing references.
+
 ## 0.6.2
 - fix issue with inline references for blueprints
 
