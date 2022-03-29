@@ -8,16 +8,16 @@ export class EventUnsafeChildrenRefParser implements FtlXmlParser {
 
   public parseNode(context: ParseContext): void {
     if (!events.isRecursionUnsafeEventRef(context)) return;
-    const names = events.getRefName(context.node, context.document);
-    if (names) {
-      if (!this.event.unsafeEventRefs) this.event.unsafeEventRefs = new Set();
-      if (typeof names === 'string') {
-        this.event.unsafeEventRefs.add(names);
-      } else {
-        for (const name of names) {
-          this.event.unsafeEventRefs.add(name);
-        }
+    const valueNames = events.getRefName(context);
+    if (!valueNames) return;
+
+    if (!this.event.unsafeEventRefs) this.event.unsafeEventRefs = new Set();
+    if (Array.isArray(valueNames)) {
+      for (const valueName of valueNames) {
+        this.event.unsafeEventRefs.add(valueName.name);
       }
+    } else {
+      this.event.unsafeEventRefs.add(valueNames.name);
     }
   }
 }

@@ -3,7 +3,7 @@ import {Location} from 'vscode-html-languageservice';
 import {FtlFile, FtlFileValue} from '../models/ftl-file';
 import {FtlBlueprintList, FtlBlueprintValue} from '../models/ftl-blueprint-list';
 import {FtlValue} from '../models/ftl-value';
-import {addToKey, findRecursiveLoop, firstWhere} from '../helpers';
+import {addToKey, contains, filterValueNameToPosition, findRecursiveLoop, firstWhere} from '../helpers';
 import {BlueprintListTypeAny} from '../data/ftl-data';
 import {BlueprintParser} from './blueprint-parser';
 import {LookupContext} from '../ref-mappers/lookup-provider';
@@ -30,10 +30,17 @@ export class BlueprintMapper implements RefMapperBase {
 
   // todo not consistent with normal lookup, will not return a result
   // when lookup is done on the def itself
-  lookupDef({node, document, position}: LookupContext): Location | undefined {
-    const ref = this.parser.getRefNameAndMapper(node, document, position);
-    if (!ref) return;
-    const refName = ref.name;
+  lookupDef(context: LookupContext): Location | undefined {
+    let refs = this.parser.getRefNameAndMapper(context);
+    if (!refs) return;
+    if (Array.isArray(refs)) {
+      refs = refs.find(ref => contains(ref.valueName.range, context.position));
+      if (!refs) return;
+    } else if (!contains(refs.valueName.range, context.position)) {
+      return undefined;
+    }
+    const ref = refs;
+    const refName = ref.valueName.name;
     // this means name was defined in a blueprint list, so find the def somewhere else
     if (!ref.mapper) {
       return this.doMapper(true, (mapper) => mapper.defs.get(refName))?.toLocation();
@@ -45,10 +52,11 @@ export class BlueprintMapper implements RefMapperBase {
 
 
   lookupRefs(context: LookupContext): Location[] | undefined {
-    const refName = this.parser.getNameDef(context)
-        ?? this.parser.getRefName(context.node, context.document, context.position);
-    if (!refName) return;
-    const results = this.getRefsByName(refName);
+    const refs = this.parser.getNameDef(context)
+        ?? this.parser.getRefName(context);
+    const ref = filterValueNameToPosition(refs, context.position);
+    if (!ref) return;
+    const results = this.getRefsByName(ref.name);
 
     return results.map((value) => value.toLocation());
   }

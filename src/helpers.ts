@@ -1,6 +1,7 @@
 import {Node} from 'vscode-html-languageservice';
 import {FtlTextDocument, FtlUri} from './models/ftl-text-document';
 import {Position, Range} from 'vscode-languageserver-textdocument';
+import {ValueName} from './ref-mappers/value-name';
 
 export function nodeTagEq(node: Node, tag: string): boolean
 export function nodeTagEq(node: Node, tag: string, tag2: string): boolean
@@ -77,19 +78,37 @@ export function hasAncestor(node: Node, name: string, includeSelf: boolean): boo
   return hasAncestor(node.parent, name, true);
 }
 
-export function getNodeTextContent(
+export function getNodeContent(
     node: Node,
     document: FtlTextDocument,
     whenTagName?: string,
-    whenParentTagName?: string) {
+    whenParentTagName?: string): undefined | ValueName {
   if (node.startTagEnd === undefined || node.endTagStart === undefined) return undefined;
   if (typeof whenTagName === 'string' && !nodeTagEq(node, whenTagName)) return undefined;
   if (typeof whenParentTagName === 'string' && !nodeTagEq(node.parent, whenParentTagName)) return undefined;
-  return getText(node.startTagEnd, node.endTagStart, document);
+  return new ValueName(getText(node.startTagEnd, node.endTagStart, document),
+      toRange(node.startTagEnd, node.endTagStart, document));
 }
 
 export function toRange(start: number, end: number, document: FtlTextDocument): Range {
   return {start: document.positionAt(start), end: document.positionAt(end)};
+}
+
+export function contains(range: Range, position: Position): boolean {
+  if (position.line < range.start.line || range.end.line < position.line) return false;
+  if (position.line == range.start.line) return range.start.character <= position.character;
+  if (position.line == range.end.line) return position.character <= range.end.character;
+  return true;
+}
+
+export function filterValueNameToPosition(
+    ref: ValueName | ValueName[] | undefined,
+    position: Position): ValueName | undefined {
+  if (!ref) return undefined;
+  if (Array.isArray(ref)) {
+    return ref.find(r => contains(r.range, position));
+  }
+  return contains(ref.range, position) ? ref : undefined;
 }
 
 export function getText(start: number, end: number, document: FtlTextDocument) {
@@ -109,11 +128,20 @@ export function getAttrValueForTag(
     node: Node,
     tagName: string,
     attrName: string,
-    document?: FtlTextDocument,
-    atPosition?: Position): string | undefined {
-  if (nodeTagEq(node, tagName) && hasAttr(node, attrName, document, atPosition)) {
-    return normalizeAttributeName(node.attributes[attrName]);
-  }
+    document: FtlTextDocument,
+    atPosition?: Position): ValueName | undefined {
+  if (!nodeTagEq(node, tagName)) return;
+  return getAttrValueName(node, attrName, document);
+}
+
+export function getAttrValueName(
+    node: Node,
+    attrName: string,
+    document: FtlTextDocument): ValueName | undefined {
+  const range = getAttrValueRange(attrName, node, document);
+  if (!range) return;
+  return new ValueName(normalizeAttributeName(node.attributes![attrName]!),
+      toRange(range.startOffset, range.endOffset, document));
 }
 
 export function getAttrValueAsInt(node: Node, attrName: string): number | undefined {
@@ -175,6 +203,17 @@ export function attrNameRange(node: Node, document: FtlTextDocument, position: P
   return {startOffset: node.start + attrStart, endOffset: node.start + attrEnd};
 }
 
+export function getAttrValueRange(attr: string, node: Node, document: FtlTextDocument): OffsetRange | undefined {
+  if (!node.attributes || !(attr in node.attributes)) return undefined;
+  const attrValue = node.attributes[attr];
+
+  const nodeStartText = getText(node.start, node.startTagEnd ?? node.end, document);
+  const attrIndex = nodeStartText.indexOf(attr);
+  const attrValueStart = node.start + attrIndex + attr.length + '="'.length;
+  const attrValueEnd = attrValueStart + (attrValue?.length ?? 2) - 2;
+  return {startOffset: attrValueStart, endOffset: attrValueEnd};
+}
+
 export function firstWhere<T, R>(list: T[], map: (value: T) => R) {
   for (const value of list) {
     const mapped = map(value);
@@ -234,4 +273,8 @@ export function findRecursiveLoop(
       return result;
     }
   }
+}
+
+export function filterFalsy<T>(array: Array<T | undefined | null>): T[] {
+  return array.filter((t): t is T => !!t);
 }

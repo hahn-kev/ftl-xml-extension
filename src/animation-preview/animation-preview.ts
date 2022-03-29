@@ -35,7 +35,7 @@ export class AnimationPreview {
       position: editor.selection.active
     });
     if (!animationName) return;
-    await this.open(animationName);
+    await this.open(animationName.name);
   }
 
   public async open(animationName: string) {

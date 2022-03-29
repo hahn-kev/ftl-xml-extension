@@ -3,25 +3,26 @@ import {FtlEvent} from '../models/ftl-event';
 import {events} from '../events';
 import {
   getAttrValueForTag,
+  getAttrValueName,
   getFileName,
-  getNodeTextContent,
+  getNodeContent,
   hasAttr,
   isInAttrValue,
   nodeTagEq,
-  normalizeAttributeName,
   normalizeTagName,
-  shouldCompleteForNodeContents
+  shouldCompleteForNodeContents,
+  toRange
 } from '../helpers';
 import {
   AnimationNames,
   AnimationSheetNames,
   AugmentNames,
-  ShipBlueprintNames,
   CrewNames,
   CustomReqNames,
   DroneNames,
   EventNamesValueSet,
   ImageListNames,
+  ShipBlueprintNames,
   ShipIconNames,
   ShipNames,
   SoundWaveNames,
@@ -69,6 +70,7 @@ import {NodeMapContext} from './node-mapping/node-map-context';
 import {staticValueNodeMap} from './node-mapping/static-node-map';
 import {NodeMapImp} from './node-mapping/node-map';
 import {declarationBasedMapFunction} from './node-mapping/declaration-node-map';
+import {ValueName} from './value-name';
 
 export class Mappers {
   readonly eventsMapper = new RefMapper(
@@ -180,20 +182,23 @@ export class Mappers {
               ({document, node, position}) => {
                 return getAttrValueForTag(node, 'shipBlueprint', 'name', document, position);
               },
-              (({document, node, position}: NodeMapContext) => {
+              ({document, node, position}: NodeMapContext) => {
                 if (nodeTagEq(node.parent, 'ships') && nodeTagEq(node, 'ship')) {
-                  const shipName = getAttrValueForTag(node, 'ship', 'name');
+                  const shipName = getAttrValueForTag(node, 'ship', 'name', document);
                   if (!shipName) return undefined;
                   if (position && isInAttrValue(node, document, 'name', position)) return shipName;
-                  const results: string[] = [];
-                  const shipNameB = shipName + '_2';
-                  const shipNameC = shipName + '_3';
-                  const hasB = getAttrValueForTag(node, 'ship', 'b', document, position) == 'true';
-                  if (hasB) results.push(shipNameB);
-                  const hasC = getAttrValueForTag(node, 'ship', 'c', document, position) == 'true';
-                  if (hasC) results.push(shipNameC);
-                  // if position is defined then there should be 1 or no results
-                  if (position) return results[0];
+                  const results: ValueName[] = [];
+                  const shipNameB = shipName.name + '_2';
+                  const shipNameC = shipName.name + '_3';
+
+                  const bValueName = getAttrValueForTag(node, 'ship', 'b', document, position);
+                  const hasB = bValueName?.name == 'true';
+                  if (hasB) results.push(new ValueName(shipNameB, bValueName.range));
+
+                  const cValueName = getAttrValueForTag(node, 'ship', 'c', document, position);
+                  const hasC = cValueName?.name == 'true';
+                  if (hasC) results.push(new ValueName(shipNameC, cValueName.range));
+
                   results.unshift(shipName);
                   return results;
                 }
@@ -201,12 +206,12 @@ export class Mappers {
                     ?? getAttrValueForTag(node, 'customShip', 'name', document, position)
                     ?? getAttrValueForTag(node, 'unlockShip', 'shipReq', document, position)
                     ?? getAttrValueForTag(node, 'unlockCustomShip', 'shipReq', document, position)
-                    ?? getNodeTextContent(node, document, 'bossShip')
-                    ?? getNodeTextContent(node, document, 'shipReq')
-                    ?? getNodeTextContent(node, document, 'ship', 'otherUnlocks')
-                    ?? getNodeTextContent(node, document, 'victory')
-                    ?? getNodeTextContent(node, document, 'unlockCustomShip');
-              }) as any)
+                    ?? getNodeContent(node, document, 'bossShip')
+                    ?? getNodeContent(node, document, 'shipReq')
+                    ?? getNodeContent(node, document, 'ship', 'otherUnlocks')
+                    ?? getNodeContent(node, document, 'victory')
+                    ?? getNodeContent(node, document, 'unlockCustomShip');
+              })
       ),
       ShipBlueprintNames,
       'Ship Blueprint',
@@ -239,16 +244,16 @@ export class Mappers {
           (file) => file.text,
           FtlText,
           new NodeMapImp(
-              ({node, document, position}) => {
-                if (nodeTagEq(node, 'text') && hasAttr(node, 'name', document, position)) {
+              ({node, document}) => {
+                if (nodeTagEq(node, 'text') && hasAttr(node, 'name', document)) {
                   // filter out language files
                   if (getFileName(document)?.startsWith('text-')) {
                     return undefined;
                   }
-                  return normalizeAttributeName(node.attributes.name);
+                  return getAttrValueName(node, 'name', document);
                 }
 
-                return getAttrValueForTag(node, 'textList', 'name', document, position);
+                return getAttrValueForTag(node, 'textList', 'name', document);
               },
               declarationBasedMapFunction(TextIdNames)),
       ),
@@ -263,7 +268,10 @@ export class Mappers {
               (c) => {
                 if (!Sounds.isWaveNode(c.node, c.document)
                     || (c.position && shouldCompleteForNodeContents(c.node, c.document.offsetAt(c.position)))) return;
-                return normalizeTagName(c.node.tag);
+                return new ValueName(
+                    normalizeTagName(c.node.tag),
+                    toRange(c.node.start, c.node.start + c.node.tag.length, c.document)
+                );
               },
               declarationBasedMapFunction(SoundWaveNames),
           )),
@@ -321,11 +329,11 @@ export class Mappers {
   static readonly shipIconNodeMap = new NodeMapImp(
       (context) => {
         if (!nodeTagEq(context.node.parent?.parent, 'shipIcons')) return undefined;
-        return getNodeTextContent(context.node, context.document, 'name', 'shipIcon');
+        return getNodeContent(context.node, context.document, 'name', 'shipIcon');
       },
       (context) => {
         if (!nodeTagEq(context.node.parent?.parent, 'customShip')) return undefined;
-        return getNodeTextContent(context.node, context.document, 'shipIcon', 'shipIcons');
+        return getNodeContent(context.node, context.document, 'shipIcon', 'shipIcons');
       });
   readonly shipIconMapper = new RefMapper(
       new RefParser((file) => file.shipIcons,

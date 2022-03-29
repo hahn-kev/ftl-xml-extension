@@ -11,7 +11,7 @@ export class EventRefParser extends RefParser<FtlEvent> {
       return context.isModNode ? undefined : new EventUnsafeChildrenRefParser(event);
     }
 
-    const nameRefs = this.getRefName(context.node, context.document);
+    const nameRefs = this.getRefName(context);
     if (nameRefs) {
       this.handleReference(context, nameRefs);
     }

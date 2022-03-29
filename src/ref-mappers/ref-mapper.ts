@@ -1,6 +1,6 @@
 import {FtlFile, FtlFileValue} from '../models/ftl-file';
 import {IValueData, IValueSet, Location, Node} from 'vscode-html-languageservice';
-import {addToKey} from '../helpers';
+import {addToKey, filterValueNameToPosition} from '../helpers';
 import {FtlValue} from '../models/ftl-value';
 import {FtlRefParser, RefParser} from './ref-parser';
 import {LookupContext, LookupProvider} from './lookup-provider';
@@ -77,22 +77,22 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
   }
 
   lookupRefs(context: LookupContext): Location[] | undefined {
-    const name = this.getRefName(context);
-    if (!name) return;
-    const values = this.refs.get(name) ?? this.altRefMapper?.refs.get(name);
+    const valueName = filterValueNameToPosition(this.getRefName(context), context.position);
+    if (!valueName) return;
+    const values = this.refs.get(valueName.name) ?? this.altRefMapper?.refs.get(valueName.name);
     return values?.map((value: FtlValue) => value.toLocation());
   }
 
   lookupDef(context: LookupContext): Location | undefined {
-    const name = this.getRefName(context);
-    if (!name) return;
-    const value = this.defs.get(name) ?? this.altRefMapper?.defs.get(name);
+    const valueName = filterValueNameToPosition(this.getRefName(context), context.position);
+    if (!valueName) return;
+    const value = this.defs.get(valueName.name) ?? this.altRefMapper?.defs.get(valueName.name);
     if (value) return value.toLocation();
   }
 
   getRefName(context: LookupContext) {
     return this.parser.nodeMap.getNameDef(context)
-        ?? this.parser.nodeMap.getRefName(context.node, context.document, context.position);
+        ?? this.parser.nodeMap.getRefName(context);
   }
 
 

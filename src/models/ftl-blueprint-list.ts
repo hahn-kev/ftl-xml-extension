@@ -4,12 +4,13 @@ import {Node} from 'vscode-html-languageservice';
 import {FtlFile} from './ftl-file';
 import {BlueprintListTypeAny} from '../data/ftl-data';
 import {normalizeAttributeName} from '../helpers';
+import {ValueName} from '../ref-mappers/value-name';
 
 export class FtlBlueprintList extends FtlValue {
   readonly kind = 'blueprint-list';
 
-  constructor(name: string, file: FtlFile, node: Node, document: FtlTextDocument, isDef: boolean) {
-    super(name, file, node, document, isDef);
+  constructor(valueName: ValueName, file: FtlFile, node: Node, document: FtlTextDocument, isDef: boolean) {
+    super(valueName, file, node, document, isDef);
     this.isAnyType = normalizeAttributeName(node.attributes?.type) == BlueprintListTypeAny;
   }
 

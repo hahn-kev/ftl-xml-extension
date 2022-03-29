@@ -1,6 +1,6 @@
 import {IValueSet, Location} from 'vscode-html-languageservice';
 import {FtlRoot} from '../models/ftl-root';
-import {getNodeTextContent, shouldCompleteForNodeContents} from '../helpers';
+import {getNodeContent, shouldCompleteForNodeContents} from '../helpers';
 import {FtlImg} from '../models/ftl-img';
 import {SoundFile} from '../models/sound-file';
 import {ImgPathNames, MusicPaths, ShipIconFileNames, SoundWavePaths} from '../data/autocomplete-value-sets';
@@ -15,6 +15,7 @@ import {Mappers} from './mappers';
 import {Sounds} from '../sounds';
 import {FtlShipIcon} from '../models/ftl-ship-icon';
 import {NodeMapContext} from './node-mapping/node-map-context';
+import {ValueName} from './value-name';
 
 export enum FileHandled {
   handled,
@@ -34,7 +35,7 @@ export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBa
               private readonly resourceBuilder: { new(file: URI): T; },
               private readonly selectRootFiles: (root: FtlRoot) => T[],
               private readonly defaultFiles: string[] = [],
-              private readonly getFileRef: (context: NodeMapContext) => string | undefined = () => undefined,
+              private readonly getFileRef: (context: NodeMapContext) => ValueName | undefined = () => undefined,
               private readonly findFile: (refName: string, files: T[], context: NodeMapContext) => T | undefined) {
   }
 
@@ -59,7 +60,7 @@ export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBa
   lookupFile(context: NodeMapContext): T | undefined {
     const refName = this.getFileRef(context);
     if (refName) {
-      return this.findFile(refName, this.selectRootFiles(this.root), context);
+      return this.findFile(refName.name, this.selectRootFiles(this.root), context);
     }
   }
 
@@ -90,9 +91,9 @@ export class PathRefMappers {
       FtlImg,
       (root) => root.imgFiles,
       defaultImgFiles,
-      (c) => getNodeTextContent(c.node, c.document, 'animSheet')
-          ?? getNodeTextContent(c.node, c.document, 'img')
-          ?? getNodeTextContent(c.node, c.document, 'chargeImage'),
+      (c) => getNodeContent(c.node, c.document, 'animSheet')
+          ?? getNodeContent(c.node, c.document, 'img')
+          ?? getNodeContent(c.node, c.document, 'chargeImage'),
       (refName, files) => files.find((f) => f.matches(refName))
   );
 
@@ -116,8 +117,8 @@ export class PathRefMappers {
       SoundFile,
       (root) => root.musicFiles,
       defaultMusic,
-      (c) => getNodeTextContent(c.node, c.document, 'explore', 'track')
-          ?? getNodeTextContent(c.node, c.document, 'combat', 'track'),
+      (c) => getNodeContent(c.node, c.document, 'explore', 'track')
+          ?? getNodeContent(c.node, c.document, 'combat', 'track'),
       (refName, files) => files.find((f) => f.modPath == refName)
   );
 
@@ -134,7 +135,7 @@ export class PathRefMappers {
       (c) => {
         if (!Sounds.isWaveNode(c.node, c.document)
             || (c.position && !shouldCompleteForNodeContents(c.node, c.document.offsetAt(c.position)))) return;
-        return getNodeTextContent(c.node, c.document);
+        return getNodeContent(c.node, c.document);
       },
       (refName, files) => files.find((f) => f.modPath == refName)
   );

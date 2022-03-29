@@ -79,7 +79,7 @@ export class FtlCodeLensProvider implements CodeLensProvider {
     const command: Command = {
       title: `${refs.length} references`,
       command: 'editor.action.showReferences',
-      arguments: [uri, def.positionStart, locations]
+      arguments: [uri, def.range.start, locations]
     };
     return new CodeLens(VscodeConverter.toVscodeRange(def.range), command);
   }

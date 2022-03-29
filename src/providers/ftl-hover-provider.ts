@@ -1,7 +1,7 @@
 import {CancellationToken, Hover, HoverProvider, MarkdownString, Position, TextDocument, Uri, workspace} from 'vscode';
 import {DocumentCache} from '../document-cache';
 import {HTMLDocument, LanguageService, Node, TextDocument as HtmlTextDocument} from 'vscode-html-languageservice';
-import {attrNameRange, nodeTagEq, toRange, transformModFindNode} from '../helpers';
+import {filterValueNameToPosition, toRange, transformModFindNode} from '../helpers';
 import {Mappers} from '../ref-mappers/mappers';
 import {PathRefMappers} from '../ref-mappers/path-ref-mapper';
 import {FtlDatFs} from '../dat-fs-provider/ftl-dat-fs';
@@ -101,41 +101,29 @@ export class FtlHoverProvider implements HoverProvider {
     return {...currentDoc, roots};
   }
 
-  tryHoverTextId({node, document, position}: LookupContext): Hover | undefined {
-    const textIdName = this.mappers.textMapper.parser.getRefName(node, document, position);
-    if (!textIdName) return;
+  tryHoverTextId(context: LookupContext): Hover | undefined {
+    const textIdNameValue = filterValueNameToPosition(this.mappers.textMapper.parser.getRefName(context), context.position);
+    if (!textIdNameValue) return;
 
-    const textDef = this.mappers.textMapper.defs.get(textIdName);
+    const textDef = this.mappers.textMapper.defs.get(textIdNameValue.name);
     if (!textDef || !textDef.text) return;
-    let idStart: number;
-    let idEnd: number;
-    // this tag has the id as the contents
-    if (nodeTagEq(node, 'tip')) {
-      idStart = node.startTagEnd ?? node.start;
-      idEnd = node.endTagStart ?? node.end;
-    } else {
-      const nameRange = attrNameRange(node, document, position);
-      if (!nameRange) return;
-      idStart = nameRange.endOffset + '="'.length;
-      idEnd = idStart + textIdName.length;
-    }
 
     return new Hover(
         [textDef.text],
-        VscodeConverter.toVscodeRange(toRange(idStart, idEnd, document))
+        VscodeConverter.toVscodeRange(textIdNameValue.range)
     );
   }
 
   tryHoverAnimation(context: LookupContext): Hover | undefined {
-    const name = this.mappers.animationMapper.parser.getNameDef(context)
-        ?? this.mappers.animationMapper.parser.getRefName(context.node, context.document, context.position);
-    if (!name) return;
-
-    const component = encodeURIComponent(JSON.stringify([name]));
+    const refs = this.mappers.animationMapper.parser.getNameDef(context)
+        ?? this.mappers.animationMapper.parser.getRefName(context);
+    const nameValue = filterValueNameToPosition(refs, context.position);
+    if (!nameValue) return;
+    const component = encodeURIComponent(JSON.stringify([nameValue.name]));
     const showPreviewCommand = Uri.parse(`command:${AnimationPreview.OpenPreviewCommand}?${component}`);
     const mdString = new MarkdownString(`[Click to Preview Animation](${showPreviewCommand})`);
     mdString.isTrusted = true;
-    return new Hover(mdString);
+    return new Hover(mdString, VscodeConverter.toVscodeRange(nameValue.range));
   }
 
 

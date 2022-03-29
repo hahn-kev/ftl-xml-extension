@@ -3,14 +3,13 @@ import {RefMapperBase} from '../ref-mappers/ref-mapper';
 import {Node} from 'vscode-html-languageservice';
 import {FtlFile, FtlFileValue} from '../models/ftl-file';
 import {FtlBlueprintList, FtlBlueprintValue} from '../models/ftl-blueprint-list';
-import {addToKey, getAttrValueForTag, getNodeTextContent, nodeTagEq} from '../helpers';
+import {addToKey, getAttrValueForTag, getNodeContent, nodeTagEq} from '../helpers';
 import {FtlValue} from '../models/ftl-value';
-import {FtlTextDocument} from '../models/ftl-text-document';
-import {Position} from 'vscode-languageserver-textdocument';
 import {NodeMapContext} from '../ref-mappers/node-mapping/node-map-context';
 import {FtlRefParser} from '../ref-mappers/ref-parser';
+import {ValueName} from '../ref-mappers/value-name';
 
-type RefContext = { name: string, mapper?: RefMapperBase };
+type RefContext = { valueName: ValueName, mapper?: RefMapperBase };
 
 export class BlueprintParser implements FtlRefParser {
   fileDataSelector(file: FtlFile): FtlFileValue<FtlBlueprintList, FtlValue> {
@@ -23,95 +22,90 @@ export class BlueprintParser implements FtlRefParser {
   parseNode(context: ParseContext): void {
     // skip list child as it's handled when the blueprintList is passed in
     if (this.isListChild(context.node)) return;
-    const name = this.getBlueprintListName(context);
-    if (name) {
-      const ftlBlueprintList = new FtlBlueprintList(name, context.file, context.node, context.document, !context.isModNode);
+    const valueName = this.getBlueprintListValueName(context);
+    if (valueName) {
+      const ftlBlueprintList = new FtlBlueprintList(valueName, context.file, context.node, context.document, !context.isModNode);
       ftlBlueprintList.childRefNames = context.node.children.filter((c) => nodeTagEq(c, 'name'))
-          .map((c) => this.getBlueprintRef(c, context.document))
+          .map((c) => this.getBlueprintRef({node: c, document: context.document})?.name)
           .filter((t): t is string => !!t);
 
       for (const child of context.node.children) {
-        const listChild = this.parseBlueprintRef(child, context.file, context.document);
+        const listChild = this.parseBlueprintRef({...context, node: child});
         if (listChild) ftlBlueprintList.children.push(listChild);
       }
 
       if (!context.isModNode) context.file.blueprintList.defs.push(ftlBlueprintList);
-      addToKey(context.file.blueprintList.refs, name, ftlBlueprintList);
+      addToKey(context.file.blueprintList.refs, ftlBlueprintList.name, ftlBlueprintList);
       return;
     }
 
-    if (this.parseBlueprintRef(context.node, context.file, context.document)) return;
+    if (this.parseBlueprintRef(context)) return;
 
     for (const mapper of this.blueprintMappers) {
       mapper.parser.parseNode(context);
     }
   }
 
-  parseBlueprintRef(node: Node, file: FtlFile, document: FtlTextDocument) {
-    const refName = this.getBlueprintRef(node, document);
-    if (!refName) return;
-    const ftlBlueprintValue = new FtlBlueprintValue(refName, file, node, document, false);
-    addToKey(file.blueprintList.refs, refName, ftlBlueprintValue);
+  parseBlueprintRef(context: ParseContext) {
+    const ref = this.getBlueprintRef(context);
+    if (!ref) return;
+    const ftlBlueprintValue = new FtlBlueprintValue(ref, context.file, context.node, context.document, false);
+    addToKey(context.file.blueprintList.refs, ftlBlueprintValue.name, ftlBlueprintValue);
     return ftlBlueprintValue;
   }
 
   /*
    * will return refs for a list child, or for a choice[req]
    */
-  getBlueprintRef(node: Node, document: FtlTextDocument, position?: Position) {
-    if (!this.isListChild(node)) return getAttrValueForTag(node, 'choice', 'req', document, position);
-    const name = getNodeTextContent(node, document);
-    if (name?.startsWith('HIDDEN ')) {
-      return name?.substring('HIDDEN '.length);
+  getBlueprintRef(context: NodeMapContext) {
+    if (!this.isListChild(context.node)) {
+      return getAttrValueForTag(context.node, 'choice', 'req', context.document, context.position);
     }
-    return name;
+    const valueName = getNodeContent(context.node, context.document);
+    if (valueName?.name.startsWith('HIDDEN ')) {
+      valueName.name = valueName.name.substring('HIDDEN '.length);
+    }
+    return valueName;
   }
 
   isListChild(node: Node) {
     return nodeTagEq(node, 'name') && nodeTagEq(node.parent, 'blueprintList');
   }
 
-  getBlueprintListName({node, document, position}: NodeMapContext) {
+  getBlueprintListValueName({node, document, position}: NodeMapContext) {
     return getAttrValueForTag(node, 'blueprintList', 'name', document, position);
   }
 
-  getNameDef(context: NodeMapContext): string | undefined {
-    let name = this.getBlueprintListName(context);
-    if (name) return name;
+  getNameDef(context: NodeMapContext) {
+    let def = this.getBlueprintListValueName(context);
+    if (def) return def;
     for (const mapper of this.blueprintMappers) {
-      name = mapper.parser.getNameDef(context);
-      if (name) return name;
+      def = mapper.parser.getNameDef(context);
+      if (def) return def;
     }
   }
 
-  getRefName(node: Node, document: FtlTextDocument, position: Position): string | undefined
-  getRefName(node: Node, document: FtlTextDocument): string[] | undefined
-  getRefName(node: Node, document: FtlTextDocument, position?: Position): string | string[] | undefined {
-    if (position) return this.getRefNameAndMapper(node, document, position)?.name;
-    return this.getRefNameAndMapper(node, document)?.map((c) => c.name);
+  getRefName(context: NodeMapContext) {
+    const result = this.getRefNameAndMapper(context);
+    if (Array.isArray(result)) return result?.map((c) => c.valueName);
+    return result?.valueName;
   }
 
-  /**
+  /*
    * returns undefined for mapper if it's mapped by the blueprint mapper
    */
-  getRefNameAndMapper(node: Node, document: FtlTextDocument, position: Position): RefContext | undefined
-  getRefNameAndMapper(node: Node, document: FtlTextDocument): RefContext[] | undefined
-  getRefNameAndMapper(
-      node: Node,
-      document: FtlTextDocument,
-      position?: Position): RefContext | RefContext[] | undefined {
-    const refName = this.getBlueprintRef(node, document, position);
-    if (refName && !position) return [{name: refName}];
-    if (refName) return {name: refName};
+  getRefNameAndMapper(context: NodeMapContext): RefContext | RefContext[] | undefined {
+    const ref = this.getBlueprintRef(context);
+    if (ref && !context.position) return [{valueName: ref}];
+    if (ref) return {valueName: ref};
     for (const blueprintMapper of this.blueprintMappers) {
-      let refName = position ? blueprintMapper.parser.getRefName(node, document, position)
-          : blueprintMapper.parser.getRefName(node, document);
-      if (!refName) continue;
-      if (typeof refName == 'string') {
-        if (position) return {name: refName, mapper: blueprintMapper};
-        refName = [refName];
+      let ref = blueprintMapper.parser.getRefName(context);
+      if (!ref) continue;
+      if (!Array.isArray(ref)) {
+        if (context.position) return {valueName: ref, mapper: blueprintMapper};
+        ref = [ref];
       }
-      return refName.map((rn: string) => ({name: rn, mapper: blueprintMapper}));
+      return ref.map((rn) => ({valueName: rn, mapper: blueprintMapper}));
     }
   }
 }

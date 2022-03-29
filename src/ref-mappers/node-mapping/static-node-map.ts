@@ -1,6 +1,7 @@
 import {NodeMapContext} from './node-map-context';
 import {NodeMap, NodeMapImp} from './node-map';
-import {getAttrValueForTag, getNodeTextContent, nodeTagEq} from '../../helpers';
+import {getAttrValueForTag, getNodeContent, nodeTagEq} from '../../helpers';
+import {ValueName} from '../value-name';
 
 interface staticMappingBase {
   tag: string;
@@ -19,11 +20,11 @@ interface staticTagContentMapping extends staticMappingBase {
 type staticValueMapping = staticTagAttrMapping | staticTagContentMapping;
 
 export function staticValueNodeMap(defs: staticValueMapping[], refs: staticValueMapping[]): NodeMap {
-  function getResult(context: NodeMapContext, def: staticValueMapping): string | undefined {
+  function getResult(context: NodeMapContext, def: staticValueMapping) {
     if (def.parentTag && !nodeTagEq(context.node.parent, def.parentTag)) return undefined;
     if (def.match && !def.match(context)) return undefined;
     if ('type' in def && def.type === 'contents') {
-      return getNodeTextContent(context.node, context.document, def.tag);
+      return getNodeContent(context.node, context.document, def.tag);
     } else if ('attr' in def) {
       return getAttrValueForTag(context.node, def.tag, def.attr, context.document, context.position);
     }
@@ -36,17 +37,13 @@ export function staticValueNodeMap(defs: staticValueMapping[], refs: staticValue
           if (result) return result;
         }
       },
-      ((context: NodeMapContext) => {
-        const results: string[] = [];
+      (context: NodeMapContext) => {
+        const results: ValueName[] = [];
         for (const ref of refs) {
           const result = getResult(context, ref);
           if (!result) continue;
-          if ('position' in context) {
-            return result;
-          } else {
-            results.push(result);
-          }
+          results.push(result);
         }
-        return 'position' in context ? undefined : results;
-      }) as any);
+        return results;
+      });
 }

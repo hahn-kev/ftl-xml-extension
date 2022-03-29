@@ -104,7 +104,7 @@ export class FtlCompletionProvider implements CompletionItemProvider {
       const blueprintListNode = node.parent;
       const listName = this.blueprintMapper.parser.getNameDef({node: blueprintListNode, document});
       if (!listName) return;
-      const typeName = this.blueprintMapper.getRefType(listName);
+      const typeName = this.blueprintMapper.getRefType(listName.name);
       const mapper = this.blueprintMapper.getMapperForTypeName(typeName);
 
       if (!mapper || mapper == this.blueprintMapper || !mapper.autoCompleteValues) {

@@ -3,14 +3,15 @@ import {FtlFile} from './ftl-file';
 import {Node} from 'vscode-html-languageservice';
 import {FtlTextDocument} from './ftl-text-document';
 import {getAttrValueForTag} from '../helpers';
+import {ValueName} from '../ref-mappers/value-name';
 
 export class FtlShipBlueprint extends FtlValue {
   readonly kind = 'Ship Blueprint';
 
-  constructor(name: string, file: FtlFile, node: Node, document: FtlTextDocument, isDef: boolean) {
-    super(name, file, node, document, isDef);
+  constructor(valueName: ValueName, file: FtlFile, node: Node, document: FtlTextDocument, isDef: boolean) {
+    super(valueName, file, node, document, isDef);
     if (isDef) {
-      this.layout = getAttrValueForTag(node, 'shipBlueprint', 'layout');
+      this.layout = getAttrValueForTag(node, 'shipBlueprint', 'layout', document)?.name;
     }
   }
 

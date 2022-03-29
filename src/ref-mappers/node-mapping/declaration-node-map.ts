@@ -1,16 +1,17 @@
 import {IValueSet} from 'vscode-html-languageservice';
 import {NodeMapContext} from './node-map-context';
-import {getAttrValueForTag, getNodeTextContent} from '../../helpers';
+import {getAttrValueForTag, getNodeContent} from '../../helpers';
 import {FtlData} from '../../data/ftl-data';
+import {ValueName} from '../value-name';
 
-export function declarationBasedMapFunction(valueSet: IValueSet): (context: NodeMapContext) => string | undefined {
+export function declarationBasedMapFunction(valueSet: IValueSet): (context: NodeMapContext) => ValueName | undefined {
   const refDeclarations = findValueSetReferences(valueSet);
   return (context) => {
     for (const refDeclaration of refDeclarations) {
-      let result: string | undefined;
+      let result: ValueName | undefined;
       switch (refDeclaration.type) {
         case 'contents':
-          result = getNodeTextContent(context.node, context.document, refDeclaration.tag);
+          result = getNodeContent(context.node, context.document, refDeclaration.tag);
           break;
         case 'attr':
           result = getAttrValueForTag(context.node,

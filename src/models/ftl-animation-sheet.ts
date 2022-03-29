@@ -2,12 +2,13 @@ import {FtlValue} from './ftl-value';
 import {FtlFile} from './ftl-file';
 import {Node} from 'vscode-html-languageservice';
 import {FtlTextDocument} from './ftl-text-document';
-import {getAttrValueAsInt, getNodeTextContent} from '../helpers';
+import {getAttrValueAsInt, getNodeContent} from '../helpers';
+import {ValueName} from '../ref-mappers/value-name';
 
 export class FtlAnimationSheet extends FtlValue {
-  constructor(name: string, file: FtlFile, node: Node, document: FtlTextDocument, isDef: boolean) {
-    super(name, file, node, document, isDef);
-    this.sheetFilePath = isDef ? getNodeTextContent(node, document) : undefined;
+  constructor(valueName: ValueName, file: FtlFile, node: Node, document: FtlTextDocument, isDef: boolean) {
+    super(valueName, file, node, document, isDef);
+    this.sheetFilePath = isDef ? getNodeContent(node, document)?.name : undefined;
     this.width = getAttrValueAsInt(node, 'w');
     this.height = getAttrValueAsInt(node, 'h');
     this.frameWidth = getAttrValueAsInt(node, 'fw');
