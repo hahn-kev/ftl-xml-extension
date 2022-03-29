@@ -13,6 +13,7 @@ import {FtlServices, setupCore} from './setup-core';
 import {VOID_ELEMENTS} from 'vscode-html-languageservice/lib/esm/languageFacts/fact';
 import {FtlFoldingProvider} from './providers/ftl-folding-provider';
 import {FtlCodeLensProvider} from './providers/ftl-code-lens-provider';
+import {FtlRenameProvider} from './providers/ftl-rename-provider';
 
 
 export type disposable = { dispose(): unknown };
@@ -87,6 +88,7 @@ export function setupVscodeProviders(services: FtlServices): Created {
       languages.registerDefinitionProvider(ftlXmlDoc, ftlDefinitionProvider),
       languages.registerReferenceProvider(ftlXmlDoc, ftlReferenceProvider),
       languages.registerFoldingRangeProvider(ftlXmlDoc, new FtlFoldingProvider(services.htmlService)),
+      languages.registerRenameProvider(ftlXmlDoc, new FtlRenameProvider(services.documentCache, services.mappers)),
       languages.registerCodeLensProvider(ftlXmlDoc, new FtlCodeLensProvider(services.parser, services.mappers)),
       languages.registerCodeActionsProvider(ftlXmlDoc, ftlCodeActionProvider, {
         providedCodeActionKinds: [

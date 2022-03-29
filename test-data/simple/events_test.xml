@@ -111,4 +111,18 @@
     <crewMember type="kevin"/>
     <removeCrew class="kevin"/>
     <crewCount class="kevin"/>
+
+<ship name="help"/>
+<event name="help">
+    <text>this is a simple help event</text>
+    <ship load="help"/>
+</event>
+<event name="help_fail"></event>
+<event name="start_help">
+    <text>You will start the help event now</text>
+    <choice>
+        <text id="continue"/>
+        <event load="help"/>
+    </choice>
+</event>
 </FTL>

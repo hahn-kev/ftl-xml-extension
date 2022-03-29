@@ -2,7 +2,8 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
-## 0.6.3 pending
+## 0.7.0
+- **Introduce Smart Rename feature**
 - Add more ship blueprint references, fix some other missing references.
 
 ## 0.6.2

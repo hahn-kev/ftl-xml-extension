@@ -2,6 +2,11 @@
 
 FTL XML is intended to improve the editing experience for any mod dev, please let me know of any additional features that you would like to have included.
 
+### Smart Rename
+![Smart Rename](gifs/rename-example.png)
+How to use:  
+![Smart Rename gift](gifs/preview-rename.webp)
+
 ### Peek Definition/Reference
 ![Peek def](gifs/peek-def-example.webp)
 
