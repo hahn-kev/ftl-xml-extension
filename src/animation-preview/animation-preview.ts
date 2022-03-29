@@ -3,6 +3,7 @@ import {Mappers} from '../ref-mappers/mappers';
 import {FtlParser} from '../ftl-parser';
 import {FtlFile} from '../models/ftl-file';
 import {DocumentCache} from '../document-cache';
+import {contains} from '../helpers';
 
 export class AnimationPreview {
   static readonly OpenPreviewCommand = 'ftl-xml.show-animation';
@@ -31,10 +32,9 @@ export class AnimationPreview {
 
     const animationName = this.mappers.animationMapper.parser.getNameDef({
       node,
-      document: editor.document,
-      position: editor.selection.active
+      document: editor.document
     });
-    if (!animationName) return;
+    if (!animationName || !contains(animationName.range, editor.selection.active)) return;
     await this.open(animationName.name);
   }
 

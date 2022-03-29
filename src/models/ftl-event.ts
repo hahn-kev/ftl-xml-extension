@@ -11,7 +11,7 @@ export class FtlEvent extends FtlValue {
   constructor(valueName: ValueName, file: FtlFile, node: Node, document: FtlTextDocument, isDef: boolean) {
     super(valueName, file, node, document, isDef);
     if (isDef) {
-      const text = firstWhere(node.children, (child) => getNodeContent(child, document, 'text'));
+      const text = firstWhere(node.children, (child) => getNodeContent(child, document, 'text')?.name);
       if (text) {
         this.autocompleteDescription = `File: ${file.fileName}  \r\nText: ${text}`;
       }

@@ -17,8 +17,7 @@ export function declarationBasedMapFunction(valueSet: IValueSet): (context: Node
           result = getAttrValueForTag(context.node,
               refDeclaration.tag,
               refDeclaration.attr,
-              context.document,
-              context.position);
+              context.document);
           break;
       }
       if (result) return result;

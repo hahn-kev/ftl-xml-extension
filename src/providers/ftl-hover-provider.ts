@@ -127,8 +127,8 @@ export class FtlHoverProvider implements HoverProvider {
   }
 
 
-  async tryHoverImagePath({node, document, position}: LookupContext): Promise<Hover | undefined> {
-    const img = this.pathMappers.imageMapper.lookupFile({node, document, position});
+  async tryHoverImagePath(context: LookupContext): Promise<Hover | undefined> {
+    const img = this.pathMappers.imageMapper.lookupFile(context);
     if (!img) return;
     const mdString = new MarkdownString();
     let imageUrl: string;
@@ -146,7 +146,7 @@ export class FtlHoverProvider implements HoverProvider {
     mdString.appendMarkdown(`![img](${imageUrl})`);
     return new Hover(
         mdString,
-        VscodeConverter.toVscodeRange(toRange(node.startTagEnd ?? node.start, node.endTagStart ?? node.end, document))
+        VscodeConverter.toVscodeRange(toRange(context.node.startTagEnd ?? context.node.start, context.node.endTagStart ?? context.node.end, context.document))
     );
   }
 }

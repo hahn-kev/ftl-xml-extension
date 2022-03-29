@@ -120,12 +120,11 @@ suite('Ftl Events', () => {
     const document = TestHelpers.testTextDocument(
         `
 <event name="my_event"/> 
-<event load="my_event"/> 
 `);
     const file = services.parser.parseDocument(document);
     expect(file.event.defs).to.have.length(1);
     const eventDef = file.event.defs[0];
-    expect(eventDef.range).to.deep.eq({start: {line: 1, character: 14}, end: {line: 1, character: 22}});
+    expect(eventDef.range).to.deep.eq({start: {line: 1, character: 13}, end: {line: 1, character: 21}});
   });
 
   test('should find an event loop', () => {

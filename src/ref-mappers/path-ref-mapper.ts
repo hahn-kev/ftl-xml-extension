@@ -1,6 +1,6 @@
 import {IValueSet, Location} from 'vscode-html-languageservice';
 import {FtlRoot} from '../models/ftl-root';
-import {getNodeContent, shouldCompleteForNodeContents} from '../helpers';
+import {contains, getNodeContent, shouldCompleteForNodeContents} from '../helpers';
 import {FtlImg} from '../models/ftl-img';
 import {SoundFile} from '../models/sound-file';
 import {ImgPathNames, MusicPaths, ShipIconFileNames, SoundWavePaths} from '../data/autocomplete-value-sets';
@@ -57,9 +57,9 @@ export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBa
     return {uri: img.uri.toString(), range: {start: {line: 0, character: 0}, end: {line: 0, character: 0}}};
   }
 
-  lookupFile(context: NodeMapContext): T | undefined {
+  lookupFile(context: LookupContext): T | undefined {
     const refName = this.getFileRef(context);
-    if (refName) {
+    if (refName && contains(refName.range, context.position)) {
       return this.findFile(refName.name, this.selectRootFiles(this.root), context);
     }
   }
@@ -133,8 +133,7 @@ export class PathRefMappers {
       (root) => root.soundWaveFiles,
       defaultSoundFiles,
       (c) => {
-        if (!Sounds.isWaveNode(c.node, c.document)
-            || (c.position && !shouldCompleteForNodeContents(c.node, c.document.offsetAt(c.position)))) return;
+        if (!Sounds.isWaveNode(c.node, c.document)) return;
         return getNodeContent(c.node, c.document);
       },
       (refName, files) => files.find((f) => f.modPath == refName)

@@ -59,7 +59,7 @@ export class BlueprintParser implements FtlRefParser {
    */
   getBlueprintRef(context: NodeMapContext) {
     if (!this.isListChild(context.node)) {
-      return getAttrValueForTag(context.node, 'choice', 'req', context.document, context.position);
+      return getAttrValueForTag(context.node, 'choice', 'req', context.document);
     }
     const valueName = getNodeContent(context.node, context.document);
     if (valueName?.name.startsWith('HIDDEN ')) {
@@ -72,8 +72,8 @@ export class BlueprintParser implements FtlRefParser {
     return nodeTagEq(node, 'name') && nodeTagEq(node.parent, 'blueprintList');
   }
 
-  getBlueprintListValueName({node, document, position}: NodeMapContext) {
-    return getAttrValueForTag(node, 'blueprintList', 'name', document, position);
+  getBlueprintListValueName(context: NodeMapContext) {
+    return getAttrValueForTag(context.node, 'blueprintList', 'name', context.document);
   }
 
   getNameDef(context: NodeMapContext) {

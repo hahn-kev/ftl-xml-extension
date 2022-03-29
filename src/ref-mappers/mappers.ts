@@ -130,8 +130,7 @@ export class Mappers {
               (context) => getAttrValueForTag(context.node,
                   'augBlueprint',
                   'name',
-                  context.document,
-                  context.position),
+                  context.document),
               declarationBasedMapFunction(AugmentNames)),
       ),
       AugmentNames,
@@ -179,33 +178,32 @@ export class Mappers {
           (file) => file.shipBlueprint,
           FtlShipBlueprint,
           new NodeMapImp(
-              ({document, node, position}) => {
-                return getAttrValueForTag(node, 'shipBlueprint', 'name', document, position);
+              ({document, node}) => {
+                return getAttrValueForTag(node, 'shipBlueprint', 'name', document);
               },
-              ({document, node, position}: NodeMapContext) => {
+              ({document, node}: NodeMapContext) => {
                 if (nodeTagEq(node.parent, 'ships') && nodeTagEq(node, 'ship')) {
                   const shipName = getAttrValueForTag(node, 'ship', 'name', document);
                   if (!shipName) return undefined;
-                  if (position && isInAttrValue(node, document, 'name', position)) return shipName;
                   const results: ValueName[] = [];
                   const shipNameB = shipName.name + '_2';
                   const shipNameC = shipName.name + '_3';
 
-                  const bValueName = getAttrValueForTag(node, 'ship', 'b', document, position);
+                  const bValueName = getAttrValueForTag(node, 'ship', 'b', document);
                   const hasB = bValueName?.name == 'true';
                   if (hasB) results.push(new ValueName(shipNameB, bValueName.range));
 
-                  const cValueName = getAttrValueForTag(node, 'ship', 'c', document, position);
+                  const cValueName = getAttrValueForTag(node, 'ship', 'c', document);
                   const hasC = cValueName?.name == 'true';
                   if (hasC) results.push(new ValueName(shipNameC, cValueName.range));
 
                   results.unshift(shipName);
                   return results;
                 }
-                return getAttrValueForTag(node, 'ship', 'auto_blueprint', document, position)
-                    ?? getAttrValueForTag(node, 'customShip', 'name', document, position)
-                    ?? getAttrValueForTag(node, 'unlockShip', 'shipReq', document, position)
-                    ?? getAttrValueForTag(node, 'unlockCustomShip', 'shipReq', document, position)
+                return getAttrValueForTag(node, 'ship', 'auto_blueprint', document)
+                    ?? getAttrValueForTag(node, 'customShip', 'name', document)
+                    ?? getAttrValueForTag(node, 'unlockShip', 'shipReq', document)
+                    ?? getAttrValueForTag(node, 'unlockCustomShip', 'shipReq', document)
                     ?? getNodeContent(node, document, 'bossShip')
                     ?? getNodeContent(node, document, 'shipReq')
                     ?? getNodeContent(node, document, 'ship', 'otherUnlocks')
@@ -231,7 +229,7 @@ export class Mappers {
   readonly reqMapper = new RefMapper(
       new RefParser((file) => file.reqs, FtlReq, new NodeMapImp(
           (context) => {
-            return getAttrValueForTag(context.node, 'req', 'name', context.document, context.position);
+            return getAttrValueForTag(context.node, 'req', 'name', context.document);
           },
           () => undefined,
       )),
@@ -266,8 +264,7 @@ export class Mappers {
           FtlSound,
           new NodeMapImp(
               (c) => {
-                if (!Sounds.isWaveNode(c.node, c.document)
-                    || (c.position && shouldCompleteForNodeContents(c.node, c.document.offsetAt(c.position)))) return;
+                if (!Sounds.isWaveNode(c.node, c.document)) return;
                 return new ValueName(
                     normalizeTagName(c.node.tag),
                     toRange(c.node.start, c.node.start + c.node.tag.length, c.document)

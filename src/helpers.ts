@@ -128,8 +128,7 @@ export function getAttrValueForTag(
     node: Node,
     tagName: string,
     attrName: string,
-    document: FtlTextDocument,
-    atPosition?: Position): ValueName | undefined {
+    document: FtlTextDocument): ValueName | undefined {
   if (!nodeTagEq(node, tagName)) return;
   return getAttrValueName(node, attrName, document);
 }

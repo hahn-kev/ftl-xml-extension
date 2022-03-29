@@ -26,7 +26,7 @@ export function staticValueNodeMap(defs: staticValueMapping[], refs: staticValue
     if ('type' in def && def.type === 'contents') {
       return getNodeContent(context.node, context.document, def.tag);
     } else if ('attr' in def) {
-      return getAttrValueForTag(context.node, def.tag, def.attr, context.document, context.position);
+      return getAttrValueForTag(context.node, def.tag, def.attr, context.document);
     }
   }
 
