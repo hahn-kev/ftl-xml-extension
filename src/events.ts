@@ -12,6 +12,9 @@ class EventsMap implements NodeMap {
 
   getRefName({document, node}: NodeMapContext) {
     if (nodeTagEq(node, 'event')) {
+      if (nodeTagEq(node.parent, 'sectorDescription', 'loadEventList')) {
+        return getAttrValueName(node, 'name', document);
+      }
       return getAttrValueName(node, 'load', document);
     }
 
@@ -38,11 +41,6 @@ class EventsMap implements NodeMap {
         getNodeContent(node, document, 'eventAlias')
       ];
       return filterFalsy(refs);
-    }
-
-    if (nodeTagEq(node, 'event')
-        && nodeTagEq(node.parent, 'sectorDescription', 'loadEventList')) {
-      return getAttrValueName(node, 'name', document);
     }
     return getNodeContent(node, document, 'startEvent')
         ?? getNodeContent(node, document, 'loadEvent')

@@ -86,25 +86,23 @@ export class BlueprintParser implements FtlRefParser {
   }
 
   getRefName(context: NodeMapContext) {
-    const result = this.getRefNameAndMapper(context);
-    if (Array.isArray(result)) return result?.map((c) => c.valueName);
-    return result?.valueName;
+    const results = this.getRefNameAndMapper(context);
+    return results?.map((c) => c.valueName);
   }
 
   /*
    * returns undefined for mapper if it's mapped by the blueprint mapper
    */
-  getRefNameAndMapper(context: NodeMapContext): RefContext | RefContext[] | undefined {
+  getRefNameAndMapper(context: NodeMapContext): RefContext[] | undefined {
     const ref = this.getBlueprintRef(context);
-    if (ref && !context.position) return [{valueName: ref}];
-    if (ref) return {valueName: ref};
+    if (ref) return [{valueName: ref}];
     for (const blueprintMapper of this.blueprintMappers) {
       let ref = blueprintMapper.parser.getRefName(context);
       if (!ref) continue;
       if (!Array.isArray(ref)) {
-        if (context.position) return {valueName: ref, mapper: blueprintMapper};
         ref = [ref];
       }
+      if (ref.length == 0) continue;
       return ref.map((rn) => ({valueName: rn, mapper: blueprintMapper}));
     }
   }

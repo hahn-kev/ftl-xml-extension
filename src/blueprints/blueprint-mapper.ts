@@ -31,15 +31,10 @@ export class BlueprintMapper implements RefMapperBase {
   // todo not consistent with normal lookup, will not return a result
   // when lookup is done on the def itself
   lookupDef(context: LookupContext): Location | undefined {
-    let refs = this.parser.getRefNameAndMapper(context);
+    const refs = this.parser.getRefNameAndMapper(context);
     if (!refs) return;
-    if (Array.isArray(refs)) {
-      refs = refs.find(ref => contains(ref.valueName.range, context.position));
-      if (!refs) return;
-    } else if (!contains(refs.valueName.range, context.position)) {
-      return undefined;
-    }
-    const ref = refs;
+    const ref = refs.find(ref => contains(ref.valueName.range, context.position));
+    if (!ref) return;
     const refName = ref.valueName.name;
     // this means name was defined in a blueprint list, so find the def somewhere else
     if (!ref.mapper) {
