@@ -97,6 +97,7 @@
     }
   },
   "scripts": {
+    "start": "npm run compile && code --extensionDevelopmentPath=\"%CD%\" --inspect-extensions=9229",
     "compile": "npm run esbuild-base -- --sourcemap",
     "esbuild-base": "esbuild ./src/main.ts --bundle --tree-shaking=true --outfile=out/ftl-main.js --external:vscode --format=cjs",
     "watch": "npm run esbuild-base -- --sourcemap --watch",

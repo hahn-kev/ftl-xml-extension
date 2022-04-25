@@ -8,11 +8,8 @@
 - add missing refs for:
     - ship blueprint elements: cloak, shield images
     - sector trackList track music
-
 - add validation that event text is not whitespace, and not over 440 chars
 - format support
-- allow marking events that are unused as not an error, still show a hint about
-  the issue so it can be undone.
 - add snippets for animations
 - error if blueprint is defined outside blueprint specific
   files [autoBlueprints, blueprints, dlcBlueprints and dlcBlueprintsOverwrite]

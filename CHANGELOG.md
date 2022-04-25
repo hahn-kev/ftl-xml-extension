@@ -6,6 +6,8 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 
 - Fix goto when the reference is not selected on a line
 - Fix the location of a warning for a missing animation sheet file
+- Allow marking an event or ship as unused to prevent warnings, include quick
+  fix
 
 ## 0.7.0
 
