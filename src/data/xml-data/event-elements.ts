@@ -61,13 +61,41 @@ const hyperspaceEventChildren: XmlTag[] = [
   },
   {name: 'repairAllSystems', attributes: [], description: `Fully repairs all of a player's systems.`},
   {name: 'killEnemyBoarders', attributes: [], description: `Kills all enemy crew on the player ship.`},
-  {name: 'instantEscape', attributes: [], description: `Causes the enemy ship to jump away instantly (even if engines are destroyed, etc.).`},
-  {name: 'escape', attributes: [], description: `Trigger's the enemy's normal escape sequence. Does not load the escape event.`},
-  {name: 'surrender', attributes: [], description: `Trigger's the enemy's normal surrender behaviour. Does not load the surrender event.`},
-  {name: 'loadEscape', attributes: [boolAttr('force')], description: `Triggers escape (including event), if the enemy was set to escape on hull threshold or if force="true".`},
-  {name: 'loadSurrender', attributes: [boolAttr('force')], description: `Triggers surrender (including event), if the enemy was set to surrender on hull threshold or if force="true".`},
-  {name: 'disableEscape', attributes: [boolAttr('force')], description: `Clears the enemy escape trigger. If force="true" then makes the enemy stop escaping if they were already escaping.`},
-  {name: 'disableSurrender', attributes: [boolAttr('force')], description: `Clears the enemy surrender trigger. If force="true" then also clears any existing surrender flag.`},
+  {
+    name: 'instantEscape',
+    attributes: [],
+    description: `Causes the enemy ship to jump away instantly (even if engines are destroyed, etc.).`
+  },
+  {
+    name: 'escape',
+    attributes: [],
+    description: `Trigger's the enemy's normal escape sequence. Does not load the escape event.`
+  },
+  {
+    name: 'surrender',
+    attributes: [],
+    description: `Trigger's the enemy's normal surrender behaviour. Does not load the surrender event.`
+  },
+  {
+    name: 'loadEscape',
+    attributes: [boolAttr('force')],
+    description: `Triggers escape (including event), if the enemy was set to escape on hull threshold or if force="true".`
+  },
+  {
+    name: 'loadSurrender',
+    attributes: [boolAttr('force')],
+    description: `Triggers surrender (including event), if the enemy was set to surrender on hull threshold or if force="true".`
+  },
+  {
+    name: 'disableEscape',
+    attributes: [boolAttr('force')],
+    description: `Clears the enemy escape trigger. If force="true" then makes the enemy stop escaping if they were already escaping.`
+  },
+  {
+    name: 'disableSurrender',
+    attributes: [boolAttr('force')],
+    description: `Clears the enemy surrender trigger. If force="true" then also clears any existing surrender flag.`
+  },
   {
     name: 'customFleet',
     attributes: [boolAttr('right'), boolAttr('firing'), boolAttr('autoDarkening')],
@@ -82,7 +110,11 @@ const hyperspaceEventChildren: XmlTag[] = [
   },
   {name: 'achievement', attributes: [boolAttr('silent')], description: `Unlocks custom global achievement.`},
   {name: 'preventQuest', attributes: [], description: `Quest events will be prevented from overwriting this event.`},
-  {name: 'preventFleet', attributes: [], description: `Prevents the rebel fleet from overtaking this beacon whatsoever.`},
+  {
+    name: 'preventFleet',
+    attributes: [],
+    description: `Prevents the rebel fleet from overtaking this beacon whatsoever.`
+  },
   {name: 'remove', attributes: [{name: 'name'}]},
   {
     name: 'jumpEvent',
@@ -145,7 +177,11 @@ const hyperspaceEventChildren: XmlTag[] = [
     description: `Removes all hazards (asteroids, pulsar, ASB, sun, and plasma storm). Nebula status is preserved.`
   },
   {name: 'removeNebula', attributes: [], description: `Removes nebula and plasma storm.`},
-  {name: 'secretSectorWarp', attributes: [], description: `Specifies the name of the secret sector to send the player to (instead of the default crystal sector).`},
+  {
+    name: 'secretSectorWarp',
+    attributes: [],
+    description: `Specifies the name of the secret sector to send the player to (instead of the default crystal sector).`
+  },
   {
     name: 'checkCargo',
     attributes: [],
@@ -185,7 +221,11 @@ const hyperspaceEventChildren: XmlTag[] = [
     ],
     description: `Same syntax as vanilla's <damage> but afflicts the enemy ship. If force="true" then bypasses all system damage resistances. If damageHull="false" then do not inflict hull damage.`
   },
-  {name: 'lose', attributes: [{name: 'text'}], description: `Immediately ends the run as a defeat. The game over text shall be specified.`},
+  {
+    name: 'lose',
+    attributes: [{name: 'text'}],
+    description: `Immediately ends the run as a defeat. The game over text shall be specified.`
+  },
   {name: 'system', attributes: [{name: 'name', valueSet: SystemNames.name}]},
   {
     name: 'noQuestText',
@@ -266,8 +306,16 @@ const hyperspaceEventChildren: XmlTag[] = [
     contentsValueSet: EventNamesValueSet.name,
     description: `Queues an event to happen as soon as the current event ends. Can queue multiple events.`
   },
-  {name: 'runFromFleet', attributes: [boolAttr('closest')], description: `If the fleet/boss overtakes this beacon, move it to a random beacon. If closest is true, prefer a nearby beacon.`},
-  {name: 'preventBossFleet', attributes: [boolAttr('forever')], description: `Prevents this event from being randomly overtaken by the fleet in the last stand. If forever is false, it will be overtaken last.`},
+  {
+    name: 'runFromFleet',
+    attributes: [boolAttr('closest')],
+    description: `If the fleet/boss overtakes this beacon, move it to a random beacon. If closest is true, prefer a nearby beacon.`
+  },
+  {
+    name: 'preventBossFleet',
+    attributes: [boolAttr('forever')],
+    description: `Prevents this event from being randomly overtaken by the fleet in the last stand. If forever is false, it will be overtaken last.`
+  },
   {
     name: 'resetFtl',
     attributes: [],
@@ -392,6 +440,7 @@ export const eventTags: XmlTag[] = [
       {name: 'name'},
       boolAttr('hidden'),
       boolAttr('unique'),
+      boolAttr('unused', 'prevent warnings by vscode if this event is not used anywhere, not used by FTL'),
       {name: 'load', valueSet: EventNamesValueSet.name},
       {
         name: 'recursive',
@@ -400,7 +449,13 @@ export const eventTags: XmlTag[] = [
       }
     ],
   },
-  {name: 'eventList', attributes: [], tags: ['event']},
+  {
+    name: 'eventList',
+    attributes: [
+      boolAttr('unused', 'prevent warnings by vscode if this event is not used anywhere, not used by FTL'),
+    ],
+    tags: ['event']
+  },
   {
     name: 'loadEvent',
     attributes: [boolAttr('seeded'), boolAttr('ignoreUnique')],

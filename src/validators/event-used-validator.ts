@@ -12,12 +12,12 @@ export class EventUsedValidator implements Validator {
   }
 
   validateFile(file: FtlFile, diagnostics: FtlDiagnostic[]) {
-    const unusedEvents = file.event.defs.filter((event) => !this.isEventUsed(event));
+    const unusedEvents = file.event.defs.filter((event) => !event.unusedOk && !this.isEventUsed(event));
 
     if (unusedEvents.length > 0) {
       diagnostics.push(...unusedEvents.map((event) => DiagnosticBuilder.refUnused('Event', event.name, event.range)));
     }
-    const unusedShips = file.ship.defs.filter((ship) => !this.isShipUsed(ship));
+    const unusedShips = file.ship.defs.filter((ship) => !ship.unusedOk && !this.isShipUsed(ship));
     if (unusedShips.length > 0) {
       diagnostics.push(...unusedShips.map((ship) => DiagnosticBuilder.refUnused('Ship', ship.name, ship.range)));
     }

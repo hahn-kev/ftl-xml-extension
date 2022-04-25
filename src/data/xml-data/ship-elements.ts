@@ -47,6 +47,7 @@ export const shipTags: XmlTag[] = [
         valueSet: ShipBlueprintNames.name
       },
       {name: 'name'},
+      boolAttr('unused', 'prevent warnings by vscode if this event is not used anywhere, not used by FTL'),
       boolAttr('hostile'),
       boolAttr('b'),
       boolAttr('c'),
