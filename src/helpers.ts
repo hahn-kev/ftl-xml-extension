@@ -96,6 +96,9 @@ export function toRange(start: number, end: number, document: FtlTextDocument): 
 
 export function contains(range: Range, position: Position): boolean {
   if (position.line < range.start.line || range.end.line < position.line) return false;
+  if (range.start.line == range.end.line && range.start.line == position.line) {
+    return range.start.character <= position.character && position.character <= range.end.character;
+  }
   if (position.line == range.start.line) return range.start.character <= position.character;
   if (position.line == range.end.line) return position.character <= range.end.character;
   return true;
