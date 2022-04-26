@@ -7,6 +7,7 @@ import {Range} from 'vscode-languageserver-textdocument';
 import {FtlTextDocument} from './models/ftl-text-document';
 import {FtlDiagnostic, FtlDiagnosticSeverity} from './models/ftl-diagnostic';
 import type {DiagnosticSeverity} from 'vscode-languageserver-types';
+import {ValueName} from './ref-mappers/value-name';
 
 export enum FtlErrorCode {
   listTypeMismatch = 'ftl-listTypeMismatch',
@@ -22,7 +23,8 @@ export enum FtlErrorCode {
   sheetDimensionNotWholeNumber = 'ftl-sheet-dimension-not-whole-number',
   animationInvalidDescription = 'ftl-animation-invalid-description',
   animationTooLong = 'ftl-animation-too-long',
-  fileNotUsed = 'ftl-file-not-referenced'
+  fileNotUsed = 'ftl-file-not-referenced',
+  valueInvalid = 'ftl-value-invalid'
 }
 
 export class DiagnosticBuilder {
@@ -159,5 +161,12 @@ export class DiagnosticBuilder {
         FtlDiagnosticSeverity.Error,
         FtlErrorCode.refLoop
     );
+  }
+
+  static invalidValue(valueName: ValueName, type: 'Node' | 'Attribute') {
+    return this.diag(valueName.range,
+        `Value '${valueName.name}' is not valid for this ${type}, results my be unexpected`,
+        FtlDiagnosticSeverity.Warning,
+        FtlErrorCode.valueInvalid);
   }
 }

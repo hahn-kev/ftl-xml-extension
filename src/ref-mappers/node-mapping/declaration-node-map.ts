@@ -26,9 +26,9 @@ export function declarationBasedMapFunction(valueSet: IValueSet): (context: Node
   };
 }
 
-type referenceDeclaration = { type: 'attr', tag: string, attr: string } | { type: 'contents', tag: string };
+export type ReferenceDeclaration = { type: 'attr', tag: string, attr: string } | { type: 'contents', tag: string };
 
-function findValueSetReferences(valueSet: IValueSet): referenceDeclaration[] {
+export function findValueSetReferences(valueSet: IValueSet): ReferenceDeclaration[] {
   if (!FtlData.valueSets?.includes(valueSet)) {
     throw new Error(`value set: ${valueSet.name} not included in FTL Data`);
   }
@@ -44,5 +44,5 @@ function findValueSetReferences(valueSet: IValueSet): referenceDeclaration[] {
   return [
     ...contentsRefs,
     ...attrRefs
-  ].filter((rd): rd is referenceDeclaration => !!rd);
+  ].filter((rd): rd is ReferenceDeclaration => !!rd);
 }

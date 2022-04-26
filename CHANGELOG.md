@@ -2,6 +2,10 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
+## 0.7.2
+
+- Implement warnings for invalid auto reward values
+
 ## 0.7.1
 
 - Fix goto when the reference is not selected on a line

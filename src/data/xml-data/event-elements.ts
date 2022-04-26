@@ -7,7 +7,7 @@ import {
   ImageListNames,
   SoundWaveNames,
   SystemNames,
-  TextIdNames
+  TextIdNames, AutoRewardLevelsValueSet, AutoRewardsValueSet
 } from '../autocomplete-value-sets';
 import {boolAttr, XmlTag} from './helpers';
 
@@ -363,10 +363,10 @@ const eventChildTags: XmlTag[] = [
     attributes: [
       {
         name: 'level',
-        values: [{name: 'LOW'}, {name: 'MED'}, {name: 'HIGH'}]
+        valueSet: AutoRewardLevelsValueSet.name
       }
     ],
-    contentsValueSet: 'auto-reward-set'
+    contentsValueSet: AutoRewardsValueSet.name
   },
   {
     name: 'crewMember',

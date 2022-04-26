@@ -21,6 +21,7 @@ import {FileOpener, FtlParser} from './ftl-parser';
 import {FtlDatCache} from './dat-fs-provider/ftl-dat-cache';
 import {FileReader} from './dat-fs-provider/dat-file-parser';
 import {EventLoopValidator} from './validators/event-loop-validator';
+import {ValueSetParserValidator} from './parsers/value-set-parser-validator';
 
 export interface FtlServices {
   parser: FtlParser;
@@ -46,7 +47,8 @@ export function setupCore(fileOpener: FileOpener, fileReader: FileReader): FtlSe
     new IncompleteTagParser(),
     // new RequiredChildrenParser(),
     new AllowedChildrenParser(),
-    new CustomEventFilesParser()
+    new CustomEventFilesParser(),
+    new ValueSetParserValidator()
   ];
   const lookupProviders: LookupProvider[] = [...mappers.list, ...pathMappers.mappers];
   const dataReceivers: DataReceiver[] = [

@@ -99,3 +99,39 @@ export const ShipIconFileNames: IValueSet = {
   name: 'ship-icon-file-names',
   values: [{name: 'loading...'}]
 };
+export const AutoRewardsValueSet: IValueSet = {
+  name: 'auto-reward-set',
+  values: [
+    {name: 'stuff'},
+    {name: 'standard'},
+    {name: 'scrap_only'},
+    {name: 'scrap'},
+    {name: 'weapon'},
+    {name: 'droneparts'},
+    {name: 'droneparts_only'},
+    {name: 'drone'},
+    {name: 'missiles'},
+    {name: 'missiles_only'},
+    {name: 'fuel'},
+    {name: 'fuel_only'},
+    {name: 'augment'},
+    {name: 'item'},
+  ]
+};
+
+export const AutoRewardLevelsValueSet: IValueSet = {
+  name: 'auto-reward-values',
+  values: [{name: 'LOW'}, {name: 'MED'}, {name: 'HIGH'}, {name: 'RANDOM'}]
+};
+export const RarityValueSet: IValueSet = {
+  name: 'rarity-value-set',
+  values: [
+    {name: '1', description: 'most frequent'},
+    {name: '2'},
+    {name: '3'},
+    {name: '4'},
+    {name: '5', description: 'least frequent'},
+    {name: '0', description: 'never shows up'},
+  ]
+};
+export const BoolValueSet: IValueSet = {name: 'bool', values: [{name: 'true'}, {name: 'false'}]};
