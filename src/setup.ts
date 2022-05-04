@@ -39,7 +39,6 @@ export function setupVscodeProviders(services: FtlServices): Created {
   // providers
   const ftlDefinitionProvider = new FtlDefinitionProvider(services.documentCache, services.lookupProviders);
   const ftlReferenceProvider = new FtlReferenceProvider(services.documentCache, services.lookupProviders);
-  const ftlCodeActionProvider = new FtlCodeActionProvider(services.documentCache);
   const hoverProvider = new FtlHoverProvider(services.documentCache,
       services.htmlService,
       services.mappers,
@@ -90,11 +89,13 @@ export function setupVscodeProviders(services: FtlServices): Created {
       languages.registerFoldingRangeProvider(ftlXmlDoc, new FtlFoldingProvider(services.htmlService)),
       languages.registerRenameProvider(ftlXmlDoc, new FtlRenameProvider(services.documentCache, services.mappers)),
       languages.registerCodeLensProvider(ftlXmlDoc, new FtlCodeLensProvider(services.parser, services.mappers)),
-      languages.registerCodeActionsProvider(ftlXmlDoc, ftlCodeActionProvider, {
-        providedCodeActionKinds: [
-          CodeActionKind.QuickFix
-        ]
-      }),
+      languages.registerCodeActionsProvider(ftlXmlDoc,
+          new FtlCodeActionProvider(services.documentCache, services.requiredChildrenParser),
+          {
+            providedCodeActionKinds: [
+              CodeActionKind.QuickFix
+            ]
+          }),
       languages.registerColorProvider(ftlXmlDoc, ftlColor),
       commands.registerCommand(AnimationPreview.OpenPreviewCommand, async (...args) => {
         await new AnimationPreview(services.mappers, services.parser, services.documentCache).openFromCommand(args);

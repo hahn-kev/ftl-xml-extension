@@ -2,6 +2,10 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
+## 0.7.3
+
+- add error if event is missing `<text>` or choice is missing
+
 ## 0.7.2
 
 - Implement warnings for invalid auto reward values

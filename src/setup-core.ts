@@ -33,6 +33,7 @@ export interface FtlServices {
   htmlService: LanguageService;
   mappers: Mappers;
   pathMappers: PathRefMappers;
+  requiredChildrenParser: RequiredChildrenParser;
 }
 
 
@@ -42,10 +43,11 @@ export function setupCore(fileOpener: FileOpener, fileReader: FileReader): FtlSe
 
   const pathMappers = new PathRefMappers();
   const mappers = new Mappers();
+  const requiredChildrenParser = new RequiredChildrenParser();
   const parsers: FtlXmlParser[] = [
     ...mappers.list.map((value) => value.parser),
     new IncompleteTagParser(),
-    // new RequiredChildrenParser(),
+    requiredChildrenParser,
     new AllowedChildrenParser(),
     new CustomEventFilesParser(),
     new ValueSetParserValidator()
@@ -87,6 +89,7 @@ export function setupCore(fileOpener: FileOpener, fileReader: FileReader): FtlSe
     htmlService: service,
     documentCache,
     lookupProviders,
-    validators
+    validators,
+    requiredChildrenParser
   };
 }

@@ -436,6 +436,7 @@ export const eventTags: XmlTag[] = [
   {
     name: 'event',
     tags: eventChildTagNames,
+    requiredTags: ['text'],
     attributes: [
       {name: 'name'},
       boolAttr('hidden'),
@@ -465,7 +466,7 @@ export const eventTags: XmlTag[] = [
   {
     name: 'choice',
     description: 'encloses the choice text and event for each choice in an event',
-    tags: eventChildTagNames,
+    tags: ['event', 'text'],
     requiredTags: ['text'],
     attributes: [
       boolAttr('unique'),

@@ -93,8 +93,8 @@ export class DiagnosticBuilder {
 
   static missingRequiredChild(node: Node, requiredName: string, document: FtlTextDocument) {
     return this.diag(toRange(node.start, node.startTagEnd ?? node.end, document),
-        `Tag: ${node.tag} is missing the required child: ${requiredName}`,
-        FtlDiagnosticSeverity.Warning, FtlErrorCode.missingRequiredChild
+        `Tag: ${node.tag} is missing the required child tag '${requiredName}'`,
+        FtlDiagnosticSeverity.Error, FtlErrorCode.missingRequiredChild
     );
   }
 
