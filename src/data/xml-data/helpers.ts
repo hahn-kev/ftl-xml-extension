@@ -5,6 +5,7 @@ export interface XmlTag extends ITagData {
   requiredTags?: string[];
   contentsValueSet?: string;
   requiredTagsByParent?: { [key: string]: string[] };
+  configOverride?: { [pattern: string]: Partial<Omit<XmlTag, 'configOverride'>> };
 }
 
 export type XmlData = Omit<HTMLDataV1, 'tags'> & { tags: XmlTag[] };

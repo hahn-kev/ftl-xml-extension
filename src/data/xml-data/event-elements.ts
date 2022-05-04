@@ -436,7 +436,7 @@ export const eventTags: XmlTag[] = [
   {
     name: 'event',
     tags: eventChildTagNames,
-    requiredTags: ['text'],
+    requiredTags: [],
     attributes: [
       {name: 'name'},
       boolAttr('hidden'),
@@ -449,6 +449,9 @@ export const eventTags: XmlTag[] = [
         description: `If recursive is true (default), then the same tags apply to all unnamed child events. Otherwise, it only applies to the top-level event.`
       }
     ],
+    configOverride: {
+      '>choice': {requiredTags: ['text']},
+    }
   },
   {
     name: 'eventList',

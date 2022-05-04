@@ -3,11 +3,14 @@ import {FtlData} from '../data/ftl-data';
 import {DiagnosticBuilder} from '../diagnostic-builder';
 import {XmlTag} from '../data/xml-data/helpers';
 import {Node} from 'vscode-html-languageservice';
+import {ConfigOverride} from '../data/config-override';
 
 export class RequiredChildrenParser implements FtlXmlParser {
   private enableRequiredChildren = new Set<string>(['choice', 'event']);
   private requiredChildrenMap: Map<string, XmlTag> = new Map(FtlData.tags
-      .filter((tag: XmlTag) => !!tag.requiredTags && this.enableRequiredChildren.has(tag.name))
+      .filter((tag: XmlTag) => !!tag.requiredTags
+          && this.enableRequiredChildren.has(tag.name)
+      )
       .map((tag) => [tag.name, tag]));
 
   parseNode(context: ParseContext): void {
@@ -24,7 +27,8 @@ export class RequiredChildrenParser implements FtlXmlParser {
   public missingChildren(node: Node): string[] | undefined {
     if (!node.tag) return;
     const xmlTag = this.requiredChildrenMap.get(node.tag);
-    const requiredChildren = xmlTag?.requiredTagsByParent?.[node.parent?.tag ?? ''] ?? xmlTag?.requiredTags;
+
+    const requiredChildren = ConfigOverride.getActualConfig(xmlTag, node)?.requiredTags;
     if (requiredChildren === undefined || requiredChildren.length < 1) return;
 
     const childNames = new Set(node.children

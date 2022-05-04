@@ -59,7 +59,7 @@ export const weaponTags: XmlTag[] = [
       'type', 'title', 'short', 'desc', 'tooltip', 'cooldown',
       'power', 'cost', 'rarity', 'weaponArt', 'launchSounds',
     ],
-    requiredTagsByParent: {'droneBlueprint': []},
+    configOverride: {'droneBlueprint<': {requiredTags: []}},
     attributes: [{name: 'name'}]
   },
   {

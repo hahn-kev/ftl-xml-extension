@@ -3,7 +3,7 @@ import {TestHelpers} from './test-helpers';
 import {expect} from 'chai';
 import {EventLoopValidator} from '../../validators/event-loop-validator';
 import {FtlDiagnostic} from '../../models/ftl-diagnostic';
-import {Range} from 'vscode-html-languageservice';
+import {FtlErrorCode} from '../../diagnostic-builder';
 
 suite('Ftl Events', () => {
   test('should parse all event references', () => {
@@ -167,5 +167,41 @@ suite('Ftl Events', () => {
     const diagnostics: FtlDiagnostic[] = [];
     validator.validateFile(file, diagnostics);
     expect(diagnostics).to.have.length(2);
+  });
+
+  test('should show text is required because there is a choice child', () => {
+    const services = TestHelpers.testSetup();
+    const document = TestHelpers.testTextDocument(
+        `
+<event name="my_event">
+    <choice>
+        <text>hello</text>
+    </choice>
+</event> 
+`);
+    const file = services.parser.parseDocument(document);
+    const requiredChildrenErrors = file.diagnostics.filter(d => d.code == FtlErrorCode.missingRequiredChild);
+    expect(requiredChildrenErrors).to.have.length(1);
+    const diagnostic = requiredChildrenErrors[0];
+    expect(diagnostic.message).to.contain('text');
+  });
+
+  test('should not show text is required because there is no choice child', () => {
+    const services = TestHelpers.testSetup();
+    const document = TestHelpers.testTextDocument(
+        `<event name="my_event"></event> `);
+    const file = services.parser.parseDocument(document);
+    const requiredChildrenErrors = file.diagnostics.filter(d => d.code == FtlErrorCode.missingRequiredChild);
+    expect(requiredChildrenErrors).to.be.empty;
+  });
+
+  test('choice should show text is required', () => {
+    const services = TestHelpers.testSetup();
+    const document = TestHelpers.testTextDocument(`<choice></choice> `);
+    const file = services.parser.parseDocument(document);
+    const requiredChildrenErrors = file.diagnostics.filter(d => d.code == FtlErrorCode.missingRequiredChild);
+    expect(requiredChildrenErrors).to.have.length(1);
+    const diagnostic = requiredChildrenErrors[0];
+    expect(diagnostic.message).to.contain('text');
   });
 });
