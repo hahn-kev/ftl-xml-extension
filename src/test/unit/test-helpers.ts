@@ -28,3 +28,13 @@ class TestHelpersImp {
 
 type helperMethodNames = Exclude<keyof typeof TestHelpersImp, 'prototype'>;
 export const TestHelpers: Pick<typeof TestHelpersImp, helperMethodNames> = TestHelpersImp;
+
+/**
+ * takes a string with a $ in it, removes the $ and returns the location
+ * @param {string} str string to parse
+ * @return {[number, string]} the location and the string without the $
+ */
+export function extractLocation(str: string): [number, string] {
+  const offset = str.indexOf('$');
+  return [offset, str.substr(0, offset) + str.substr(offset + 1)];
+}

@@ -1,7 +1,10 @@
 import {hasAttr, nodeTagEq} from '../helpers';
 import {Node} from 'vscode-html-languageservice';
 
-export type Pattern = string;
+type attributeSelector = `[${string}]`;
+type parentSelector = `${string}<`;
+type childSelector = `>${string}`;
+export type Pattern = attributeSelector | parentSelector | childSelector;
 
 export class Selector {
   private static matchers: Array<(node: Node, pattern: Pattern) => void | boolean> = [

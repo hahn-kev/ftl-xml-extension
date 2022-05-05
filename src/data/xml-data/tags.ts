@@ -4,7 +4,9 @@ import {
   AugmentNames,
   DroneNames,
   ImageListNames,
+  ImgPathNames,
   MusicPaths,
+  ShipIconFileNames,
   SoundWaveNames,
   SystemNames,
   TextIdNames,
@@ -42,6 +44,13 @@ export const allTags: XmlTag[] = [
   },
 
   {
+    name: 'name',
+    attributes: [],
+    configOverride: {
+      'shipIcon<': {contentsValueSet: ShipIconFileNames.name}
+    }
+  },
+  {
     // child of event, and weapon blueprint
     name: 'damage',
     attributes: [
@@ -52,10 +61,12 @@ export const allTags: XmlTag[] = [
   },
   {
     // child of event and imageList
-    name: 'img', attributes: [
+    name: 'img',
+    attributes: [
       {name: 'planet', valueSet: ImageListNames.name},
       {name: 'back', valueSet: ImageListNames.name}
-    ]
+    ],
+    configOverride: {'imageList<': {contentsValueSet: ImgPathNames.name}}
   },
   {name: 'imageList', attributes: [{name: 'name'}], tags: ['img']},
 

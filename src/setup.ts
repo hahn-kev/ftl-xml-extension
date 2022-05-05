@@ -3,7 +3,6 @@ import {CodeActionKind, commands, DocumentSelector, languages, window, workspace
 import {FtlDefinitionProvider} from './providers/ftl-definition-provider';
 import {FtlReferenceProvider} from './providers/ftl-reference-provider';
 import {FtlHoverProvider} from './providers/ftl-hover-provider';
-import {FtlCompletionProvider} from './providers/ftl-completion-provider';
 import {FtlCodeActionProvider} from './providers/ftl-code-action-provider';
 import {FtlColorProvider} from './providers/ftl-color-provider';
 import {WorkspaceParser} from './workspace-parser';
@@ -14,6 +13,7 @@ import {VOID_ELEMENTS} from 'vscode-html-languageservice/lib/esm/languageFacts/f
 import {FtlFoldingProvider} from './providers/ftl-folding-provider';
 import {FtlCodeLensProvider} from './providers/ftl-code-lens-provider';
 import {FtlRenameProvider} from './providers/ftl-rename-provider';
+import {FtlCompletionAdapter} from './providers/ftl-completion-adapter';
 
 
 export type disposable = { dispose(): unknown };
@@ -43,7 +43,7 @@ export function setupVscodeProviders(services: FtlServices): Created {
       services.htmlService,
       services.mappers,
       services.pathMappers);
-  const completionItemProvider = new FtlCompletionProvider(services.documentCache,
+  const completionItemProvider = new FtlCompletionAdapter(services.documentCache,
       services.htmlService,
       services.mappers.blueprintMapper);
   const fsWatcher = workspace.createFileSystemWatcher(WorkspaceParser.findPattern, false, true, false);

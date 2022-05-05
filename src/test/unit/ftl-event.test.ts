@@ -100,7 +100,8 @@ suite('Ftl Events', () => {
     const eventDef = file.event.defs[0];
     expect(eventDef.unsafeEventRefs).to.have.all.keys('event_ref_1', 'event_ref_2', 'event_ref_3');
   });
-  test('should not include vent lists as an unsafe child ref', () => {
+
+  test('should not include event lists as an unsafe child ref', () => {
     const services = TestHelpers.testSetup();
     const document = TestHelpers.testTextDocument(
         `

@@ -2,7 +2,8 @@ import {
   Location as HtmlLocation,
   MarkupContent,
   Range as HtmlRange,
-  TextDocument as HtmlTextDocument
+  TextDocument as HtmlTextDocument,
+  CompletionItem as HtmlCompletionItem,
 } from 'vscode-html-languageservice';
 import {
   Diagnostic,
@@ -10,9 +11,10 @@ import {
   Location,
   MarkdownString,
   Position,
-  Range,
+  Range, SnippetString,
   TextDocument,
-  Uri
+  Uri,
+  CompletionItem
 } from 'vscode';
 import {FtlDiagnostic} from './models/ftl-diagnostic';
 
@@ -29,6 +31,21 @@ export class VscodeConverter {
 
   static toTextDocumentHtml(d: TextDocument): HtmlTextDocument {
     return {...d, uri: d.uri.toString()};
+  }
+
+  static toVsCodeCompletionItems(items: HtmlCompletionItem[]): CompletionItem[] {
+    return items.filter((value) => value.label !== 'data-').map((item) => {
+      const {documentation, textEdit, additionalTextEdits, ...rest} = item;
+      const result: CompletionItem = {...rest};
+      result.documentation = VscodeConverter.toDocumentation(documentation);
+      if (textEdit) {
+        result.insertText = new SnippetString(textEdit.newText);
+        if ('range' in textEdit) {
+          result.range = VscodeConverter.toVscodeRange(textEdit.range);
+        }
+      }
+      return result;
+    });
   }
 
   static toVscodeRange(range: HtmlRange): Range {

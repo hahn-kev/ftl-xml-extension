@@ -1,6 +1,6 @@
 import {boolAttr, XmlTag} from './helpers';
 import {eventChildTagNames} from './event-elements';
-import {ShipBlueprintNames, EventNamesValueSet, ShipNames} from '../autocomplete-value-sets';
+import {ShipBlueprintNames, EventNamesValueSet, ShipNames, ShipIconNames} from '../autocomplete-value-sets';
 
 export const shipChildTags: XmlTag[] = [
   {name: 'weaponOverride', attributes: [], tags: ['name']},
@@ -51,9 +51,17 @@ export const shipTags: XmlTag[] = [
       boolAttr('hostile'),
       boolAttr('b'),
       boolAttr('c'),
-    ]
+    ],
+    configOverride: {
+      'shipOrder<': {contentsValueSet: ShipNames.name},
+      'otherUnlocks<': {contentsValueSet: ShipBlueprintNames.name}
+    }
   },
   {name: 'shipIcons', attributes: []},
-  {name: 'shipIcon', attributes: []},
+  {
+    name: 'shipIcon',
+    attributes: [],
+    configOverride: {'shipIcons<': {contentsValueSet: ShipIconNames.name}}
+  },
   ...shipChildTags
 ];

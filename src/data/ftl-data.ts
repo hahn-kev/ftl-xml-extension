@@ -32,6 +32,7 @@ export const BlueprintListTypeAny = 'any';
 export const FtlData: XmlData = {
   version: 1.1,
   tags: allTags,
+  tagMap: new Map(allTags.map(t => [t.name, t])),
   valueSets: [
     BoolValueSet,
     RarityValueSet,
