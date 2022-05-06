@@ -4,7 +4,8 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 
 ## 0.7.3
 
-- add error if event is missing `<text>` or choice is missing
+- add error if event is missing `<text>` or choice is missing `<text>`
+  or `<event>`
 
 ## 0.7.2
 

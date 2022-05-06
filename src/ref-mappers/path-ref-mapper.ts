@@ -78,7 +78,6 @@ export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBa
         .concat(this.defaultFiles)
         .map((modPath) => ({name: modPath}))
     );
-    // todo update autocomplete value sets
   }
 }
 
