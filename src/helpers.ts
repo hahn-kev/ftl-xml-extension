@@ -168,6 +168,10 @@ export function hasAttr<T extends string>(
   return true;
 }
 
+export function getEol(eol: 1 | 2): string {
+  return eol == 1 ? '\n' : '\r\n';
+}
+
 export function isInAttrValue(node: Node, document: FtlTextDocument, attrName: string, position: Position): boolean {
   const text = getText(node.start, node.startTagEnd ?? node.end, document);
   const nameRange = attrNameRange(node, document, position);

@@ -5,7 +5,6 @@ import {
   CodeActionKind,
   CodeActionProvider,
   Command,
-  EndOfLine,
   ProviderResult,
   Range,
   Selection,
@@ -16,36 +15,73 @@ import {DocumentCache} from '../document-cache';
 import {FtlErrorCode} from '../diagnostic-builder';
 import {Node} from 'vscode-html-languageservice';
 import {BlueprintListTypeAny} from '../data/ftl-data';
-import {nodeTagEq, transformModFindNode} from '../helpers';
+import {
+  getEol,
+  getText,
+  hasAttr,
+  nodeTagEq,
+  normalizeAttributeName,
+  toRange,
+  transformModFindNode
+} from '../helpers';
 import {RequiredChildrenParser} from '../parsers/required-children-parser';
+import {VscodeConverter} from '../vscode-converter';
 
-export class FtlCodeActionProvider implements CodeActionProvider {
+class ResolvableCodeAction extends CodeAction {
+  constructor(
+      title: string,
+      kind: CodeActionKind,
+      private callback: (action: CodeAction) => void
+  ) {
+    super(title, kind);
+  }
+
+  resolve() {
+    this.callback(this);
+  }
+}
+
+export class FtlCodeActionProvider implements CodeActionProvider<ResolvableCodeAction | CodeAction> {
   constructor(private documentCache: DocumentCache, private requiredChildrenParser: RequiredChildrenParser) {
 
   }
+
+  private actionMethods = [
+    this.changeListTypeCodeAction.bind(this),
+    this.markAsUnused.bind(this),
+    this.extractEvent.bind(this),
+  ];
 
   provideCodeActions(
       document: TextDocument,
       range: Range | Selection,
       context: CodeActionContext,
-      token: CancellationToken): ProviderResult<(Command | CodeAction)[]> {
+      token: CancellationToken): ProviderResult<(Command | CodeAction | ResolvableCodeAction)[]> {
     const actions: CodeAction[] = [];
-    let action = this.changeListTypeCodeAction(document, range, context);
-    if (action) actions.push(action);
-    action = this.markAsUnused(document, range, context);
-    if (action) actions.push(action);
-    // const result = this.fixMissingChild(document, range, context);
-    // if (result) actions.push(...result);
+    const node = this.getNode(document, range);
+    if (!node) return;
+    for (const actionMethod of this.actionMethods) {
+      const action = actionMethod(document, node, range, context);
+      if (action) actions.push(action);
+    }
+
     return actions;
   }
 
-  markAsUnused(
+  resolveCodeAction(
+      codeAction: ResolvableCodeAction | CodeAction,
+      token: CancellationToken): ProviderResult<CodeAction> {
+    if (codeAction instanceof ResolvableCodeAction) codeAction.resolve();
+    return undefined;
+  }
+
+  private markAsUnused(
       document: TextDocument,
+      node: Node,
       range: Range | Selection,
       context: CodeActionContext): CodeAction | undefined {
     const unusedDefDiagnostic = context.diagnostics.find(diag => diag.code == FtlErrorCode.unusedRef);
-    if (!unusedDefDiagnostic) return;
-    const node = this.getNode(document, range);
+    if (!unusedDefDiagnostic || !unusedDefDiagnostic.range.intersection(range)) return;
     if (!node) return;
     const action = new CodeAction(`Disable unused reference warning`, CodeActionKind.QuickFix);
     action.diagnostics = [unusedDefDiagnostic];
@@ -56,17 +92,17 @@ export class FtlCodeActionProvider implements CodeActionProvider {
     return action;
   }
 
-  changeListTypeCodeAction(
+  private changeListTypeCodeAction(
       document: TextDocument,
+      baseNode: Node,
       range: Range | Selection,
       context: CodeActionContext): CodeAction | undefined {
     const invalidTypeDiagnostic = context.diagnostics.find((diag) => diag.code == FtlErrorCode.listTypeMismatch);
     if (!invalidTypeDiagnostic) return;
-    let node = this.getNode(document, range);
-    if (!node) return;
+
+    let node: Node | undefined = baseNode;
     const findNode = transformModFindNode(node);
     if (findNode) node = findNode;
-
     if (nodeTagEq(node, 'name')) {
       node = node.parent;
     }
@@ -97,7 +133,7 @@ export class FtlCodeActionProvider implements CodeActionProvider {
       const diag = missingChildDiagnostics.find(d => d.message.includes(`'${missingTag}'`));
       if (diag) action.diagnostics = [diag];
       action.edit = new WorkspaceEdit();
-      const indenting = document.eol == EndOfLine.LF ? '\n' : '\r\n';
+      const indenting = getEol(document.eol);
       action.edit.insert(document.uri, document.positionAt(node.startTagEnd!),
           `${indenting}<${missingTag}></${missingTag}>`);
       return action;
@@ -109,7 +145,46 @@ export class FtlCodeActionProvider implements CodeActionProvider {
     return htmlDocument.findNodeBefore(document.offsetAt(range.start));
   }
 
-  resolveCodeAction(codeAction: CodeAction, token: CancellationToken): ProviderResult<CodeAction> {
-    return undefined;
+  private extractEvent(
+      document: TextDocument,
+      node: Node,
+      range: Range | Selection,
+      context: CodeActionContext) {
+    if (!nodeTagEq(node, 'event') || !nodeTagEq(node.parent, 'choice') || hasAttr(node,
+        'load') || typeof node.startTagEnd === 'undefined') return;
+
+    return new ResolvableCodeAction('Convert to Named Event', CodeActionKind.QuickFix, (action) => {
+      if (!node.parent || typeof node.startTagEnd === 'undefined') return;
+      const baseEventNode = this.findBaseEventNode(node.parent);
+      if (!baseEventNode) return;
+      const baseEventName = normalizeAttributeName(baseEventNode.attributes.name);
+      const baseEventStartPosition = document.positionAt(baseEventNode.start);
+
+      action.edit = new WorkspaceEdit();
+      // replace with load
+      const eventName = baseEventName + '_CHILD';
+      action.edit.replace(document.uri,
+          VscodeConverter.toVscodeRange(toRange(node.start, node.end, document)),
+          `<event load="${eventName}"/>`);
+
+      // write new event with name, todo fix indenting on each line
+      let eventText = getText(node.start, node.end, document);
+      const openTagLength = node.startTagEnd - node.start;
+      const insertNameLocation = openTagLength - 1;
+      eventText = [
+        getEol(document.eol),
+        ' '.repeat(baseEventStartPosition.character),
+        eventText.slice(0, insertNameLocation),
+        ` name="${eventName}"`,
+        eventText.slice(insertNameLocation)
+      ].join('');
+      action.edit.insert(document.uri, document.positionAt(baseEventNode.end), eventText);
+    });
+  }
+
+  private findBaseEventNode(node: Node): (Node & { attributes: { name: string } }) | undefined {
+    if (nodeTagEq(node, 'event') && hasAttr(node, 'name')) return node;
+    if (!node.parent) return undefined;
+    return this.findBaseEventNode(node.parent);
   }
 }

@@ -14,6 +14,7 @@ import {FtlFoldingProvider} from './providers/ftl-folding-provider';
 import {FtlCodeLensProvider} from './providers/ftl-code-lens-provider';
 import {FtlRenameProvider} from './providers/ftl-rename-provider';
 import {FtlCompletionAdapter} from './providers/ftl-completion-adapter';
+import {FtlFormattingProvider} from './providers/ftl-formatting-provider';
 
 
 export type disposable = { dispose(): unknown };
@@ -46,6 +47,7 @@ export function setupVscodeProviders(services: FtlServices): Created {
   const completionItemProvider = new FtlCompletionAdapter(services.documentCache,
       services.htmlService,
       services.mappers.blueprintMapper);
+  const formattingProvider = new FtlFormattingProvider(services.htmlService);
   const fsWatcher = workspace.createFileSystemWatcher(WorkspaceParser.findPattern, false, true, false);
   fsWatcher.onDidCreate((e) => services.parser.fileAdded(e));
   fsWatcher.onDidDelete((e) => services.parser.fileRemoved(e));
@@ -89,6 +91,8 @@ export function setupVscodeProviders(services: FtlServices): Created {
       languages.registerFoldingRangeProvider(ftlXmlDoc, new FtlFoldingProvider(services.htmlService)),
       languages.registerRenameProvider(ftlXmlDoc, new FtlRenameProvider(services.documentCache, services.mappers)),
       languages.registerCodeLensProvider(ftlXmlDoc, new FtlCodeLensProvider(services.parser, services.mappers)),
+      // languages.registerDocumentFormattingEditProvider(ftlXmlDoc, formattingProvider),
+      // languages.registerDocumentRangeFormattingEditProvider(ftlXmlDoc, formattingProvider),
       languages.registerCodeActionsProvider(ftlXmlDoc,
           new FtlCodeActionProvider(services.documentCache, services.requiredChildrenParser),
           {

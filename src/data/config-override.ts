@@ -1,5 +1,5 @@
 import {XmlTag} from './xml-data/helpers';
-import {Selector} from '../selectors/selector';
+import {Pattern, Selector} from '../selectors/selector';
 import {Node} from 'vscode-html-languageservice';
 
 export class ConfigOverride {
@@ -10,7 +10,7 @@ export class ConfigOverride {
     if (!baseTag.configOverride) return baseTag;
     const overrides = Object.entries(baseTag.configOverride);
     for (const [pattern, override] of overrides) {
-      if (Selector.match(node, pattern)) {
+      if (Selector.match(node, pattern as Pattern)) {
         return {...baseTag, ...override};
       }
     }

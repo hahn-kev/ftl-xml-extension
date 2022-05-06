@@ -4,6 +4,7 @@ import {
   Range as HtmlRange,
   TextDocument as HtmlTextDocument,
   CompletionItem as HtmlCompletionItem,
+  TextEdit as HtmlTextEdit
 } from 'vscode-html-languageservice';
 import {
   Diagnostic,
@@ -14,7 +15,7 @@ import {
   Range, SnippetString,
   TextDocument,
   Uri,
-  CompletionItem
+  CompletionItem, TextEdit
 } from 'vscode';
 import {FtlDiagnostic} from './models/ftl-diagnostic';
 
@@ -68,5 +69,9 @@ export class VscodeConverter {
           info.message));
     }
     return vscodeDiag;
+  }
+
+  static toVscodeTextEdit(textEdit: HtmlTextEdit): TextEdit {
+    return new TextEdit(this.toVscodeRange(textEdit.range), textEdit.newText);
   }
 }
