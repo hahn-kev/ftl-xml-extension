@@ -167,19 +167,36 @@ export class FtlCodeActionProvider implements CodeActionProvider<ResolvableCodeA
           VscodeConverter.toVscodeRange(toRange(node.start, node.end, document)),
           `<event load="${eventName}"/>`);
 
-      // write new event with name, todo fix indenting on each line
-      let eventText = getText(node.start, node.end, document);
+      // write new event with name
+      const eventIndentLength = document.positionAt(node.start).character;
+      let eventText = getText(node.start - eventIndentLength, node.end, document);
       const openTagLength = node.startTagEnd - node.start;
-      const insertNameLocation = openTagLength - 1;
+      const insertNameLocation = openTagLength - 1 + eventIndentLength;
       eventText = [
-        getEol(document.eol),
-        ' '.repeat(baseEventStartPosition.character),
         eventText.slice(0, insertNameLocation),
         ` name="${eventName}"`,
         eventText.slice(insertNameLocation)
       ].join('');
+      eventText = getEol(document.eol) + this.fixIndenting(eventText, ' '.repeat(baseEventStartPosition.character), getEol(document.eol));
       action.edit.insert(document.uri, document.positionAt(baseEventNode.end), eventText);
     });
+  }
+
+  private fixIndenting(text: string, indentStr: string, eol: string): string {
+    let amountToRemove: number | undefined;
+    const lines = text.split(eol);
+    return lines.map(line => {
+      if (amountToRemove === undefined) {
+        const lineTrim = line.trimStart();
+        amountToRemove = line.length - lineTrim.length - indentStr.length;
+        return indentStr + lineTrim;
+      } else {
+        const lineTrim = line.trimStart();
+        const amountRemoved = line.length - lineTrim.length;
+        if (amountRemoved < amountToRemove) return line;
+        return line.slice(amountToRemove);
+      }
+    }).join(eol);
   }
 
   private findBaseEventNode(node: Node): (Node & { attributes: { name: string } }) | undefined {
