@@ -9,6 +9,7 @@ import {
   Range,
   Selection,
   TextDocument,
+  window,
   WorkspaceEdit
 } from 'vscode';
 import {DocumentCache} from '../document-cache';
@@ -31,14 +32,20 @@ class ResolvableCodeAction extends CodeAction {
   constructor(
       title: string,
       kind: CodeActionKind,
-      private callback: (action: CodeAction) => void
+      private callback: (action: CodeAction) => void | Promise<void>
   ) {
     super(title, kind);
   }
 
-  resolve() {
-    this.callback(this);
+  resolve(): void | Promise<void> {
+    return this.callback(this);
   }
+}
+
+interface ActionContext extends CodeActionContext {
+  document: TextDocument,
+  node: Node,
+  range: Range | Selection,
 }
 
 export class FtlCodeActionProvider implements CodeActionProvider<ResolvableCodeAction | CodeAction> {
@@ -60,8 +67,9 @@ export class FtlCodeActionProvider implements CodeActionProvider<ResolvableCodeA
     const actions: CodeAction[] = [];
     const node = this.getNode(document, range);
     if (!node) return;
+    const actionContext: ActionContext = {...context, document, range, node};
     for (const actionMethod of this.actionMethods) {
-      const action = actionMethod(document, node, range, context);
+      const action = actionMethod(actionContext);
       if (action) actions.push(action);
     }
 
@@ -71,36 +79,31 @@ export class FtlCodeActionProvider implements CodeActionProvider<ResolvableCodeA
   resolveCodeAction(
       codeAction: ResolvableCodeAction | CodeAction,
       token: CancellationToken): ProviderResult<CodeAction> {
-    if (codeAction instanceof ResolvableCodeAction) codeAction.resolve();
+    if (codeAction instanceof ResolvableCodeAction) {
+      const result = codeAction.resolve();
+      if (result) return result as Promise<undefined>;
+    }
     return undefined;
   }
 
-  private markAsUnused(
-      document: TextDocument,
-      node: Node,
-      range: Range | Selection,
-      context: CodeActionContext): CodeAction | undefined {
+  private markAsUnused(context: ActionContext): CodeAction | undefined {
     const unusedDefDiagnostic = context.diagnostics.find(diag => diag.code == FtlErrorCode.unusedRef);
-    if (!unusedDefDiagnostic || !unusedDefDiagnostic.range.intersection(range)) return;
-    if (!node) return;
+    if (!unusedDefDiagnostic || !unusedDefDiagnostic.range.intersection(context.range)) return;
+    if (!context.node) return;
     const action = new CodeAction(`Disable unused reference warning`, CodeActionKind.QuickFix);
     action.diagnostics = [unusedDefDiagnostic];
     action.edit = new WorkspaceEdit();
-    action.edit.insert(document.uri,
-        document.positionAt((node.startTagEnd ?? node.end) - 1),
+    action.edit.insert(context.document.uri,
+        context.document.positionAt((context.node.startTagEnd ?? context.node.end) - 1),
         ` unused="true"`);
     return action;
   }
 
-  private changeListTypeCodeAction(
-      document: TextDocument,
-      baseNode: Node,
-      range: Range | Selection,
-      context: CodeActionContext): CodeAction | undefined {
+  private changeListTypeCodeAction(context: ActionContext): CodeAction | undefined {
     const invalidTypeDiagnostic = context.diagnostics.find((diag) => diag.code == FtlErrorCode.listTypeMismatch);
     if (!invalidTypeDiagnostic) return;
 
-    let node: Node | undefined = baseNode;
+    let node: Node | undefined = context.node;
     const findNode = transformModFindNode(node);
     if (findNode) node = findNode;
     if (nodeTagEq(node, 'name')) {
@@ -110,20 +113,17 @@ export class FtlCodeActionProvider implements CodeActionProvider<ResolvableCodeA
     const action = new CodeAction(`Change type of blueprint list to 'any'`, CodeActionKind.QuickFix);
     action.diagnostics = [invalidTypeDiagnostic];
     action.edit = new WorkspaceEdit();
-    action.edit.insert(document.uri,
-        document.positionAt((node.startTagEnd ?? node.end) - 1),
+    action.edit.insert(context.document.uri,
+        context.document.positionAt((node.startTagEnd ?? node.end) - 1),
         ` type="${BlueprintListTypeAny}"`);
     return action;
   }
 
   // todo determine how to handle indenting properly, and fix issue with diagnostic not showing up
-  fixMissingChild(
-      document: TextDocument,
-      range: Range | Selection,
-      context: CodeActionContext): CodeAction[] | undefined {
+  fixMissingChild(context: ActionContext): CodeAction[] | undefined {
     const missingChildDiagnostics = context.diagnostics.filter(diag => diag.code == FtlErrorCode.missingRequiredChild);
     if (missingChildDiagnostics.length == 0) return;
-    const node = this.getNode(document, range);
+    const node = this.getNode(context.document, context.range);
     // not supporting tags that are self closing for now
     if (!node || node.startTagEnd === undefined) return;
     const missingChildren = this.requiredChildrenParser.missingChildren(node);
@@ -133,8 +133,8 @@ export class FtlCodeActionProvider implements CodeActionProvider<ResolvableCodeA
       const diag = missingChildDiagnostics.find(d => d.message.includes(`'${missingTag}'`));
       if (diag) action.diagnostics = [diag];
       action.edit = new WorkspaceEdit();
-      const indenting = getEol(document.eol);
-      action.edit.insert(document.uri, document.positionAt(node.startTagEnd!),
+      const indenting = getEol(context.document.eol);
+      action.edit.insert(context.document.uri, context.document.positionAt(node.startTagEnd!),
           `${indenting}<${missingTag}></${missingTag}>`);
       return action;
     });
@@ -145,24 +145,25 @@ export class FtlCodeActionProvider implements CodeActionProvider<ResolvableCodeA
     return htmlDocument.findNodeBefore(document.offsetAt(range.start));
   }
 
-  private extractEvent(
-      document: TextDocument,
-      node: Node,
-      range: Range | Selection,
-      context: CodeActionContext) {
+  private extractEvent({node, document}: ActionContext) {
     if (!nodeTagEq(node, 'event') || !nodeTagEq(node.parent, 'choice') || hasAttr(node,
         'load') || typeof node.startTagEnd === 'undefined') return;
 
-    return new ResolvableCodeAction('Convert to Named Event', CodeActionKind.QuickFix, (action) => {
+    return new ResolvableCodeAction('Convert to Named Event', CodeActionKind.QuickFix, async (action) => {
       if (!node.parent || typeof node.startTagEnd === 'undefined') return;
       const baseEventNode = this.findBaseEventNode(node.parent);
       if (!baseEventNode) return;
       const baseEventName = normalizeAttributeName(baseEventNode.attributes.name);
       const baseEventStartPosition = document.positionAt(baseEventNode.start);
 
+      const eventName = await window.showInputBox({
+        prompt: 'Please type the name for the Event',
+        value: baseEventName + '_CHILD'
+      });
+      if (!eventName) return;
+
       action.edit = new WorkspaceEdit();
       // replace with load
-      const eventName = baseEventName + '_CHILD';
       action.edit.replace(document.uri,
           VscodeConverter.toVscodeRange(toRange(node.start, node.end, document)),
           `<event load="${eventName}"/>`);
@@ -177,7 +178,9 @@ export class FtlCodeActionProvider implements CodeActionProvider<ResolvableCodeA
         ` name="${eventName}"`,
         eventText.slice(insertNameLocation)
       ].join('');
-      eventText = getEol(document.eol) + this.fixIndenting(eventText, ' '.repeat(baseEventStartPosition.character), getEol(document.eol));
+      eventText = getEol(document.eol) + this.fixIndenting(eventText,
+          ' '.repeat(baseEventStartPosition.character),
+          getEol(document.eol));
       action.edit.insert(document.uri, document.positionAt(baseEventNode.end), eventText);
     });
   }
