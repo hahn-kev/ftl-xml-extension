@@ -1,7 +1,6 @@
 ## Want to implement
 
 - narrow range for attribute refs
-- allow extracting an annonmus event into a new event
 - make sure projectile tag contents is a ref to an animation
 - enable required children again once we can fix weapon issues
 - make sure unlock custom ship only shows player ships (defined in hyper space

@@ -2,6 +2,11 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
+## 0.8.0
+
+- Add new 'Convert to Named Event' quick fix, use by clicking the light bulb
+  when an event inside a choice is selected
+
 ## 0.7.3
 
 - add error if event is missing `<text>` or choice is missing `<text>`
