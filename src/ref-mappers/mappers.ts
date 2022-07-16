@@ -17,6 +17,7 @@ import {
   AnimationNames,
   AnimationSheetNames,
   AugmentNames,
+  AutoRewardsValueSet,
   CrewNames,
   CustomReqNames,
   DroneNames,
@@ -65,12 +66,14 @@ import {FtlImageList} from '../models/ftl-image-list';
 import {FtlVariable} from '../models/ftl-variable';
 import {FtlReq} from '../models/ftl-req';
 import {EventRefParser} from './event-ref-parser';
-import {FtlGenericValue} from '../models/ftl-value';
+import {FtlGenericValue, FtlValue} from '../models/ftl-value';
 import {NodeMapContext} from './node-mapping/node-map-context';
 import {staticValueNodeMap} from './node-mapping/static-node-map';
 import {NodeMapImp} from './node-mapping/node-map';
 import {declarationBasedMapFunction} from './node-mapping/declaration-node-map';
 import {ValueName} from './value-name';
+import {defaultAutoRewards} from '../data/default-ftl-data/default-auto-rewards';
+import {FtlReward} from '../models/ftl-reward';
 
 export class Mappers {
   readonly eventsMapper = new RefMapper(
@@ -237,6 +240,19 @@ export class Mappers {
       'Requirement'
   );
 
+  readonly rewardMapper = new RefMapper(
+      new RefParser(
+          file => file.rewards,
+          FtlReward,
+          new NodeMapImp(
+              (context) => getAttrValueForTag(context.node, 'reward', 'name', context.document),
+              declarationBasedMapFunction(AutoRewardsValueSet))
+      ),
+      AutoRewardsValueSet,
+      'Rewards',
+      defaultAutoRewards
+  );
+
   readonly textMapper = new RefMapper(
       new RefParser(
           (file) => file.text,
@@ -361,6 +377,7 @@ export class Mappers {
     this.weaponAnimationMapper,
     this.imageListMapper,
     this.shipIconMapper,
-    this.blueprintMapper
+    this.blueprintMapper,
+    this.rewardMapper
   ];
 }

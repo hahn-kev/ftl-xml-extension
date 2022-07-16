@@ -101,22 +101,7 @@ export const ShipIconFileNames: IValueSet = {
 };
 export const AutoRewardsValueSet: IValueSet = {
   name: 'auto-reward-set',
-  values: [
-    {name: 'stuff'},
-    {name: 'standard'},
-    {name: 'scrap_only'},
-    {name: 'scrap'},
-    {name: 'weapon'},
-    {name: 'droneparts'},
-    {name: 'droneparts_only'},
-    {name: 'drone'},
-    {name: 'missiles'},
-    {name: 'missiles_only'},
-    {name: 'fuel'},
-    {name: 'fuel_only'},
-    {name: 'augment'},
-    {name: 'item'},
-  ]
+  values: [{name: 'loading...'}]
 };
 
 export const AutoRewardLevelsValueSet: IValueSet = {

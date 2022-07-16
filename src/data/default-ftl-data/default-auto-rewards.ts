@@ -1,0 +1,16 @@
+export const defaultAutoRewards = [
+  'stuff',
+  'standard',
+  'scrap_only',
+  'scrap',
+  'weapon',
+  'droneparts',
+  'droneparts_only',
+  'drone',
+  'missiles',
+  'missiles_only',
+  'fuel',
+  'fuel_only',
+  'augment',
+  'item',
+];

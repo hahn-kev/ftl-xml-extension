@@ -3,7 +3,6 @@ import {findValueSetReferences, ReferenceDeclaration} from '../ref-mappers/node-
 import {IValueSet} from 'vscode-html-languageservice';
 import {
   AutoRewardLevelsValueSet,
-  AutoRewardsValueSet,
   BoolValueSet,
   RarityValueSet
 } from '../data/autocomplete-value-sets';
@@ -17,7 +16,6 @@ export class ValueSetParserValidator implements FtlXmlParser {
   constructor() {
     const valueSets: IValueSet[] = [
       AutoRewardLevelsValueSet,
-      AutoRewardsValueSet,
       BoolValueSet,
       RarityValueSet
     ];
