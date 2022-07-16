@@ -3,7 +3,7 @@ import {FtlFile} from './models/ftl-file';
 import {DocumentCache} from './document-cache';
 import {FtlXmlParser, ParseContext} from './parsers/ftl-xml-parser';
 import {FtlRoot} from './models/ftl-root';
-import {getFileName, transformModFindNode} from './helpers';
+import {getFileName, Progress, transformModFindNode} from './helpers';
 import {PathRefMapperBase} from './ref-mappers/path-ref-mapper';
 import {HyperspaceFile} from './models/hyperspace-file';
 import {URI} from 'vscode-uri';
@@ -41,14 +41,14 @@ export class FtlParser {
 
   public readonly root = new FtlRoot();
 
-  public async parseFiles(files: URI[], reset: boolean) {
+  public async parseFiles(files: URI[], reset: boolean, progress: Progress<{message?: string}>) {
     if (files.length == 0) return this.root;
     if (this.isParsing) return this._parsingPromise as Thenable<FtlRoot>;
     if (reset) this.root.clear();
 
     try {
       console.time('parse files');
-      this._parsingPromise = this._parseFiles(files).then(() => this.root);
+      this._parsingPromise = this._parseFiles(files, progress).then(() => this.root);
       await this._parsingPromise;
       this._parsingPromise = undefined;
     } finally {
@@ -68,8 +68,10 @@ export class FtlParser {
     this.dataUpdated(this.root);
   }
 
-  private async _parseFiles(files: URI[]) {
+  private async _parseFiles(files: URI[], progress: Progress<{message?: string}>) {
     files = [...files];
+    const fileCount = files.length;
+    let currentIndex = 0;
 
     // attempts to improve performance, seems to have worked
     const workerCount = 24;
@@ -79,6 +81,8 @@ export class FtlParser {
       let file: URI | undefined;
       while (file = files.pop()) {
         await this.parseFile(file);
+        currentIndex++;
+        progress.report({message: `${currentIndex}/${fileCount}`});
       }
     };
 

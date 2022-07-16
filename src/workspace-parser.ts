@@ -3,6 +3,7 @@ import {FltDocumentValidator} from './flt-document-validator';
 import {FileType, ProgressLocation, RelativePattern, Uri, window, workspace, WorkspaceFolder} from 'vscode';
 import {FtlDatFs} from './dat-fs-provider/ftl-dat-fs';
 import {FtlDatCache} from './dat-fs-provider/ftl-dat-cache';
+import {Progress} from './helpers';
 
 export class WorkspaceParser {
   get isParsing() {
@@ -15,15 +16,15 @@ export class WorkspaceParser {
   }
 
   public async parseWorkspace(subFolder?: string) {
-    const root = await this.execInParsing(async () => {
+    const root = await this.execInParsing(async (progress) => {
       const files = await this.findFiles(subFolder);
-      return await this.xmlParser.parseFiles(files, true);
+      return await this.xmlParser.parseFiles(files, true, progress);
     });
     this.validator.validateFtlRoot(root);
     return this.xmlParser.root;
   }
 
-  private async execInParsing<T>(exec: () => Promise<T>): Promise<T> {
+  private async execInParsing<T>(exec: (progress: Progress<{message?: string}>) => Promise<T>): Promise<T> {
     return window.withProgress({
       title: 'Parsing FTL files',
       location: ProgressLocation.Window
@@ -67,7 +68,7 @@ export class WorkspaceParser {
   }
 
   public async workspaceFoldersAdded(folders: readonly WorkspaceFolder[]) {
-    await this.execInParsing(async () => {
+    await this.execInParsing(async (progress) => {
       for (const folder of folders) {
         let files: Uri[];
         if (folder.uri.scheme === FtlDatFs.scheme) {
@@ -78,7 +79,7 @@ export class WorkspaceParser {
           files = await workspace.findFiles(pattern);
         }
 
-        await this.xmlParser.parseFiles(files, false);
+        await this.xmlParser.parseFiles(files, false, progress);
       }
     });
 

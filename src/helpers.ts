@@ -2,6 +2,9 @@ import {Node} from 'vscode-html-languageservice';
 import {FtlTextDocument, FtlUri} from './models/ftl-text-document';
 import {Position, Range} from 'vscode-languageserver-textdocument';
 import {ValueName} from './ref-mappers/value-name';
+export interface Progress<T> {
+  report(value: T): void;
+}
 
 export function nodeTagEq(node: Node, tag: string): boolean
 export function nodeTagEq(node: Node, tag: string, tag2: string): boolean
