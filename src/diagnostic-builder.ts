@@ -165,7 +165,7 @@ export class DiagnosticBuilder {
 
   static invalidValue(valueName: ValueName, type: 'Node' | 'Attribute') {
     return this.diag(valueName.range,
-        `Value '${valueName.name}' is not valid for this ${type}, results my be unexpected`,
+        `Value '${valueName.name}' is not valid for this ${type}, results may be unexpected`,
         FtlDiagnosticSeverity.Warning,
         FtlErrorCode.valueInvalid);
   }
