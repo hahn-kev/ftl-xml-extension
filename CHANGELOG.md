@@ -2,9 +2,16 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
-## 0.8.1
+## 0.8.2
 
 - Fix bug where variables declared in `hyperspace.xml.append` wouldn't get detected properly
+- fixed up how reqs and removeItem work so they show references better and don't have errors
+- Fixed list type missmatch errors
+
+## 0.8.1
+
+- Added progress reporting when parsing
+- add custom auto reward support
 
 ## 0.8.0
 
