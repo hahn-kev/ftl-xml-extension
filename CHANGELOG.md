@@ -2,6 +2,10 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
+## 0.8.1
+
+- Fix bug where variables declared in `hyperspace.xml.append` wouldn't get detected properly
+
 ## 0.8.0
 
 - Add new 'Convert to Named Event' quick fix, use by clicking the light bulb

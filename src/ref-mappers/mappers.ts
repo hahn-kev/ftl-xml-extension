@@ -222,7 +222,7 @@ export class Mappers {
       new RefParser((file) => file.variables, FtlVariable, new NodeMapImp(
           (context) => {
             const name = this.variableNodeMapFunction(context);
-            return (name && getFileName(context.document) == 'hyperspace.xml') ? name : undefined;
+            return (name && getFileName(context.document).startsWith('hyperspace.xml')) ? name : undefined;
           },
           this.variableNodeMapFunction,
       )),
