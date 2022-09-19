@@ -120,8 +120,9 @@
     <event name="help_fail"></event>
     <event name="start_help">
         <text>You will start the help event now</text>
-        <choice>
+        <choice req="weapon-list-1">
             <text id="continue"/>
+            <removeItem>weapon-list-1</removeItem>
             <event load="help"/>
         </choice>
         <choice>

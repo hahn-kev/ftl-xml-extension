@@ -7,7 +7,7 @@ import {
   ImageListNames,
   SoundWaveNames,
   SystemNames,
-  TextIdNames, AutoRewardLevelsValueSet, AutoRewardsValueSet
+  TextIdNames, AutoRewardLevelsValueSet, AutoRewardsValueSet, AllBlueprintsValueSet
 } from '../autocomplete-value-sets';
 import {boolAttr, XmlTag} from './helpers';
 
@@ -265,7 +265,7 @@ const hyperspaceEventChildren: XmlTag[] = [
   {
     name: 'removeItem',
     attributes: [],
-    contentsValueSet: AugmentNames.name,
+    contentsValueSet: AllBlueprintsValueSet.name,
     description: `Removes the item with the specified name. Unlike vanilla's <remove> tag, this can be repeated, but it also does not display a "removed" message. Hidden augments can be removed by giving the name "HIDDEN AUG_ID", replacing AUG_ID with the normal augment's id.`
   },
   {
@@ -478,7 +478,7 @@ export const eventTags: XmlTag[] = [
         valueSet: 'bool',
         description: ` if marked true, the choice's rewards will not be displayed before selecting the event. By default set to false. (usually set to true unless its an event where a trade is made, so that you can see the exact values of what is being traded)`
       },
-      {name: 'req'},
+      {name: 'req', valueSet: AllBlueprintsValueSet.name},
       {name: 'lvl'},
       boolAttr('blue'),
       {name: 'max_group'},

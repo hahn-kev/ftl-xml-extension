@@ -69,9 +69,6 @@ export class FtlCompletionProvider {
         return this.valueSetToCompletionItems(mapper.autoCompleteValues, range);
       }
     }
-    if (isInAttrValue(node, document, 'req', position)) {
-      return this.blueprintMapper.getAllBlueprintNames().map((name) => ({label: name, kind: CompletionItemKind.Unit}));
-    }
   }
 
   private tryCompleteNodeContents(node: Node, document: FtlTextDocument, offset: number): CompletionItem[] | undefined {

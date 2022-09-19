@@ -8,6 +8,7 @@ import {BlueprintListTypeAny} from '../data/ftl-data';
 import {BlueprintParser} from './blueprint-parser';
 import {LookupContext} from '../ref-mappers/lookup-provider';
 import {FtlRoot} from '../models/ftl-root';
+import {AllBlueprintsValueSet} from '../data/autocomplete-value-sets';
 
 
 export class BlueprintMapper implements RefMapperBase {
@@ -81,6 +82,8 @@ export class BlueprintMapper implements RefMapperBase {
       file.blueprintList.refs.forEach((value, key) => addToKey(this.refs, key, value));
     }
 
+    AllBlueprintsValueSet.values.length = 0;
+
     for (const blueprintMapper of this.blueprintMappers) {
       blueprintMapper.updateData(root);
 
@@ -89,7 +92,10 @@ export class BlueprintMapper implements RefMapperBase {
       const blueprintListNames = blueprintLists
           .filter((bList) => !bList.isAnyType && this.getListTypeFromBlueprint(bList) == blueprintMapper.typeName)
           .map((blueprintList) => blueprintList.name);
-      blueprintMapper.autoCompleteValues?.values.push(...blueprintListNames.map((name) => ({name})));
+      if (blueprintMapper.autoCompleteValues) {
+        blueprintMapper.autoCompleteValues?.values.push(...blueprintListNames.map((name) => ({name})));
+        AllBlueprintsValueSet.values.push(...blueprintMapper.autoCompleteValues.values);
+      }
     }
 
     // we need to do this after the first iteration of files because we need the defs to be setup already

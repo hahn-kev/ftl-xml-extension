@@ -90,6 +90,11 @@ export const CustomReqNames: IValueSet = {
   values: [{name: 'loading...'}]
 };
 
+export const AllBlueprintsValueSet: IValueSet = {
+  name: 'all-blueprints-names',
+  values: [{name: 'loading...'}]
+};
+
 export const ShipIconNames: IValueSet = {
   name: 'ship-icon-names',
   values: [{name: 'loading...'}]

@@ -1,4 +1,5 @@
 import {
+  AllBlueprintsValueSet,
   AnimationNames,
   AnimationSheetNames,
   AugmentNames,
@@ -59,5 +60,6 @@ export const FtlData: XmlData = {
     CustomReqNames,
     ShipIconNames,
     ShipIconFileNames,
+    AllBlueprintsValueSet
   ]
 };
