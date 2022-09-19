@@ -42,9 +42,9 @@ export class BlueprintValidator implements Validator {
     if (!typeResults) return [];
     const {map: typeMapper, listTypeName} = typeResults;
     if (listTypeName == BlueprintListTypeAny) return;
-    for (const [type, blueprintValues] of typeMapper) {
+    for (const [type, blueprintValues] of typeMapper.entries()) {
       // skip unknown because it'll be a warning from tryGetInvalidRefName
-      if (type == listTypeName || type == 'Unknown') return;
+      if (type == listTypeName || type == 'Unknown') continue;
       diagnostics.push(...blueprintValues.map((value) => DiagnosticBuilder.listTypeMisMatch(value.name,
           type,
           listTypeName,
