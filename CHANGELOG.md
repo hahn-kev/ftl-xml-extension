@@ -2,6 +2,13 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
+## 0.8.3
+
+- add artillery as a weapon
+- fix some ship reference issues
+- removed event button warning until we can get proper support
+- fixed invalid warnings when restoring an event alias
+
 ## 0.8.2
 
 - Fix bug where variables declared in `hyperspace.xml.append` wouldn't get detected properly
