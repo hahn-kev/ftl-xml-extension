@@ -106,7 +106,8 @@ export class Mappers {
               [
                 {tag: 'weapon', attr: 'name'},
                 {tag: 'weaponList', attr: 'load'},
-                {tag: 'weaponBlueprint', parentTag: 'droneBlueprint', type: 'contents'}
+                {tag: 'weaponBlueprint', parentTag: 'droneBlueprint', type: 'contents'},
+                {tag: 'artillery', parentTag: 'systemList', attr: 'weapon'}
               ]
           )
       ),
