@@ -120,6 +120,7 @@
     <event name="help_fail"></event>
     <event name="start_help">
         <text>You will start the help event now</text>
+        <eventAlias name="help">help_fail</eventAlias>
         <choice req="weapon-list-1">
             <text id="continue"/>
             <removeItem>weapon-list-1</removeItem>
@@ -128,6 +129,7 @@
         <choice>
             <text>choice</text>
             <event>
+                <eventAlias name="help"></eventAlias>
                 <text>hello</text>
                 <choice>
                     <text>more text</text>

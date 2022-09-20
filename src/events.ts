@@ -1,7 +1,12 @@
-import {filterFalsy, getAttrValueForTag, getAttrValueName, getNodeContent, hasAttr, nodeTagEq} from './helpers';
+import {getAttrValueForTag, getAttrValueName, getNodeContent, hasAttr, nodeTagEq} from './helpers';
 import {ParseContext} from './parsers/ftl-xml-parser';
 import {NodeMap} from './ref-mappers/node-mapping/node-map';
 import {NodeMapContext} from './ref-mappers/node-mapping/node-map-context';
+import {ValueName} from './ref-mappers/value-name';
+
+function filterEmpty(array: Array<ValueName | undefined>): ValueName[] {
+  return array.filter((v): v is ValueName => !!v?.name);
+}
 
 class EventsMap implements NodeMap {
   getNameDef(context: NodeMapContext) {
@@ -25,7 +30,7 @@ class EventsMap implements NodeMap {
         getAttrValueName(node, 'rebelEvent', document),
       ];
 
-      return filterFalsy(refs);
+      return filterEmpty(refs);
     }
 
     if (nodeTagEq(node, 'rebelBeacon')) {
@@ -33,14 +38,14 @@ class EventsMap implements NodeMap {
         getAttrValueName(node, 'event', document),
         getAttrValueName(node, 'nebulaEvent', document),
       ];
-      return filterFalsy(refs);
+      return filterEmpty(refs);
     }
     if (nodeTagEq(node, 'eventAlias')) {
       const refs = [
         getAttrValueName(node, 'name', document),
         getNodeContent(node, document, 'eventAlias')
       ];
-      return filterFalsy(refs);
+      return filterEmpty(refs);
     }
     return getNodeContent(node, document, 'startEvent')
         ?? getNodeContent(node, document, 'loadEvent')

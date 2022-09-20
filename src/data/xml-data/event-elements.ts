@@ -293,7 +293,7 @@ const hyperspaceEventChildren: XmlTag[] = [
   {
     name: 'eventAlias',
     attributes: [
-      {name: 'name'},
+      {name: 'name', valueSet: EventNamesValueSet.name},
       boolAttr('jumpClear'),
       boolAttr('once')
     ],
