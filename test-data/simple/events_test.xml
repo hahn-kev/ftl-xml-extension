@@ -47,6 +47,11 @@
 
     <shipBlueprint name="ship-blueprint-1"/>
     <shipBlueprint name="ship-blueprint-2"/>
+    <mod:findLike type="ships">
+        <mod-append:ship name="ship-blueprint-1">
+
+        </mod-append:ship>
+    </mod:findLike>
 
     <!-- weapons -->
     <weaponBlueprint name="weapon-1"/>

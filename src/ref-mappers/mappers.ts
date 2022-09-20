@@ -283,7 +283,7 @@ export class Mappers {
               (c) => {
                 if (!Sounds.isWaveNode(c.node, c.document)) return;
                 return new ValueName(
-                    normalizeTagName(c.node.tag),
+                    normalizeTagName(c.node.tag, c.node),
                     toRange(c.node.start, c.node.start + c.node.tag.length, c.document)
                 );
               },

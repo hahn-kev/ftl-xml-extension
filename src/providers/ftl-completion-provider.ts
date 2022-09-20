@@ -79,7 +79,7 @@ export class FtlCompletionProvider {
       return this.valueSetToCompletionItems(SoundWavePaths, range);
     }
 
-    const tagName = normalizeTagName(node.tag);
+    const tagName = normalizeTagName(node.tag, node);
     const xmlTag = ConfigOverride.getActualConfig(FtlData.tagMap.get(tagName), node);
     if (!xmlTag || !xmlTag.contentsValueSet) return;
     const valueSet = this.valueSetMap.get(xmlTag.contentsValueSet);

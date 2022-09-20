@@ -13,13 +13,18 @@ export function nodeTagEq(node: Node | undefined, tag: string, tag2: string): no
 export function nodeTagEq(node: Node | undefined, tag: string, tag2?: string) {
   let nodeTagName = node?.tag;
   if (!nodeTagName) return false;
-  nodeTagName = normalizeTagName(nodeTagName);
+  nodeTagName = normalizeTagName(nodeTagName, node);
   return nodeTagName === tag || (nodeTagName === tag2);
 }
 
-export function normalizeTagName(nodeTagName: string): string {
+export function normalizeTagName(nodeTagName: string, node?: Node): string {
   if (nodeTagName.startsWith('mod-append:')) return nodeTagName.substring('mod-append:'.length);
   if (nodeTagName.startsWith('mod-overwrite:')) return nodeTagName.substring('mod-overwrite:'.length);
+  if (node) {
+    if (nodeTagName == 'mod:findLike') return getAttrValue(node, 'type') ?? nodeTagName;
+    if (nodeTagName == 'mod:findName') return getAttrValue(node, 'type') ?? nodeTagName;
+    if (nodeTagName == 'mod:findWithChildLike') return getAttrValue(node, 'type') ?? nodeTagName;
+  }
   return nodeTagName;
 }
 
@@ -150,9 +155,13 @@ export function getAttrValueName(
 }
 
 export function getAttrValueAsInt(node: Node, attrName: string): number | undefined {
+  let value = getAttrValue(node, attrName);
+  return value ? parseInt(value) :  undefined
+}
+export function getAttrValue(node: Node, attrName: string): string | undefined {
   if (hasAttr(node, attrName)) {
     const value = normalizeAttributeName(node.attributes[attrName]);
-    return value === '' ? undefined : parseInt(value);
+    return value === '' ? undefined : value;
   }
 }
 

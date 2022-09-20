@@ -2,6 +2,10 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
+## 0.8.4
+
+- Fix tag names not matching properly when using mod tags
+
 ## 0.8.3
 
 - add artillery as a weapon
