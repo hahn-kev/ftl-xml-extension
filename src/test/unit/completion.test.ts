@@ -36,9 +36,9 @@ suite('code completion', () => {
     expectTextCompletesWith('<loadEvent>$</loadEvent>', EventNamesValueSet);
   });
 
-  test('should complete with ship names', () => {
+  test('should complete with ship blueprint names', () => {
     // language=XML
-    expectTextCompletesWith('<shipOrder><ship>$</ship></shipOrder>', ShipNames);
+    expectTextCompletesWith('<shipOrder><ship>$</ship></shipOrder>', ShipBlueprintNames);
   });
 
   test('should complete with img path names', () => {
@@ -67,7 +67,7 @@ suite('code completion', () => {
     services.parser.parseFiles([
       URI.file('/test/img/combatUI/icons/test1.png'),
       URI.file('/test/img/combatUI/icons/test2.png'),
-    ], false);
+    ], false, {report: ()=>({})});
     // language=XML
     expectTextCompletesWith(`
         <shipIcon>

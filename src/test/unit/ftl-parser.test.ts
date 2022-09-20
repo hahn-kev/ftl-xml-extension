@@ -16,6 +16,7 @@ suite('Ftl Parser', () => {
     expect(def.name).eq('my_event');
 
     expect(file.event.refs).to.have.keys('my_event');
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const refs: FtlEvent[] = file.event.refs.get('my_event')!;
     expect(refs).length(2);
     expect(refs).to.include(def);

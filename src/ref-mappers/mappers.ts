@@ -88,10 +88,9 @@ export class Mappers {
       new RefParser(
           (file) => file.ship,
           FtlShip,
-          staticValueNodeMap([{tag: 'ship', attr: 'name'}],
+          staticValueNodeMap([{tag: 'ship', attr: 'name', match: (c) => !nodeTagEq(c.node.parent, 'ships')}],
               [
-                {tag: 'ship', attr: 'load'},
-                {tag: 'ship', parentTag: 'shipOrder', type: 'contents'}
+                {tag: 'ship', attr: 'load', parentTag: 'event'}
               ]
           )
       ),
@@ -210,6 +209,7 @@ export class Mappers {
                     ?? getNodeContent(node, document, 'bossShip')
                     ?? getNodeContent(node, document, 'shipReq')
                     ?? getNodeContent(node, document, 'ship', 'otherUnlocks')
+                    ?? getNodeContent(node, document, 'ship', 'shipOrder')
                     ?? getNodeContent(node, document, 'victory')
                     ?? getNodeContent(node, document, 'unlockCustomShip');
               })

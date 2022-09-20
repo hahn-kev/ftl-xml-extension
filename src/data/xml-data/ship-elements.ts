@@ -53,8 +53,10 @@ export const shipTags: XmlTag[] = [
       boolAttr('c'),
     ],
     configOverride: {
-      'shipOrder<': {contentsValueSet: ShipNames.name},
-      'otherUnlocks<': {contentsValueSet: ShipBlueprintNames.name}
+      'shipOrder<': {contentsValueSet: ShipBlueprintNames.name},
+      'otherUnlocks<': {contentsValueSet: ShipBlueprintNames.name},
+      'ships<': {}, // todo support in all completion cases
+      'event<': {}
     }
   },
   {name: 'shipIcons', attributes: []},
