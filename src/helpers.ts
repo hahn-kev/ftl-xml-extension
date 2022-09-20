@@ -155,8 +155,8 @@ export function getAttrValueName(
 }
 
 export function getAttrValueAsInt(node: Node, attrName: string): number | undefined {
-  let value = getAttrValue(node, attrName);
-  return value ? parseInt(value) :  undefined
+  const value = getAttrValue(node, attrName);
+  return value ? parseInt(value) : undefined;
 }
 export function getAttrValue(node: Node, attrName: string): string | undefined {
   if (hasAttr(node, attrName)) {
