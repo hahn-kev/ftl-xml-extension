@@ -298,7 +298,10 @@ export class Mappers {
           FtlAnimation,
           staticValueNodeMap(
               [{tag: 'anim', attr: 'name'}],
-              [{tag: 'image', type: 'contents'}, {tag: 'explosion', parentTag: 'weaponBlueprint', type: 'contents'}])
+              [
+                {tag: 'image', type: 'contents', parentTag: 'weaponBlueprint'},
+                {tag: 'explosion', parentTag: 'weaponBlueprint', type: 'contents'}
+              ])
       ),
       AnimationNames,
       'Animation',

@@ -30,7 +30,6 @@ const weaponChildTags: XmlTag[] = [
   {name: 'cost', attributes: []},
   {name: 'bp', attributes: []},
   {name: 'rarity', attributes: [], contentsValueSet: 'rarity-value-set'},
-  {name: 'image', attributes: [], contentsValueSet: AnimationNames.name},
   {name: 'explosion', attributes: [], contentsValueSet: AnimationNames.name},
   {name: 'launchSounds', attributes: []},
   {name: 'hitShipSounds', attributes: []},
@@ -49,7 +48,7 @@ const weaponChildTags: XmlTag[] = [
   {name: 'boost', attributes: []},
   {name: 'stun', attributes: []},
 ];
-const weaponTagNames = [...weaponChildTags.map((t) => t.name), 'title'];
+const weaponTagNames = [...weaponChildTags.map((t) => t.name), 'title', 'image'];
 export const weaponTags: XmlTag[] = [
   ...weaponChildTags,
   {

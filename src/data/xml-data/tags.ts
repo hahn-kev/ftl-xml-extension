@@ -1,6 +1,7 @@
 import {boolAttr, XmlTag} from './helpers';
 import {eventTags} from './event-elements';
 import {
+  AnimationNames,
   AugmentNames,
   DroneNames,
   ImageListNames,
@@ -70,6 +71,15 @@ export const allTags: XmlTag[] = [
   },
   {name: 'imageList', attributes: [{name: 'name'}], tags: ['img']},
 
+  // child of weaponBlueprint and eventButton
+  {
+    name: 'image',
+    attributes: [],
+    configOverride: {
+      'weaponBlueprint<': {contentsValueSet: AnimationNames.name},
+      'eventButton<': {}// todo specify contents value set
+    }
+  },
   {
     // child of event and ship blueprint drone list
     name: 'drone',
