@@ -80,6 +80,9 @@ export function setupVscodeProviders(services: FtlServices): Created {
           });
         }
       }),
+      workspace.onDidSaveTextDocument(e => {
+        ftlDocumentValidator.validateFtlRoot(services.parser.root);
+      }),
       workspace.onDidChangeWorkspaceFolders(async (e) => {
         if (e.removed.length > 0) {
           // refresh all, todo just remove files that were in the workspace and call update data

@@ -1,4 +1,5 @@
 import {HTMLDocument, LanguageService, TextDocument as HtmlTextDocument} from 'vscode-html-languageservice';
+import {URI} from 'vscode-uri';
 import {FtlTextDocument} from './models/ftl-text-document';
 
 export class DocumentCache {
@@ -18,5 +19,10 @@ export class DocumentCache {
     const htmlDoc = this.service.parseHTMLDocument(correctDoc);
     this.cache.set(documentKey, {doc: htmlDoc, version: document.version});
     return htmlDoc;
+  }
+
+  fileRemoved(uri: URI) {
+    const documentKey = uri.toString();
+    this.cache.delete(documentKey);
   }
 }

@@ -103,6 +103,7 @@ export class FtlParser {
     }
     if (fileRemoved) {
       this.root.xmlFiles.delete(file.toString());
+      this.cache.fileRemoved(file);
       return;
     }
     const document = await this.fileOpener(file);

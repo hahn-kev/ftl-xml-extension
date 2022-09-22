@@ -6,6 +6,9 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 
 - Add priorityEvent support
 - `<removeItem>HIDDEN AUG</removeItem>` now works correctly
+- refresh warnings for all open documents on edit
+- refresh all warnings when file saved
+- purge cache when a file is removed/renamed
 
 ## 0.8.4
 
