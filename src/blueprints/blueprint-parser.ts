@@ -58,12 +58,14 @@ export class BlueprintParser implements FtlRefParser {
    * will return refs for a list child, or for a choice[req], or removeItem contents
    */
   getBlueprintRef(context: NodeMapContext) {
-    if (!this.isListChild(context.node)) {
-      return getAttrValueForTag(context.node, 'choice', 'req', context.document)
-      ?? getNodeContent(context.node, context.document, 'removeItem');
+    let valueName = getAttrValueForTag(context.node, 'choice', 'req', context.document);
+    if (valueName) return valueName;
+    if (nodeTagEq(context.node, 'removeItem') || this.isListChild(context.node)) {
+      valueName = getNodeContent(context.node, context.document);
     }
-    const valueName = getNodeContent(context.node, context.document);
-    if (valueName?.name.startsWith('HIDDEN ')) {
+    if (!valueName) return;
+
+    if (valueName.name.startsWith('HIDDEN ')) {
       valueName.name = valueName.name.substring('HIDDEN '.length);
     }
     return valueName;

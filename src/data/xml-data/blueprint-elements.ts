@@ -34,5 +34,5 @@ export const blueprintTags: XmlTag[] = [
     name: 'title',
     attributes: [{name: 'id', valueSet: TextIdNames.name}],
   },
-  {name: 'augmentBlueprint', attributes: [{name: 'name'}]},
+  {name: 'augBlueprint', attributes: [{name: 'name'}]},
 ];

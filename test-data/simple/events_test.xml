@@ -117,6 +117,8 @@
     <removeCrew class="kevin"/>
     <crewCount class="kevin"/>
 
+    <augBlueprint name="test-aug"></augBlueprint>
+
     <ship name="help"/>
     <event name="help">
         <text>this is a simple help event</text>
@@ -129,6 +131,7 @@
         <choice req="weapon-list-1">
             <text id="continue"/>
             <removeItem>weapon-list-1</removeItem>
+            <removeItem>HIDDEN test-aug</removeItem>
             <event load="help"/>
         </choice>
         <choice>

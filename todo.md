@@ -1,5 +1,8 @@
 ## Want to implement
 
+- req can be `req="SEC Final"` where Final is a sector name
+
+
 - narrow range for attribute refs
 - make sure projectile tag contents is a ref to an animation
 - enable required children again once we can fix weapon issues
