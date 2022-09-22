@@ -73,9 +73,11 @@ export function setupVscodeProviders(services: FtlServices): Created {
           // todo look into partial document parsing, it's slow for animation files which are long
           const file = services.parser.parseDocument(e.document);
           ftlDocumentValidator.validateFile(file);
-          if (workspace.textDocuments?.length > 0) {
-            ftlDocumentValidator.validateDocuments(workspace.textDocuments, services.parser.root);
-          }
+          setTimeout(()=> {
+            if (workspace.textDocuments?.length > 0) {
+              ftlDocumentValidator.validateDocuments(workspace.textDocuments, services.parser.root);
+            }
+          });
         }
       }),
       workspace.onDidChangeWorkspaceFolders(async (e) => {
