@@ -2,7 +2,7 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
-## 0.8.5 (not released)
+## 0.8.5
 
 - Add priorityEvent support
 - `<removeItem>HIDDEN AUG</removeItem>` now works correctly
