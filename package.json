@@ -92,7 +92,11 @@
 		"configurationDefaults": {
 			"[ftl-xml]": {
 				"editor.wordBasedSuggestions": false,
-				"editor.quickSuggestions": true
+				"editor.quickSuggestions": {
+					"other": "on",
+					"comments": "off",
+					"strings": "off"
+				}
 			}
 		}
 	},
