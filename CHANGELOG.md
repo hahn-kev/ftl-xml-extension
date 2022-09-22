@@ -2,6 +2,10 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
+## 0.8.5 (not released)
+
+- Add priorityEvent support
+
 ## 0.8.4
 
 - Fix tag names not matching properly when using mod tags

@@ -26,6 +26,18 @@ const hyperspaceSectorTags: XmlTag[] = [
     ]
   },
   {
+    name: 'priorityEvent',
+    attributes: [
+      {name: 'name', valueSet: EventNamesValueSet.name},
+      {name: 'min'},
+      {name: 'max'},
+      {name: 'priority'},
+      {name: 'req'}, // todo support same as blueprint req
+      {name: 'lvl'},
+      {name: 'max_lvl'},
+    ]
+  },
+  {
     // hyperspace tag
     name: 'removeFirstBeaconNebula',
     attributes: []

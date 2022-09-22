@@ -62,7 +62,8 @@ class EventsMap implements NodeMap {
         ?? getAttrValueForTag(node, 'surrender', 'load', document)
         ?? getAttrValueForTag(node, 'escape', 'load', document)
         ?? getAttrValueForTag(node, 'gotaway', 'load', document)
-        ?? getAttrValueForTag(node, 'quest', 'event', document);
+        ?? getAttrValueForTag(node, 'quest', 'event', document)
+        ?? getAttrValueForTag(node, 'priorityEvent', 'name', document);
   }
 
   isRecursionUnsafeEventRef(context: ParseContext) {
