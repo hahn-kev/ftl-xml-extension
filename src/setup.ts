@@ -32,8 +32,7 @@ export function setupVscodeProviders(services: FtlServices): Created {
   ];
 
   const diagnosticCollection = languages.createDiagnosticCollection('ftl-xml');
-  const ftlDocumentValidator = new FltDocumentValidator(services.documentCache,
-      diagnosticCollection,
+  const ftlDocumentValidator = new FltDocumentValidator(diagnosticCollection,
       services.validators);
   const workspaceParser = new WorkspaceParser(services.parser, ftlDocumentValidator, services.datCache);
 
@@ -49,8 +48,6 @@ export function setupVscodeProviders(services: FtlServices): Created {
       services.mappers.blueprintMapper);
   const formattingProvider = new FtlFormattingProvider(services.htmlService);
   const fsWatcher = workspace.createFileSystemWatcher(WorkspaceParser.findPattern, false, true, false);
-  fsWatcher.onDidCreate((e) => services.parser.fileAdded(e));
-  fsWatcher.onDidDelete((e) => services.parser.fileRemoved(e));
 
   const ftlDatFS = new FtlDatFs(services.datCache);
 
@@ -62,6 +59,8 @@ export function setupVscodeProviders(services: FtlServices): Created {
   return {
     workspaceParser,
     subs: [
+      fsWatcher.onDidCreate((e) => services.parser.fileAdded(e)),
+      fsWatcher.onDidDelete((e) => services.parser.fileRemoved(e)),
       window.onDidChangeActiveTextEditor((e) => {
         if (e?.document.languageId === ftlLanguage) {
           const file = ftlDocumentValidator.validateDocument(e.document, services.parser.root);

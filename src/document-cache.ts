@@ -3,7 +3,7 @@ import {URI} from 'vscode-uri';
 import {FtlTextDocument} from './models/ftl-text-document';
 
 export class DocumentCache {
-  cache = new Map<string, { doc: HTMLDocument, version: number }>();
+  private cache = new Map<string, { doc: HTMLDocument, version: number }>();
 
   constructor(private service: LanguageService) {
   }
@@ -24,5 +24,9 @@ export class DocumentCache {
   fileRemoved(uri: URI) {
     const documentKey = uri.toString();
     this.cache.delete(documentKey);
+  }
+
+  clearCache() {
+    this.cache.clear();
   }
 }

@@ -1,4 +1,3 @@
-import {DocumentCache} from './document-cache';
 import {DiagnosticCollection, TextDocument, Uri} from 'vscode';
 import {FtlFile} from './models/ftl-file';
 import {Validator} from './validators/validator';
@@ -8,8 +7,7 @@ import {FtlDiagnostic} from './models/ftl-diagnostic';
 import {VscodeConverter} from './vscode-converter';
 
 export class FltDocumentValidator {
-  constructor(private documentCache: DocumentCache,
-              private diagnosticCollection: DiagnosticCollection,
+  constructor(private diagnosticCollection: DiagnosticCollection,
               private validators: Validator[]) {
   }
 
