@@ -77,7 +77,7 @@ export class DiagnosticBuilder {
 
   static invalidRefName(name: string, range: Range, typeName: string) {
     return this.diag(range,
-        `Invalid ${typeName} name: '${name}'`,
+        `Invalid ${typeName} name: ${name}`,
         FtlDiagnosticSeverity.Warning,
         FtlErrorCode.invalidRefName);
   }
