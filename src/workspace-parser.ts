@@ -1,6 +1,16 @@
 import {FtlParser} from './ftl-parser';
 import {FltDocumentValidator} from './flt-document-validator';
-import {FileType, ProgressLocation, RelativePattern, Uri, window, workspace, WorkspaceFolder} from 'vscode';
+import {
+  FileType,
+  ProgressLocation,
+  RelativePattern,
+  Uri,
+  window,
+  workspace,
+  WorkspaceFolder,
+  env,
+  UIKind
+} from 'vscode';
 import {FtlDatFs} from './dat-fs-provider/ftl-dat-fs';
 import {FtlDatCache} from './dat-fs-provider/ftl-dat-cache';
 import {Progress} from './helpers';
@@ -42,12 +52,12 @@ export class WorkspaceParser {
 
     const files: Uri[] = [];
     for (const folder of workspace.workspaceFolders) {
-      if (folder.uri.scheme === FtlDatFs.scheme) {
-        await this.ftlDatCache.tryAdd(folder.uri);
-        files.push(...await this.listFiles(folder.uri));
-      } else {
+      if (folder.uri.scheme === 'file' && env.uiKind == UIKind.Desktop) {
         const pattern = new RelativePattern(folder, WorkspaceParser.findPattern);
         files.push(...await workspace.findFiles(pattern));
+      } else {
+        if (folder.uri.scheme === FtlDatFs.scheme) await this.ftlDatCache.tryAdd(folder.uri);
+        files.push(...await this.listFiles(folder.uri));
       }
     }
     return files;
