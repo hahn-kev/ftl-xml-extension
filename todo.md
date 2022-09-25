@@ -1,9 +1,13 @@
 ## Want to implement
 
 - req can be `req="SEC Final"` where Final is a sector name
+- add documentation for slipstream tags, `<mod-append:event>` should show docs for both mod-apend and event
+- stores can have custom stock and need to reference blueprints
+- show warning for deeply nested lists, 3rd list deep will be ignored
+- tutorial xml has custom text id stuff, example `<default id="textID">` and `<PC id="id">`
 
 
-- narrow range for attribute refs
+- narrow range for attribute refs, for example `name= "value"` has the range set incorrectly
 - make sure projectile tag contents is a ref to an animation
 - enable required children again once we can fix weapon issues
 - make sure unlock custom ship only shows player ships (defined in hyper space
