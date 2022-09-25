@@ -8,6 +8,7 @@ import {
 import {FtlData} from '../data/ftl-data';
 import {FtlRoot} from '../models/ftl-root';
 import {normalizeTagName} from '../helpers';
+import {TagsValueSet} from '../data/autocomplete-value-sets';
 
 export interface DataReceiver {
   updateData(root: FtlRoot): void;
@@ -19,6 +20,8 @@ export interface IFtlDataProvider {
 
 export class FtlDataProvider implements IHTMLDataProvider, IFtlDataProvider {
   constructor(private receivers: DataReceiver[]) {
+    TagsValueSet.values.length = 0;
+    TagsValueSet.values.push(...Array.from(FtlData.tagMap.keys()).map(tag => ({name: tag})));
   }
 
   public updateFtlData(root: FtlRoot) {

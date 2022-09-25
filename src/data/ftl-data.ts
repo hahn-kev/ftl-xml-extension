@@ -21,6 +21,7 @@ import {
   SoundWaveNames,
   SoundWavePaths,
   SystemNames,
+  TagsValueSet,
   TextIdNames,
   VariableNames,
   WeaponAnimationNames,
@@ -60,6 +61,7 @@ export const FtlData: XmlData = {
     CustomReqNames,
     ShipIconNames,
     ShipIconFileNames,
-    AllBlueprintsValueSet
+    AllBlueprintsValueSet,
+    TagsValueSet
   ]
 };

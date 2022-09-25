@@ -1,8 +1,14 @@
+/* eslint-disable max-len */
 import {boolAttr, XmlTag} from './helpers';
 import {IAttributeData} from 'vscode-html-languageservice';
+import {TagsValueSet} from '../autocomplete-value-sets';
 
 const findAttributes: IAttributeData[] = [
-  {name: 'type', description: 'tag name to match against optional, if type="event" then `<event>` would match'},
+  {
+    name: 'type',
+    description: 'tag name to match against optional, if type="event" then `<event>` would match',
+    valueSet: TagsValueSet.name
+  },
   boolAttr('reverse', 'defaults to true'),
   {name: 'start'},
   {name: 'limit', description: 'limit the number of tags that are modified, defaults to 1'},
@@ -18,7 +24,8 @@ const findTags: XmlTag[] = [
         description: 'element must have a name attribute matching this value, for example if `name="FINAL_BOSS"` then `<bla name="FINAL_BOSS">` would match'
       },
       ...findAttributes
-    ]
+    ],
+    description: `Searches for tags of a given type with the given name attribute. The type arg is optional. Its unusual defaults are: reverse="true", start="0", limit="1". It finds the first match from the end.`
   },
   {
     name: 'mod:findLike',
@@ -26,7 +33,7 @@ const findTags: XmlTag[] = [
       ...findAttributes
     ],
     tags: ['mod:selector'],
-    description: 'used as a more broad search than findName, use with `<mod:selector>` to configure matching'
+    description: `Searches for tags of a given type, with all of the given attributes and the given value. All of these find arguments are optional. To omit the value, leave it blank, or make <mod:selector /> self-closing. If no value or attributes are given, <mod:selector> is unnecessary.`
   },
   {
     name: 'mod:selector',
@@ -40,13 +47,13 @@ const findTags: XmlTag[] = [
       description: 'similar to type, but used to match the child tags'
     }],
     tags: ['mod:selector'],
-    description: 'used as a more broad search than findName, use with `<mod:selector>` to configure matching'
+    description: `similar to <mod:findLike>, except it searches for tags of a given type, that contain certain children with the attributes and value. All args are optional here as well. Note: The children are only search criteria, not results themselves.`
   },
   {
     name: 'mod:findComposite',
     attributes: [...findAttributes.filter((a) => a.name != 'type')],
     tags: ['mod:par'],
-    description: 'used to combine multiple find tags, they should be contained in a `<mod:par>` tag'
+    description: `Collates results from several <mod:find...> criteria, or even multiple nested <mod:par>entheses. The <mod:par> combines results using "OR" (union) or "AND" (intersection) logic. Any commands within those <mod:find...> tags will be ignored.`
   },
   {
     name: 'mod:par',
@@ -63,22 +70,22 @@ const modCommandTags: XmlTag[] = [
   {
     name: 'mod:setAttributes',
     attributes: [],
-    description: 'changes or adds the attributes from this tag to the one that was found'
+    description: 'changes or adds the attributes from this tag to the context tag'
   },
   {
     name: 'mod:removeAttributes',
     attributes: [],
-    description: 'removes the attributes from this tag to the one that was found'
+    description: 'removes the attributes from this tag to the context tag'
   },
   {
     name: 'mod:setValue',
     attributes: [],
-    description: 'sets the contents of the found tag overwriting the previous contents'
+    description: 'sets the contents of the context tag overwriting the previous contents'
   },
   {
     name: 'mod:removeTag',
     attributes: [],
-    description: 'removes the found tag from the file'
+    description: 'removes the context tag from the file'
   },
   {
     name: 'mod-append:',
