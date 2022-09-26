@@ -48,9 +48,7 @@
     <shipBlueprint name="ship-blueprint-1"/>
     <shipBlueprint name="ship-blueprint-2"/>
     <mod:findLike type="ships">
-        <mod-append:ship name="ship-blueprint-1">
-
-        </mod-append:ship>
+        <mod-append:loadEvent name="ship-blueprint-1"></mod-append:loadEvent>
     </mod:findLike>
 
     <!-- weapons -->
@@ -86,6 +84,11 @@
     <blueprintList name="list-3">
         <name>list-1</name>
     </blueprintList>
+    <mod:findLike type="blueprintList">
+        <mod:findLike type="name">
+            <mod:removeTag/>
+        </mod:findLike>
+    </mod:findLike>
 
     <text name="sample-text">I love my wife</text>
 

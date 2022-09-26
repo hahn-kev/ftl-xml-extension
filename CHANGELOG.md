@@ -2,6 +2,12 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
+## 0.8.6
+
+- add documentation for mod tags
+- Show documentation for both mod tags and ftl tags when merged
+- mod find tags now have autocomplete of the type attribute
+
 ## 0.8.5
 
 - Add priorityEvent support

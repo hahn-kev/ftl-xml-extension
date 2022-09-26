@@ -16,8 +16,10 @@ export function nodeTagEq(node: Node | undefined, tag: string, tag2?: string) {
   nodeTagName = normalizeTagName(nodeTagName, node);
   return nodeTagName === tag || (nodeTagName === tag2);
 }
-
-export function normalizeTagName(nodeTagName: string, node?: Node): string {
+export function normalizeTagName(nodeTagName: string, node?: Node): string
+export function normalizeTagName(nodeTagName: string|undefined): string|undefined
+export function normalizeTagName(nodeTagName: string|undefined, node?: Node): string|undefined {
+  if (!nodeTagName) return;
   if (nodeTagName.startsWith('mod-append:')) return nodeTagName.substring('mod-append:'.length);
   if (nodeTagName.startsWith('mod-overwrite:')) return nodeTagName.substring('mod-overwrite:'.length);
   if (node) {
@@ -28,30 +30,38 @@ export function normalizeTagName(nodeTagName: string, node?: Node): string {
   return nodeTagName;
 }
 
+export function transformModNode(node: Node): Node|undefined {
+  if (!node.tag) return;
+  if (node.tag.startsWith('mod:find')) return transformModFindNode(node);
+  if (node.parent && (node.tag.startsWith('mod-append:') || node.tag.startsWith('mod-overwrite:'))) {
+    const parentFindNode = transformModFindNode(node.parent);
+    if (!parentFindNode) return;
+    const modNode = parentFindNode.children.find(c => c.start == node.start);
+    return modNode;
+  }
+}
+
 export function transformModFindNode(node: Node): Node | undefined {
   if (node.tag == 'mod:findName' && hasAttr(node, 'type') && hasAttr(node, 'name')) {
-    return handleModCommands({
-      ...node,
+    return handleModCommands(copyNode(node, {
       tag: normalizeAttributeName(node.attributes.type),
       attributes: {name: node.attributes.name}
-    });
+    }));
   }
   if (node.tag == 'mod:findLike' && hasAttr(node, 'type')) {
     const selectorNode = node.children.find((c) => c.tag == 'mod:selector');
-    return handleModCommands({
-      ...node,
+    return handleModCommands(copyNode(node, {
       tag: normalizeAttributeName(node.attributes.type),
       attributes: selectorNode?.attributes
-    });
+    }));
   }
   if (node.tag == 'mod:findWithChildLike' && hasAttr(node, 'type') && hasAttr(node, 'child-type')) {
     const childType = node.attributes['child-type'];
-    const children = [...node.children];
     const selectorNode = node.children.find((c) => c.tag == 'mod:selector');
 
-    const newNode = {...node, tag: normalizeAttributeName(node.attributes.type), children};
+    const newNode = copyNode(node, {tag: normalizeAttributeName(node.attributes.type)});
     if (selectorNode) {
-      children.push({...selectorNode, tag: normalizeAttributeName(childType), parent: newNode});
+      newNode.children.push({...selectorNode, tag: normalizeAttributeName(childType), parent: newNode});
     }
     return handleModCommands(newNode);
   }
@@ -67,15 +77,26 @@ function handleModCommands(newNode: Node): Node {
     if (child.tag == 'mod:setValue') {
       childrenToRemove.add(child);
       if (child.children.length > 0) {
-        childrenToAdd.push(...child.children.map((cc) => ({...cc, parent: newNode})));
+        childrenToAdd.push(...child.children.map((cc) => copyNode(cc, {parent: newNode})));
       } else {
         newNode.startTagEnd = child.startTagEnd;
         newNode.endTagStart = child.endTagStart;
       }
     }
+    if (child.tag?.startsWith('mod-append:') || child.tag?.startsWith('mod-overwrite:')) {
+      childrenToRemove.add(child);
+      childrenToAdd.push(copyNode(child, {tag: normalizeTagName(child.tag, child)}));
+    }
   }
   newNode.children.push(...childrenToAdd);
   newNode.children = newNode.children.filter((c) => !childrenToRemove.has(c));
+  return newNode;
+}
+
+export function copyNode(node: Node, newContents: Partial<Node>): Node {
+  const prototype = Object.getPrototypeOf(node);
+  const newNode = Object.create(prototype) as Node;
+  Object.assign(newNode, node, {children: [...node.children]}, newContents);
   return newNode;
 }
 

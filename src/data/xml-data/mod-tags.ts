@@ -90,12 +90,12 @@ const modCommandTags: XmlTag[] = [
   {
     name: 'mod-append:',
     attributes: [],
-    description: 'syntax example `<mod-append:choice>` will add a choice tag as a child of the found tag, any attributes specified will be preserved',
+    description: '`mod-append:` syntax example `<mod-append:choice>` will add a choice tag as a child of the context tag, any attributes specified will be preserved',
   },
   {
     name: 'mod-overwrite:',
     attributes: [],
-    description: 'syntax example `<mod-overwrite:choice>` will replace the first choice tag in the found tag with the one specified here, any attributes specified will be preserved',
+    description: '`mod-overwrite:` syntax example `<mod-overwrite:choice>` will replace the first choice tag in the context tag with the one specified here, any attributes specified will be preserved',
   }
 ];
 

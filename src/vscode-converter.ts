@@ -20,6 +20,9 @@ import {
 import {FtlDiagnostic} from './models/ftl-diagnostic';
 
 export class VscodeConverter {
+  static toDocumentation(documentation: string | MarkupContent): string | MarkdownString
+  static toDocumentation(documentation: string | MarkupContent | undefined): string | MarkdownString | undefined
+  static toDocumentation(documentation: undefined): undefined
   static toDocumentation(documentation: string | MarkupContent | undefined): string | MarkdownString | undefined {
     if (typeof documentation === 'object' && 'kind' in documentation) {
       if (documentation.kind == 'markdown') {

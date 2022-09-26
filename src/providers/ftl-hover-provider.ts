@@ -1,13 +1,20 @@
 import {CancellationToken, Hover, HoverProvider, MarkdownString, Position, TextDocument, Uri, workspace} from 'vscode';
 import {DocumentCache} from '../document-cache';
-import {HTMLDocument, LanguageService, Node, TextDocument as HtmlTextDocument} from 'vscode-html-languageservice';
-import {filterValueNameToPosition, toRange, transformModFindNode} from '../helpers';
+import {
+  HTMLDocument,
+  LanguageService,
+  Node,
+  Range,
+  TextDocument as HtmlTextDocument
+} from 'vscode-html-languageservice';
+import {copyNode, filterValueNameToPosition, toRange, transformModNode} from '../helpers';
 import {Mappers} from '../ref-mappers/mappers';
 import {PathRefMappers} from '../ref-mappers/path-ref-mapper';
 import {FtlDatFs} from '../dat-fs-provider/ftl-dat-fs';
 import {LookupContext} from '../ref-mappers/lookup-provider';
 import {VscodeConverter} from '../vscode-converter';
 import {AnimationPreview} from '../animation-preview/animation-preview';
+import {FtlData} from '../data/ftl-data';
 
 export class FtlHoverProvider implements HoverProvider {
   constructor(private documentCache: DocumentCache,
@@ -18,14 +25,14 @@ export class FtlHoverProvider implements HoverProvider {
   }
 
   async provideHover(document: TextDocument, position: Position, token: CancellationToken): Promise<Hover | undefined> {
-    let htmlDocument = this.documentCache.getHtmlDocument(document);
+    const htmlDocument = this.documentCache.getHtmlDocument(document);
 
     let node: Node;
     const originalNode = node = htmlDocument.findNodeAt(document.offsetAt(position));
-    const findNode = transformModFindNode(node);
+    const modNode = transformModNode(node);
     let isModNode = false;
-    if (findNode) {
-      node = findNode;
+    if (modNode) {
+      node = modNode;
       isModNode = true;
     }
 
@@ -44,13 +51,47 @@ export class FtlHoverProvider implements HoverProvider {
         document.version,
         document.getText());
 
+
+    const hover = this.doHover(textDocument, position, htmlDocument);
+    const contents: Array<string | MarkdownString> = [];
+    let range: Range | undefined = undefined;
+    if (hover) {
+      contents.push(hover.documentation);
+      range = hover.range;
+    }
     if (isModNode) {
-      htmlDocument = this.patchTransformedFindNodeIntoHtml(node, originalNode, htmlDocument);
+      const hover = this.doHover(
+          textDocument,
+          position,
+          this.patchTransformedFindNodeIntoHtml(node, originalNode, htmlDocument)
+      );
+      if (hover) {
+        contents.push(hover?.documentation);
+        range ??= hover.range;
+      }
     }
 
-    const hover = this.service.doHover(textDocument,
+    if (node.tag && originalNode.tag?.startsWith('mod-') && isModNode) {
+      const modTagName = originalNode.tag.slice(0, -node.tag.length);
+      const tag = FtlData.tagMap.get(modTagName);
+      if (tag && tag.description) {
+        contents.push(VscodeConverter.toDocumentation(tag.description));
+        range ??= toRange(originalNode.start + 1, originalNode.start + 1 + originalNode.tag.length, document);
+      }
+    }
+
+    if (!range) return;
+    return {
+      range: VscodeConverter.toVscodeRange(range),
+      contents
+    };
+  }
+
+  private doHover(doc: HtmlTextDocument, position: Position, htmlDoc: HTMLDocument)
+    : {range: Range, documentation: MarkdownString | string}|undefined {
+    const hover = this.service.doHover(doc,
         position,
-        htmlDocument,
+        htmlDoc,
         {documentation: true});
     if (!hover || !hover.range || hover.contents === '') return;
     let documentation: string | MarkdownString | undefined;
@@ -58,10 +99,7 @@ export class FtlHoverProvider implements HoverProvider {
       documentation = VscodeConverter.toDocumentation(hover.contents);
     }
     if (!documentation) return;
-    return {
-      range: VscodeConverter.toVscodeRange(hover.range),
-      contents: [documentation]
-    };
+    return {range: hover.range, documentation};
   }
 
   patchTransformedFindNodeIntoHtml(transformedNode: Node, originalNode: Node, currentDoc: HTMLDocument): HTMLDocument {
@@ -75,30 +113,32 @@ export class FtlHoverProvider implements HoverProvider {
       return [];
     }
 
-    const roots = [...currentDoc.roots];
     const list = parentList(originalNode);
     let previous: Node | undefined = undefined;
+    let root: Node | undefined = undefined;
 
     for (const node of list) {
-      const newNode: Node = {
-        ...node,
+      const newNode = copyNode(node, {
         parent: previous,
         attributes: {...node.attributes},
         children: [...node.children]
-      };
+      });
+      if (!root) root = newNode;
       if (previous) {
         previous.children[previous.children.indexOf(node)] = newNode;
-      }
-      if (roots.includes(node)) {
-        roots[roots.indexOf(node)] = newNode;
       }
       previous = newNode;
     }
     if (previous) {
       previous.children[previous.children.indexOf(originalNode)] = transformedNode;
     }
-
-    return {...currentDoc, roots};
+    if (!root) throw new Error('no root element found');
+    const nodePrototype = Object.getPrototypeOf(originalNode);
+    return {
+      roots: root.children,
+      findNodeAt: nodePrototype.findNodeAt.bind(root),
+      findNodeBefore: nodePrototype.findNodeBefore.bind(root)
+    };
   }
 
   tryHoverTextId(context: LookupContext): Hover | undefined {
