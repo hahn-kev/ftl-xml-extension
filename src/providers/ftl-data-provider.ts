@@ -21,7 +21,8 @@ export interface IFtlDataProvider {
 export class FtlDataProvider implements IHTMLDataProvider, IFtlDataProvider {
   constructor(private receivers: DataReceiver[]) {
     TagsValueSet.values.length = 0;
-    TagsValueSet.values.push(...Array.from(FtlData.tagMap.keys()).map(tag => ({name: tag})));
+    TagsValueSet.values.push(...Array.from(FtlData.tags)
+        .map(tag => ({name: tag.name, description: tag.description} as IValueData)));
   }
 
   public updateFtlData(root: FtlRoot) {
