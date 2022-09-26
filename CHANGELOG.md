@@ -7,6 +7,8 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 - add documentation for mod tags
 - Show documentation for both mod tags and ftl tags when merged
 - mod find tags now have autocomplete of the type attribute
+- adjust how invalid ref warning is displayed to not include single quotes
+- provide fallback for find files when running on web
 
 ## 0.8.5
 
