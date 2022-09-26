@@ -9,6 +9,8 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 - mod find tags now have autocomplete of the type attribute
 - adjust how invalid ref warning is displayed to not include single quotes
 - provide fallback for find files when running on web
+- custom sectors are supported
+- `<choice req="SEC FINAL"/>` and other custom sectors are now supported
 
 ## 0.8.5
 
