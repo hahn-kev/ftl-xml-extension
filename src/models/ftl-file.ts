@@ -23,6 +23,7 @@ import {FtlTextDocument} from './ftl-text-document';
 import {FtlDiagnostic} from './ftl-diagnostic';
 import {Range} from 'vscode-languageserver-textdocument';
 import {FtlReward} from './ftl-reward';
+import {FtlSector} from './ftl-sector';
 
 
 export class FtlFile {
@@ -58,6 +59,7 @@ export class FtlFile {
   blueprintList = new FtlFileValue<FtlBlueprintList, FtlValue>();
   variables = new FtlFileValue<FtlVariable>();
   reqs = new FtlFileValue<FtlReq>();
+  sectors = new FtlFileValue<FtlSector>();
   rewards = new FtlFileValue<FtlReward>();
   colors: FtlColor[] = [];
   isReferenced = true;

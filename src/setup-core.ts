@@ -22,6 +22,7 @@ import {FtlDatCache} from './dat-fs-provider/ftl-dat-cache';
 import {FileReader} from './dat-fs-provider/dat-file-parser';
 import {EventLoopValidator} from './validators/event-loop-validator';
 import {ValueSetParserValidator} from './parsers/value-set-parser-validator';
+import {ReqListUpdater} from './data-receivers/req-list-updater';
 
 export interface FtlServices {
   parser: FtlParser;
@@ -57,6 +58,7 @@ export function setupCore(fileOpener: FileOpener, fileReader: FileReader): FtlSe
     new IsReferencedUpdater(),
     ...mappers.list,
     ...pathMappers.mappers,
+    new ReqListUpdater(mappers)
   ];
 
   const validators: Validator[] = [

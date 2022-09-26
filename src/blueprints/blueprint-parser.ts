@@ -59,6 +59,7 @@ export class BlueprintParser implements FtlRefParser {
    */
   getBlueprintRef(context: NodeMapContext) {
     let valueName = getAttrValueForTag(context.node, 'choice', 'req', context.document);
+    if (valueName?.name.startsWith('SEC ')) valueName = undefined;
     if (valueName) return valueName;
     if (nodeTagEq(context.node, 'removeItem') || this.isListChild(context.node)) {
       valueName = getNodeContent(context.node, context.document);

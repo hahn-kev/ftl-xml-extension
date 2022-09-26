@@ -85,8 +85,8 @@ export const VariableNames: IValueSet = {
   name: 'variable-names',
   values: [{name: 'loading...'}]
 };
-export const CustomReqNames: IValueSet = {
-  name: 'custom-req-names',
+export const ReqNames: IValueSet = {
+  name: 'req-names',
   values: [{name: 'loading...'}]
 };
 
@@ -106,6 +106,10 @@ export const ShipIconFileNames: IValueSet = {
 };
 export const AutoRewardsValueSet: IValueSet = {
   name: 'auto-reward-set',
+  values: [{name: 'loading...'}]
+};
+export const SectorsValueSet: IValueSet = {
+  name: 'sectors-value-set',
   values: [{name: 'loading...'}]
 };
 

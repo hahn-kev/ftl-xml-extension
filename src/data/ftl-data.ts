@@ -7,13 +7,14 @@ import {
   AutoRewardsValueSet,
   BoolValueSet,
   CrewNames,
-  CustomReqNames,
+  ReqNames,
   DroneNames,
   EventNamesValueSet,
   ImageListNames,
   ImgPathNames,
   MusicPaths,
   RarityValueSet,
+  SectorsValueSet,
   ShipBlueprintNames,
   ShipIconFileNames,
   ShipIconNames,
@@ -58,10 +59,11 @@ export const FtlData: XmlData = {
     ImgPathNames,
     ImageListNames,
     VariableNames,
-    CustomReqNames,
+    ReqNames,
     ShipIconNames,
     ShipIconFileNames,
     AllBlueprintsValueSet,
-    TagsValueSet
+    TagsValueSet,
+    SectorsValueSet
   ]
 };

@@ -2,6 +2,7 @@ import {RefMapper, RefMapperBase} from './ref-mapper';
 import {FtlEvent} from '../models/ftl-event';
 import {events} from '../events';
 import {
+  getAttrValue,
   getAttrValueForTag,
   getAttrValueName,
   getFileName,
@@ -19,10 +20,11 @@ import {
   AugmentNames,
   AutoRewardsValueSet,
   CrewNames,
-  CustomReqNames,
+  ReqNames,
   DroneNames,
   EventNamesValueSet,
   ImageListNames,
+  SectorsValueSet,
   ShipBlueprintNames,
   ShipIconNames,
   ShipNames,
@@ -74,6 +76,8 @@ import {declarationBasedMapFunction} from './node-mapping/declaration-node-map';
 import {ValueName} from './value-name';
 import {defaultAutoRewards} from '../data/default-ftl-data/default-auto-rewards';
 import {FtlReward} from '../models/ftl-reward';
+import {FtlSector} from '../models/ftl-sector';
+import {defaultSectors} from '../data/default-ftl-data/default-sectors';
 
 export class Mappers {
   readonly eventsMapper = new RefMapper(
@@ -230,14 +234,34 @@ export class Mappers {
       VariableNames,
       'Variable'
   );
+
+  readonly sectorMapper = new RefMapper(
+      new RefParser(
+          file => file.sectors,
+          FtlSector,
+          new NodeMapImp(
+              c => getAttrValueForTag(c.node, 'sectorDescription', 'name', c.document),
+              c => {
+                const reqValue = getAttrValueForTag(c.node, 'choice', 'req', c.document);
+                if (!reqValue || !reqValue.name.startsWith('SEC ')) return;
+                reqValue.name = reqValue.name.slice('SEC '.length);
+                return reqValue;
+              }
+          )
+      ),
+      SectorsValueSet,
+      'Sector',
+      defaultSectors
+  );
+
   readonly reqMapper = new RefMapper(
       new RefParser((file) => file.reqs, FtlReq, new NodeMapImp(
           (context) => {
             return getAttrValueForTag(context.node, 'req', 'name', context.document);
           },
-          () => undefined,
+          (c) => undefined,
       )),
-      CustomReqNames,
+      ReqNames,
       'Requirement'
   );
 
@@ -382,6 +406,7 @@ export class Mappers {
     this.imageListMapper,
     this.shipIconMapper,
     this.blueprintMapper,
-    this.rewardMapper
+    this.rewardMapper,
+    this.sectorMapper
   ];
 }

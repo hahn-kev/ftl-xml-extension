@@ -7,7 +7,12 @@ import {
   ImageListNames,
   SoundWaveNames,
   SystemNames,
-  TextIdNames, AutoRewardLevelsValueSet, AutoRewardsValueSet, AllBlueprintsValueSet
+  TextIdNames,
+  AutoRewardLevelsValueSet,
+  AutoRewardsValueSet,
+  AllBlueprintsValueSet,
+  SectorsValueSet,
+  ReqNames
 } from '../autocomplete-value-sets';
 import {boolAttr, XmlTag} from './helpers';
 
@@ -402,7 +407,8 @@ const eventChildTags: XmlTag[] = [
   {
     name: 'secretSector',
     attributes: [],
-    description: `Alias for secretSectorWarp. Allows specifying a custom secret sector in events.xml files with a single tag.`
+    description: `Alias for secretSectorWarp. Allows specifying a custom secret sector in events.xml files with a single tag.`,
+    contentsValueSet: SectorsValueSet.name
   },
   {name: 'upgrade', attributes: [{name: 'system', valueSet: SystemNames.name}]},
   {
@@ -478,7 +484,7 @@ export const eventTags: XmlTag[] = [
         valueSet: 'bool',
         description: ` if marked true, the choice's rewards will not be displayed before selecting the event. By default set to false. (usually set to true unless its an event where a trade is made, so that you can see the exact values of what is being traded)`
       },
-      {name: 'req', valueSet: AllBlueprintsValueSet.name},
+      {name: 'req', valueSet: ReqNames.name},
       {name: 'lvl'},
       boolAttr('blue'),
       {name: 'max_group'},
