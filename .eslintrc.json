@@ -6,11 +6,15 @@
   },
   "extends": [
     "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
-    "google"
+    "plugin:@typescript-eslint/recommended"
   ],
   "parser": "@typescript-eslint/parser",
-  "parserOptions": {"project": ["./tsconfig.json", "./test.tsconfig.json"]},
+  "parserOptions": {
+    "project": [
+      "./tsconfig.json",
+      "./test.tsconfig.json"
+    ]
+  },
   "plugins": [
     "@typescript-eslint"
   ],
@@ -21,20 +25,35 @@
     ],
     "comma-dangle": "off",
     "require-jsdoc": "off",
-    "max-len": ["warn", 120],
+    "max-len": [
+      "warn",
+      120
+    ],
     "no-redeclare": "off",
-    "@typescript-eslint/no-redeclare": ["error"],
+    "@typescript-eslint/no-redeclare": [
+      "error"
+    ],
     "no-dupe-class-members": "off",
-    "@typescript-eslint/no-dupe-class-members": ["error"],
+    "@typescript-eslint/no-dupe-class-members": [
+      "error"
+    ],
     "no-undef": "off",
     "no-unused-vars": "off",
-    "operator-linebreak": ["warn", "before"],
+    "operator-linebreak": [
+      "warn",
+      "before"
+    ],
     "no-invalid-this": "off",
-    "@typescript-eslint/no-invalid-this": ["error"],
+    "@typescript-eslint/no-invalid-this": [
+      "error"
+    ],
     "@typescript-eslint/no-unused-vars": "off",
     "new-cap": "warn",
     "arrow-parens": "off",
     "no-case-declarations": "off"
   },
-  "ignorePatterns": ["out/**/", "out-test/**/"]
+  "ignorePatterns": [
+    "out/**/",
+    "out-test/**/"
+  ]
 }

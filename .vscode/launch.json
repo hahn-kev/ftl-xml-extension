@@ -16,6 +16,18 @@
       "preLaunchTask": "npm: compile"
     },
     {
+      "name": "Extension Web",
+      "type": "extensionHost",
+      "debugWebWorkerHost": true,
+      "request": "launch",
+      "runtimeExecutable": "${execPath}",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}",
+        "--extensionDevelopmentKind=web"
+      ],
+      "preLaunchTask": "npm: compile"
+    },
+    {
       "name": "Extension Tests",
       "type": "extensionHost",
       "request": "launch",
