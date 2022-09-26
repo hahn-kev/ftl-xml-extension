@@ -7,8 +7,7 @@ import {
   EventNamesValueSet,
   ImgPathNames, ShipBlueprintNames,
   ShipIconFileNames,
-  ShipIconNames,
-  ShipNames
+  ShipIconNames
 } from '../../data/autocomplete-value-sets';
 import {FtlServices} from '../../setup-core';
 import {URI} from 'vscode-uri';
