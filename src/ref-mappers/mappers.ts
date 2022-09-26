@@ -8,10 +8,8 @@ import {
   getFileName,
   getNodeContent,
   hasAttr,
-  isInAttrValue,
   nodeTagEq,
   normalizeTagName,
-  shouldCompleteForNodeContents,
   toRange
 } from '../helpers';
 import {
@@ -68,9 +66,9 @@ import {FtlImageList} from '../models/ftl-image-list';
 import {FtlVariable} from '../models/ftl-variable';
 import {FtlReq} from '../models/ftl-req';
 import {EventRefParser} from './event-ref-parser';
-import {FtlGenericValue, FtlValue} from '../models/ftl-value';
+import {FtlGenericValue} from '../models/ftl-value';
 import {NodeMapContext} from './node-mapping/node-map-context';
-import {staticValueNodeMap} from './node-mapping/static-node-map';
+import {StaticValueMapping, staticValueNodeMap} from './node-mapping/static-node-map';
 import {NodeMapImp} from './node-mapping/node-map';
 import {declarationBasedMapFunction} from './node-mapping/declaration-node-map';
 import {ValueName} from './value-name';
@@ -78,6 +76,16 @@ import {defaultAutoRewards} from '../data/default-ftl-data/default-auto-rewards'
 import {FtlReward} from '../models/ftl-reward';
 import {FtlSector} from '../models/ftl-sector';
 import {defaultSectors} from '../data/default-ftl-data/default-sectors';
+
+function storeCategoryMatcher(type: string): StaticValueMapping {
+  return {
+    tag: 'blueprint',
+    type: 'contents',
+    parentTag: 'item',
+    match: c => nodeTagEq(c.node.parent?.parent, 'category')
+        && getAttrValue(c.node.parent?.parent, 'type') == type
+  };
+}
 
 export class Mappers {
   readonly eventsMapper = new RefMapper(
@@ -111,7 +119,8 @@ export class Mappers {
                 {tag: 'weapon', attr: 'name'},
                 {tag: 'weaponList', attr: 'load'},
                 {tag: 'weaponBlueprint', parentTag: 'droneBlueprint', type: 'contents'},
-                {tag: 'artillery', parentTag: 'systemList', attr: 'weapon'}
+                {tag: 'artillery', parentTag: 'systemList', attr: 'weapon'},
+                storeCategoryMatcher('WEAPONS')
               ]
           )
       ),
@@ -123,7 +132,12 @@ export class Mappers {
       new RefParser(
           (file) => file.drone,
           FtlDrone,
-          staticValueNodeMap([{tag: 'droneBlueprint', attr: 'name'}], [{tag: 'drone', attr: 'name'}])
+          staticValueNodeMap(
+              [{tag: 'droneBlueprint', attr: 'name'}],
+              [
+                {tag: 'drone', attr: 'name'},
+                storeCategoryMatcher('DRONES')
+              ])
       ),
       DroneNames,
       'Drone',
@@ -133,12 +147,16 @@ export class Mappers {
       new RefParser(
           (file) => file.augment,
           FtlAugment,
-          new NodeMapImp(
-              (context) => getAttrValueForTag(context.node,
-                  'augBlueprint',
-                  'name',
-                  context.document),
-              declarationBasedMapFunction(AugmentNames)),
+          staticValueNodeMap(
+              [{tag: 'augBlueprint', attr: 'name'}],
+              [
+                {tag: 'hiddenAug', type: 'contents'},
+                {tag: 'augment', attr: 'name'},
+                {tag: 'aug', attr: 'name'},
+                {tag: 'function', attr: 'name'},
+                storeCategoryMatcher('AUGMENTS')
+              ]
+          )
       ),
       AugmentNames,
       'Augment',
@@ -156,7 +174,8 @@ export class Mappers {
                 {tag: 'removeCrew', attr: 'class'},
                 {tag: 'crewCount', attr: 'class'},
                 {tag: 'transformRace', attr: 'class'},
-                {tag: 'transformRace', type: 'contents'}
+                {tag: 'transformRace', type: 'contents'},
+                storeCategoryMatcher('CREW')
               ])
       ),
       CrewNames,
@@ -172,7 +191,8 @@ export class Mappers {
               [
                 {tag: 'status', attr: 'system'},
                 {tag: 'upgrade', attr: 'system'},
-                {tag: 'damage', attr: 'system'}
+                {tag: 'damage', attr: 'system'},
+                storeCategoryMatcher('SYSTEMS')
               ])
       ),
       SystemNames,
@@ -259,7 +279,7 @@ export class Mappers {
           (context) => {
             return getAttrValueForTag(context.node, 'req', 'name', context.document);
           },
-          (c) => undefined,
+          () => undefined,
       )),
       ReqNames,
       'Requirement'

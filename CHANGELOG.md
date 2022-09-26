@@ -11,6 +11,7 @@ All notable changes to the "ftlXml" extension will be documented in this file.
 - provide fallback for find files when running on web
 - custom sectors are supported
 - `<choice req="SEC FINAL"/>` and other custom sectors are now supported
+- custom store blueprints now work
 
 ## 0.8.5
 

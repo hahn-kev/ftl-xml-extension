@@ -1,9 +1,6 @@
 ## Want to implement
 
-- stores can have custom stock and need to reference blueprints
 - show warning for deeply nested lists, 3rd list deep will be ignored
-- tutorial xml has custom text id stuff, example `<default id="textID">` and `<PC id="id">`
-
 
 - narrow range for attribute refs, for example `name= "value"` has the range set incorrectly
 - make sure projectile tag contents is a ref to an animation

@@ -6,11 +6,25 @@ import {
   LanguageService,
   Node
 } from 'vscode-html-languageservice';
-import {isInAttrValue, normalizeTagName, shouldCompleteForNodeContents, toRange} from '../helpers';
+import {
+  hasAttr,
+  nodeTagEq,
+  normalizeAttributeName,
+  normalizeTagName,
+  shouldCompleteForNodeContents,
+  toRange
+} from '../helpers';
 import {DocumentCache} from '../document-cache';
 import {BlueprintMapper} from '../blueprints/blueprint-mapper';
 import {FtlData} from '../data/ftl-data';
-import {SoundWavePaths} from '../data/autocomplete-value-sets';
+import {
+  AugmentNames,
+  CrewNames,
+  DroneNames,
+  SoundWavePaths,
+  SystemNames,
+  WeaponNames
+} from '../data/autocomplete-value-sets';
 import {Sounds} from '../sounds';
 import {ConfigOverride} from '../data/config-override';
 import {FtlTextDocument} from '../models/ftl-text-document';
@@ -77,6 +91,23 @@ export class FtlCompletionProvider {
 
     if (Sounds.isWaveNode(node, document)) {
       return this.valueSetToCompletionItems(SoundWavePaths, range);
+    }
+
+    if (nodeTagEq(node, 'blueprint')
+        && nodeTagEq(node.parent, 'item')
+        && nodeTagEq(node.parent?.parent, 'category')
+        && hasAttr(node.parent.parent, 'type')) {
+      const lookup = {
+        'AUGMENTS': AugmentNames,
+        'WEAPONS': WeaponNames,
+        'DRONES': DroneNames,
+        'CREW': CrewNames,
+        'SYSTEMS': SystemNames
+      };
+
+      const type = normalizeAttributeName(node.parent.parent.attributes.type) as keyof typeof lookup;
+      const valueSet = lookup[type] as undefined | IValueSet;
+      if (valueSet) return this.valueSetToCompletionItems(valueSet, range);
     }
 
     const tagName = normalizeTagName(node.tag, node);

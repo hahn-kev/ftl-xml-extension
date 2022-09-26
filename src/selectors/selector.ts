@@ -4,13 +4,16 @@ import {Node} from 'vscode-html-languageservice';
 type attributeSelector = `[${string}]`;
 type parentSelector = `${string}<`;
 type childSelector = `>${string}`;
-export type Pattern = attributeSelector | parentSelector | childSelector;
+type subPattern = attributeSelector | parentSelector | childSelector
+export type Pattern = subPattern;
 
 export class Selector {
   private static matchers: Array<(node: Node, pattern: Pattern) => void | boolean> = [
     this.tryAttributeSelector,
     this.tryParentSelector,
     this.tryChildSelector,
+    // this.tryGroupSelector,
+      // commented out because it's not tested
   ];
 
   public static match(node: Node, pattern: Pattern): boolean {
@@ -38,5 +41,16 @@ export class Selector {
     if (!pattern.startsWith('>')) return;
     const childName = pattern.substr(1);
     return node.children.find(child => nodeTagEq(child, childName)) !== undefined;
+  }
+
+  private static tryGroupSelector(node: Node, pattern: Pattern): void | boolean {
+    const patterns = pattern.split('&') as Pattern[];
+    let result: boolean | void;
+    if (patterns.length < 2) return;
+    for (const childPattern of patterns) {
+      result = this.match(node, childPattern);
+      if (!result) return false;
+    }
+    return true;
   }
 }

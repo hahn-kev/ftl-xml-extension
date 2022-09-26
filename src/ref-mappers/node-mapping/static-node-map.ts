@@ -17,10 +17,10 @@ interface staticTagContentMapping extends staticMappingBase {
   type: 'contents'
 }
 
-type staticValueMapping = staticTagAttrMapping | staticTagContentMapping;
+export type StaticValueMapping = staticTagAttrMapping | staticTagContentMapping;
 
-export function staticValueNodeMap(defs: staticValueMapping[], refs: staticValueMapping[]): NodeMap {
-  function getResult(context: NodeMapContext, def: staticValueMapping) {
+export function staticValueNodeMap(defs: StaticValueMapping[], refs: StaticValueMapping[]): NodeMap {
+  function getResult(context: NodeMapContext, def: StaticValueMapping) {
     if (def.parentTag && !nodeTagEq(context.node.parent, def.parentTag)) return undefined;
     if (def.match && !def.match(context)) return undefined;
     if ('type' in def && def.type === 'contents') {

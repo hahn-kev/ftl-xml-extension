@@ -179,7 +179,9 @@ export function getAttrValueAsInt(node: Node, attrName: string): number | undefi
   const value = getAttrValue(node, attrName);
   return value ? parseInt(value) : undefined;
 }
-export function getAttrValue(node: Node, attrName: string): string | undefined {
+
+export function getAttrValue(node: Node | undefined, attrName: string): string | undefined {
+  if (!node) return;
   if (hasAttr(node, attrName)) {
     const value = normalizeAttributeName(node.attributes[attrName]);
     return value === '' ? undefined : value;
@@ -188,6 +190,13 @@ export function getAttrValue(node: Node, attrName: string): string | undefined {
 
 type OffsetRange = { startOffset: number, endOffset: number };
 
+/**
+ * determine if the node has the given attribute
+ * @param node
+ * @param name
+ * @param document optional provide with a position to determine if the position is within the attribute value
+ * @param atPosition
+ */
 export function hasAttr<T extends string>(
     node: Node,
     name: T,
