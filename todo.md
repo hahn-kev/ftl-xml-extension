@@ -1,6 +1,5 @@
 ## Want to implement
 
-- req can be `req="SEC Final"` where Final is a sector name
 - stores can have custom stock and need to reference blueprints
 - show warning for deeply nested lists, 3rd list deep will be ignored
 - tutorial xml has custom text id stuff, example `<default id="textID">` and `<PC id="id">`

@@ -3,12 +3,15 @@ import {NodeMapContext} from './node-map-context';
 import {getAttrValueForTag, getNodeContent} from '../../helpers';
 import {FtlData} from '../../data/ftl-data';
 import {ValueName} from '../value-name';
+import {XmlTag} from '../../data/xml-data/helpers';
+import {Pattern, Selector} from '../../selectors/selector';
 
 export function declarationBasedMapFunction(valueSet: IValueSet): (context: NodeMapContext) => ValueName | undefined {
   const refDeclarations = findValueSetReferences(valueSet);
   return (context) => {
     for (const refDeclaration of refDeclarations) {
       let result: ValueName | undefined;
+      if (refDeclaration.configName && !Selector.match(context.node, refDeclaration.configName)) continue;
       switch (refDeclaration.type) {
         case 'contents':
           result = getNodeContent(context.node, context.document, refDeclaration.tag);
@@ -26,23 +29,33 @@ export function declarationBasedMapFunction(valueSet: IValueSet): (context: Node
   };
 }
 
-export type ReferenceDeclaration = { type: 'attr', tag: string, attr: string } | { type: 'contents', tag: string };
+export type ReferenceDeclaration = { type: 'attr', tag: string, attr: string, configName?: Pattern }
+ | { type: 'contents', tag: string, configName?: Pattern };
 
 export function findValueSetReferences(valueSet: IValueSet): ReferenceDeclaration[] {
   if (!FtlData.valueSets?.includes(valueSet)) {
     throw new Error(`value set: ${valueSet.name} not included in FTL Data`);
   }
-  const contentsRefs = FtlData.tags.map((tag) => tag.contentsValueSet == valueSet.name ? {
-    type: 'contents',
-    tag: tag.name
-  } : undefined);
-  const attrRefs = FtlData.tags.flatMap((tag) => tag.attributes.map((attr) => attr.valueSet == valueSet.name ? {
-    type: 'attr',
-    tag: tag.name,
-    attr: attr.name
-  } : undefined));
-  return [
-    ...contentsRefs,
-    ...attrRefs
-  ].filter((rd): rd is ReferenceDeclaration => !!rd);
+  const refs: ReferenceDeclaration[] = [];
+  function processTagDef(tag: Partial<XmlTag>, tagName: string, configName?: Pattern) {
+    if (tag.contentsValueSet == valueSet.name) {
+      refs.push({type: 'contents', tag: tagName, configName});
+    }
+    if (!tag.attributes) return;
+    for (const attr of tag.attributes) {
+      if (attr.valueSet == valueSet.name) {
+        refs.push({type: 'attr', tag: tagName, attr: attr.name, configName});
+      }
+    }
+  }
+
+  for (const tag of FtlData.tags) {
+    processTagDef(tag, tag.name);
+    if (tag.configOverride) {
+      for (const [config, tagConfig] of Object.entries(tag.configOverride)) {
+        processTagDef(tagConfig, tag.name, config as Pattern);
+      }
+    }
+  }
+  return refs;
 }

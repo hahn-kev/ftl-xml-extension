@@ -43,6 +43,14 @@ export const allTags: XmlTag[] = [
     attributes: [{name: 'name'}],
     tags: ['text']
   },
+  {
+    name: 'PC',
+    attributes: [{name: 'id', valueSet: TextIdNames.name}]
+  },
+  {
+    name: 'default',
+    attributes: [{name: 'id', valueSet: TextIdNames.name}]
+  },
 
   {
     name: 'name',
@@ -114,13 +122,16 @@ export const allTags: XmlTag[] = [
   // time sounds for events in hyperspace? not event specific
   {name: 'timerSound', attributes: [], contentsValueSet: SoundWaveNames.name},
 
-  // music tags
+  // music tags 
   {name: 'explore', attributes: [], contentsValueSet: MusicPaths.name},
   {name: 'combat', attributes: [], contentsValueSet: MusicPaths.name},
 
   {name: 'variable', attributes: [{name: 'name', valueSet: VariableNames.name}, {name: 'val'}, {name: 'op'}]},
   {name: 'metaVariable', attributes: [{name: 'name', valueSet: VariableNames.name}, {name: 'val'}, {name: 'op'}]},
-  {name: 'req', attributes: [{name: 'name'}, {name: 'type', values: [{name: 'any'}, {name: 'all'}, {name: 'sum'}]}]},
+  {
+    name: 'req',
+    attributes: [{name: 'name'}, {name: 'type', values: [{name: 'any'}, {name: 'all'}, {name: 'sum'}]}]
+  },
 
   {name: 'eventFile', attributes: []}
 ];
