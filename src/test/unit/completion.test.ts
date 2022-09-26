@@ -36,7 +36,7 @@ suite('code completion', () => {
     expectTextCompletesWith('<loadEvent>$</loadEvent>', EventNamesValueSet);
   });
 
-  test('should complete with ship blueprint names', () => {
+  test('should complete with ship blueprint names shipOrder->ship', () => {
     // language=XML
     expectTextCompletesWith('<shipOrder><ship>$</ship></shipOrder>', ShipBlueprintNames);
   });
@@ -75,7 +75,7 @@ suite('code completion', () => {
         </shipIcon>`, ShipIconFileNames, services);
   });
 
-  test('should complete with ship blueprint names', () => {
+  test('should complete with ship blueprint names otherUnlocks->ship', () => {
     // language=XML
     expectTextCompletesWith(`
         <otherUnlocks>
