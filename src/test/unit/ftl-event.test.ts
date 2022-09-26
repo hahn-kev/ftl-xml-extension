@@ -128,6 +128,14 @@ suite('Ftl Events', () => {
     expect(eventDef.range).to.deep.eq({start: {line: 1, character: 13}, end: {line: 1, character: 21}});
   });
 
+  test('should goto definition from ref', () => {
+    const document = TestHelpers.gotoWorks(
+        `
+<event name="my_$event"/> 
+<loadEvent>my_^event</loadEvent>
+`);
+  });
+
   test('should find an event loop', () => {
     const services = TestHelpers.testSetup();
     const document = TestHelpers.testTextDocument(
