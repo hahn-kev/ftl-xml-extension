@@ -247,8 +247,9 @@ export function getAttrValueRange(attr: string, node: Node, document: FtlTextDoc
   const attrValue = node.attributes[attr];
 
   const nodeStartText = getText(node.start, node.startTagEnd ?? node.end, document);
-  const attrIndex = nodeStartText.indexOf(attr);
-  const attrValueStart = node.start + attrIndex + attr.length + '="'.length;
+  const attrIndex = nodeStartText.search(attr + '[\\s=]');
+
+  const attrValueStart = node.start + nodeStartText.indexOf(`"`, attrIndex) + 1;
   const attrValueEnd = attrValueStart + (attrValue?.length ?? 2) - 2;
   return {startOffset: attrValueStart, endOffset: attrValueEnd};
 }
@@ -281,7 +282,7 @@ export function addToKey<T, Key>(map: Map<Key, T[]>, key: Key, value: T | T[]) {
 export function getFileName(uri: FtlUri | FtlTextDocument | string): string {
   if (typeof uri === 'object' && 'uri' in uri) uri = uri.uri;
   if (typeof uri !== 'string') uri = uri.path;
-  return uri.substr(uri.lastIndexOf('/') + 1);
+  return uri.slice(uri.lastIndexOf('/') + 1);
 }
 
 export function shouldCompleteForNodeContents(
