@@ -26,7 +26,8 @@ import {
   TextIdNames,
   VariableNames,
   WeaponAnimationNames,
-  WeaponNames
+  WeaponNames,
+  ShipRoomImageFileNames
 } from './autocomplete-value-sets';
 import {XmlData} from './xml-data/helpers';
 import {allTags} from './xml-data/tags';
@@ -64,6 +65,7 @@ export const FtlData: XmlData = {
     ShipIconFileNames,
     AllBlueprintsValueSet,
     TagsValueSet,
-    SectorsValueSet
+    SectorsValueSet,
+    ShipRoomImageFileNames
   ]
 };

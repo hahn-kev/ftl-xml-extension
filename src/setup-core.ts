@@ -15,7 +15,6 @@ import {EventUsedValidator} from './validators/event-used-validator';
 import {BlueprintValidator} from './blueprints/blueprint-validator';
 import {RefNameValidator} from './validators/ref-name-validator';
 import {SoundFileNameValidator} from './validators/sound-file-name-validator';
-import {ImgFileNameValidator} from './validators/img-file-name-validator';
 import {AnimationValidator} from './validators/animation-validator';
 import {FileOpener, FtlParser} from './ftl-parser';
 import {FtlDatCache} from './dat-fs-provider/ftl-dat-cache';
@@ -47,6 +46,7 @@ export function setupCore(fileOpener: FileOpener, fileReader: FileReader): FtlSe
   const requiredChildrenParser = new RequiredChildrenParser();
   const parsers: FtlXmlParser[] = [
     ...mappers.list.map((value) => value.parser),
+    ...pathMappers.mappers,
     new IncompleteTagParser(),
     requiredChildrenParser,
     new AllowedChildrenParser(),
@@ -66,7 +66,6 @@ export function setupCore(fileOpener: FileOpener, fileReader: FileReader): FtlSe
     new BlueprintValidator(mappers.blueprintMapper),
     new RefNameValidator(mappers.list, mappers.blueprintMapper),
     new SoundFileNameValidator(),
-    new ImgFileNameValidator(),
     new AnimationValidator(mappers),
     new EventLoopValidator(mappers.eventsMapper)
   ];

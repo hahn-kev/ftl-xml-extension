@@ -1,11 +1,12 @@
 import {boolAttr, XmlTag} from './helpers';
-import {ShipBlueprintNames, CrewNames, TextIdNames, WeaponNames} from '../autocomplete-value-sets';
+import {ShipBlueprintNames, CrewNames, TextIdNames, WeaponNames, ShipRoomImageFileNames} from '../autocomplete-value-sets';
 import {IAttributeData} from 'vscode-html-languageservice';
 const defaultSystemAttributes: IAttributeData[] = [
   {name: 'max'},
   {name: 'power'},
   {name: 'room'},
-  boolAttr('start')
+  boolAttr('start'),
+  {name: 'img', valueSet: ShipRoomImageFileNames.name}
 ];
 const systemsListChildren: XmlTag[] = [
   {

@@ -3,6 +3,7 @@ import {SoundFile} from './sound-file';
 import {FtlImg} from './ftl-img';
 import {HyperspaceFile} from './hyperspace-file';
 import {FtlShipIcon} from './ftl-ship-icon';
+import { FtlShipRoomImage } from './ftl-ship-room-image';
 
 export class FtlRoot {
   constructor() {
@@ -17,6 +18,7 @@ export class FtlRoot {
   musicFiles: SoundFile[] = [];
   imgFiles: FtlImg[] = [];
   shipIconFiles: FtlShipIcon[] = [];
+  shipRoomImageFiles: FtlShipRoomImage[] = [];
 
   findMatchingImg(modFileRef: string): FtlImg | undefined {
     for (const ftlImg of this.imgFiles) {

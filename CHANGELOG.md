@@ -2,6 +2,10 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
+## 0.8.7
+
+- support ship system images, warnings, previews autocomplete goto etc...
+
 ## 0.8.6
 
 - add documentation for mod tags

@@ -3,6 +3,7 @@ import {DocumentCache} from '../document-cache';
 import {
   HTMLDocument,
   LanguageService,
+  Location,
   Node,
   Range,
   TextDocument as HtmlTextDocument
@@ -15,6 +16,9 @@ import {LookupContext} from '../ref-mappers/lookup-provider';
 import {VscodeConverter} from '../vscode-converter';
 import {AnimationPreview} from '../animation-preview/animation-preview';
 import {FtlData} from '../data/ftl-data';
+import { URI } from 'vscode-uri';
+import { FtlResourceFile } from '../models/ftl-resource-file';
+import { ValueName } from '../ref-mappers/value-name';
 
 export class FtlHoverProvider implements HoverProvider {
   constructor(private documentCache: DocumentCache,
@@ -168,16 +172,22 @@ export class FtlHoverProvider implements HoverProvider {
 
 
   async tryHoverImagePath(context: LookupContext): Promise<Hover | undefined> {
-    const img = this.pathMappers.imageMapper.lookupFile(context);
-    if (!img) return;
+    let file: FtlResourceFile | undefined = undefined;
+    let ref: ValueName | undefined = undefined;
+    for (const mapper of this.pathMappers.mappers) {
+      ({ file, ref } = mapper.lookupFile(context));
+      if (file && file.uri.path.endsWith('.png')) break;
+    }
+    if (!file || !file.uri.path.endsWith('.png') || !ref) return;
+    const uri = file.uri;
     const mdString = new MarkdownString();
     let imageUrl: string;
-    if (img.uri.scheme == 'file') {
-      imageUrl = img.uri.toString();
-    } else if (img.uri.scheme == FtlDatFs.scheme) {
+    if (uri.scheme == 'file') {
+      imageUrl = uri.toString();
+    } else if (uri.scheme == FtlDatFs.scheme) {
       // markdown in vscode does not support using non file schemes
       // so we need to convert the image into a data uri
-      const imgData = await workspace.fs.readFile(img.uri);
+      const imgData = await workspace.fs.readFile(uri);
       const base64EncodedImage = Buffer.from(imgData).toString('base64');
       imageUrl = `data:image/png;base64,${base64EncodedImage}`;
     } else {
@@ -185,8 +195,8 @@ export class FtlHoverProvider implements HoverProvider {
     }
     mdString.appendMarkdown(`![img](${imageUrl})`);
     return new Hover(
-        mdString,
-        VscodeConverter.toVscodeRange(toRange(context.node.startTagEnd ?? context.node.start, context.node.endTagStart ?? context.node.end, context.document))
+      mdString,
+      VscodeConverter.toVscodeRange(ref.range)
     );
   }
 }

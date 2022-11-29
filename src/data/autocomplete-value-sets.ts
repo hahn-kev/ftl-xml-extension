@@ -104,6 +104,10 @@ export const ShipIconFileNames: IValueSet = {
   name: 'ship-icon-file-names',
   values: [{name: 'loading...'}]
 };
+export const ShipRoomImageFileNames: IValueSet = {
+  name: 'ship-room-image-file-names',
+  values: [{name: 'loading...'}]
+};
 export const AutoRewardsValueSet: IValueSet = {
   name: 'auto-reward-set',
   values: [{name: 'loading...'}]

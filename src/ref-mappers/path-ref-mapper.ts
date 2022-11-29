@@ -1,9 +1,9 @@
 import {IValueSet, Location} from 'vscode-html-languageservice';
 import {FtlRoot} from '../models/ftl-root';
-import {contains, getNodeContent, shouldCompleteForNodeContents} from '../helpers';
+import {contains, getAttrValue, getAttrValueForTag, getNodeContent, shouldCompleteForNodeContents} from '../helpers';
 import {FtlImg} from '../models/ftl-img';
 import {SoundFile} from '../models/sound-file';
-import {ImgPathNames, MusicPaths, ShipIconFileNames, SoundWavePaths} from '../data/autocomplete-value-sets';
+import {ImgPathNames, MusicPaths, ShipIconFileNames, ShipRoomImageFileNames, SoundWavePaths} from '../data/autocomplete-value-sets';
 import {FtlResourceFile} from '../models/ftl-resource-file';
 import {LookupContext, LookupProvider} from './lookup-provider';
 import {defaultSoundFiles} from '../data/default-ftl-data/default-sound-files';
@@ -16,14 +16,21 @@ import {Sounds} from '../sounds';
 import {FtlShipIcon} from '../models/ftl-ship-icon';
 import {NodeMapContext} from './node-mapping/node-map-context';
 import {ValueName} from './value-name';
+import { FtlShipRoomImage } from '../models/ftl-ship-room-image';
+import { declarationBasedMapFunction } from './node-mapping/declaration-node-map';
+import { FtlXmlParser, ParseContext } from '../parsers/ftl-xml-parser';
+import { FtlFile } from '../models/ftl-file';
+import { DiagnosticBuilder } from '../diagnostic-builder';
+import { defaultRoomImages } from '../data/default-ftl-data/default-room-images';
 
 export enum FileHandled {
   handled,
   notHandled
 }
 
-export interface PathRefMapperBase extends LookupProvider, DataReceiver {
+export interface PathRefMapperBase extends LookupProvider, DataReceiver, FtlXmlParser {
   handleFile(file: URI, fileName: string, root: FtlRoot, fileRemoved: boolean): FileHandled;
+  lookupFile(context: LookupContext): {file?: FtlResourceFile, ref?: ValueName}
 }
 
 export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBase {
@@ -36,7 +43,7 @@ export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBa
               private readonly selectRootFiles: (root: FtlRoot) => T[],
               private readonly defaultFiles: string[] = [],
               private readonly getFileRef: (context: NodeMapContext) => ValueName | undefined = () => undefined,
-              private readonly findFile: (refName: string, files: T[], context: NodeMapContext) => T | undefined) {
+              private readonly findFile: (refName: string, files: T[]) => T | undefined) {
   }
 
   public handleFile(file: URI, fileName: string, root: FtlRoot, fileRemoved: boolean): FileHandled {
@@ -52,16 +59,20 @@ export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBa
   }
 
   public lookupDef(context: LookupContext): Location | undefined {
-    const img = this.lookupFile(context);
-    if (!img) return;
-    return {uri: img.uri.toString(), range: {start: {line: 0, character: 0}, end: {line: 0, character: 0}}};
+    const {file} = this.lookupFile(context);
+    if (!file) return;
+    return {uri: file.uri.toString(), range: {start: {line: 0, character: 0}, end: {line: 0, character: 0}}};
   }
 
-  lookupFile(context: LookupContext): T | undefined {
+  lookupFile(context: LookupContext): {file?: T, ref?: ValueName} {
     const refName = this.getFileRef(context);
     if (refName && contains(refName.range, context.position)) {
-      return this.findFile(refName.name, this.selectRootFiles(this.root), context);
+      return {
+        file: this.findFile(refName.name, this.selectRootFiles(this.root)),
+        ref: refName
+      };
     }
+    return {};
   }
 
   public lookupRefs({node, document, position}: LookupContext): Location[] | undefined {
@@ -78,6 +89,35 @@ export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBa
         .concat(this.defaultFiles)
         .map((modPath) => ({name: modPath}))
     );
+
+    //validate all custom refs
+    for (const xmlFile of root.xmlFiles.values()) {
+      const refs = this.getRefsToValidate(xmlFile);
+      for (const ref of refs) {
+        if (this.defaultFiles.includes(ref.name)) continue;
+        const resourceFile = this.findFile(ref.name, this.selectRootFiles(this.root));
+        if (!resourceFile) {
+          xmlFile.diagnostics.push(
+            DiagnosticBuilder.invalidRefName(ref.name, ref.range, this.typeName)
+          )
+        }
+      }
+    }
+  }
+
+
+  parseNode(context: ParseContext): void | FtlXmlParser {
+    const ref = this.getFileRef(context);
+    if (!ref || this.defaultFiles.includes(ref.name)) return;
+    const fileData = this.getRefsToValidate(context.file);
+    fileData.push(ref);
+  }
+  
+  private customDataSymbol = Symbol(this.typeName);
+  private getRefsToValidate(file: FtlFile): ValueName[] {
+    const data = file.customData[this.customDataSymbol];
+    if (data) return data;
+    return file.customData[this.customDataSymbol] = [];
   }
 }
 
@@ -103,6 +143,16 @@ export class PathRefMappers {
       (root) => root.shipIconFiles,
       [],
       (c) => Mappers.shipIconNodeMap.getNameDef(c),
+      (refName, files) => files.find((f) => f.modPath == refName)
+  );
+
+  shipRoomImageMapper = new PathRefMapper('Ship Room Image',
+      ShipRoomImageFileNames,
+      (file, fileName) => fileName.endsWith('.png') && file.path.endsWith('img/ship/interior/' + fileName),
+      FtlShipRoomImage,
+      (root) => root.shipRoomImageFiles,
+      defaultRoomImages,
+      declarationBasedMapFunction(ShipRoomImageFileNames),
       (refName, files) => files.find((f) => f.modPath == refName)
   );
 
@@ -137,5 +187,11 @@ export class PathRefMappers {
       },
       (refName, files) => files.find((f) => f.modPath == refName)
   );
-  mappers: PathRefMapperBase[] = [this.imageMapper, this.soundMapper, this.musicMapper, this.shipIconMapper];
+  mappers: PathRefMapperBase[] = [
+    this.imageMapper,
+    this.soundMapper,
+    this.musicMapper,
+    this.shipIconMapper,
+    this.shipRoomImageMapper
+  ];
 }

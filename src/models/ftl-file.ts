@@ -63,6 +63,7 @@ export class FtlFile {
   rewards = new FtlFileValue<FtlReward>();
   colors: FtlColor[] = [];
   isReferenced = true;
+  customData: Record<symbol, any> = {};
 }
 
 export class FtlFileValue<TDef extends FtlValue, TRef extends FtlValue = TDef> {
