@@ -171,10 +171,11 @@ export class PathRefMappers {
       (refName, files) => files.find((f) => f.modPath == refName)
   );
 
+  validSoundExtensions = ['.ogg', '.wav', '.mp3'];
   soundMapper = new PathRefMapper('Sound',
       SoundWavePaths,
       (file, fileName) => {
-        if (!fileName?.endsWith('.ogg') && !fileName?.endsWith('.wav')) return false;
+        if (!fileName || !this.validSoundExtensions.some(ext => fileName.endsWith(ext))) return false;
         const soundFile = new SoundFile(file);
         return soundFile.type === 'wave';
       },

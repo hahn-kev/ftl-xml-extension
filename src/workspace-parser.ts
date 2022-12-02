@@ -41,7 +41,7 @@ export class WorkspaceParser {
     }, exec);
   }
 
-  public static readonly findPattern = '**/*.{xml,xml.append,ogg,wav,png}';
+  public static readonly findPattern = '**/*.{xml,xml.append,ogg,wav,png,mp3}';
 
   private async findFiles(subFolder?: string): Promise<Uri[]> {
     if (subFolder) {
