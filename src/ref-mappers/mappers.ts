@@ -328,7 +328,7 @@ export class Mappers {
                 if (!Sounds.isWaveNode(c.node, c.document)) return;
                 return new ValueName(
                     normalizeTagName(c.node.tag, c.node),
-                    toRange(c.node.start, c.node.start + c.node.tag.length, c.document)
+                    toRange(c.node.start + 1, c.node.start + c.node.tag.length + 1, c.document)
                 );
               },
               declarationBasedMapFunction(SoundWaveNames),
