@@ -2,6 +2,13 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
+## 0.8.8
+
+- fix hover text for weapon
+- fix highlight offset for sounds
+- fix animation sheet references in race
+- support mp3 files as sounds
+
 ## 0.8.7
 
 - support ship system images, warnings, previews autocomplete goto etc...
