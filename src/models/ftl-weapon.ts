@@ -11,7 +11,7 @@ export class FtlWeapon extends FtlValue {
     super(valueName, file, node, document, isDef);
     if (isDef) {
       const title = firstWhere(node.children, (child) => getNodeContent(child, document, 'title'));
-      if (title) this.autocompleteDescription = `Title: ${title}`;
+      if (title) this.autocompleteDescription = `Title: ${title.name}`;
     }
   }
 }
