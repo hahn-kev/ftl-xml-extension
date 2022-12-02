@@ -15,7 +15,15 @@ export function nodeTagEq(node: Node | undefined, tag: string, tag2?: string) {
     let nodeTagName = node?.tag;
     if (!nodeTagName) return false;
     nodeTagName = normalizeTagName(nodeTagName, node);
-    return nodeTagName === tag || (nodeTagName === tag2);
+    
+    return nodeTagMatches(nodeTagName, tag) || (tag2 && nodeTagMatches(nodeTagName, tag2));
+}
+
+function nodeTagMatches(tagName: string, pattern: string): boolean {
+    if (pattern.startsWith('!')) {
+        return '!' + tagName !== pattern;
+    }
+    return tagName === pattern;
 }
 
 export function normalizeTagName(nodeTagName: string, node?: Node): string

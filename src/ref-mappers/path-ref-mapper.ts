@@ -130,7 +130,7 @@ export class PathRefMappers {
       FtlImg,
       (root) => root.imgFiles,
       defaultImgFiles,
-      (c) => getNodeContent(c.node, c.document, 'animSheet')
+      (c) => getNodeContent(c.node, c.document, 'animSheet', '!race')
           ?? getNodeContent(c.node, c.document, 'img')
           ?? getNodeContent(c.node, c.document, 'chargeImage'),
       (refName, files) => files.find((f) => f.matches(refName))

@@ -354,12 +354,15 @@ export class Mappers {
   );
 
   readonly animationSheetMapper = new RefMapper(
-      new RefParser((file) => file.animationSheets,
-          FtlAnimationSheet,
-          staticValueNodeMap([{tag: 'animSheet', attr: 'name'}], [{tag: 'sheet', type: 'contents'}])),
-      AnimationSheetNames,
-      'Animation Sheet',
-      defaultAnimationSheets
+    new RefParser((file) => file.animationSheets,
+      FtlAnimationSheet,
+      staticValueNodeMap(
+        [{ tag: 'animSheet', attr: 'name', parentTag: '!race'}],
+        [{ tag: 'sheet', type: 'contents' }, { tag: 'animSheet', parentTag: 'race', type: 'contents' }]
+      )),
+    AnimationSheetNames,
+    'Animation Sheet',
+    defaultAnimationSheets
   );
 
   readonly weaponAnimationMapper = new RefMapper(

@@ -15,7 +15,10 @@ export const animationTags: XmlTag[] = [
       {name: 'fw'},
       {name: 'fh'},
     ],
-    contentsValueSet: ImgPathNames.name
+    contentsValueSet: ImgPathNames.name,
+    configOverride: {
+      'race<': {contentsValueSet: AnimationSheetNames.name}
+    }
   },
   {name: 'chargeImage', attributes: [], contentsValueSet: ImgPathNames.name},
 ];
