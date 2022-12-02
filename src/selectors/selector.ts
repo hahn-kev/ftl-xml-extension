@@ -1,8 +1,16 @@
 import {hasAttr, nodeTagEq} from '../helpers';
 import {Node} from 'vscode-html-languageservice';
 
+
+// here's some examples, assume the given node is <event>
+
+//[name] true for <event name="anything">
 type attributeSelector = `[${string}]`;
+
+//parent< true for <parent> <event/> </parent>
 type parentSelector = `${string}<`;
+
+//>child true for <event> <child/> </event>
 type childSelector = `>${string}`;
 type subPattern = attributeSelector | parentSelector | childSelector
 export type Pattern = subPattern;
@@ -39,7 +47,7 @@ export class Selector {
 
   private static tryChildSelector(node: Node, pattern: Pattern): void | boolean {
     if (!pattern.startsWith('>')) return;
-    const childName = pattern.substr(1);
+    const childName = pattern.slice(1);
     return node.children.find(child => nodeTagEq(child, childName)) !== undefined;
   }
 
