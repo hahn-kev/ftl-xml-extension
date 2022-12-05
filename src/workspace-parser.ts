@@ -14,6 +14,7 @@ import {
 import {FtlDatFs} from './dat-fs-provider/ftl-dat-fs';
 import {FtlDatCache} from './dat-fs-provider/ftl-dat-cache';
 import {Progress} from './helpers';
+import {FtlOutputChannel} from './output/ftl-output-channel';
 
 export class WorkspaceParser {
   get isParsing() {
@@ -22,10 +23,12 @@ export class WorkspaceParser {
 
   constructor(public xmlParser: FtlParser,
               private validator: FltDocumentValidator,
-              private ftlDatCache: FtlDatCache) {
+              private ftlDatCache: FtlDatCache,
+              private output: FtlOutputChannel) {
   }
 
   public async parseWorkspace(subFolder?: string) {
+    this.output.appendLine('parse workspace');
     const root = await this.execInParsing(async (progress) => {
       const files = await this.findFiles(subFolder);
       const root = await this.xmlParser.parseFiles(files, true, progress);
@@ -82,6 +85,7 @@ export class WorkspaceParser {
   public async workspaceFoldersAdded(folders: readonly WorkspaceFolder[]) {
     await this.execInParsing(async (progress) => {
       for (const folder of folders) {
+        this.output.appendLine(`workspace folder added ${folder}`);
         let files: Uri[];
         if (folder.uri.scheme === FtlDatFs.scheme) {
           await this.ftlDatCache.tryAdd(folder.uri);

@@ -9,6 +9,7 @@ import {FtlData} from '../data/ftl-data';
 import {FtlRoot} from '../models/ftl-root';
 import {normalizeTagName} from '../helpers';
 import {TagsValueSet} from '../data/autocomplete-value-sets';
+import {FtlOutputChannel} from '../output/ftl-output-channel';
 
 export interface DataReceiver {
   updateData(root: FtlRoot): void;
@@ -19,18 +20,18 @@ export interface IFtlDataProvider {
 }
 
 export class FtlDataProvider implements IHTMLDataProvider, IFtlDataProvider {
-  constructor(private receivers: DataReceiver[]) {
+  constructor(private receivers: DataReceiver[], private output: FtlOutputChannel) {
     TagsValueSet.values.length = 0;
     TagsValueSet.values.push(...Array.from(FtlData.tags)
         .map(tag => ({name: tag.name, description: tag.description} as IValueData)));
   }
 
   public updateFtlData(root: FtlRoot) {
-    console.time('update data');
+    this.output.time('update data');
     for (const receiver of this.receivers) {
       receiver.updateData(root);
     }
-    console.timeEnd('update data');
+    this.output.timeEnd('update data');
   }
 
   htmlDataProvider = newHTMLDataProvider('ftl-data', FtlData);

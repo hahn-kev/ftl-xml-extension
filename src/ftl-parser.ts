@@ -9,6 +9,7 @@ import {HyperspaceFile} from './models/hyperspace-file';
 import {URI} from 'vscode-uri';
 import {FtlTextDocument} from './models/ftl-text-document';
 import {IFtlDataProvider} from './providers/ftl-data-provider';
+import {FtlOutputChannel} from './output/ftl-output-channel';
 
 export type FileOpener = (uri: URI) => Thenable<FtlTextDocument>;
 
@@ -17,7 +18,8 @@ export class FtlParser {
               private parsers: FtlXmlParser[],
               private pathMappers: PathRefMapperBase[],
               private ftlDataProvider: IFtlDataProvider,
-              private fileOpener: FileOpener) {
+              private fileOpener: FileOpener,
+              private output: FtlOutputChannel) {
   }
 
   private _parsingPromise?: Thenable<FtlRoot>;
@@ -47,12 +49,12 @@ export class FtlParser {
     if (reset) this.root.clear();
 
     try {
-      console.time('parse files');
+      this.output.time('parse files');
       this._parsingPromise = this._parseFiles(files, progress).then(() => this.root);
       await this._parsingPromise;
       this._parsingPromise = undefined;
     } finally {
-      console.timeEnd('parse files');
+      this.output.timeEnd('parse files');
     }
     this.dataUpdated(this.root);
     return this.root;
@@ -70,7 +72,8 @@ export class FtlParser {
 
   private async _parseFiles(files: URI[], progress: Progress<{message?: string}>) {
     files = [...files];
-    const fileCount = files.length;
+    const fileCount = this.output.formatNumber(files.length);
+    this.output.appendLine(`parsing ${fileCount} files`);
     let currentIndex = 0;
 
     // attempts to improve performance, seems to have worked
@@ -79,10 +82,11 @@ export class FtlParser {
     // this way we don't get stuck waiting for a single file to read, so we're always parsing
     const parseUntilFinished = async (): Promise<void> => {
       let file: URI | undefined;
+      // eslint-disable-next-line no-cond-assign
       while (file = files.pop()) {
         await this.parseFile(file);
         currentIndex++;
-        progress.report({message: `${currentIndex}/${fileCount}`});
+        progress.report({message: `${this.output.formatNumber(currentIndex)} / ${fileCount}`});
       }
     };
 

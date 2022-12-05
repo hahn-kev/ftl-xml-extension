@@ -21,6 +21,7 @@ import {FileReader} from './dat-fs-provider/dat-file-parser';
 import {EventLoopValidator} from './validators/event-loop-validator';
 import {ValueSetParserValidator} from './parsers/value-set-parser-validator';
 import {ReqListUpdater} from './data-receivers/req-list-updater';
+import {FtlOutputChannel, IFtlOutputChannel} from './output/ftl-output-channel';
 
 export interface FtlServices {
   parser: FtlParser;
@@ -33,10 +34,25 @@ export interface FtlServices {
   mappers: Mappers;
   pathMappers: PathRefMappers;
   requiredChildrenParser: RequiredChildrenParser;
+  output: FtlOutputChannel;
 }
 
 
-export function setupCore(fileOpener: FileOpener, fileReader: FileReader): FtlServices {
+export function setupCore(fileOpener: FileOpener, fileReader: FileReader, outputChannel?: IFtlOutputChannel): FtlServices {
+  outputChannel = outputChannel ?? {
+    appendLine(value: string) {
+      console.log(value);
+    },
+    append(value: string) {
+      console.log(value);
+    },
+    name: '',
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    clear() {
+
+    }
+  };
+  const output = new FtlOutputChannel(outputChannel);
   const service = getLanguageService({useDefaultDataProvider: false});
   const documentCache = new DocumentCache(service);
 
@@ -68,13 +84,15 @@ export function setupCore(fileOpener: FileOpener, fileReader: FileReader): FtlSe
     new EventLoopValidator(mappers.eventsMapper),
     ...pathMappers.mappers
   ];
-  const ftlDataProvider = new FtlDataProvider(dataReceivers);
+  const ftlDataProvider = new FtlDataProvider(dataReceivers, output);
   const ftlParser = new FtlParser(
       documentCache,
       parsers,
       pathMappers.mappers,
       ftlDataProvider,
-      fileOpener);
+      fileOpener,
+      output
+      );
   const ftlDatCache = new FtlDatCache(fileReader);
   service.setDataProviders(false, [
     ftlDataProvider
@@ -90,6 +108,7 @@ export function setupCore(fileOpener: FileOpener, fileReader: FileReader): FtlSe
     documentCache,
     lookupProviders,
     validators,
-    requiredChildrenParser
+    requiredChildrenParser,
+    output
   };
 }

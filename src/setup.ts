@@ -19,7 +19,7 @@ import {FtlFormattingProvider} from './providers/ftl-formatting-provider';
 
 export type disposable = { dispose(): unknown };
 
-type Created = { workspaceParser: WorkspaceParser, subs: disposable[] };
+type Created = { workspaceParser: WorkspaceParser, subs: disposable[], services: FtlServices };
 
 export function setupVscodeProviders(services: FtlServices): Created {
   const ftlLanguage = 'ftl-xml';
@@ -31,10 +31,14 @@ export function setupVscodeProviders(services: FtlServices): Created {
     }
   ];
 
+
   const diagnosticCollection = languages.createDiagnosticCollection('ftl-xml');
-  const ftlDocumentValidator = new FltDocumentValidator(diagnosticCollection,
-      services.validators);
-  const workspaceParser = new WorkspaceParser(services.parser, ftlDocumentValidator, services.datCache);
+  const ftlDocumentValidator = new FltDocumentValidator(
+      diagnosticCollection,
+      services.validators,
+      services.output
+  );
+  const workspaceParser = new WorkspaceParser(services.parser, ftlDocumentValidator, services.datCache, services.output);
 
   // providers
   const ftlDefinitionProvider = new FtlDefinitionProvider(services.documentCache, services.lookupProviders);
@@ -46,7 +50,6 @@ export function setupVscodeProviders(services: FtlServices): Created {
   const completionItemProvider = new FtlCompletionAdapter(services.documentCache,
       services.htmlService,
       services.mappers.blueprintMapper);
-  const formattingProvider = new FtlFormattingProvider(services.htmlService);
   const fsWatcher = workspace.createFileSystemWatcher(WorkspaceParser.findPattern, false, true, false);
 
   const ftlDatFS = new FtlDatFs(services.datCache);
@@ -58,6 +61,7 @@ export function setupVscodeProviders(services: FtlServices): Created {
 
   return {
     workspaceParser,
+    services,
     subs: [
       fsWatcher.onDidCreate((e) => services.parser.fileAdded(e)),
       fsWatcher.onDidDelete((e) => services.parser.fileRemoved(e)),
@@ -85,6 +89,7 @@ export function setupVscodeProviders(services: FtlServices): Created {
       workspace.onDidChangeWorkspaceFolders(async (e) => {
         if (e.removed.length > 0) {
           // refresh all, todo just remove files that were in the workspace and call update data
+          services.output.appendLine('workspace folders removed, reparse whole workspace');
           await workspaceParser.parseWorkspace();
         } else if (e.added.length > 0) {
           await workspaceParser.workspaceFoldersAdded(e.added);
@@ -95,7 +100,7 @@ export function setupVscodeProviders(services: FtlServices): Created {
       languages.registerHoverProvider(ftlXmlDoc, hoverProvider),
       languages.registerDefinitionProvider(ftlXmlDoc, ftlDefinitionProvider),
       languages.registerReferenceProvider(ftlXmlDoc, ftlReferenceProvider),
-      languages.registerFoldingRangeProvider(ftlXmlDoc, new FtlFoldingProvider(services.htmlService)),
+      languages.registerFoldingRangeProvider(ftlXmlDoc, new FtlFoldingProvider(services.htmlService, services.output)),
       languages.registerRenameProvider(ftlXmlDoc, new FtlRenameProvider(services.documentCache, services.mappers)),
       languages.registerCodeLensProvider(ftlXmlDoc, new FtlCodeLensProvider(services.parser, services.mappers)),
       // languages.registerDocumentFormattingEditProvider(ftlXmlDoc, formattingProvider),
@@ -119,5 +124,7 @@ export function setup(registerProviders = false): Created {
   // hack to prevent img elements from getting marked as void and thus ending too soon
   // in fact.js isVoidElement is called by the parser to see if the element is self closing
   VOID_ELEMENTS.length = 0;
-  return setupVscodeProviders(setupCore((uri) => workspace.openTextDocument(uri), (uri) => workspace.fs.readFile(uri)));
+
+  const output = window.createOutputChannel('FTL');
+  return setupVscodeProviders(setupCore((uri) => workspace.openTextDocument(uri), (uri) => workspace.fs.readFile(uri), output));
 }

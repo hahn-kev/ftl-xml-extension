@@ -9,9 +9,10 @@ import {
 } from 'vscode';
 import {FoldingRangeKind as HtmlFoldingRangeKind, LanguageService} from 'vscode-html-languageservice';
 import {VscodeConverter} from '../vscode-converter';
+import {FtlOutputChannel} from '../output/ftl-output-channel';
 
 export class FtlFoldingProvider implements FoldingRangeProvider {
-  constructor(private htmlService: LanguageService) {
+  constructor(private htmlService: LanguageService, private output: FtlOutputChannel) {
 
   }
 
@@ -19,7 +20,9 @@ export class FtlFoldingProvider implements FoldingRangeProvider {
       document: TextDocument,
       context: FoldingContext,
       token: CancellationToken): ProviderResult<FoldingRange[]> {
+    this.output.time('provide folding ranges');
     const ranges = this.htmlService.getFoldingRanges(VscodeConverter.toTextDocumentHtml(document));
+    this.output.timeEnd('provide folding ranges');
 
     return ranges.map((r) => {
       let kind: FoldingRangeKind;

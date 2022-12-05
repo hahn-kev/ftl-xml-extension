@@ -5,10 +5,12 @@ import {FtlRoot} from './models/ftl-root';
 import {DiagnosticBuilder} from './diagnostic-builder';
 import {FtlDiagnostic} from './models/ftl-diagnostic';
 import {VscodeConverter} from './vscode-converter';
+import {FtlOutputChannel} from './output/ftl-output-channel';
 
 export class FltDocumentValidator {
   constructor(private diagnosticCollection: DiagnosticCollection,
-              private validators: Validator[]) {
+              private validators: Validator[],
+              private output: FtlOutputChannel) {
   }
 
   public validateFtlRoot(root: FtlRoot) {
@@ -17,12 +19,12 @@ export class FltDocumentValidator {
 
   private validateFtlFiles(files: FtlFile[]) {
     try {
-      console.time('validate ftl files');
+      this.output.time('validate ftl files');
       for (const file of files) {
         this.validateFile(file);
       }
     } finally {
-      console.timeEnd('validate ftl files');
+      this.output.timeEnd('validate ftl files');
     }
   }
 

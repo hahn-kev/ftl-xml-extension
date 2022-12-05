@@ -22,11 +22,11 @@ import {AnimationPreview} from './animation-preview/animation-preview';
 
 // noinspection JSUnusedGlobalSymbols
 export function activate(context: ExtensionContext) {
-  const {subs, workspaceParser} = setup(true);
+  const {subs, workspaceParser, services} = setup(true);
   context.subscriptions.push(...subs);
 
   if (context.extensionMode !== ExtensionMode.Test) {
-    console.log('FTL Extension activated');
+    services.output.appendLine('FTL Extension activated');
     subs.push(commands.registerCommand('ftl-xml.add-ftl-dat', async (_) => {
       await addFtlDat();
     }));
