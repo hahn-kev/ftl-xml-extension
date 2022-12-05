@@ -65,7 +65,8 @@ export function setupCore(fileOpener: FileOpener, fileReader: FileReader): FtlSe
     new BlueprintValidator(mappers.blueprintMapper),
     new RefNameValidator(mappers.list, mappers.blueprintMapper),
     new AnimationValidator(mappers),
-    new EventLoopValidator(mappers.eventsMapper)
+    new EventLoopValidator(mappers.eventsMapper),
+    ...pathMappers.mappers
   ];
   const ftlDataProvider = new FtlDataProvider(dataReceivers);
   const ftlParser = new FtlParser(

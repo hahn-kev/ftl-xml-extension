@@ -1,4 +1,4 @@
-import {IValueSet, Location} from 'vscode-html-languageservice';
+import {Diagnostic, IValueSet, Location} from 'vscode-html-languageservice';
 import {FtlRoot} from '../models/ftl-root';
 import {contains, getAttrValue, getAttrValueForTag, getNodeContent, shouldCompleteForNodeContents} from '../helpers';
 import {FtlImg} from '../models/ftl-img';
@@ -22,13 +22,14 @@ import { FtlXmlParser, ParseContext } from '../parsers/ftl-xml-parser';
 import { FtlFile } from '../models/ftl-file';
 import { DiagnosticBuilder } from '../diagnostic-builder';
 import { defaultRoomImages } from '../data/default-ftl-data/default-room-images';
+import { Validator } from '../validators/validator';
 
 export enum FileHandled {
   handled,
   notHandled
 }
 
-export interface PathRefMapperBase extends LookupProvider, DataReceiver, FtlXmlParser {
+export interface PathRefMapperBase extends LookupProvider, DataReceiver, FtlXmlParser, Validator {
   handleFile(file: URI, fileName: string, root: FtlRoot, fileRemoved: boolean): FileHandled;
   lookupFile(context: LookupContext): {file?: FtlResourceFile, ref?: ValueName}
 }
@@ -89,18 +90,17 @@ export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBa
         .concat(this.defaultFiles)
         .map((modPath) => ({name: modPath}))
     );
+  }
 
-    //validate all custom refs
-    for (const xmlFile of root.xmlFiles.values()) {
-      const refs = this.getRefsToValidate(xmlFile);
-      for (const ref of refs) {
-        if (this.defaultFiles.includes(ref.name)) continue;
-        const resourceFile = this.findFile(ref.name, this.selectRootFiles(this.root));
-        if (!resourceFile) {
-          xmlFile.diagnostics.push(
-            DiagnosticBuilder.invalidRefName(ref.name, ref.range, this.typeName)
-          )
-        }
+  public validateFile(file: FtlFile, diagnostics: Diagnostic[]): void {
+    const refs = this.getRefsToValidate(file);
+    for (const ref of refs) {
+      if (this.defaultFiles.includes(ref.name)) continue;
+      const resourceFile = this.findFile(ref.name, this.selectRootFiles(this.root));
+      if (!resourceFile) {
+        diagnostics.push(
+          DiagnosticBuilder.invalidRefName(ref.name, ref.range, this.typeName)
+        )
       }
     }
   }

@@ -33,6 +33,9 @@ export class FtlFile {
   imageLists = new FtlFileValue<FtlImageList>();
   animationSheets = new FtlFileValue<FtlAnimationSheet>();
   shipIcons = new FtlFileValue();
+  /**
+   * should only be used during parsing
+   */
   diagnostics: FtlDiagnostic[] = [];
   uri: string;
   fileName: string;

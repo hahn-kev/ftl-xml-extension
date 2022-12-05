@@ -28,9 +28,11 @@ export class WorkspaceParser {
   public async parseWorkspace(subFolder?: string) {
     const root = await this.execInParsing(async (progress) => {
       const files = await this.findFiles(subFolder);
-      return await this.xmlParser.parseFiles(files, true, progress);
+      const root = await this.xmlParser.parseFiles(files, true, progress);
+      progress.report({message: 'validating files'});
+      this.validator.validateFtlRoot(root);
+      return root;
     });
-    this.validator.validateFtlRoot(root);
     return this.xmlParser.root;
   }
 
@@ -91,8 +93,8 @@ export class WorkspaceParser {
 
         await this.xmlParser.parseFiles(files, false, progress);
       }
+      progress.report({message: 'validating files'});
+      this.validator.validateFtlRoot(this.xmlParser.root);
     });
-
-    this.validator.validateFtlRoot(this.xmlParser.root);
   }
 }
