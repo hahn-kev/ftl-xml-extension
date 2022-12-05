@@ -2,6 +2,11 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
+## 0.8.9
+
+- prevent duplicate warnings from getting created in some cases
+- add output window and some logging to diagnose issues
+
 ## 0.8.8
 
 - fix hover text for weapon
