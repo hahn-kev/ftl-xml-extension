@@ -23,15 +23,16 @@ How to use:
 
 ## Features
 
-* Preview animations
 * Slipstream tags, `<mod:findName>` and `<mod-append:*>` along with some minor
   documentation about using them
+* Open FTL.dat file (readonly) to inspect the XML that's used by the game.
 * Autocomplete, Go to definition and references supported for
     * events
     * ships
     * all blueprints
     * text
     * animations
+* Preview animations
 * Warnings
     * if trying to load an event that can't be found
     * if trying to load a ship that can't be found
