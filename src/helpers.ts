@@ -8,15 +8,14 @@ export interface Progress<T> {
 }
 
 export function nodeTagEq(node: Node, tag: string): boolean
-export function nodeTagEq(node: Node, tag: string, tag2: string): boolean
 export function nodeTagEq(node: Node | undefined, tag: string): node is Node
-export function nodeTagEq(node: Node | undefined, tag: string, tag2: string): node is Node
-export function nodeTagEq(node: Node | undefined, tag: string, tag2?: string): boolean {
+export function nodeTagEq(node: Node | undefined, tag: string): boolean {
     let nodeTagName = node?.tag;
-    if (!nodeTagName) return false;
+    //we want to return true if it's a not pattern, and false if it's a normal pattern
+    if (!nodeTagName) return tag.startsWith('!');
     nodeTagName = normalizeTagName(nodeTagName, node);
     
-    return nodeTagMatches(nodeTagName, tag) || (tag2 !== undefined && nodeTagMatches(nodeTagName, tag2));
+    return nodeTagMatches(nodeTagName, tag);
 }
 
 function nodeTagMatches(tagName: string, pattern: string): boolean {

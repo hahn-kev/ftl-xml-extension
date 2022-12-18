@@ -10,14 +10,14 @@ function filterEmpty(array: Array<ValueName | undefined>): ValueName[] {
 
 class EventsMap implements NodeMap {
   getNameDef(context: NodeMapContext) {
-    if (nodeTagEq(context.node.parent, 'sectorDescription', 'loadEventList')) return;
-    if (!nodeTagEq(context.node, 'eventList', 'event')) return;
+    if (nodeTagEq(context.node.parent, 'sectorDescription') || nodeTagEq(context.node.parent, 'loadEventList')) return;
+    if (!nodeTagEq(context.node, 'eventList') && !nodeTagEq(context.node, 'event')) return;
     return getAttrValueName(context.node, 'name', context.document);
   }
 
   getRefName({document, node}: NodeMapContext) {
     if (nodeTagEq(node, 'event')) {
-      if (nodeTagEq(node.parent, 'sectorDescription', 'loadEventList')) {
+      if (nodeTagEq(node.parent, 'sectorDescription') || nodeTagEq(node.parent, 'loadEventList')) {
         return getAttrValueName(node, 'name', document);
       }
       return getAttrValueName(node, 'load', document);
