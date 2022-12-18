@@ -1,5 +1,6 @@
 import {expect} from 'chai';
 import {suite, test} from 'mocha';
+import { FtlErrorCode } from '../../diagnostic-builder';
 import {FtlEvent} from '../../models/ftl-event';
 import {TestHelpers} from './test-helpers';
 
@@ -23,4 +24,22 @@ suite('Ftl Parser', () => {
     const ref = refs.filter((r) => r != def)[0];
     expect(ref.name).to.eq('my_event');
   });
+  const xmlList = [
+    `<badTag>event-1`, 
+  `<badTag>event-1</badTag `,
+  `<badTag/`,
+  // disabled because they don't currently work.
+  // `text </badTag>`,
+  // `<tag> badTag> test</badTag></tag>`
+];
+  for (const xml of xmlList) {
+    test('should warn for invalid xml: ' + xml, () => {
+      const services = TestHelpers.testSetup();
+      const document = TestHelpers.testTextDocument(xml);
+
+      const file = services.parser.parseDocument(document);
+      const invalidTagErrors = file.diagnostics.filter(d => d.code == FtlErrorCode.tagNotClosed);
+      expect(invalidTagErrors).to.have.length.greaterThan(0);
+    });
+  }
 });

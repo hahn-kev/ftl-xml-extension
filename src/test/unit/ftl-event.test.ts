@@ -4,6 +4,8 @@ import {expect} from 'chai';
 import {EventLoopValidator} from '../../validators/event-loop-validator';
 import {FtlDiagnostic} from '../../models/ftl-diagnostic';
 import {FtlErrorCode} from '../../diagnostic-builder';
+import { EventUsedValidator } from '../../validators/event-used-validator';
+import { Diagnostic } from 'vscode-html-languageservice';
 
 suite('Ftl Events', () => {
   test('should parse all event references', () => {
@@ -212,5 +214,36 @@ suite('Ftl Events', () => {
     expect(requiredChildrenErrors).to.have.length(1);
     const diagnostic = requiredChildrenErrors[0];
     expect(diagnostic.message).to.contain('text');
+  });
+
+  test('event should show as unused referenced', () => {
+    const services = TestHelpers.testSetup();
+    const document = TestHelpers.testTextDocument( ` <event name="my_event"></event> `);
+    const file = services.parser.parseDocument(document);
+
+    const validator = new EventUsedValidator(services.mappers.eventsMapper, services.mappers.shipsMapper);
+    const unusedRefErrors: Diagnostic[] = [];
+    validator.validateFile(file, unusedRefErrors);
+
+    expect(unusedRefErrors).to.have.length(1);
+    const diagnostic = unusedRefErrors[0];
+    expect(diagnostic.message).to.contain('my_event');
+  });
+
+  test('event should show as referenced by a loadEventList event', () => {
+    const services = TestHelpers.testSetup();
+    const document = TestHelpers.testTextDocument( ` 
+    <event name="my_event"></event>
+    <loadEventList>
+        <event name="my_event"/>
+    </loadEventList>
+     `);
+    const file = services.parser.parseDocument(document);
+    
+    const validator = new EventUsedValidator(services.mappers.eventsMapper, services.mappers.shipsMapper);
+    const unusedRefErrors: Diagnostic[] = [];
+    validator.validateFile(file, unusedRefErrors);
+
+    expect(unusedRefErrors).to.be.empty;
   });
 });
