@@ -9,7 +9,6 @@ import {WorkspaceParser} from './workspace-parser';
 import {FtlDatFs} from './dat-fs-provider/ftl-dat-fs';
 import {AnimationPreview} from './animation-preview/animation-preview';
 import {FtlServices, setupCore} from './setup-core';
-import {VOID_ELEMENTS} from 'vscode-html-languageservice/lib/esm/languageFacts/fact';
 import {FtlFoldingProvider} from './providers/ftl-folding-provider';
 import {FtlCodeLensProvider} from './providers/ftl-code-lens-provider';
 import {FtlRenameProvider} from './providers/ftl-rename-provider';
@@ -121,10 +120,9 @@ export function setupVscodeProviders(services: FtlServices): Created {
 }
 
 export function setup(registerProviders = false): Created {
-  // hack to prevent img elements from getting marked as void and thus ending too soon
-  // in fact.js isVoidElement is called by the parser to see if the element is self closing
-  VOID_ELEMENTS.length = 0;
 
   const output = window.createOutputChannel('FTL');
-  return setupVscodeProviders(setupCore((uri) => workspace.openTextDocument(uri), (uri) => workspace.fs.readFile(uri), output));
+  return setupVscodeProviders(
+    setupCore((uri) => workspace.openTextDocument(uri), (uri) => workspace.fs.readFile(uri), output)
+  );
 }
