@@ -2,6 +2,10 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
+## 0.8.10
+
+- fix minor issue with animation sheets not in a FTL tag
+
 ## 0.8.9
 
 - prevent duplicate warnings from getting created in some cases
