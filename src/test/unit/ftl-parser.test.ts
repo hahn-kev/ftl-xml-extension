@@ -1,6 +1,7 @@
 import {expect} from 'chai';
 import {suite, test} from 'mocha';
 import { FtlErrorCode } from '../../diagnostic-builder';
+import { getNodeContent } from '../../helpers';
 import {FtlEvent} from '../../models/ftl-event';
 import {TestHelpers} from './test-helpers';
 
@@ -24,6 +25,16 @@ suite('Ftl Parser', () => {
     const ref = refs.filter((r) => r != def)[0];
     expect(ref.name).to.eq('my_event');
   });
+
+  test('should properly parse img tags', () => {
+    const services = TestHelpers.testSetup();
+    const document = TestHelpers.testTextDocument(`<img>text content</img>`);
+    const htmlDoc = services.documentCache.getHtmlDocument(document);
+    const content = getNodeContent(htmlDoc.roots[0], document)?.name;
+    expect(content).to
+    .eq('text content', 'this is probably because the img tag was treated as an empty tag like it is in normal html');
+  });
+
   const xmlList = [
     `<badTag>event-1`, 
   `<badTag>event-1</badTag `,
