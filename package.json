@@ -2,7 +2,7 @@
 	"name": "ftl-xml",
 	"displayName": "FTL XML",
 	"description": "provides autocomplete and other help to FTL mod devs",
-	"version": "0.8.10",
+	"version": "0.8.11",
 	"publisher": "hahn-kev",
 	"repository": {
 		"type": "git",
