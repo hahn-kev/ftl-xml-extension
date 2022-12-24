@@ -55,7 +55,7 @@ export class BlueprintParser implements FtlRefParser {
   }
 
   /*
-   * will return refs for a list child, or for a choice[req], or removeItem contents
+   * will return refs for a list child, or for a choice[req], or removeItem contents, or raritylist > blueprint[name]
    */
   getBlueprintRef(context: NodeMapContext) {
     let valueName = getAttrValueForTag(context.node, 'choice', 'req', context.document);
@@ -63,6 +63,9 @@ export class BlueprintParser implements FtlRefParser {
     if (valueName) return valueName;
     if (nodeTagEq(context.node, 'removeItem') || this.isListChild(context.node)) {
       valueName = getNodeContent(context.node, context.document);
+    }
+    if (!valueName && nodeTagEq(context.node.parent, 'rarityList')) {
+      valueName = getAttrValueForTag(context.node, 'blueprint', 'name', context.document);
     }
     if (!valueName) return;
 
