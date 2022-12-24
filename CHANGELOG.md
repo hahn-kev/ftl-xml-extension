@@ -2,6 +2,11 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
+## 0.8.11
+
+- support blueprint rarity lists
+- support custom stores autocomplete and id checks
+
 ## 0.8.10
 
 - fix minor issue with animation sheets not in a FTL tag

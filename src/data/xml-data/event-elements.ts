@@ -12,7 +12,7 @@ import {
   AutoRewardsValueSet,
   AllBlueprintsValueSet,
   SectorsValueSet,
-  ReqNames
+  ReqNames, StoresValueSet
 } from '../autocomplete-value-sets';
 import {boolAttr, XmlTag} from './helpers';
 
@@ -197,11 +197,6 @@ const hyperspaceEventChildren: XmlTag[] = [
     attributes: [{name: 'class', valueSet: CrewNames.name}],
     contentsValueSet: CrewNames.name,
     description: `Transforms a random crewmember to the race new_race. If the class attribute is specified, restricts the random crew selection.`
-  },
-  {
-    name: 'customStore',
-    attributes: [],
-    description: `Use the custom store specified in the tag contents for this store event.`
   },
   {name: 'removeStore', attributes: [], description: `Removes the store at the current beacon.`},
   {
@@ -424,7 +419,7 @@ const eventChildTags: XmlTag[] = [
     name: 'augment',
     attributes: [{name: 'name', valueSet: AugmentNames.name}]
   },
-  {name: 'store', attributes: []},
+  {name: 'store', attributes: [], contentsValueSet: StoresValueSet.name},
   ...hyperspaceEventChildren
 ];
 

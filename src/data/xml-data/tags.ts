@@ -21,6 +21,7 @@ import {animationTags} from './animation-elements';
 import {sectorTags} from './sector-elements';
 import {raceTags} from './race-elements';
 import {modTags} from './mod-tags';
+import {storeTags} from './store-elements';
 
 export const allTags: XmlTag[] = [
   ...eventTags,
@@ -31,6 +32,7 @@ export const allTags: XmlTag[] = [
   ...sectorTags,
   ...raceTags,
   ...modTags,
+  ...storeTags,
   {
     name: 'text',
     attributes: [

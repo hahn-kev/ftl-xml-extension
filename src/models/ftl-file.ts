@@ -24,6 +24,7 @@ import {FtlDiagnostic} from './ftl-diagnostic';
 import {Range} from 'vscode-languageserver-textdocument';
 import {FtlReward} from './ftl-reward';
 import {FtlSector} from './ftl-sector';
+import {FtlCustomStore} from './ftl-custom-store';
 
 
 export class FtlFile {
@@ -64,6 +65,7 @@ export class FtlFile {
   reqs = new FtlFileValue<FtlReq>();
   sectors = new FtlFileValue<FtlSector>();
   rewards = new FtlFileValue<FtlReward>();
+  customStores = new FtlFileValue<FtlCustomStore>();
   colors: FtlColor[] = [];
   isReferenced = true;
   customData: Record<symbol, any> = {};

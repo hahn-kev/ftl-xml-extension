@@ -31,7 +31,8 @@ import {
   TextIdNames,
   VariableNames,
   WeaponAnimationNames,
-  WeaponNames
+  WeaponNames,
+  StoresValueSet
 } from '../data/autocomplete-value-sets';
 import {defaultEvents} from '../data/default-ftl-data/default-events';
 import {FtlShip} from '../models/ftl-ship';
@@ -76,6 +77,7 @@ import {defaultAutoRewards} from '../data/default-ftl-data/default-auto-rewards'
 import {FtlReward} from '../models/ftl-reward';
 import {FtlSector} from '../models/ftl-sector';
 import {defaultSectors} from '../data/default-ftl-data/default-sectors';
+import {FtlCustomStore} from '../models/ftl-custom-store';
 
 function storeCategoryMatcher(type: string): StaticValueMapping {
   return {
@@ -406,6 +408,19 @@ export class Mappers {
       ),
       ShipIconNames,
       'Ship Icon');
+
+  readonly customStoreMapper = new RefMapper(
+      new RefParser((file) => file.customStores,
+          FtlCustomStore,
+          staticValueNodeMap([{tag: 'customStore', parentTag: 'store', attr: 'id'}], [
+            {tag: 'store', parentTag: 'event', type: 'contents'},
+            {tag: 'customStore', parentTag: 'event', type: 'contents'},
+          ]),
+      ),
+      StoresValueSet,
+      'Store',
+      []
+  );
   readonly blueprintMappers = [
     this.weaponsMapper,
     this.shipBlueprintMapper,
@@ -430,6 +445,7 @@ export class Mappers {
     this.shipIconMapper,
     this.blueprintMapper,
     this.rewardMapper,
-    this.sectorMapper
+    this.sectorMapper,
+    this.customStoreMapper
   ];
 }
