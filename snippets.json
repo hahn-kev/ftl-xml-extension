@@ -21,7 +21,7 @@
       "\t<event>",
       "\t\t$0",
       "\t</event>",
-      "</choice>",
+      "</choice>"
     ]
   },
   "New Choice hidden":{
@@ -32,13 +32,689 @@
       "\t<event>",
       "\t\t$0",
       "\t</event>",
-      "</choice>",
+      "</choice>"
     ]
   },
+
+
+  
+  "Event Load":{
+    "prefix": "event-load",
+    "body": [
+      "<event load=\"$1\"/>"
+    ]
+  },
+  "Event List":{
+    "prefix": "event-list",
+    "body": [
+      "<eventList name=\"$1\">",
+      "\t$0",
+      "</eventList>"
+    ]
+  },
+  
+
+  "Choice blue": {
+    "prefix": ["choice-blue", "attr-blue", "blue"],
+    "body": [
+      "blue=\"${1|true,false|}\""
+    ]
+  },
+  "Choice req": {
+    "prefix": ["choice-req", "attr-req", "req"],
+    "body": [
+      "req=\"$1\""
+    ]
+  },
+  "Choice lvl": {
+    "prefix": ["choice-lvl", "attr-lvl", "lvl"],
+    "body": [
+      "lvl=\"$1\""
+    ]
+  },
+  "Choice max_lvl": {
+    "prefix": ["choice-max_lvl", "attr-max_lvl", "max_lvl"],
+    "body": [
+      "max_lvl=\"$1\""
+    ]
+  },
+  "Choice max_group": {
+    "prefix": ["choice-max_group", "attr-max_group", "max_group"],
+    "body": [
+      "max_group=\"$1\""
+    ]
+  },
+
+
+  "Event Text": {
+    "prefix": ["text", "event-text"],
+    "body": [
+      "<text>${1:insert text here}</text>"
+    ]
+  },
+  "Event Text Load": {
+    "prefix": "text-load",
+    "body": [
+      "<text load=\"$1\"/>"
+    ]
+  },
+  "Text List": {
+    "prefix": "text-list",
+    "body": [
+      "<textList name=\"$1\">",
+      "\t$0",
+      "</textList>"
+    ]
+  },
+
+
   "Auto Reward": {
     "prefix": "auto-reward",
     "body": [
-      "<autoReward level=\"${1:MED}\">${2:standard}</autoReward>"
+      "<autoReward level=\"${1|LOW,MED,HIGH,RANDOM|}\">${2|standard,stuff,fuel,missiles,droneparts,scrap_only,fuel_only,missiles_only,droneparts_only,item,weapon,drone,augment|}</autoReward>"
+    ]
+  },
+  "Item Modify": {
+    "prefix": "item-modify",
+    "body": [
+      "<item_modify>",
+      "\t$1",
+      "</item_modify>"
+    ]
+  },
+  "Item Modify Steal": {
+    "prefix": "item-modify-steal",
+    "body": [
+      "<item_modify steal=\"true\">",
+      "\t$1",
+      "</item_modify>"
+    ]
+  },
+  "Item Modify Item": {
+    "prefix": ["item-modify-item", "item"],
+    "body": [
+      "<item type=\"${1|scrap,fuel,missiles,drones|}\" min=\"$2\" max=\"$3\"/>"
+    ]
+  },
+  "Equipment": {
+    "prefix": ["weapon", "drone", "augment", "equipment"],
+    "body": [
+      "<${1|weapon,drone,augment|} name=\"$2\"/>"
+    ]
+  },
+  "Remove Equipment": {
+    "prefix": "remove",
+    "body": [
+      "<remove name=\"$1\" />"
+    ]
+  },
+
+
+  "Boarders": {
+    "prefix": "boarders",
+    "body": [
+      "<boarders min=\"$1\" max=\"$2\" class=\"${3:race_id}\"/>"
+    ]
+  },
+  "Crew Member": {
+    "prefix": "crew-member",
+    "body": [
+      "<crewMember amount=\"$1\" ${2|weapons,shields,pilot,engines,combat,repair,all_skills|}=\"$3\" class=\"${4:race_id}\">${5:Name}</crewMember>"
+    ]
+  },
+  "Remove Crew": {
+    "prefix": "remove-crew",
+    "body": [
+      "<removeCrew class=\"${1:race_id}\">",
+      "\t<clone>${2:true}</clone>",
+      "\t<text>${3:Your clonebay successfully revived your crew.}</text>",
+      "</removeCrew>"
+    ]
+  },
+
+
+  "Damage Hull": {
+    "prefix": ["damage-hull"],
+    "body": ["<damage amount=\"$1\"/>"]
+  },
+  "Damage": {
+    "prefix": ["damage"],
+    "body": [
+      "<damage amount=\"$1\" system=\"${2|shields,weapons,engines,medbay,clonebay,oxygen,teleporter,drones,cloaking,artillery,hacking,mind,pilot,sensors,doors,battery,room,random|}\" effect=\"${3|fire,breach,all,random|}\" />"
+    ]
+  },
+  "Status": {
+    "prefix": ["status"],
+    "body": [
+      "<status type=\"${1|loss,divide,limit,clear|}\" target=\"${2|player,enemy,all|}\" amount=\"$3\" system=\"${4|shields,weapons,engines,medbay,clonebay,oxygen,teleporter,drones,cloaking,artillery,hacking,mind,pilot,sensors,doors,battery|}\" />"
+    ]
+  },
+  "Upgrade": {
+    "prefix": ["upgrade"],
+    "body": [
+      "<upgrade amount=\"$1\" system=\"${2|shields,weapons,engines,medbay,clonebay,oxygen,teleporter,drones,cloaking,artillery,hacking,mind,pilot,sensors,doors,battery|}\"/>"
+    ]
+  },
+  "System": {
+    "prefix": ["system"],
+    "body": [
+      "<system name=\"${1|shields,weapons,engines,medbay,clonebay,oxygen,teleporter,drones,cloaking,artillery,hacking,mind,pilot,sensors,doors,battery|}\" />"
+    ]
+  },
+
+
+  "Distress Beacon": {
+    "prefix": ["distress-beacon"],
+    "body": ["<distressBeacon />"]
+  },
+  "Reveal Map": {
+    "prefix": ["reveal-map"],
+    "body": ["<reveal_map />"]
+  },
+  "Modify Pursuit": {
+    "prefix": ["modify-pursuit"],
+    "body": ["<modifyPursuit amount=\"$1\"/>"]
+  },
+  "Store": {
+    "prefix": ["store"],
+    "body": ["<store>$1</store>"]
+  },
+  "Quest": {
+    "prefix": ["quest"],
+    "body": ["<quest event=\"$1\"/>"]
+  },
+
+
+  "Environment": {
+    "prefix": ["environment"],
+    "body": ["<environment type=\"${1|sun,nebula,storm,asteroid,pulsar,PDS|}\"/>"]
+  },
+  "Environment Pds": {
+    "prefix": ["environment-pds", "anti-ship-batt"],
+    "body": ["<environment type=\"PDS\" target=\"${1|player,enemy,all|}\"/>"]
+  },
+  "Img": {
+    "prefix": ["img", "background-image", "image"],
+    "body": ["<img back=\"$1\" planet=\"$2\"/>"]
+  },
+  "Custom Fleet": {
+    "prefix": ["custom-fleet"],
+    "body": [
+      "<customFleet right=\"${1|true,false|}\" firing=\"${2|true,false|}\" autoDarkening=\"${3|true,false|}\">${4:text_fleet_name}</customFleet>"
+    ]
+  },
+
+
+  "Ship Set": {
+    "prefix": ["ship-set"],
+    "body": ["<ship hostile=\"${1|true,false|}\"/>"]
+  },
+  "Ship Load": {
+    "prefix": ["ship-load"],
+    "body": ["<ship load=\"$1\" hostile=\"${2|true,false|}\"/>"]
+  },
+  "New Enemy Ship": {
+    "prefix": ["new-enemy-ship"],
+    "body": ["<ship name=\"$1\" auto_blueprint=\"$2\">", "\t", "</ship>"]
+  },
+  "Surrender": {
+    "prefix": ["surrender"],
+    "body": ["<surrender chance=\"$1\" min=\"$2\" max=\"$3\" load=\"$4\"/>"]
+  },
+  "Escape": {
+    "prefix": ["escape"],
+    "body": ["<escape chance=\"$1\" min=\"$2\" max=\"$3\" timer=\"$4\" load=\"$5\"/>"]
+  },
+  "Gotaway": {
+    "prefix": ["gotaway"],
+    "body": ["<gotaway load=\"$1\"/>"]
+  },
+  "Destroyed": {
+    "prefix": ["destroyed"],
+    "body": ["<destroyed load=\"$1\"/>"]
+  },
+  "Deadcrew": {
+    "prefix": ["deadcrew"],
+    "body": ["<deadCrew load=\"$1\"/>"]
+  },
+  "Enemy Ship Crew": {
+    "prefix": ["enemy-ship-crew"],
+    "body": ["<crew>", "\t<crewMember type=\"${1:race_id}}\" prop=\"${2:proportion from 0-1}}\"/>", "</crew>"]
+  },
+  "Weapon Override": {
+    "prefix": ["weapon-override"],
+    "body": ["<weaponOverride count=\"$1\">", "\t<name>${2:weapon_id}</name>", "</weaponOverride>"]
+  },
+
+
+  "Hs Load Event": {
+    "prefix": ["hs-load-event", "load-event"],
+    "body": ["<loadEvent seeded=\"$1\" ignoreUnique=\"$2\">${3:EVENT_NAME}</loadEvent>"]
+  },
+  "Hs Load Event List": {
+    "prefix": ["hs-load-event-list", "load-event-list"],
+    "body": [
+      "<loadEventList seeded=\"$1\" first=\"$2\" default=\"$3\" generate=\"$4\" ignoreUnique=\"$5\">",
+      "\t<event name=\"$6\" req=\"ITEM_ID\" lvl=\"0\" max_lvl=\"0\" />",
+      "</loadEventList>"
+    ]
+  },
+  "Revisit Event": {
+    "prefix": ["revisit-event"],
+    "body": ["<revisitEvent seeded=\"$1\" ignoreUnique=\"$2\">${3:NOTHING}</revisitEvent>"]
+  },
+  "Event Alias": {
+    "prefix": ["event-alias"],
+    "body": ["<eventAlias name=\"$1\" jumpClear=\"$2\" once=\"$3\">$4</eventAlias>"]
+  },
+  "Queue Event": {
+    "prefix": ["queue-event"],
+    "body": ["<queueEvent seeded=\"$1\">$2</queueEvent>"]
+  },
+  "Restart Event": {
+    "prefix": ["restart-event"],
+    "body": ["<restartEvent />"]
+  },
+  "Rename Beacon": {
+    "prefix": ["rename-beacon"],
+    "body": ["<renameBeacon>$1</renameBeacon>"]
+  },
+  "Jump Event": {
+    "prefix": ["jump-event"],
+    "body": ["<jumpEvent name=\"$1\" loop=\"$2\" priority=\"$3\">$4</jumpEvent>"]
+  },
+  "Jump Event Clear": {
+    "prefix": ["jump-event-clear"],
+    "body": ["<clearJumpEvent />"]
+  },
+  "Death Event": {
+    "prefix": ["death-event"],
+    "body": ["<deathEvent name=\"$1\" jumpClear=\"$2\" thisFight=\"$3\" priority=\"$4\">$5</deathEvent>"]
+  },
+  "Death Event Clear": {
+    "prefix": ["death-event-clear"],
+    "body": ["<clearDeathEvent />"]
+  },
+  "Triggered Event": {
+    "prefix": ["triggered-event"],
+    "body": [
+      "<triggeredEvent name=\"$1\" event=\"$2\" seeded=\"$3\" thisFight=\"$4\" clearOnJump=\"$5\" loops=\"$6\">",
+      "\t<${7|time,jumps,playerHull,enemyHull,playerCrew,enemyCrew,playerDeaths,enemyDeaths|} amount=\"0\" min=\"0\" max=\"0\" scaling=\"0\" countRepairs=\"true\" includeClonebay=\"true\" countNewCrew=\"true\" />",
+      "\t<triggeredEventBox load=\"DEFAULT_TIMER}\" />",
+      "\t<timerSounds load=\"DEFAULT_TIMER_SOUNDS}\" />",
+      "\t<warningMessage x=\"0\" y=\"0\" time=\"0\" centerText=\"true\" flash=\"true\" useWarningLine=\"true\" r=\"255\" g=\"0\" b=\"0\" sound=\"surgeWarning\">WARNING TEXT</warningMessage>",
+      "</triggeredEvent>"
+    ]
+  },
+  "Triggered Event Mod": {
+    "prefix": ["triggered-event-mod"],
+    "body": ["<triggeredEventModifier name=\"$1\" />"]
+  },
+  "Triggered Event Clear": {
+    "prefix": ["triggered-event-clear", "clear-triggered"],
+    "body": ["<clearTriggeredEvent />"]
+  },
+
+
+  "Secret Sector": {
+    "prefix": ["secret-sector", "secret-warp"],
+    "body": ["<secretSectorWarp>$1</secretSectorWarp>"]
+  },
+  "Goto Flagship": {
+    "prefix": ["goto-flagship"],
+    "body": ["<goToFlagship atBase=\"$1\" allFleet=\"$3\"/>"]
+  },
+  "Replace Sector": {
+    "prefix": ["replace-sector"],
+    "body": ["<replaceSector name=\"${1:current}\">$2</replaceSector>"]
+  },
+
+
+  "Check Cargo": {
+    "prefix": ["check-cargo"],
+    "body": ["<checkCargo />"]
+  },
+  "Hidden Aug": {
+    "prefix": ["hidden-aug"],
+    "body": ["<hiddenAug>$1</hiddenAug>"]
+  },
+  "Remove Item": {
+    "prefix": ["remove-item"],
+    "body": ["<removeItem>$1</removeItem>"]
+  },
+
+
+  "Change Background": {
+    "prefix": ["change-background"],
+    "body": ["<changeBackground>$1</changeBackground>"]
+  },
+  "Back Object": {
+    "prefix": ["back-object", "background-object", "back-obj"],
+    "body": ["<backgroundObject load=\"$1\"/>"]
+  },
+  "Back Object Clear": {
+    "prefix": ["back-object-clear", "clear-background-obj"],
+    "body": ["<clearBackgroundObject />"]
+  },
+  "Back Object Trans": {
+    "prefix": ["back-object-trans", "transform-background-obj"],
+    "body": ["<transformBackgroundObject name=\"$1\">${2:to_id}</transformBackgroundObject>"]
+  },
+  "Event Button": {
+    "prefix": ["event-button"],
+    "body": ["<eventButton load=\"$1\"/>"]
+  },
+  "Event Button Clear": {
+    "prefix": ["event-button-clear", "clear-event-button"],
+    "body": ["<clearEventButton />"]
+  },
+  "Clear Fleet": {
+    "prefix": ["clear-fleet", "clear-custom-fleet"],
+    "body": ["<clearCustomFleet />"]
+  },
+  "Remove Nebula": {
+    "prefix": ["remove-nebula"],
+    "body": ["<removeNebula />"]
+  },
+  "Remove Hazards": {
+    "prefix": ["remove-hazards"],
+    "body": ["<removeHazards />"]
+  },
+
+
+  "Hs Variable": {
+    "prefix": ["hs-variable", "variable", "var"],
+    "body": ["<variable name=\"$1\" op=\"${2|set,add,mul,div,min,max|}\" val=\"0\" min=\"0\" max=\"0\" var=\"var_id/req\" />"]
+  },
+  "Hs Meta Variable": {
+    "prefix": ["hs-meta-variable", "metavar"],
+    "body": ["<metaVariable name=\"$1\" op=\"${2|set,add,mul,div,min,max|}\" val=\"0\" min=\"0\" max=\"0\" var=\"var_id/req\" />"]
+  },
+  "Hs Temp Variable": {
+    "prefix": ["hs-temp-variable", "tempvar"],
+    "body": ["<tempVariable name=\"$1\" op=\"${2|set,add,mul,div,min,max|}\" val=\"0\" min=\"0\" max=\"0\" var=\"var_id/req\" />"]
+  },
+  "Hs Beacon Type": {
+    "prefix": ["hs-beacon-type", "beacon-type"],
+    "body": [
+      "<beaconType text=\"$1\" req=\"$2\" global=\"${3:true}\" persist=\"${4:true}\" hideVanillaLabel=\"${5:true}\">",
+      "\t<color r=\"255\" g=\"255\" b=\"255\" a=\"1\" />",
+      "\t<undiscoveredTooltip>${6:This is the location of...}</undiscoveredTooltip>",
+      "\t<unvisitedTooltip>${7:An unvisited location.}</unvisitedTooltip>",
+      "\t<visitedTooltip>${8:Explored location. Nothing left of interest.}</visitedTooltip>",
+      "</beaconType>"
+    ]
+  },
+
+
+  "Remove Store": {
+    "prefix": ["remove-store"],
+    "body": ["<removeStore />"]
+  },
+  "Prevent Quest": {
+    "prefix": ["prevent-quest"],
+    "body": ["<preventQuest />"]
+  },
+  "No Quest Text": {
+    "prefix": ["no-quest-text"],
+    "body": ["<noQuestText />"]
+  },
+  "Prevent Fleet": {
+    "prefix": ["prevent-fleet"],
+    "body": ["<preventFleet />"]
+  },
+  "Prevent Boss Fleet": {
+    "prefix": ["prevent-boss-fleet"],
+    "body": ["<preventBossFleet forever=\"$1\"/>"]
+  },
+  "Run From Fleet": {
+    "prefix": ["run-from-fleet"],
+    "body": ["<runFromFleet closest=\"$1\"/>"]
+  },
+  "Hs Quest": {
+    "prefix": ["hs-quest", "quest-custom-define"],
+    "body": [
+      "<quest event=\"$0\">",
+      "\t<nonNebulaBeacon>${1:true}</nonNebulaBeacon>",
+      "\t<nebulaBeacon>${2:true}</nebulaBeacon>",
+      "\t<currentSector>${3:true}</currentSector>",
+      "\t<nextSector>${4:true}</nextSector>",
+      "\t<sectorEight>${5:true}</sectorEight>",
+      "\t<lastStand>${6:true}</lastStand> ",
+      "\t<createNebula>${7:true}</createNebula>",
+      "\t<nebulaEvent>${8:NEBULA_Event}</nebulaEvent>",
+      "\t<aggressive>${9|0,1,2|}</aggressive><!--0:none, 1:force, 2:force current sector-->",
+      "</quest>"
+    ]
+  },
+
+
+  "Allow Noslot": {
+    "prefix": ["allow-noslot"],
+    "body": ["<allowNoSlot />"]
+  },
+  "Block Noslot": {
+    "prefix": ["block-noslot"],
+    "body": ["<blockNoSlot />"]
+  },
+  "Require Crew": {
+    "prefix": ["require-crew"],
+    "body": ["<choiceRequiresCrew />"]
+  },
+  "Transform Race": {
+    "prefix": ["transform-race"],
+    "body": ["<transformRace class=\"${1:from_id}\">${2:new_id}</transformRace>"]
+  },
+
+
+  "Reset Ftl": {
+    "prefix": ["reset-ftl"],
+    "body": ["<resetFtl />"]
+  },
+  "Repair Allsys": {
+    "prefix": ["repair-allsys"],
+    "body": ["<repairAllSystems />"]
+  },
+  "Kill Boarders": {
+    "prefix": ["kill-boarders"],
+    "body": ["<killEnemyBoarders />"]
+  },
+  "Recall Boarders": {
+    "prefix": ["recall-boarders"],
+    "body": ["<recallBoarders ship=\"${1|player,enemy,both|}\"/>"]
+  },
+
+
+  "Instant Esc": {
+    "prefix": ["instant-esc"],
+    "body": ["<instantEscape />"]
+  },
+  "Escape Enemy": {
+    "prefix": ["escape-enemy"],
+    "body": ["<escape />"]
+  },
+  "Escape Load": {
+    "prefix": ["escape-load"],
+    "body": ["<loadEscape force=\"${1:false}\"/>"]
+  },
+  "Disable Esc": {
+    "prefix": ["disable-esc"],
+    "body": ["<disableEscape force=\"${1:false}\"/>"]
+  },
+  "Surrender Enemy": {
+    "prefix": ["surrender-enemy"],
+    "body": ["<surrender />"]
+  },
+  "Surrender Load": {
+    "prefix": ["surrender-load"],
+    "body": ["<loadSurrender force=\"${1:false}\"/>"]
+  },
+  "Disable Surrender": {
+    "prefix": ["disable-surrender"],
+    "body": ["<disableSurrender force=\"${1:false}\"/>"]
+  },
+  "Enemy Damage": {
+    "prefix": ["enemy-damage"],
+    "body": [
+      "<enemyDamage amount=\"$1\" amount=\"$2\" system=\"$3\" effect=\"$4\" force=\"${5:false}\" damageHull=\"${6:true}\" />"
+    ]
+  },
+
+
+  "Super Drones": {
+    "prefix": ["super-drones", "surge-drones"],
+    "body": ["<superDrones player=\"${1:true}\" name=\"$2\"/>"]
+  },
+  "Super Barrage": {
+    "prefix": ["super-barrage", "surge-lasers"],
+    "body": ["<superBarrage player=\"${1:true}\" name=\"$2\"/>"]
+  },
+  "Super Shields": {
+    "prefix": ["super-shields", "surge-supershield"],
+    "body": ["<superShields player=\"${1:true}\" amount=\"$2\" add=\"$3\"/>"]
+  },
+  "Super Drones Clear": {
+    "prefix": ["super-drones-clear", "clear-super-drones"],
+    "body": ["<clearSuperDrones player=\"${1:true}\" />"]
+  },
+
+
+  "Unlock Ship": {
+    "prefix": ["unlock-ship"],
+    "body": ["<unlockCustomShip silent=\"${1:false}\" shipReq=\"$2\">${3:unlocked_id}</unlockCustomShip>"]
+  },
+  "Achievement": {
+    "prefix": ["achievement"],
+    "body": ["<achievement silent=\"${1:false}\">$2}</achievement>"]
+  },
+
+
+  "Disable Scrap Score": {
+    "prefix": ["disable-scrap-score"],
+    "body": ["<disableScrapScore />"]
+  },
+  "Disable Scrap Augments": {
+    "prefix": ["disable-scrap-augments"],
+    "body": ["<disableScrapAugments />"]
+  },
+  "Play Sound": {
+    "prefix": ["play-sound"],
+    "body": ["<playSound>$1</playSound>"]
+  },
+  "Play Music": {
+    "prefix": ["play-music"],
+    "body": ["<playMusic>$1</playMusic>"]
+  },
+  "Win Game": {
+    "prefix": ["win-game"],
+    "body": [
+      "<win text=\"${1:You Win}\" creditsText=\"${2:def_text_id}\" creditsBackground=\"$3\" sound=\"${4:victory}\" music=\"${5:title}\" ach=\"${6:ach_id}\" />"
+    ]
+  },
+  "Lose Game": {
+    "prefix": ["lose-game"],
+    "body": ["<lose text=\"${1:You Lost}\" sound=\"$2\" />"]
+  },
+
+
+  "New Weapon Blueprint": {
+    "prefix": "new-weapon-bp",
+    "body": [
+      "<weaponBlueprint name=\"$1\">",
+      "\t<type>${2|LASER,MISSILE,BEAM,BOMB|}</type>",
+      "\t<title>${3:default}</title>",
+      "\t<short>${4:default}</short>",
+      "\t<desc>${5:default}</desc>",
+      "\t<damage>$6</damage>",
+      "\t<shots>$7</shots>",
+      "\t<sp>$8</sp>",
+      "\t<fireChance>$9</fireChance>",
+      "\t<breachChance>$10</breachChance>",
+      "\t<cooldown>$11</cooldown>",
+      "\t<power>$12</power>",
+      "\t<cost>$13</cost>",
+      "\t<rarity>$14</rarity>",
+      "\t<image>${15:laser_light1}</image>",
+      "\t<launchSounds>",
+      "\t\t<sound>${16:lightLaser1}</sound>",
+      "\t</launchSounds>",
+      "\t<hitShipSounds>",
+      "\t\t<sound>${17:hitHull2}</sound>",
+      "\t</hitShipSounds>",
+      "\t<hitShieldSounds>",
+      "\t\t<sound>${18:hitShield1}</sound>",
+      "\t</hitShieldSounds>",
+      "\t<missSounds>",
+      "\t\t<sound>${19:miss}</sound>",
+      "\t</missSounds>",
+      "\t<weaponArt>${0:laser_burst}</weaponArt>",
+      "</weaponBlueprint>"
+    ]
+  },
+  "New Crew Blueprint": {
+    "prefix": "new-crew-bp",
+    "body": [
+      "<crewBlueprint name=\"$1\">",
+      "\t<title>$2</title>",
+      "\t<short>$2</short>",
+      "\t<desc>${3:crew description}</desc>",
+      "\t<cost>$4</cost>",
+      "\t<rarity>$5</rarity>",
+      "\t<powerList>",
+      "\t\t<power>${5:specialty_1}</power>",
+      "\t\t<power>${6:specialty_2}</power>",
+      "\t</powerList>",
+      "</crewBlueprint>"
+    ]
+  },
+  "New Drone Blueprint": {
+    "prefix": "new-drone-bp",
+    "body": [
+      "<droneBlueprint name=\"$1\">",
+      "\t<type>${2:BATTLE,BOARDER,REPAIR,SHIP_REPAIR,DEFENSE,COMBAT}</type>",
+      "\t<tip>$3</tip>",
+      "\t<title>$4</title>",
+      "\t<short>$5</short>",
+      "\t<desc>$6</desc>",
+      "\t<power>$7</power>",
+      "\t<cost>$8</cost>",
+      "\t<rarity>$9</rarity>",
+      "\t<iconImage>$10</iconImage>",
+      "</droneBlueprint>"
+    ]
+  },
+  "New Augment Blueprint": {
+    "prefix": "new-augment-bp",
+    "body": [
+      "<augBlueprint name=\"$1\">",
+      "\t<title>$2</title>",
+      "\t<desc>$3</desc>",
+      "\t<cost>$4</cost>",
+      "\t<rarity>$5</rarity>",
+      "\t<stackable>${6:true,false}</stackable>",
+      "</augBlueprint>"
+    ]
+  },
+
+  "New Blueprint List": {
+    "prefix": "new-bp-list",
+    "body": [
+      "<blueprintList name=\"LIST_$1\">",
+      "\t<name>$2</name>",
+      "</blueprintList>"
+    ]
+  },
+
+  "New HS Statboost": {
+    "prefix": "new-statboost",
+    "body": [
+      "<statBoost name=\"${1:name_of_property_to_boost}\">",
+      "\t<boostType>${2|FLAT,MULT,SET,MIN,MAX,FLIP|}</boostType>",
+      "\t<amount>$3</amount>",
+      "\t<shipTarget>${4|ALL,PLAYER_SHIP,ORIGINAL_SHIP,ORIGINAL_OTHER_SHIP,CURRENT_ALL,OTHER_ALL,CURRENT_ROOM,CREW_TARGET,TARGETS_ME|}</shipTarget>",
+      "\t<crewTarget>${5|ALLIES,ENEMIES,ALL,CURRENT_ALLIES,CURRENT_ENEMIES,ORIGINAL_ALLIES,ORIGINAL_ENEMIES,SELF,NONE|}</crewTarget>",
+      "\t<priority>$6</priority>",
+      "</statBoost>"
     ]
   }
 }
