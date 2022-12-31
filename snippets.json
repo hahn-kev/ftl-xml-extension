@@ -279,7 +279,7 @@
   },
   "Enemy Ship Crew": {
     "prefix": ["enemy-ship-crew"],
-    "body": ["<crew>", "\t<crewMember type=\"${1:race_id}}\" prop=\"${2:proportion from 0-1}}\"/>", "</crew>"]
+    "body": ["<crew>", "\t<crewMember type=\"${1:race_id}\" prop=\"${2:proportion from 0-1}\"/>", "</crew>"]
   },
   "Weapon Override": {
     "prefix": ["weapon-override"],
@@ -339,9 +339,9 @@
     "prefix": ["triggered-event"],
     "body": [
       "<triggeredEvent name=\"$1\" event=\"$2\" seeded=\"$3\" thisFight=\"$4\" clearOnJump=\"$5\" loops=\"$6\">",
-      "\t<${7|time,jumps,playerHull,enemyHull,playerCrew,enemyCrew,playerDeaths,enemyDeaths|} amount=\"0\" min=\"0\" max=\"0\" scaling=\"0\" countRepairs=\"true\" includeClonebay=\"true\" countNewCrew=\"true\" />",
-      "\t<triggeredEventBox load=\"DEFAULT_TIMER}\" />",
-      "\t<timerSounds load=\"DEFAULT_TIMER_SOUNDS}\" />",
+      "\t<${7|time|jumps|playerHull|enemyHull|playerCrew|enemyCrew|playerDeaths|enemyDeaths} amount=\"0\" min=\"0\" max=\"0\" scaling=\"0\" countRepairs=\"true\" includeClonebay=\"true\" countNewCrew=\"true\" />",
+      "\t<triggeredEventBox load=\"DEFAULT_TIMER\" />",
+      "\t<timerSounds load=\"DEFAULT_TIMER_SOUNDS\" />",
       "\t<warningMessage x=\"0\" y=\"0\" time=\"0\" centerText=\"true\" flash=\"true\" useWarningLine=\"true\" r=\"255\" g=\"0\" b=\"0\" sound=\"surgeWarning\">WARNING TEXT</warningMessage>",
       "</triggeredEvent>"
     ]
@@ -585,7 +585,7 @@
   },
   "Achievement": {
     "prefix": ["achievement"],
-    "body": ["<achievement silent=\"${1:false}\">$2}</achievement>"]
+    "body": ["<achievement silent=\"${1:false}\">$2</achievement>"]
   },
 
 
@@ -691,7 +691,7 @@
       "\t<desc>$3</desc>",
       "\t<cost>$4</cost>",
       "\t<rarity>$5</rarity>",
-      "\t<stackable>${6:true,false}</stackable>",
+      "\t<stackable>${6:true|false}</stackable>",
       "</augBlueprint>"
     ]
   },

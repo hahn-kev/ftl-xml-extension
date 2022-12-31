@@ -2,6 +2,10 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
+## 0.8.12
+
+- add a lot more snippets, credit to [@untitledC20H12 ](https://github.com/C20H12)
+
 ## 0.8.11
 
 - support blueprint rarity lists
