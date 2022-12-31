@@ -36,6 +36,8 @@ export class FtlFoldingProvider implements FoldingRangeProvider {
         case HtmlFoldingRangeKind.Region:
           kind = FoldingRangeKind.Region;
           break;
+        default:
+          kind = FoldingRangeKind.Comment;
       }
       return ({start: r.startLine, end: r.endLine, kind: kind});
     });

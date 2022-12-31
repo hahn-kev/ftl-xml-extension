@@ -1,0 +1,14 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "npm",
+			"script": "watch",
+			"group": "build",
+			"problemMatcher": "$esbuild-watch",
+			"label": "npm: watch",
+			"detail": "npm run esbuild-base -- --sourcemap --watch",
+			"isBackground": true
+		}
+	]
+}
