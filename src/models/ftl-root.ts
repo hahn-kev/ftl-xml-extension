@@ -3,7 +3,7 @@ import {SoundFile} from './sound-file';
 import {FtlImg} from './ftl-img';
 import {HyperspaceFile} from './hyperspace-file';
 import {FtlShipIcon} from './ftl-ship-icon';
-import { FtlShipRoomImage } from './ftl-ship-room-image';
+import {FtlShipRoomImage} from './ftl-ship-room-image';
 
 export class FtlRoot {
   constructor() {
@@ -23,7 +23,7 @@ export class FtlRoot {
 
   findMatchingImg(modFileRef: string): FtlImg | undefined {
     for (const ftlImg of this.imgFiles) {
-      if (ftlImg.matches(modFileRef)) {
+      if (ftlImg.modPath == modFileRef) {
         return ftlImg;
       }
     }

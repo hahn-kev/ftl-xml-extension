@@ -55,8 +55,7 @@ export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBa
               private readonly resourceBuilder: { new(file: URI): T; },
               private readonly selectRootFiles: (root: FtlRoot) => T[],
               private readonly defaultFiles: string[] = [],
-              private readonly getFileRef: (context: NodeMapContext) => ValueName | undefined = () => undefined,
-              private readonly findFile: (refName: string, files: T[]) => T | undefined) {
+              private readonly getFileRef: (context: NodeMapContext) => ValueName | undefined = () => undefined) {
   }
 
   public handleFile(file: URI, fileName: string, root: FtlRoot, fileRemoved: boolean): FileHandled {
@@ -88,6 +87,10 @@ export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBa
     return {};
   }
 
+  findFile(refName: string, files: T[]): T | undefined {
+    return files.find((f) => f.modPath == refName);
+  }
+
   public lookupRefs({node, document, position}: LookupContext): Location[] | undefined {
     // todo implement
     const offset = document.offsetAt(position);
@@ -108,7 +111,7 @@ export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBa
     const refs = this.getRefsToValidate(file);
     for (const ref of refs) {
       if (this.defaultFiles.includes(ref.name)) continue;
-      const resourceFile = this.findFile(ref.name, this.selectRootFiles(this.root));
+      const resourceFile = this.findFile(ref.name, this.selectRootFiles(file.root));
       if (!resourceFile) {
         diagnostics.push(
             DiagnosticBuilder.invalidRefName(ref.name, ref.range, this.typeName)
@@ -150,8 +153,7 @@ export class PathRefMappers {
         }
         return getNodeContent(c.node, c.document, 'img')
             ?? getNodeContent(c.node, c.document, 'chargeImage');
-      },
-      (refName, files) => files.find((f) => f.matches(refName))
+      }
   );
 
   shipIconMapper = new PathRefMapper('Ship Icon',
@@ -160,8 +162,7 @@ export class PathRefMappers {
       FtlShipIcon,
       (root) => root.shipIconFiles,
       [],
-      (c) => Mappers.shipIconNodeMap.getNameDef(c),
-      (refName, files) => files.find((f) => f.modPath == refName)
+      (c) => Mappers.shipIconNodeMap.getNameDef(c)
   );
 
   shipRoomImageMapper = new PathRefMapper('Ship Room Image',
@@ -170,8 +171,7 @@ export class PathRefMappers {
       FtlShipRoomImage,
       (root) => root.shipRoomImageFiles,
       defaultRoomImages,
-      declarationBasedMapFunction(ShipRoomImageFileNames),
-      (refName, files) => files.find((f) => f.modPath == refName)
+      declarationBasedMapFunction(ShipRoomImageFileNames)
   );
 
   peopleImageMapper = new PathRefMapper('Person Image',
@@ -180,8 +180,7 @@ export class PathRefMappers {
       FtlResourceFile.builder(uri => uri.path.slice(uri.path.indexOf('people/') + 'people/'.length, -'.png'.length)),
       (root) => root.personImageFiles,
       [],
-      declarationBasedMapFunction(PersonImagesValueSet),
-      (refName, files) => files.find((f) => f.modPath == refName)
+      declarationBasedMapFunction(PersonImagesValueSet)
   );
 
   musicMapper = new PathRefMapper('Music',
@@ -195,8 +194,7 @@ export class PathRefMappers {
       (root) => root.musicFiles,
       defaultMusic,
       (c) => getNodeContent(c.node, c.document, 'explore', 'track')
-          ?? getNodeContent(c.node, c.document, 'combat', 'track'),
-      (refName, files) => files.find((f) => f.modPath == refName)
+          ?? getNodeContent(c.node, c.document, 'combat', 'track')
   );
 
   validSoundExtensions = ['.ogg', '.wav', '.mp3'];
@@ -213,8 +211,7 @@ export class PathRefMappers {
       (c) => {
         if (!Sounds.isWaveNode(c.node, c.document)) return;
         return getNodeContent(c.node, c.document);
-      },
-      (refName, files) => files.find((f) => f.modPath == refName)
+      }
   );
   mappers: PathRefMapperBase[] = [
     this.imageMapper,

@@ -7,9 +7,4 @@ export class FtlImg extends FtlResourceFile {
     const imgIndex = pathArray.lastIndexOf('img');
     super(uri, pathArray.slice(imgIndex + 1).join('/'));
   }
-
-
-  public matches(path: string): boolean {
-    return this.modPath == path;
-  }
 }
