@@ -124,7 +124,8 @@ export function getNodeContent(
     if (typeof whenTagName === 'string' && !nodeTagEq(node, whenTagName)) return undefined;
     if (typeof whenParentTagName === 'string' && !nodeTagEq(node.parent, whenParentTagName)) return undefined;
     return new ValueName(getText(node.startTagEnd, node.endTagStart, document),
-        toRange(node.startTagEnd, node.endTagStart, document));
+        toRange(node.startTagEnd, node.endTagStart, document),
+        document.uri);
 }
 
 export function toRange(start: number, end: number, document: FtlTextDocument): Range {
@@ -180,7 +181,8 @@ export function getAttrValueName(
     const range = getAttrValueRange(attrName, node, document);
     if (!range) return;
     return new ValueName(normalizeAttributeName(node.attributes![attrName]!),
-        toRange(range.startOffset, range.endOffset, document));
+        toRange(range.startOffset, range.endOffset, document),
+        document.uri);
 }
 
 export function getAttrValueAsInt(node: Node, attrName: string): number | undefined {

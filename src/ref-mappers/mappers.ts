@@ -220,11 +220,11 @@ export class Mappers {
 
                   const bValueName = getAttrValueForTag(node, 'ship', 'b', document);
                   const hasB = bValueName?.name == 'true';
-                  if (hasB) results.push(new ValueName(shipNameB, bValueName.range));
+                  if (hasB) results.push(new ValueName(shipNameB, bValueName.range, document.uri));
 
                   const cValueName = getAttrValueForTag(node, 'ship', 'c', document);
                   const hasC = cValueName?.name == 'true';
-                  if (hasC) results.push(new ValueName(shipNameC, cValueName.range));
+                  if (hasC) results.push(new ValueName(shipNameC, cValueName.range, document.uri));
 
                   results.unshift(shipName);
                   return results;
@@ -330,7 +330,8 @@ export class Mappers {
                 if (!Sounds.isWaveNode(c.node, c.document)) return;
                 return new ValueName(
                     normalizeTagName(c.node.tag, c.node),
-                    toRange(c.node.start + 1, c.node.start + c.node.tag.length + 1, c.document)
+                    toRange(c.node.start + 1, c.node.start + c.node.tag.length + 1, c.document),
+                    c.document.uri
                 );
               },
               declarationBasedMapFunction(SoundWaveNames),
