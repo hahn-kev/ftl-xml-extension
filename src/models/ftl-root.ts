@@ -19,6 +19,7 @@ export class FtlRoot {
   imgFiles: FtlImg[] = [];
   shipIconFiles: FtlShipIcon[] = [];
   shipRoomImageFiles: FtlShipRoomImage[] = [];
+  personImageFiles: FtlImg[] = [];
 
   findMatchingImg(modFileRef: string): FtlImg | undefined {
     for (const ftlImg of this.imgFiles) {

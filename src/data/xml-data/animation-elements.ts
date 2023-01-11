@@ -1,5 +1,9 @@
 import {XmlTag} from './helpers';
-import {AnimationSheetNames, ImgPathNames} from '../autocomplete-value-sets';
+import {
+  AnimationSheetNames,
+  ImgPathNames,
+  PersonImagesValueSet
+} from '../autocomplete-value-sets';
 
 export const animationTags: XmlTag[] = [
   {name: 'anim', attributes: [{name: 'name'}]},
@@ -17,7 +21,8 @@ export const animationTags: XmlTag[] = [
     ],
     contentsValueSet: ImgPathNames.name,
     configOverride: {
-      'race<': {contentsValueSet: AnimationSheetNames.name}
+      'race<': {contentsValueSet: AnimationSheetNames.name},
+      'temporaryEffect<': {contentsValueSet: PersonImagesValueSet.name},
     }
   },
   {name: 'chargeImage', attributes: [], contentsValueSet: ImgPathNames.name},

@@ -1,9 +1,20 @@
 import {Diagnostic, IValueSet, Location} from 'vscode-html-languageservice';
 import {FtlRoot} from '../models/ftl-root';
-import {contains, getAttrValue, getAttrValueForTag, getNodeContent, shouldCompleteForNodeContents} from '../helpers';
+import {
+  contains,
+  getNodeContent,
+  nodeTagEq
+} from '../helpers';
 import {FtlImg} from '../models/ftl-img';
 import {SoundFile} from '../models/sound-file';
-import {ImgPathNames, MusicPaths, ShipIconFileNames, ShipRoomImageFileNames, SoundWavePaths} from '../data/autocomplete-value-sets';
+import {
+  ImgPathNames,
+  MusicPaths,
+  PersonImagesValueSet,
+  ShipIconFileNames,
+  ShipRoomImageFileNames,
+  SoundWavePaths
+} from '../data/autocomplete-value-sets';
 import {FtlResourceFile} from '../models/ftl-resource-file';
 import {LookupContext, LookupProvider} from './lookup-provider';
 import {defaultSoundFiles} from '../data/default-ftl-data/default-sound-files';
@@ -16,13 +27,13 @@ import {Sounds} from '../sounds';
 import {FtlShipIcon} from '../models/ftl-ship-icon';
 import {NodeMapContext} from './node-mapping/node-map-context';
 import {ValueName} from './value-name';
-import { FtlShipRoomImage } from '../models/ftl-ship-room-image';
-import { declarationBasedMapFunction } from './node-mapping/declaration-node-map';
-import { FtlXmlParser, ParseContext } from '../parsers/ftl-xml-parser';
-import { FtlFile } from '../models/ftl-file';
-import { DiagnosticBuilder } from '../diagnostic-builder';
-import { defaultRoomImages } from '../data/default-ftl-data/default-room-images';
-import { Validator } from '../validators/validator';
+import {FtlShipRoomImage} from '../models/ftl-ship-room-image';
+import {declarationBasedMapFunction} from './node-mapping/declaration-node-map';
+import {FtlXmlParser, ParseContext} from '../parsers/ftl-xml-parser';
+import {FtlFile} from '../models/ftl-file';
+import {DiagnosticBuilder} from '../diagnostic-builder';
+import {defaultRoomImages} from '../data/default-ftl-data/default-room-images';
+import {Validator} from '../validators/validator';
 
 export enum FileHandled {
   handled,
@@ -31,7 +42,8 @@ export enum FileHandled {
 
 export interface PathRefMapperBase extends LookupProvider, DataReceiver, FtlXmlParser, Validator {
   handleFile(file: URI, fileName: string, root: FtlRoot, fileRemoved: boolean): FileHandled;
-  lookupFile(context: LookupContext): {file?: FtlResourceFile, ref?: ValueName}
+
+  lookupFile(context: LookupContext): { file?: FtlResourceFile, ref?: ValueName };
 }
 
 export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBase {
@@ -65,7 +77,7 @@ export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBa
     return {uri: file.uri.toString(), range: {start: {line: 0, character: 0}, end: {line: 0, character: 0}}};
   }
 
-  lookupFile(context: LookupContext): {file?: T, ref?: ValueName} {
+  lookupFile(context: LookupContext): { file?: T, ref?: ValueName } {
     const refName = this.getFileRef(context);
     if (refName && contains(refName.range, context.position)) {
       return {
@@ -99,8 +111,8 @@ export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBa
       const resourceFile = this.findFile(ref.name, this.selectRootFiles(this.root));
       if (!resourceFile) {
         diagnostics.push(
-          DiagnosticBuilder.invalidRefName(ref.name, ref.range, this.typeName)
-        )
+            DiagnosticBuilder.invalidRefName(ref.name, ref.range, this.typeName)
+        );
       }
     }
   }
@@ -112,8 +124,9 @@ export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBa
     const fileData = this.getRefsToValidate(context.file);
     fileData.push(ref);
   }
-  
+
   private customDataSymbol = Symbol(this.typeName);
+
   private getRefsToValidate(file: FtlFile): ValueName[] {
     const data = file.customData[this.customDataSymbol];
     if (data) return data;
@@ -130,9 +143,14 @@ export class PathRefMappers {
       FtlImg,
       (root) => root.imgFiles,
       defaultImgFiles,
-      (c) => getNodeContent(c.node, c.document, 'animSheet', '!race')
-          ?? getNodeContent(c.node, c.document, 'img')
-          ?? getNodeContent(c.node, c.document, 'chargeImage'),
+      (c) => {
+        if (nodeTagEq(c.node, 'animSheet') && !nodeTagEq(c.node.parent, 'race') && !nodeTagEq(c.node.parent,
+            'temporaryEffect')) {
+          return getNodeContent(c.node, c.document);
+        }
+        return getNodeContent(c.node, c.document, 'img')
+            ?? getNodeContent(c.node, c.document, 'chargeImage');
+      },
       (refName, files) => files.find((f) => f.matches(refName))
   );
 
@@ -153,6 +171,16 @@ export class PathRefMappers {
       (root) => root.shipRoomImageFiles,
       defaultRoomImages,
       declarationBasedMapFunction(ShipRoomImageFileNames),
+      (refName, files) => files.find((f) => f.modPath == refName)
+  );
+
+  peopleImageMapper = new PathRefMapper('Person Image',
+      PersonImagesValueSet,
+      (file, fileName) => fileName.endsWith('.png') && file.path.endsWith('img/people/' + fileName),
+      FtlResourceFile.builder(uri => uri.path.slice(uri.path.indexOf('people/') + 'people/'.length, -'.png'.length)),
+      (root) => root.personImageFiles,
+      [],
+      declarationBasedMapFunction(PersonImagesValueSet),
       (refName, files) => files.find((f) => f.modPath == refName)
   );
 
@@ -193,6 +221,7 @@ export class PathRefMappers {
     this.soundMapper,
     this.musicMapper,
     this.shipIconMapper,
-    this.shipRoomImageMapper
+    this.shipRoomImageMapper,
+    this.peopleImageMapper
   ];
 }

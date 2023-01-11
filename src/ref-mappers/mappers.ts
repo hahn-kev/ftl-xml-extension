@@ -359,8 +359,12 @@ export class Mappers {
     new RefParser((file) => file.animationSheets,
       FtlAnimationSheet,
       staticValueNodeMap(
-        [{ tag: 'animSheet', attr: 'name', parentTag: '!race'}],
-        [{ tag: 'sheet', type: 'contents' }, { tag: 'animSheet', parentTag: 'race', type: 'contents' }]
+          [{
+            tag: 'animSheet',
+            attr: 'name',
+            match: c => !nodeTagEq(c.node.parent, 'race') && !nodeTagEq(c.node.parent, 'temporaryEffect')
+          }],
+          [{tag: 'sheet', type: 'contents'}, {tag: 'animSheet', parentTag: 'race', type: 'contents'}]
       )),
     AnimationSheetNames,
     'Animation Sheet',

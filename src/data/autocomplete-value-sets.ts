@@ -136,3 +136,4 @@ export const BoolValueSet: IValueSet = {name: 'bool', values: [{name: 'true'}, {
 
 export const TagsValueSet: IValueSet = {name: 'tags-list', values: [{name: 'loading...'}]};
 export const StoresValueSet: IValueSet = {name: 'stores-list', values: [{name: 'loading...'}]};
+export const PersonImagesValueSet: IValueSet = {name: 'person-images-list', values: [{name: 'loading...'}]};
