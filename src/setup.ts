@@ -14,6 +14,7 @@ import {FtlCodeLensProvider} from './providers/ftl-code-lens-provider';
 import {FtlRenameProvider} from './providers/ftl-rename-provider';
 import {FtlCompletionAdapter} from './providers/ftl-completion-adapter';
 import {FtlFormattingProvider} from './providers/ftl-formatting-provider';
+import {FileUsedValidator} from './validators/file-used-validator';
 
 
 export type disposable = { dispose(): unknown };
@@ -35,7 +36,11 @@ export function setupVscodeProviders(services: FtlServices): Created {
   const ftlDocumentValidator = new FltDocumentValidator(
       diagnosticCollection,
       services.validators,
-      services.output
+      [
+          // disabled because it gave too many false positives for things that are used but aren't checked yet
+          // new FileUsedValidator(services.pathMappers)
+      ],
+      services.output,
   );
   const workspaceParser = new WorkspaceParser(services.parser, ftlDocumentValidator, services.datCache, services.output);
 

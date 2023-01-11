@@ -1,20 +1,25 @@
 import {DiagnosticCollection, TextDocument, Uri} from 'vscode';
 import {FtlFile} from './models/ftl-file';
-import {Validator} from './validators/validator';
+import {AddDiagnostics, RootValidator, Validator} from './validators/validator';
 import {FtlRoot} from './models/ftl-root';
 import {DiagnosticBuilder} from './diagnostic-builder';
 import {FtlDiagnostic} from './models/ftl-diagnostic';
 import {VscodeConverter} from './vscode-converter';
 import {FtlOutputChannel} from './output/ftl-output-channel';
 
+
 export class FltDocumentValidator {
   constructor(private diagnosticCollection: DiagnosticCollection,
               private validators: Validator[],
+              private rootValidators: RootValidator[],
               private output: FtlOutputChannel) {
   }
 
   public validateFtlRoot(root: FtlRoot) {
     this.validateFtlFiles(Array.from(root.xmlFiles.values()));
+    for (const rootValidator of this.rootValidators) {
+      rootValidator.validate(root, this.addDiagnostics);
+    }
   }
 
   private validateFtlFiles(files: FtlFile[]) {
@@ -39,11 +44,15 @@ export class FltDocumentValidator {
       diagnostics.push(DiagnosticBuilder.fileNotReferenced(file.firstLineRange));
     }
 
+    this.addDiagnostics(file.uri, diagnostics);
+  }
+
+  private addDiagnostics: AddDiagnostics = (uri: string, diagnostics: FtlDiagnostic[]) => {
     this.diagnosticCollection.set(
-        Uri.parse(file.uri),
+        Uri.parse(uri),
         diagnostics.map((diag) => VscodeConverter.toVscodeDiagnostic(diag))
     );
-  }
+  };
 
   public validateDocument(document: TextDocument, root: FtlRoot) {
     const ftlFiles = root.xmlFiles;

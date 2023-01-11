@@ -1,6 +1,7 @@
 import {Diagnostic, IValueSet, Location} from 'vscode-html-languageservice';
 import {FtlRoot} from '../models/ftl-root';
 import {
+  addToKey,
   contains,
   getNodeContent,
   nodeTagEq
@@ -44,16 +45,19 @@ export interface PathRefMapperBase extends LookupProvider, DataReceiver, FtlXmlP
   handleFile(file: URI, fileName: string, root: FtlRoot, fileRemoved: boolean): FileHandled;
 
   lookupFile(context: LookupContext): { file?: FtlResourceFile, ref?: ValueName };
+  lookupFileRefs(resourceFile: FtlResourceFile): readonly ValueName[]
+  selectRootFiles(root: FtlRoot): FtlResourceFile[],
 }
 
 export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBase {
   public root: FtlRoot = new FtlRoot();
+  readonly refs = new Map<string, ValueName[]>();
 
   constructor(public readonly typeName: string,
               public readonly autoCompleteValues: IValueSet,
               private readonly matchingFile: (file: URI, fileName: string) => boolean,
               private readonly resourceBuilder: { new(file: URI): T; },
-              private readonly selectRootFiles: (root: FtlRoot) => T[],
+              public readonly selectRootFiles: (root: FtlRoot) => T[],
               private readonly defaultFiles: string[] = [],
               private readonly getFileRef: (context: NodeMapContext) => ValueName | undefined = () => undefined) {
   }
@@ -97,6 +101,12 @@ export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBa
     return undefined;
   }
 
+  static readonly emptyArray = [];
+
+  public lookupFileRefs(resourceFile: T): readonly ValueName[] {
+    return this.refs.get(resourceFile.modPath) ?? PathRefMapper.emptyArray;
+  }
+
   public updateData(root: FtlRoot): void {
     this.root = root;
     this.autoCompleteValues.values.length = 0;
@@ -124,6 +134,7 @@ export class PathRefMapper<T extends FtlResourceFile> implements PathRefMapperBa
   parseNode(context: ParseContext): void | FtlXmlParser {
     const ref = this.getFileRef(context);
     if (!ref || this.defaultFiles.includes(ref.name)) return;
+    addToKey(this.refs, ref.name, ref);
     const fileData = this.getRefsToValidate(context.file);
     fileData.push(ref);
   }
