@@ -26,6 +26,7 @@
 	],
 	"main": "./out/ftl-main",
 	"browser": "./out/ftl-main.js",
+	"type": "commonjs",
 	"capabilities": {
 		"virtualWorkspaces": true,
 		"untrustedWorkspaces": {
@@ -111,7 +112,10 @@
 		"unit-test": "mocha --ui tdd src\\test\\unit\\**\\*.test.ts",
 		"vscode:prepublish": "npm run unit-test && npm run esbuild-base --  --sourcemap --minify",
 		"package": "vsce package",
-		"publish": "vsce publish"
+		"publish": "vsce publish",
+		"vite:build": "vite build -c src/web-views/vite.config.mts",
+		"vite:watch": "vite build -w -c src/web-views/vite.config.mts",
+		"vite:test": "vite -c src/web-views/vite.config.mts"
 	},
 	"dependencies": {
 		"path-browserify": "^1.0.1",
@@ -120,6 +124,8 @@
 		"vscode-uri": "^3.0.7"
 	},
 	"devDependencies": {
+		"@sveltejs/vite-plugin-svelte": "^2.0.0",
+		"@tsconfig/svelte": "^3.0.0",
 		"@types/chai": "^4.3.0",
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^9.1.0",
@@ -135,8 +141,13 @@
 		"glob": "^7.1.4",
 		"mocha": "^10.2.0",
 		"npm-run-all": "^4.1.5",
+		"svelte": "^3.55.1",
+		"svelte-check": "^3.0.2",
 		"ts-node": "^10.9.1",
+		"tslib": "^2.4.1",
 		"typescript": "^4.9.4",
+		"vite": "^4.0.4",
+		"vite-plugin-singlefile": "^0.13.2",
 		"vsce": "^2.14.0"
 	},
 	"mocha": {

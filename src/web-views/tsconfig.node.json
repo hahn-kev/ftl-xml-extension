@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "module": "ESNext",
+    "moduleResolution": "classic",
+    "esModuleInterop": true
+  },
+  "include": ["vite.config.mts"]
+}
