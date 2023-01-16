@@ -4,9 +4,11 @@ import {FtlParser} from '../ftl-parser';
 import {FtlFile} from '../models/ftl-file';
 import {DocumentCache} from '../document-cache';
 import {contains} from '../helpers';
+import previewHtml from './preview.html';
 
 export class AnimationPreview {
   static readonly OpenPreviewCommand = 'ftl-xml.show-animation';
+
   constructor(private mappers: Mappers, private ftlParser: FtlParser, private cache: DocumentCache) {
   }
 
@@ -71,67 +73,6 @@ export class AnimationPreview {
       }
     });
     // language=HTML
-    panel.webview.html = `
-        <div class="animation-parent">
-            <img id="animation">
-        </div>
-        <span id="debug"></span>
-        <style>
-            html, body {
-                height: 100%;
-            }
-
-            .animation-parent {
-                width: 100%;
-                height: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            #animation {
-                object-fit: none;
-            }
-        </style>
-        <script>
-            let imageElement = document.getElementById('animation');
-            let debugText = document.getElementById('debug');
-            debugText.style.display = 'none';
-            let intervalId;
-            let vscode = acquireVsCodeApi();
-            window.addEventListener('message', e => {
-                const message = e.data;
-                if (intervalId) {
-                    clearInterval(intervalId);
-                    intervalId = null;
-                }
-                imageElement.src = 'data:image/png;base64,' + message.img;
-                imageElement.width = message.fw;
-                imageElement.height = message.fh;
-                let index = 0;
-                let verticalFrameCount = message.height / message.fh;
-                //this is if the time is time per frame
-                let interval = message.time * 1000;
-                // however interval could be time for total animation
-                interval = (message.time * 1000) / message.length
-
-                function nextFrame() {
-                    let positionX = (index++ % (message.length)) * message.fw + message.x * message.fw;
-                    // message.y is frames from the bottom, but we need frames from the top
-                    let positionY = (verticalFrameCount - message.y - 1) * message.fh;
-                    imageElement.style.objectPosition = '-' + positionX + 'px -' + positionY + 'px';
-                }
-
-                nextFrame();
-                if (message.length > 1)
-                    setInterval(() => nextFrame(), interval);
-                if (message.debug) {
-                    debugText.style.display = 'inline';
-                    debugText.innerText = JSON.stringify(message, null, 4);
-                }
-            });
-            vscode.postMessage({signal: 'ready'});
-        </script>
-    `;
+    panel.webview.html = previewHtml;
   }
 }
