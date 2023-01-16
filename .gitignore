@@ -4,3 +4,4 @@ out
 /.vscode-test/
 /out-test/
 /.vscode-test-web/
+/src/web-views/html/
