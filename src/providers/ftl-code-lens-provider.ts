@@ -29,7 +29,15 @@ export class FtlCodeLensProvider implements CodeLensProvider {
   private* animationPreviewLenses(file: FtlFile) {
     for (const def of file.animations.defs) {
       yield new CodeLens(VscodeConverter.toVscodeRange(def.range),
-          {title: 'Preview Animation', command: AnimationPreview.OpenPreviewCommand, arguments: [def.name]});
+          {title: 'Preview Animation', command: AnimationPreview.OpenPreviewCommand, arguments: [def.name, 'anim']});
+    }
+    for (const def of file.weaponAnimations.defs) {
+      yield new CodeLens(VscodeConverter.toVscodeRange(def.range),
+          {
+            title: 'Preview Animation',
+            command: AnimationPreview.OpenPreviewCommand,
+            arguments: [def.name, 'weaponAnim']
+          });
     }
   }
 

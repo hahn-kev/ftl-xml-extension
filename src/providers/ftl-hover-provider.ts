@@ -159,15 +159,26 @@ export class FtlHoverProvider implements HoverProvider {
   }
 
   tryHoverAnimation(context: LookupContext): Hover | undefined {
-    const refs = this.mappers.animationMapper.parser.getNameDef(context)
-        ?? this.mappers.animationMapper.parser.getRefName(context);
-    const nameValue = filterValueNameToPosition(refs, context.position);
-    if (!nameValue) return;
-    const component = encodeURIComponent(JSON.stringify([nameValue.name]));
+
+    const animation = this.tryGetAnimationForHover(context);
+  if (!animation) return;
+    const component = encodeURIComponent(JSON.stringify([animation.valueName.name, animation.type]));
     const showPreviewCommand = Uri.parse(`command:${AnimationPreview.OpenPreviewCommand}?${component}`);
     const mdString = new MarkdownString(`[Click to Preview Animation](${showPreviewCommand})`);
     mdString.isTrusted = true;
-    return new Hover(mdString, VscodeConverter.toVscodeRange(nameValue.range));
+    return new Hover(mdString, VscodeConverter.toVscodeRange(animation.valueName.range));
+  }
+
+  tryGetAnimationForHover(context: LookupContext): { valueName: ValueName, type: 'anim' | 'weaponAnim' } | undefined {
+    let refs = this.mappers.animationMapper.parser.getNameDef(context)
+        ?? this.mappers.animationMapper.parser.getRefName(context);
+    let valueName = filterValueNameToPosition(refs, context.position);
+    if (valueName) return {valueName, type: 'anim'};
+    refs = this.mappers.weaponAnimationMapper.parser.getNameDef(context)
+        ?? this.mappers.weaponAnimationMapper.parser.getRefName(context);
+    valueName = filterValueNameToPosition(refs, context.position);
+    if (valueName) return {valueName, type: 'weaponAnim'};
+    return undefined;
   }
 
 

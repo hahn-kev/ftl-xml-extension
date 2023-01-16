@@ -1,24 +1,30 @@
-export type AnimationMessage = {
-  debug?: boolean;
-} & AnimationSheetBase;
+import {FtlUri} from '../models/ftl-text-document';
 
+export type AnimationMessage = AnimSheet | WeaponAnimationSheet;
 
 
 interface AnimationSheetBase {
-  fw?: number;
+  type?: string;
+  debug?: boolean;
+  fw: number | undefined;
   img: string;
-  fh?: number;
-  x?: number;
-  width?: number;
-  length?: number;
-  y?: number;
-  time?: number;
-  height?: number;
+  fh: number | undefined;
+  x: number | undefined;
+  width: number | undefined;
+  length: number | undefined;
+  y: number | undefined;
+  height: number | undefined;
 }
 
-interface WeaponAnimationSheet extends AnimationSheetBase{
-  chargedFrame?: number;
-  fireFrame?: number;
-  firePoint?: {x: number, y: number}
-  mountPoint?: {x: number, y: number}
+interface AnimSheet extends AnimationSheetBase {
+  type: 'anim';
+  time: number | undefined;
+}
+
+export interface WeaponAnimationSheet extends AnimationSheetBase {
+  type: 'weapon';
+  chargedFrame: number | undefined;
+  fireFrame: number | undefined;
+  firePoint: { x: number, y: number } | undefined;
+  mountPoint: { x: number, y: number } | undefined;
 }
