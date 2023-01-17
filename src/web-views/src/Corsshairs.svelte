@@ -12,7 +12,7 @@
 <style>
     .horizontal {
         position: absolute;
-        rotate: 90deg;
+        transform: rotate(90deg);
     }
 
     .firing-line {

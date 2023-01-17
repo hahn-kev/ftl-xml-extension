@@ -198,6 +198,10 @@ export function getAttrValue(node: Node | undefined, attrName: string): string |
     }
 }
 
+export function tryParseInt(value?: string | null): number | undefined {
+    return value ? parseInt(value) : undefined;
+}
+
 type OffsetRange = { startOffset: number, endOffset: number };
 
 /**

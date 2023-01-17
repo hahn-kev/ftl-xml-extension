@@ -79,6 +79,10 @@ export class AnimationPreview {
     if (!sheet || !sheet.sheetFilePath || typeof sheet.frameWidth !== 'number' || typeof sheet.frameHeight !== 'number') return;
     const img = sheet.file.root.findMatchingImg(sheet.sheetFilePath);
     if (!img) return;
+    let weapon = this.mappers.weaponsMapper.defs.get(animationName);
+    if (weapon?.weaponArt !== animationName) {
+      weapon = Array.from(this.mappers.weaponsMapper.defs.values()).find(w => w.weaponArt === animationName);
+    }
     const message = this.getMessage(weaponAnimation, sheet);
     if (!message) return;
     return {
@@ -87,7 +91,10 @@ export class AnimationPreview {
       chargedFrame: weaponAnimation.chargedFrame,
       fireFrame: weaponAnimation.fireFrame,
       firePoint: weaponAnimation.firePoint,
-      mountPoint: weaponAnimation.mountPoint
+      mountPoint: weaponAnimation.mountPoint,
+      chargeImage: weaponAnimation.chargeImagePath ? sheet.file.root.findMatchingImg(weaponAnimation.chargeImagePath!)?.uri.toString() : undefined,
+      shots: weapon?.shots,
+      cooldown: weapon?.cooldown,
     };
   }
 
@@ -107,6 +114,9 @@ export class AnimationPreview {
         {enableScripts: true}
     );
     message.img = panel.webview.asWebviewUri(URI.parse(message.img)).toString();
+    if (message.type == 'weapon' && message.chargeImage) {
+      message.chargeImage = panel.webview.asWebviewUri(URI.parse(message.chargeImage)).toString();
+    }
     panel.webview.onDidReceiveMessage((e) => {
       if (e.signal == 'ready') {
         panel.webview.postMessage(message);

@@ -29,15 +29,13 @@
   }
 
   let crosshairs: 'none' | 'firePoint' | 'mountPoint' = 'none';
-  let chargeRate = 21;
-  let shots = 8;
   let currentShot = 0;
   $: if (isWeapon) {
     if (firing) {
       let seconds = 0.25;
       interval = seconds * 1000 / (message.length - weapon.chargedFrame);
     } else {
-      interval = (chargeRate * 1000) / weapon.chargedFrame;
+      interval = (weapon.cooldown * 1000) / weapon.chargedFrame;
     }
   }
   let interval: number | undefined = undefined;
@@ -59,11 +57,11 @@
     if (!isWeapon) {
       return;
     }
-    if (frameNumber == weapon.chargedFrame - 1) {
-      play = false;
+    if (frameNumber == weapon.chargedFrame) {
+      chargeFinished();
       return;
     }
-    if (frameNumber == 0 && ++currentShot != shots) {
+    if (frameNumber == 0 && ++currentShot != weapon.shots) {
       frameNumber = weapon.chargedFrame + 1;
     } else if (frameNumber == 0) {
       firing = false;
@@ -79,9 +77,31 @@
     firing = true;
   }
 
+  function chargeFinished() {
+    chargeImagePercent = 0;
+    play = false;
+  }
+
   function charge() {
+    chargeImagePercent = 0;
     frameNumber = 0;
     play = true;
+  }
+
+  let percentInterval;
+  let chargeImagePercent = 0;
+  const msPerChargeFrame = 1000 / 60;
+  $: if (isWeapon && weapon.chargeImage) {
+    if (percentInterval)
+      clearInterval(percentInterval);
+    if (play) {
+      percentInterval = setInterval(increasePercent, msPerChargeFrame);
+    }
+  }
+
+  function increasePercent() {
+    let totalMs = weapon.cooldown * 1000;
+    chargeImagePercent += msPerChargeFrame / totalMs;
   }
 
   function start(arg: AnimationMessage) {
@@ -100,6 +120,12 @@
     crosshairs = event.currentTarget.value;
   }
 
+  let zoom = 1;
+
+  function onZoomChanged(event: any) {
+    zoom = parseInt(event.currentTarget.value);
+  }
+
   window.addEventListener('message', e => {
     if (!e.data) return;
     start(e.data as AnimationMessage);
@@ -110,49 +136,52 @@
 <main>
     {#if message}
         <div class="animation-parent">
-            <div class="img-parent">
+            <div class="img-parent span-two" style="--zoom: {zoom}">
                 {#if crosshairs === 'firePoint'}
-                    <Corsshairs x={message.firePoint.x} y={message.firePoint.y}/>
+                    <Corsshairs x={message.firePoint.x}
+                                y={message.firePoint.y}/>
                 {/if}
                 {#if crosshairs === 'mountPoint'}
-                    <Corsshairs x={message.mountPoint.x} y={message.mountPoint.y}/>
+                    <Corsshairs x={message.mountPoint.x}
+                                y={message.mountPoint.y}/>
                 {/if}
                 <img id="animation"
                      height={message?.fh}
                      width={message?.fw}
                      src={message?.img}
                      style:object-position={imagePosition}>
+                {#if weapon?.chargeImage}
+                    <img class="charge-image"
+                         height={message?.fh}
+                         width={message?.fw}
+                         src={message?.chargeImage}
+                         style="--percent: {chargeImagePercent}">
+                {/if}
             </div>
-            <label>
+            <label class="span-two">
                 <input type="checkbox" bind:checked={play}>
                 Enabled
             </label>
-            <div>
+            <div class="span-two">
                 <button on:click={nextFrame}>Next Frame</button>
                 {#if isWeapon}
                     <button on:click={charge}>Charge</button>
                     <button on:click={fire}>Fire</button>
                 {/if}
             </div>
-            <div>
-                <label>
-                    charge rate seconds
-                </label>
-                <input type="number" bind:value={chargeRate} min="1">
-            </div>
-            <div>
-                <label>
-                    shots
-                </label>
-                <input type="number" bind:value={shots} min="1">
-            </div>
-            <div>
-                <label>
-                    frame #
-                </label>
-                <input type="number" bind:value={frameNumber} min="0">
-            </div>
-            <div>
+            <label>
+                cooldown seconds
+            </label>
+            <input type="number" bind:value={message.cooldown} min="1">
+            <label>
+                shots
+            </label>
+            <input type="number" bind:value={message.shots} min="1">
+            <label>
+                frame #
+            </label>
+            <input type="number" bind:value={frameNumber} min="0">
+            <div class="span-two">
                 Crosshairs
                 <label>
                     <input type="radio" checked={crosshairs === 'none'}
@@ -167,6 +196,23 @@
                     <input type="radio" checked={crosshairs === 'mountPoint'}
                            on:change={onCrosshairChanged} value="mountPoint">
                     Mount Point
+                </label>
+            </div>
+            <div class="span-two">
+                Zoom
+                <label>
+                    <input type="radio" checked={zoom === 1}
+                           on:change={onZoomChanged} value="1"> None
+                </label>
+                <label>
+                    <input type="radio" checked={zoom === 2}
+                           on:change={onZoomChanged} value="2">
+                    200%
+                </label>
+                <label>
+                    <input type="radio" checked={zoom === 3}
+                           on:change={onZoomChanged} value="3">
+                    300%
                 </label>
             </div>
         </div>
@@ -192,13 +238,16 @@
 
     .img-parent {
         position: relative;
+        padding: 0;
+        transform: scale(var(--zoom));
+        transform-origin: bottom;
     }
 
     .animation-parent {
         width: 100%;
         height: 100%;
         display: grid;
-        grid-template-columns: 1fr;
+        grid-template-columns: auto auto;
         align-items: center;
         grid-gap: 0.5rem;
         justify-items: center;
@@ -207,6 +256,18 @@
 
     #animation {
         object-fit: none;
+    }
+
+    .charge-image {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        opacity: calc(var(--percent));
+    }
+
+    .clip-charge {
+        clip-path: inset(calc(100% - var(--percent) * 100%) 0 0 0);
     }
 
     .grid {
@@ -221,5 +282,9 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+
+    .span-two {
+        grid-column: span 2;
     }
 </style>

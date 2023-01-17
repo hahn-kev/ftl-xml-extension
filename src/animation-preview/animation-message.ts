@@ -22,9 +22,12 @@ interface AnimSheet extends AnimationSheetBase {
 }
 
 export interface WeaponAnimationSheet extends AnimationSheetBase {
+  chargeImage: string | undefined;
   type: 'weapon';
   chargedFrame: number | undefined;
   fireFrame: number | undefined;
   firePoint: { x: number, y: number } | undefined;
   mountPoint: { x: number, y: number } | undefined;
+  cooldown: number | undefined;
+  shots: number | undefined;
 }
