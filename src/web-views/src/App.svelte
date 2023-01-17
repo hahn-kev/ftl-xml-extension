@@ -3,6 +3,7 @@
     AnimationMessage, WeaponAnimationSheet
   } from '../../animation-preview/animation-message';
   import {onDestroy} from 'svelte';
+  import Corsshairs from './Corsshairs.svelte';
 
   let intervalId;
   let debug = false;
@@ -27,10 +28,13 @@
     return '-' + positionX + 'px -' + positionY + 'px';
   }
 
+  let crosshairs: 'none' | 'firePoint' | 'mountPoint' = 'none';
   let chargeRate = 21;
+  let shots = 8;
+  let currentShot = 0;
   $: if (isWeapon) {
     if (firing) {
-      let seconds = 1;
+      let seconds = 0.25;
       interval = seconds * 1000 / (message.length - weapon.chargedFrame);
     } else {
       interval = (chargeRate * 1000) / weapon.chargedFrame;
@@ -52,21 +56,25 @@
 
   function nextFrame() {
     frameNumber = (frameNumber + 1) % (message.length);
-    if (isWeapon) {
-      if (frameNumber == weapon.chargedFrame - 1) {
-        play = false;
-      }
-      if (frameNumber == 0) {
-        firing = false;
-      }
+    if (!isWeapon) {
+      return;
+    }
+    if (frameNumber == weapon.chargedFrame - 1) {
+      play = false;
+      return;
+    }
+    if (frameNumber == 0 && ++currentShot != shots) {
+      frameNumber = weapon.chargedFrame + 1;
+    } else if (frameNumber == 0) {
+      firing = false;
     }
   }
 
   let firing = false;
 
   function fire() {
-    frameNumber = weapon.chargedFrame;
-    frameNumber++;
+    currentShot = 0;
+    frameNumber = weapon.chargedFrame + 1;
     play = true;
     firing = true;
   }
@@ -79,13 +87,17 @@
   function start(arg: AnimationMessage) {
     if (arg.type === 'weapon') weapon = arg;
     message = arg;
-    console.log('starting animation: ', arg);
     debug = message.debug;
+    if (debug) console.log('starting animation: ', arg);
     //this is if the time is time per frame
     // interval = message.time * 1000;
     // however interval could be time for total animation
     if (message.type === 'anim')
       interval = (message.time * 1000) / message.length;
+  }
+
+  function onCrosshairChanged(event: any) {
+    crosshairs = event.currentTarget.value;
   }
 
   window.addEventListener('message', e => {
@@ -96,32 +108,69 @@
 </script>
 
 <main>
-    <div class="animation-parent">
-        <img id="animation"
-             height={message?.fh}
-             width={message?.fw}
-             src={message?.img}
-             style:object-position={imagePosition}>
-        <label>
-            <input type="checkbox" bind:checked={play}>
-            Enabled
-        </label>
-        <div>
-            <button on:click={nextFrame}>Next Frame</button>
-            {#if isWeapon}
-                <button on:click={charge}>Charge</button>
-                <button on:click={fire}>Fire</button>
-            {/if}
+    {#if message}
+        <div class="animation-parent">
+            <div class="img-parent">
+                {#if crosshairs === 'firePoint'}
+                    <Corsshairs x={message.firePoint.x} y={message.firePoint.y}/>
+                {/if}
+                {#if crosshairs === 'mountPoint'}
+                    <Corsshairs x={message.mountPoint.x} y={message.mountPoint.y}/>
+                {/if}
+                <img id="animation"
+                     height={message?.fh}
+                     width={message?.fw}
+                     src={message?.img}
+                     style:object-position={imagePosition}>
+            </div>
+            <label>
+                <input type="checkbox" bind:checked={play}>
+                Enabled
+            </label>
+            <div>
+                <button on:click={nextFrame}>Next Frame</button>
+                {#if isWeapon}
+                    <button on:click={charge}>Charge</button>
+                    <button on:click={fire}>Fire</button>
+                {/if}
+            </div>
+            <div>
+                <label>
+                    charge rate seconds
+                </label>
+                <input type="number" bind:value={chargeRate} min="1">
+            </div>
+            <div>
+                <label>
+                    shots
+                </label>
+                <input type="number" bind:value={shots} min="1">
+            </div>
+            <div>
+                <label>
+                    frame #
+                </label>
+                <input type="number" bind:value={frameNumber} min="0">
+            </div>
+            <div>
+                Crosshairs
+                <label>
+                    <input type="radio" checked={crosshairs === 'none'}
+                           on:change={onCrosshairChanged} value="none"> none
+                </label>
+                <label>
+                    <input type="radio" checked={crosshairs === 'firePoint'}
+                           on:change={onCrosshairChanged} value="firePoint">
+                    Fire point
+                </label>
+                <label>
+                    <input type="radio" checked={crosshairs === 'mountPoint'}
+                           on:change={onCrosshairChanged} value="mountPoint">
+                    Mount Point
+                </label>
+            </div>
         </div>
-        <label>
-            <input type="number" bind:value={chargeRate}>
-            charge rate seconds
-        </label>
-        <label>
-            frame #
-            <input type="number" bind:value={frameNumber}>
-        </label>
-    </div>
+    {/if}
     {#if debug}
         <div class="grid">
             {#each Object.entries(message ?? {}) as [key, value] }
@@ -137,6 +186,13 @@
         height: 100%;
     }
 
+    input[type="number"] {
+        width: 8ch;
+    }
+
+    .img-parent {
+        position: relative;
+    }
 
     .animation-parent {
         width: 100%;
