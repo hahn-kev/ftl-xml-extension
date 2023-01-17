@@ -13,9 +13,10 @@ import {FtlColor} from '../models/ftl-color';
 import {nodeTagEq, normalizeAttributeName, toRange} from '../helpers';
 import {FtlXmlParser, ParseContext} from '../parsers/ftl-xml-parser';
 import {VscodeConverter} from '../vscode-converter';
+import { FtlOutputChannel } from '../output/ftl-output-channel';
 
 export class FtlColorProvider implements DocumentColorProvider, FtlXmlParser {
-  constructor(private ftlParser: FtlParser) {
+  constructor(private ftlParser: FtlParser, private output: FtlOutputChannel) {
   }
 
   provideColorPresentations(
@@ -35,16 +36,19 @@ export class FtlColorProvider implements DocumentColorProvider, FtlXmlParser {
       document: TextDocument,
       token: CancellationToken): Promise<ColorInformation[] | undefined> {
     const files = await this.ftlParser.files;
+    this.output.time('provide document colors')
     const ftlFile = files.get(document.uri.toString());
     if (!ftlFile) return;
-    return ftlFile.colors.filter((c): c is ({ r: number; g: number; b: number } & FtlColor) => c.isValid())
-        .map((ftlColor) => {
-          return new ColorInformation(VscodeConverter.toVscodeRange(ftlColor.range),
-              new Color(this.toPercentColor(ftlColor.r),
-                  this.toPercentColor(ftlColor.g),
-                  this.toPercentColor(ftlColor.b),
-                  ftlColor.a ?? 0));
-        });
+    const colors = ftlFile.colors.filter((c): c is ({ r: number; g: number; b: number } & FtlColor) => c.isValid())
+      .map((ftlColor) => {
+        return new ColorInformation(VscodeConverter.toVscodeRange(ftlColor.range),
+          new Color(this.toPercentColor(ftlColor.r),
+            this.toPercentColor(ftlColor.g),
+            this.toPercentColor(ftlColor.b),
+            ftlColor.a ?? 0));
+      });
+    this.output.timeEnd('provide document colors');
+    return colors;
   }
 
   parseNode({node, file, document}: ParseContext): void {

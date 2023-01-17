@@ -6,14 +6,16 @@ import {VscodeConverter} from '../vscode-converter';
 import {Mappers} from '../ref-mappers/mappers';
 import {AnimationPreview} from '../animation-preview/animation-preview';
 import {RefMapperBase} from '../ref-mappers/ref-mapper';
+import { FtlOutputChannel } from '../output/ftl-output-channel';
 
 export class FtlCodeLensProvider implements CodeLensProvider {
-  constructor(private parser: FtlParser, private mappers: Mappers) {
+  constructor(private parser: FtlParser, private mappers: Mappers, private output: FtlOutputChannel) {
 
   }
 
   public async provideCodeLenses(document: TextDocument, token: CancellationToken): Promise<CodeLens[] | undefined> {
     const files = await this.parser.files;
+    this.output.time('provide Code Lenses');
     if (token.isCancellationRequested) return;
     const file = files.get(document.uri.toString());
     if (!file) return;
@@ -22,7 +24,7 @@ export class FtlCodeLensProvider implements CodeLensProvider {
       ...this.referenceLenses(file, document.uri),
       ...this.animationPreviewLenses(file)
     ];
-
+    this.output.timeEnd('provide Code Lenses');
     return lenses;
   }
 

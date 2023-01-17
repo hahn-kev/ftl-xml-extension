@@ -60,7 +60,7 @@ export function setupVscodeProviders(services: FtlServices): Created {
 
   // kinda ugly, but the ftlParser depends on a list of parsers, and the color provider depends on the parser
   // I should split them out, but I like the parsing and color providing in the same place
-  const ftlColor = new FtlColorProvider(services.parser);
+  const ftlColor = new FtlColorProvider(services.parser, services.output);
   services.parsers.push(ftlColor);
 
   return {
@@ -71,15 +71,16 @@ export function setupVscodeProviders(services: FtlServices): Created {
       fsWatcher.onDidDelete((e) => services.parser.fileRemoved(e)),
       window.onDidChangeActiveTextEditor((e) => {
         if (e?.document.languageId === ftlLanguage) {
-          const file = ftlDocumentValidator.validateDocument(e.document, services.parser.root);
-          AnimationPreview.updateMenuContext(file);
+          ftlDocumentValidator.validateDocument(e.document, services.parser.root);
         }
       }),
       workspace.onDidChangeTextDocument((e) => {
         if (e.document?.languageId == ftlLanguage && e.contentChanges.length > 0) {
           // todo look into partial document parsing, it's slow for animation files which are long
+          services.output.time('parse and validate on change');
           const file = services.parser.parseDocument(e.document);
           ftlDocumentValidator.validateFile(file);
+          services.output.timeEnd('parse and validate on change');
           setTimeout(()=> {
             if (workspace.textDocuments?.length > 0) {
               ftlDocumentValidator.validateDocuments(workspace.textDocuments, services.parser.root);
@@ -106,7 +107,7 @@ export function setupVscodeProviders(services: FtlServices): Created {
       languages.registerReferenceProvider(ftlXmlDoc, ftlReferenceProvider),
       languages.registerFoldingRangeProvider(ftlXmlDoc, new FtlFoldingProvider(services.htmlService, services.output)),
       languages.registerRenameProvider(ftlXmlDoc, new FtlRenameProvider(services.documentCache, services.mappers)),
-      languages.registerCodeLensProvider(ftlXmlDoc, new FtlCodeLensProvider(services.parser, services.mappers)),
+      languages.registerCodeLensProvider(ftlXmlDoc, new FtlCodeLensProvider(services.parser, services.mappers, services.output)),
       // languages.registerDocumentFormattingEditProvider(ftlXmlDoc, formattingProvider),
       // languages.registerDocumentRangeFormattingEditProvider(ftlXmlDoc, formattingProvider),
       languages.registerCodeActionsProvider(ftlXmlDoc,

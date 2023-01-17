@@ -55,11 +55,13 @@ export class FltDocumentValidator {
   };
 
   public validateDocument(document: TextDocument, root: FtlRoot) {
+    this.output.time('validate document');
     const ftlFiles = root.xmlFiles;
     const file = ftlFiles.get(document.uri.toString());
     if (file) {
       this.validateFile(file);
     }
+    this.output.timeEnd('validate document');
     return file;
   }
   public validateDocuments(documents: readonly TextDocument[], root: FtlRoot) {
