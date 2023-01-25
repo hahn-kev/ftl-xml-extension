@@ -102,7 +102,7 @@
 		}
 	},
 	"scripts": {
-		"start": "run-p watch launch-vscode",
+		"start": "run-p vite:watch watch launch-vscode",
 		"launch-vscode": "code --extensionDevelopmentPath=\"%CD%\" --inspect-extensions=9229",
 		"compile": "npm run esbuild-base -- --sourcemap",
 		"esbuild-base": "esbuild ./src/main.ts --bundle --tree-shaking=true --loader:.html=text --outfile=out/ftl-main.js --external:vscode --format=cjs",
