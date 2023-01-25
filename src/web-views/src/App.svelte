@@ -64,7 +64,7 @@
     if (frameNumber == 0 && ++currentShot != weapon.shots) {
       frameNumber = weapon.chargedFrame + 1;
     } else if (frameNumber == 0) {
-      firing = false;
+      firingFinished();
     }
   }
 
@@ -72,9 +72,15 @@
 
   function fire() {
     currentShot = 0;
+    chargeImagePercent = 0;
     frameNumber = weapon.chargedFrame + 1;
     play = true;
     firing = true;
+  }
+
+  function firingFinished() {
+    firing = false;
+    chargeImagePercent = 0;
   }
 
   function chargeFinished() {
@@ -89,12 +95,13 @@
   }
 
   let percentInterval;
+  //percent 0 - 1
   let chargeImagePercent = 0;
   const msPerChargeFrame = 1000 / 60;
-  $: if (isWeapon && weapon.chargeImage) {
+  $: if (isWeapon) {
     if (percentInterval)
       clearInterval(percentInterval);
-    if (play) {
+    if (play && !firing) {
       percentInterval = setInterval(increasePercent, msPerChargeFrame);
     }
   }
@@ -135,8 +142,8 @@
 
 <main>
     {#if message}
-        <div class="animation-parent">
-            <div class="img-parent span-two" style="--zoom: {zoom}">
+        <div class="animation-parent"  style="--zoom: {zoom}; --height: {message?.fh}px">
+            <div class="img-parent span-two">
                 {#if crosshairs === 'firePoint'}
                     <Corsshairs x={message.firePoint.x}
                                 y={message.firePoint.y}/>
@@ -162,6 +169,9 @@
                 <input type="checkbox" bind:checked={play}>
                 Enabled
             </label>
+            <div class="span-two">
+                <progress value={chargeImagePercent}/>
+            </div>
             <div class="span-two">
                 <button on:click={nextFrame}>Next Frame</button>
                 {#if isWeapon}
@@ -241,6 +251,7 @@
         padding: 0;
         transform: scale(var(--zoom));
         transform-origin: bottom;
+        align-self: end;
     }
 
     .animation-parent {
@@ -248,6 +259,7 @@
         height: 100%;
         display: grid;
         grid-template-columns: auto auto;
+        grid-template-rows: calc(var(--height) * 3) auto;
         align-items: center;
         grid-gap: 0.5rem;
         justify-items: center;

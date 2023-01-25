@@ -2,6 +2,11 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
+## 0.8.13
+
+- support temporaryEffect > animSheet properly
+- add weapon animation preview sandbox
+
 ## 0.8.12
 
 - add a lot more snippets, credit to [@untitledC20H12 ](https://github.com/C20H12)
