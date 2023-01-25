@@ -18,7 +18,7 @@ How to use:
 ![Convert to named event](gifs/preview-extract.webp)
 
 ### Preview Animation
-
+includes mode for weapon testing on `weaponAnim`. Check it out.
 ![Preview Animation](gifs/preview-animation.webp)
 
 ## Features
