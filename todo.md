@@ -1,5 +1,6 @@
 ## Want to implement
-
+- all auto updating animation previews when editing xml
+- implement image stretching to match ftl, forgemaster weapon FOCUS_SHADOW
 - show warning for deeply nested lists, 3rd list deep will be ignored
 
 - narrow range for attribute refs, for example `name= "value"` has the range set incorrectly
