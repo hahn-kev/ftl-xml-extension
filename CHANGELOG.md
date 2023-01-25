@@ -2,6 +2,10 @@
 
 All notable changes to the "ftlXml" extension will be documented in this file.
 
+## 0.9.1
+
+- pixelate scaled up images
+
 ## 0.9.0
 
 - support temporaryEffect > animSheet properly

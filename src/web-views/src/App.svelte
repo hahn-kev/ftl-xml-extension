@@ -268,9 +268,11 @@
 
     #animation {
         object-fit: none;
+        image-rendering: pixelated; 
     }
 
     .charge-image {
+        image-rendering: pixelated; 
         position: absolute;
         left: 0;
         top: 0;
