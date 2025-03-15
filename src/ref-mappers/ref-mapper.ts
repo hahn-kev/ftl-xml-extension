@@ -13,6 +13,7 @@ export interface RefMapperBase extends LookupProvider, DataReceiver {
 
   readonly typeName: string;
   readonly baseGameDefaults?: readonly string[];
+  readonly hyperSpaceGameDefaults?: readonly string[];
   readonly autoCompleteValues?: IValueSet;
   readonly refs: Map<string, FtlValue[]>;
   readonly defs: Map<string, FtlValue>;
@@ -26,11 +27,13 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
   readonly refs = new Map<string, T[]>();
   readonly defs = new Map<string, T>();
   readonly fileDataSelector: (file: FtlFile) => FtlFileValue<FtlValue>;
+  private hasHyperspace: boolean = false;
 
   constructor(public parser: RefParser<T>,
               public readonly autoCompleteValues: IValueSet,
               public readonly typeName: string,
               public baseGameDefaults: readonly string[] = [],
+              public hyperSpaceGameDefaults: readonly string[] = [],
               private altRefMapper?: RefMapperBase) {
     this.fileDataSelector = this.parser.fileDataSelector;
   }
@@ -38,6 +41,7 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
   updateData(root: FtlRoot): void {
     this.refs.clear();
     this.defs.clear();
+    this.hasHyperspace = root.hasHyperspace();
     this.autoCompleteValues.values.length = 0;
     this.autoCompleteValues.values
         .push(...this.convertDefsAndDefaultsToAutoCompleteList(root));
@@ -65,6 +69,14 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
       if (seenNames.has(name)) continue;
       autoCompleteValueList.push({name});
       seenNames.add(name);
+    }
+    // Add Hyperspace defaults if any Hyperspace files are present
+    if (this.hasHyperspace) {
+      for (const name of this.hyperSpaceGameDefaults) {
+        if (seenNames.has(name)) continue;
+        autoCompleteValueList.push({name});
+        seenNames.add(name);
+      }
     }
     return autoCompleteValueList;
   }
@@ -99,6 +111,7 @@ export class RefMapper<T extends FtlValue> implements RefMapperBase {
   isNameValid(name: string) {
     return this.defs.has(name)
         || this.baseGameDefaults.includes(name)
+        || (this.hasHyperspace && this.hyperSpaceGameDefaults.includes(name))
         || (this.altRefMapper?.isNameValid(name) ?? false);
   }
 }

@@ -284,7 +284,9 @@ export class Mappers {
           () => undefined,
       )),
       ReqNames,
-      'Requirement'
+      'Requirement',
+      [], // base game defaults
+      ['hull'] // hyperspace defaults
   );
 
   readonly rewardMapper = new RefMapper(
@@ -379,7 +381,8 @@ export class Mappers {
       WeaponAnimationNames,
       'Weapon Animation',
       defaultWeaponAnimations,
-      this.animationMapper
+      [], // hyperspace defaults
+      this.animationMapper // altRefMapper
   );
 
   readonly imageListMapper = new RefMapper(

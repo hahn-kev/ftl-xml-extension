@@ -30,6 +30,9 @@ export class FtlRoot {
     return;
   }
 
+  hasHyperspace(): boolean {
+    return this.hyperspaceFiles.length > 0;
+  }
 
   clear() {
     this.xmlFiles.clear();
