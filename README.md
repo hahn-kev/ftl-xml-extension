@@ -60,4 +60,37 @@ includes mode for weapon testing on `weaponAnim`. Check it out.
 
 You must wait for the loading indicator to finish.
 
+## Development
+
+### Publishing a New Version
+
+To publish a new version of the extension:
+
+1. Set the VS Code Personal Access Token as an environment variable:
+   ```bash
+   # Windows PowerShell
+   $env:VSCE_PAT="your_pat_here"
+   
+   # Windows CMD
+   set VSCE_PAT=your_pat_here
+   
+   # Linux/Mac
+   export VSCE_PAT="your_pat_here"
+   ```
+
+2. Run the publish command with the desired version bump (patch/minor/major):
+   ```bash
+   npm run publish patch  # For bug fixes (0.0.X)
+   npm run publish minor  # For new features (0.X.0)
+   npm run publish major  # For breaking changes (X.0.0)
+   ```
+Note: The `vsce` tool doesn't support pnpm, so you'll need to use npm for publishing:
+
+
+This will automatically:
+- Bump the version in package.json
+- Run tests
+- Build the extension
+- Publish to the VS Code Marketplace
+
 **Enjoy!**
