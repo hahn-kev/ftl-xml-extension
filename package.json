@@ -104,9 +104,9 @@
 	"scripts": {
 		"start": "run-p vite:watch esbuild:watch launch-vscode",
 		"launch-vscode": "code --extensionDevelopmentPath=\"%CD%\" --inspect-extensions=9229",
-		"compile": "npm run esbuild-base -- --sourcemap --minify",
+		"compile": "pnpm run esbuild-base -- --sourcemap --minify",
 		"esbuild-base": "esbuild ./src/main.ts --bundle --tree-shaking=true --loader:.html=text --outfile=out/ftl-main.js --external:vscode --format=cjs",
-		"esbuild:watch": "npm run esbuild-base -- --sourcemap --watch",
+		"esbuild:watch": "pnpm run esbuild-base -- --sourcemap --watch",
 		"watch": "run-p vite:watch esbuild:watch",
 		"pretest": "tsc -p ./test.tsconfig.json && npm run compile",
 		"test": "node ./out-test/test/runTest.js",
