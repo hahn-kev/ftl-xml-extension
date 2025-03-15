@@ -122,6 +122,7 @@
 		"path-browserify": "^1.0.1",
 		"vscode-html-languageservice": "^5.0.3",
 		"vscode-languageserver-textdocument": "^1.0.8",
+		"vscode-languageserver-types": "^3.17.5",
 		"vscode-uri": "^3.0.7"
 	},
 	"devDependencies": {
@@ -163,5 +164,6 @@
 		"publisherDisplayName": "hahn-kev",
 		"publisherId": "0e320348-9c4b-49b9-91ad-11d221293e9c",
 		"isPreReleaseVersion": false
-	}
+	},
+	"packageManager": "pnpm@8.8.0+sha512.798e6b322669ce63c8da856bd62ad1f7b6f36f4dfaa0ac025af2bdd700d09dd5dca943e5cad3edac5d1b3baebc4b2c3fb80fbb8537f936733c32be2ec7805144"
 }
