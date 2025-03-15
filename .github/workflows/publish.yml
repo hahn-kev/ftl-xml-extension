@@ -20,7 +20,7 @@ jobs:
           run_install: true
         
       - name: Run tests
-        run: pnpm unit-tests
+        run: pnpm unit-test
         
       - name: Build extension
         run: pnpm run vscode:prepublish
