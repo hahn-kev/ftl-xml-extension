@@ -12,5 +12,13 @@
 	<mount x="233" y="235" rotate="false" mirror="false" gib="-1" slide="right" />
 	<mount x="36" y="235" rotate="false" mirror="true" gib="-1" slide="left" />
 </weaponMounts>
+<thrusters sync="true">
+    <thruster x="34" y="335">siren_scout_thruster</thruster>
+    <thruster x="166" y="335">siren_scout_thruster</thruster>
+</thrusters>
+<mv-hullAnims sync="true">
+	<hullAnim x="100" y="90">siren_scout_bands</hullAnim>
+	<hullAnim x="112" y="29">siren_scout_column</hullAnim>
+</mv-hullAnims>
 <explosion />
 

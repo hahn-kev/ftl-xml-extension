@@ -3,7 +3,7 @@
 <!--Copyright (c) 2012 by Subset Games. All rights reserved.-->
 <img x="-68" y="-59" w="470" h="469" />
 <offsets>
-	<floor x="63" y="53" />
+	<floor x="62" y="53" />
 	<cloak x="-4" y="-5" />
 </offsets>
 <weaponMounts>
@@ -12,5 +12,8 @@
 	<mount x="427" y="182" rotate="true" mirror="false" gib="-1" slide="right" />
 	<mount x="427" y="287" rotate="true" mirror="true" gib="-1" slide="right" />
 </weaponMounts>
+<thrusters sync="true">
+    <thruster x="9" y="37">mup_multiverse_main</thruster>
+</thrusters>
 <explosion />
 

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--Copyright (c) 2012 by Subset Games. All rights reserved.-->
+<img x="-20" y="-82" w="599" h="374" />
+<offsets>
+	<floor x="14" y="76" />
+	<cloak x="-23" y="-23" />
+</offsets>
+<weaponMounts>
+	<mount x="416" y="124" rotate="true" mirror="true" gib="-1" slide="up" />
+	<mount x="416" y="250" rotate="true" mirror="false" gib="-1" slide="down" />
+	<mount x="330" y="90" rotate="true" mirror="true" gib="-1" slide="up" />
+	<mount x="331" y="283" rotate="true" mirror="false" gib="-1" slide="down" />
+	<mount x="596" y="187" rotate="true" mirror="false" gib="-1" slide="no" />
+</weaponMounts>
+<thrusters sync="true">
+    <thruster x="51" y="17">mup_mvkestrel_thruster</thruster>
+    <thruster x="51" y="285">mup_mvkestrel_thruster</thruster>
+</thrusters>
+<explosion />
+
