@@ -106,7 +106,7 @@
 		"launch-vscode": "code --extensionDevelopmentPath=\"%CD%\" --inspect-extensions=9229",
 		"compile": "npm run esbuild-base -- --sourcemap --minify",
 		"esbuild-base": "esbuild ./src/main.ts --bundle --tree-shaking=true --loader:.html=text --outfile=out/ftl-main.js --external:vscode --format=cjs",
-		"esbuild:watch": "pnpm run esbuild-base -- --sourcemap --watch",
+		"esbuild:watch": "npm run esbuild-base -- --sourcemap --watch",
 		"watch": "run-p vite:watch esbuild:watch",
 		"pretest": "tsc -p ./test.tsconfig.json && npm run compile",
 		"test": "node ./out-test/test/runTest.js",
@@ -165,6 +165,5 @@
 		"publisherDisplayName": "hahn-kev",
 		"publisherId": "0e320348-9c4b-49b9-91ad-11d221293e9c",
 		"isPreReleaseVersion": false
-	},
-	"packageManager": "pnpm@8.8.0+sha512.798e6b322669ce63c8da856bd62ad1f7b6f36f4dfaa0ac025af2bdd700d09dd5dca943e5cad3edac5d1b3baebc4b2c3fb80fbb8537f936733c32be2ec7805144"
+	}
 }
