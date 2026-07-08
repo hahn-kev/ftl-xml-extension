@@ -22,8 +22,14 @@ jobs:
       - name: Run tests
         run: pnpm unit-test
         
-      - name: Build extension
-        run: pnpm run vscode:prepublish
+      - name: Package extension
+        run: pnpm run package
+
+      - name: Upload VSIX artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ftl-xml-vsix
+          path: "*.vsix"
         
       # - name: Publish to VS Code Marketplace
       #   run: pnpm run publish patch
